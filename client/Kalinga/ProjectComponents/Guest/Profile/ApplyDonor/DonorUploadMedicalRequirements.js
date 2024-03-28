@@ -141,7 +141,9 @@ const DonorUploadMedicalRequirements = () => {
   const styles = StyleSheet.create({
 
     body: {
-        flex: 1
+        flex: 1,
+        // backgroundColor: "pink",
+        width: "85%"
     },
 
     button: {
@@ -205,7 +207,7 @@ const DonorUploadMedicalRequirements = () => {
         paddingVertical: 10,
         paddingHorizontal: 10,
         marginBottom: 17,
-        width: "90%",
+       
         backgroundColor: "#FFFFFF"
     },
 
