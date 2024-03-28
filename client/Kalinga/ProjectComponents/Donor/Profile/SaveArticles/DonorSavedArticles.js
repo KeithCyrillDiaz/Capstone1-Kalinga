@@ -32,7 +32,7 @@ const SavedArticles = () => {
 
     return (
         
-        <SafeAreaView>
+        <SafeAreaView style = {styles.safe}>
             <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style = {globalHeader.SmallHeader}>
               <Text style = {globalHeader.SmallHeaderTitle}>Saved Articles</Text>
@@ -145,7 +145,9 @@ const SavedArticles = () => {
                     </View>
 
                  </View>
-           
+
+                 <View style = {styles.space}/>
+
               
             </View>
               
@@ -159,6 +161,14 @@ const SavedArticles = () => {
 
 
   const styles = StyleSheet.create({
+
+    safe: {
+        flex:1,
+    },
+
+    space: {
+        marginVertical: "10%"
+    },
 
     row: {
         flexDirection: "row",

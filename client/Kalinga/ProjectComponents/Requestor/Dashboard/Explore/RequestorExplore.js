@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, StatusBar, Text, TextInput } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
-import { globalHeader } from '../../styles_kit/globalHeader.js';
-import { globalStyles } from '../../styles_kit/globalStyles.js';
-import MapContainer from './map';
+import { globalHeader } from '../../../../styles_kit/globalHeader.js';
+import MapContainer from './map.js';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 const MAP_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
-const GuestExplore = () => {
+const RequestorExplore = () => {
 
   const [search, setSearch] = useState('');
 
@@ -74,4 +72,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GuestExplore;
+export default RequestorExplore;

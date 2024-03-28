@@ -7,14 +7,24 @@ import {
   StatusBar,
   StyleSheet,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  Image,
 } from 'react-native';
 import { globalStyles } from "../../../../styles_kit/globalStyles.js";
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
-
+import { useNavigation } from '@react-navigation/native';
 
 
 const SetAppointment = () => {
+
+  const navigation = useNavigation();
+    
+  const navigatePage = (Page) => {
+      navigation.navigate(Page); // Navigate to the Login screen
+      
+
+  };
+
 
 
   const FirstParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse'
@@ -33,7 +43,7 @@ const SetAppointment = () => {
            style = {globalStyles.ScrollView}
            overScrollMode='never' // Disable the over-scroll effect or the Jelly effect when reaching the end of the scroll
            nestedScrollEnabled={true} // Enable nested scrolling
-           
+           showsVerticalScrollIndicator={false}
            >
             <View style = {globalStyles.container}>
                 <View style = {styles.center}>
@@ -42,7 +52,7 @@ const SetAppointment = () => {
 
                 <View style = {styles.img}>
                   {/*Image*/}
-                  <Text>Img</Text>
+                  <Image source={require('../../../../assets/makereq.png')} style={styles.image}></Image>
                   </View>
                 <View style = {styles.left}>
                     <Text style = {styles.note}>Note: All fields marked with (*) are required</Text>
@@ -118,7 +128,7 @@ const SetAppointment = () => {
                   <View style = {styles.spaceBetween}>
                     <TextInput 
                               style = {styles.placeholderDesign}
-                              placeholder="Email Amount of milk to be donated (mL)"
+                              placeholder="Amount of milk to be donated (mL)"
                               placeholderTextColor="#E60965"
                           />
                   </View>
@@ -127,8 +137,8 @@ const SetAppointment = () => {
                       *
                     </Text>
                 </View>
-                <TouchableOpacity>
-                  <Text style = {styles.button}> Set Appointment </Text>
+                <TouchableOpacity onPress={() => navigatePage("Nearest Date")}>
+                  <Text style = {styles.button}> Next </Text>
                 </TouchableOpacity>
                 
             </View>
@@ -143,12 +153,11 @@ const SetAppointment = () => {
 
   const styles = StyleSheet.create ({
 
-
-    img: {
-      backgroundColor: "pink",
-      height: 200,
+    image: {
       width: 200,
-      marginTop: 40
+      height: 200,
+      margin: 20,
+      marginBottom: 3,
     },
 
     center: {
@@ -228,8 +237,8 @@ const SetAppointment = () => {
       backgroundColor: "#E60965",
       marginTop: 20,
       color: "white",
-      padding: 20,
-      width: 200,
+      paddingVertical: 7,
+      paddingHorizontal: 30,
       textAlign: "center",
       borderRadius: 30,
       fontFamily: "Open-Sans-SemiBold",

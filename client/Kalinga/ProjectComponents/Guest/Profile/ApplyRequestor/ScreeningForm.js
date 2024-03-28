@@ -44,7 +44,11 @@ const ApplyAs_DonorISF = () => {
 
             </View>
 
-<ScrollView>
+<ScrollView
+overScrollMode='never'
+nestedScrollEnabled={true}
+showsVerticalScrollIndicator={false}
+>
 <SafeAreaView>
 
       <View style={styles.rectanglesContainer}>

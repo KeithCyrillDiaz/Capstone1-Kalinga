@@ -2,7 +2,6 @@
 import  React, { useState, useEffect } from 'react';
 import { globalStyles } from "../../../styles_kit/globalStyles.js";
 import { globalHeader } from "../../../styles_kit/globalHeader.js";
-import * as Font from 'expo-font';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -22,7 +21,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 
 export default function GuestProfile() {
 
@@ -85,28 +84,6 @@ export default function GuestProfile() {
             
   
             </View>
-        
-            <View style={styles.navBarBorder}>
-            <View style={styles.navBar}>
-            <TouchableOpacity onPress={handleHomePress} style={styles.navBarButton}>
-              <Feather name="home" size={45} color="white"/>
-              <Text style={styles.iconText}>Home</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleProfilePress} style={styles.navBarButton}>
-              <Ionicons name="notifications-outline" size={50} color="white" style={{marginLeft: 10}}/>
-              <Text style={styles.iconText}>Notifications</Text >
-              <View style={styles.line2}></View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleProfilePress} style={styles.navBarButton}>
-              <MaterialIcons name="person-outline" size={50} color="white"  />
-              <Text style={styles.iconText}>Profile</Text>
-              <View style={styles.line2}></View>
-            </TouchableOpacity>
-            </View>
-            </View>
-          <StatusBar style="auto" />
-         
-
         </SafeAreaView>
   );
 }

@@ -5,7 +5,8 @@ import { Entypo } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { globalHeader } from '../../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../../styles_kit/globalStyles.js';
-
+import { Feather } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const GuestHome = () => {
 
@@ -78,4 +79,3 @@ const GuestHome = () => {
 
   
 export default GuestHome;
-

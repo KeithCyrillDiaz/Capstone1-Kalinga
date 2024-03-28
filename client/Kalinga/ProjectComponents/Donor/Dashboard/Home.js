@@ -9,7 +9,6 @@ import { globalHeader } from '../../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../../styles_kit/globalStyles.js';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
 
 
 
@@ -25,13 +24,15 @@ const DonorHome = () => {
     const UserName = "Rogine"
 
     const navigation = useNavigation();
-    const handleHomePress = () => {
-      console.log("Home button pressed");
-    };
+    
     const navigatePage = (Page) => {
         navigation.navigate(Page); // Navigate to the Login screen
         
 
+    };
+
+    const handleHomePress = () => {
+      console.log("Home button pressed");
     };
 
     return (
@@ -45,13 +46,14 @@ const DonorHome = () => {
         <ScrollView
         overScrollMode='never' // Disable the over-scroll effect or the Jelly effect when reaching the end of the scroll
         nestedScrollEnabled={true} // Enable nested scrolling
+        showsVerticalScrollIndicator={false}
         >
               <View style = {styles.flex_start}>
                 <Text style = {styles.title}>Donor's Dashboard</Text>
               </View>
               <View style = {styles.flex_Row}>
 
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox}>
+                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("DonorTabsExploreAndMilkBank")}>
                     <MaterialIcons name="location-pin" size={70} color="#E60965" />
                     <View style = {styles.LabelCenter}>
                       <Text style = {styles.Label}>Milk Bank Locator</Text>
@@ -89,7 +91,7 @@ const DonorHome = () => {
               </View>
 
               <View style = {styles.flex_Row}>
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("Make a Donation")}>
+                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("SetAnAppointment")}>
                 <Ionicons name="calendar" size={70} color="#E60965" />
                   <View style = {styles.LabelCenter}>
                     <Text style = {styles.Label}>Make a Donation</Text>
