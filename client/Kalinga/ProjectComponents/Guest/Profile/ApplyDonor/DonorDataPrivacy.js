@@ -77,7 +77,7 @@ const DonorDataPrivacy = () => {
   const styles = StyleSheet.create ({
     SafeArea: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#FFF8EB',
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import { globalHeader } from '../../styles_kit/globalHeader.js';
-import { globalStyles } from '../../styles_kit/globalStyles.js';
+
 
 
 const apiKey = process.env.GOOGLE_MAPS_API_KEY;

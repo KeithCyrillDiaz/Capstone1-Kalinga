@@ -156,7 +156,7 @@ const DonorScreeningForm = () => {
   const styles = StyleSheet.create ({
     SafeArea: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#FFF8EB',
         
         width: '100%',
         height: "100%"
@@ -244,6 +244,7 @@ const DonorScreeningForm = () => {
         width: "90%",
         marginVertical: "1.5%",
         color: "#E60965",
+        backgroundColor: "#FFFFFF"
     },
 
     SmallinputField: {
@@ -256,6 +257,7 @@ const DonorScreeningForm = () => {
         marginVertical: "1.5%",
         marginHorizontal: "3%",
         color: "#E60965",
+        backgroundColor: "#FFFFFF"
     },
 
    

@@ -4,20 +4,20 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 
-import GuestMilkBank from '../screens/Guest/GuestMilkBank.js';
-import GuestExplore from '../screens/Guest/Explore.js';
+import GuestMilkBank from '../ProjectComponents/Guest/GuestDashboard/Explore/GuestMilkBank.js';
+import GuestExplore from '../ProjectComponents/Guest/GuestDashboard/Explore/ExploreFinal.js';
 
-import DonorHome from '../screens/Donor/Home.js';
-import DonorProfile from '../screens/Donor/Profile.js';
+// import DonorHome from '../screens/Donor/Home.js';
+// import DonorProfile from '../screens/Donor/Profile.js';
 
-import RequestorHome from '../screens/Requestor/Home.js';
-import RequestorProfile from '../screens/Requestor/Profile.js';
+// import RequestorHome from '../screens/Requestor/Home.js';
+// import RequestorProfile from '../screens/Requestor/Profile.js';
 import { MaterialIcons } from '@expo/vector-icons';
 
 
 const Tab = createBottomTabNavigator()
 
-const Tabs = ({userType}) => {
+const GuestTabsExploreAndMIlkBank = ({userType}) => {
     userType = "Guest"
     return (
             <Tab.Navigator
@@ -50,8 +50,8 @@ const Tabs = ({userType}) => {
                     name = {"Explore"}
                     component={
                         userType === "Guest" ? GuestExplore  // If statement. It heavy relies on the value of usertype
-                        : userType === "Donor" ? DonorHome
-                        : RequestorHome // Else condition
+                        : userType === "Donor" ? DonorExplore
+                        : RequestorExplore // Else condition
                     }
                     //component = {GuestHome} // palitan niyo to bai
                     options={{
@@ -67,8 +67,8 @@ const Tabs = ({userType}) => {
                     name = {'Milk Banks'} 
                     component={
                         userType === "Guest" ? GuestMilkBank  // If statement. It heavy relies on the value of usertype
-                        : userType === "Donor" ? DonorProfile
-                        : RequestorProfile // Else condition
+                        : userType === "Donor" ? DonorMilkBank
+                        : RequestorMilkBank // Else condition
                     }
                     options={{
                         tabBarIcon: ({focused}) => (
@@ -85,4 +85,4 @@ const Tabs = ({userType}) => {
 
 }
 
-export default Tabs;
+export default GuestTabsExploreAndMIlkBank;

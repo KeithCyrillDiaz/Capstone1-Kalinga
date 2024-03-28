@@ -56,13 +56,13 @@ const DonorProfile = () => {
                     </View>
 
                     <Text style = {styles.name}>Rogine Cubelo</Text>
-                    <Text style = {styles.userType}>Donator</Text>
+                    <Text style = {styles.userType}>Donor</Text>
 
                   </View>
 
                   <View style = {styles.box}>
                     
-                      <TouchableOpacity  onPress={() => navigatePage("Saved Articles")}>
+                      <TouchableOpacity  onPress={() => navigatePage("DonorSavedArticles")}>
                         <View style = {styles.rowBox}>
                           <View style = {styles.rowMenu}>
                             <FontAwesome5 style = {styles.iconBookmark} name="bookmark" size={30} color="#E60965" />
@@ -91,7 +91,7 @@ const DonorProfile = () => {
 
                     </TouchableOpacity>
                     
-                    <TouchableOpacity onPress={() => navigatePage("SettingScreen")}>
+                    <TouchableOpacity onPress={() => navigatePage("DonorSettingScreen")}>
                       <View style = {styles.rowBox}>
                             <View style = {styles.rowMenu}>
                               <Octicons style = {styles.icon} name="gear" size={30} color="#E60965" />
@@ -145,17 +145,22 @@ const DonorProfile = () => {
 
     rowMenu: {
       flexDirection: "row",
+      alignItems: "center",
+      height: 50,
+      justifyContent: "space-between",
+      marginHorizontal: "15%"
     },
 
     rowBox: {
       flexDirection: "row",
-      //backgroundColor: "gray",
+      // backgroundColor: "gray",
       alignItems: "center",
       height: 50,
       borderBottomWidth: .5,
       borderColor: "#E60965",
       marginBottom: 10,
-      justifyContent: "space-between"
+      justifyContent: "space-between",
+      paddingRight: "10%"
       
     },
 

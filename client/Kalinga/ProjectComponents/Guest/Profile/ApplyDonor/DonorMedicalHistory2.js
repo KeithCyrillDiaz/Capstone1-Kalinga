@@ -184,6 +184,7 @@ const DonorMedicalHistory2 = () => {
       height: 210,
       paddingRight: 10,
       marginBottom: 10,
+      backgroundColor: "#FFFFFF"
     },
 
     form2: {
@@ -194,6 +195,7 @@ const DonorMedicalHistory2 = () => {
         height: 170,
         paddingRight: 10,
         marginBottom: 10,
+        backgroundColor: "#FFFFFF"
       },
 
     row: {

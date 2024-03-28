@@ -10,12 +10,22 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
+import SavedArticles from '../Profile/SaveArticles/RequestorSavedArticles.js';
+import SettingScreen from '../Profile/ReqSetting/RequestorSettingScreen.js';
 
 
 
 const DonorProfile = () => {
 
+  const navigation = useNavigation();
+    
+const navigatePage = (Page) => {
+    navigation.navigate(Page); // Navigate to the Login screen
+    
+
+};
     const FirstParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
 
     const SecondParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
@@ -55,7 +65,7 @@ const DonorProfile = () => {
 
                   <View style = {styles.box}>
                     
-                      <TouchableOpacity>
+                      <TouchableOpacity onPress={() => navigatePage("RequestorSavedArticles")} >
                         <View style = {styles.rowBox}>
                           <View style = {styles.rowMenu}>
                             <FontAwesome5 style = {styles.iconBookmark} name="bookmark" size={30} color="#E60965" />
@@ -69,8 +79,8 @@ const DonorProfile = () => {
                       </TouchableOpacity>
                        
                  
+                  {/* <TouchableOpacity onPress={() => navigatePage("SavedMilkBanks")}> */}
                   <TouchableOpacity>
-
                       <View style = {styles.rowBox}>
                           <View style = {styles.rowMenu}>
                             <MaterialCommunityIcons style = {styles.iconBabyBottle} name="baby-bottle-outline" size={38} color="#E60965"/>
@@ -84,7 +94,7 @@ const DonorProfile = () => {
 
                     </TouchableOpacity>
                     
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigatePage("RequestorSettingScreen")}>
                       <View style = {styles.rowBox}>
                             <View style = {styles.rowMenu}>
                               <Octicons style = {styles.icon} name="gear" size={30} color="#E60965" />
@@ -138,17 +148,22 @@ const DonorProfile = () => {
 
     rowMenu: {
       flexDirection: "row",
+      alignItems: "center",
+      height: 50,
+      justifyContent: "space-between",
+      marginHorizontal: "15%"
     },
 
     rowBox: {
       flexDirection: "row",
-      //backgroundColor: "gray",
+      // backgroundColor: "gray",
       alignItems: "center",
       height: 50,
       borderBottomWidth: .5,
       borderColor: "#E60965",
       marginBottom: 10,
-      justifyContent: "space-between"
+      justifyContent: "space-between",
+      paddingRight: "10%"
       
     },
 

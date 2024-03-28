@@ -6,7 +6,7 @@ const GetStarted = () => {
     const navigation = useNavigation();
 
     const handleGetStarted = () => {
-        navigation.navigate('Guest Home'); 
+        navigation.navigate('GuestTabs'); 
     };
 
     return (

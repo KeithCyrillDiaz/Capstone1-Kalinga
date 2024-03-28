@@ -117,7 +117,7 @@ export default function SettingScreen() {
             justifyContent: "center",
             alignItems: "center",
           }}>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => navigatePage("LogIn")}>
             <View style={buttonStyle.primary}>
               <Text
                 style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>

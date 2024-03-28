@@ -1,11 +1,13 @@
 import React from 'react';
 //import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
-import { Feather } from '@expo/vector-icons';
+
 import { AntDesign } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
+
 
 import GuestProfile from '../ProjectComponents/Guest/GuestDashboard/GuestProfile.js';
-import GuestHome from '../ProjectComponents/Guest/GuestDashboard/Home.js';
+import GuestHome from '../ProjectComponents/Guest/GuestDashboard/GuestHome.js';
 
 import DonorHome from '../ProjectComponents/Donor/Dashboard/Home.js';
 import DonorProfile from '../ProjectComponents/Donor/Dashboard/Profile.js';
@@ -63,6 +65,7 @@ const userType = "Guest";
                             size = {focused ? 37 : 30}
                             color = {focused ? 'white' : 'white'}
                             />
+                            
                         )
                     }}
                 />

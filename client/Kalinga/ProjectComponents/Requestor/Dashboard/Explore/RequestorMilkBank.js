@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import { View, StatusBar, StyleSheet, Text } from 'react-native';
 import MapContainer from './map';
-import { globalHeader } from '../../styles_kit/globalHeader.js';
+import { globalHeader } from '../../../../styles_kit/globalHeader';
 import { TextInput } from 'react-native-gesture-handler';
 import { FontAwesome5 } from '@expo/vector-icons';
 
-const GuestMilkBank = () => {
+const RequestorMilkBank = () => {
 
   const [search, setSearch] = useState('');
 
@@ -72,4 +72,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GuestMilkBank;
+export default RequestorMilkBank;

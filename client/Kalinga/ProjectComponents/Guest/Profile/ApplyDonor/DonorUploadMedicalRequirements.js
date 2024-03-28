@@ -205,7 +205,8 @@ const DonorUploadMedicalRequirements = () => {
         paddingVertical: 10,
         paddingHorizontal: 10,
         marginBottom: 17,
-        width: "90%"
+        width: "90%",
+        backgroundColor: "#FFFFFF"
     },
 
     label: {
