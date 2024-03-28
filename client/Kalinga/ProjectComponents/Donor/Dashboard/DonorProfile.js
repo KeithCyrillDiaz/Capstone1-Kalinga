@@ -3,10 +3,9 @@ import React from 'react';
 import { ScrollView,Text, View, StatusBar, StyleSheet, SafeAreaView, TouchableOpacity} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { globalHeader } from '../../../styles_kit/globalHeader.js';
-import { globalStyles } from '../../../styles_kit/globalStyles.js';
 
 import { FontAwesome5 } from '@expo/vector-icons';
-import { FontAwesome6 } from '@expo/vector-icons';
+import { Entypo } from "@expo/vector-icons";
 import { FontAwesome } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -18,11 +17,6 @@ import { useNavigation } from '@react-navigation/native';
 
 const DonorProfile = () => {
 
-    const FirstParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
-
-    const SecondParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
-
-    const ThridParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
 
     const UserName = "Rogine"
     const navigation = useNavigation();
@@ -70,14 +64,13 @@ const DonorProfile = () => {
                               Saved Articles
                             </Text>
                           </View>
-                          
-                          <FontAwesome6 name="greater-than" size={30} color="#E60965" />
+                          <Entypo name="chevron-right" size={30} color="#E60965" />
+              
                         </View>
                       </TouchableOpacity>
                        
                  
                   <TouchableOpacity>
-
                       <View style = {styles.rowBox}>
                           <View style = {styles.rowMenu}>
                             <MaterialCommunityIcons style = {styles.iconBabyBottle} name="baby-bottle-outline" size={38} color="#E60965"/>
@@ -86,7 +79,7 @@ const DonorProfile = () => {
                             </Text>
                           </View>
                        
-                        <FontAwesome6 name="greater-than" size={30} color="#E60965" />
+                          <Entypo name="chevron-right" size={30} color="#E60965" />
                       </View>
 
                     </TouchableOpacity>
@@ -100,7 +93,7 @@ const DonorProfile = () => {
                               </Text>
                             </View>
                           
-                          <FontAwesome6 name="greater-than" size={30} color="#E60965" />
+                            <Entypo name="chevron-right" size={30} color="#E60965" />
                       </View>
                     </TouchableOpacity>
                 </View>
@@ -112,7 +105,9 @@ const DonorProfile = () => {
     
         
       )
-  }
+  } 
+  
+
 
 
   const styles = StyleSheet.create({
@@ -218,5 +213,5 @@ const DonorProfile = () => {
    
   })
   
-export default DonorProfile;
+  export default DonorProfile;
 

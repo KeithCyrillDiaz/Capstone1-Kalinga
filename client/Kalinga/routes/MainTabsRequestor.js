@@ -10,7 +10,7 @@ import GuestProfile from '../ProjectComponents/Guest/GuestDashboard/GuestProfile
 import GuestHome from '../ProjectComponents/Guest/GuestDashboard/GuestHome.js';
  
 import DonorHome from '../ProjectComponents/Donor/Dashboard/Home.js';
-import DonorProfile from '../ProjectComponents/Donor/Dashboard/Profile.js';
+import DonorProfile from '../ProjectComponents/Donor/Dashboard/DonorProfile.js';
 import DonorNotification from '../ProjectComponents/Donor/Dashboard/Notifications.js';
 
 import RequestorHome from '../ProjectComponents/Requestor/Dashboard/Home.js';
@@ -22,7 +22,7 @@ const Tab = createBottomTabNavigator()
 
 
 const Tabs = () => {
-const userType = "Donor";
+const userType = "Requestor";
     return (
         
             <Tab.Navigator
@@ -90,7 +90,7 @@ const userType = "Donor";
                 <Tab.Screen
                     name = {'Profile'} 
                     component={
-                        userType === "Guest" ? RequestorProfile   // If statement. It heavy relies on the value of usertype
+                        userType === "Requestor" ? RequestorProfile   // If statement. It heavy relies on the value of usertype
                         : DonorProfile
                     }
                     options={{

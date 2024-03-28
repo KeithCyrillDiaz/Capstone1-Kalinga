@@ -3,21 +3,16 @@ import React from 'react';
 import { ScrollView,Text, View, StatusBar, StyleSheet, SafeAreaView, TouchableOpacity} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { globalHeader } from '../../../styles_kit/globalHeader.js';
-import { globalStyles } from '../../../styles_kit/globalStyles.js';
 
 import { FontAwesome5 } from '@expo/vector-icons';
-import { FontAwesome6 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-
-import SavedArticles from '../Profile/SaveArticles/RequestorSavedArticles.js';
-import SettingScreen from '../Profile/ReqSetting/RequestorSettingScreen.js';
+import { Entypo } from "@expo/vector-icons";
 
 
-
-const DonorProfile = () => {
+const RequestorProfile = () => {
 
   const navigation = useNavigation();
     
@@ -74,12 +69,11 @@ const navigatePage = (Page) => {
                             </Text>
                           </View>
                           
-                          <FontAwesome6 name="greater-than" size={30} color="#E60965" />
+                          <Entypo name="chevron-right" size={30} color="#E60965" />
                         </View>
                       </TouchableOpacity>
                        
                  
-                  {/* <TouchableOpacity onPress={() => navigatePage("SavedMilkBanks")}> */}
                   <TouchableOpacity>
                       <View style = {styles.rowBox}>
                           <View style = {styles.rowMenu}>
@@ -89,7 +83,7 @@ const navigatePage = (Page) => {
                             </Text>
                           </View>
                        
-                        <FontAwesome6 name="greater-than" size={30} color="#E60965" />
+                          <Entypo name="chevron-right" size={30} color="#E60965" />
                       </View>
 
                     </TouchableOpacity>
@@ -103,7 +97,7 @@ const navigatePage = (Page) => {
                               </Text>
                             </View>
                           
-                          <FontAwesome6 name="greater-than" size={30} color="#E60965" />
+                            <Entypo name="chevron-right" size={30} color="#E60965" />
                       </View>
                     </TouchableOpacity>
                 </View>
@@ -221,5 +215,5 @@ const navigatePage = (Page) => {
    
   })
   
-export default DonorProfile;
+export default RequestorProfile;
 

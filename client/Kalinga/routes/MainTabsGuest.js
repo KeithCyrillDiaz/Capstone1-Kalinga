@@ -10,7 +10,7 @@ import GuestProfile from '../ProjectComponents/Guest/GuestDashboard/GuestProfile
 import GuestHome from '../ProjectComponents/Guest/GuestDashboard/GuestHome.js';
 
 import DonorHome from '../ProjectComponents/Donor/Dashboard/Home.js';
-import DonorProfile from '../ProjectComponents/Donor/Dashboard/Profile.js';
+import DonorProfile from '../ProjectComponents/Donor/Dashboard/DonorProfile.js';
 
 import RequestorHome from '../ProjectComponents/Requestor/Dashboard/Home.js';
 import RequestorProfile from '../ProjectComponents/Requestor/Dashboard/Profile.js';

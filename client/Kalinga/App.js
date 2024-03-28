@@ -56,7 +56,7 @@ import DonorFavoriteArticles from './ProjectComponents/Donor/Profile/SaveArticle
 import SetAnAppointment from './ProjectComponents/Donor/Home/MakeDonation/SetAppointForm.js'
 import DonorHome from './ProjectComponents/Donor/Dashboard/Home.js'
 import DonorNotifications from './ProjectComponents/Donor/Dashboard/Notifications.js'
-import DonorProfile from './ProjectComponents/Donor/Dashboard/Profile.js'
+import DonorProfile from './ProjectComponents/Donor/Dashboard/DonorProfile.js'
 import DonorSettingScreen from './ProjectComponents/Donor/Profile/DonorSettngs/DonorSettingScreen.js'
 import DonorAboutUs from './ProjectComponents/Donor/Profile/DonorSettngs/DonorAboutUs.js'
 import DonorChangePassword from './ProjectComponents/Donor/Profile/DonorSettngs/DonorChangePassword.js'
@@ -97,11 +97,12 @@ import RequestorSavedArticles from './ProjectComponents/Requestor/Profile/SaveAr
 import RequestorFavoriteArticles from './ProjectComponents/Requestor/Profile/SaveArticles/RequestorFavoriteArticles.js'
 import ApprovedMessageRequest from './ProjectComponents/Requestor/Home/MyRequest/ApprovedMessageRequest.js';
 import ApprovedTabRequest from './ProjectComponents/Requestor/Home/MyRequest/ApprovedTabRequest.js';
+import RequestorProfile from './ProjectComponents/Requestor/Dashboard/Profile.js'
 
 
 
 //Requestor DUPLICATE THE DONOR PAGES
-import RequestorProfile from './ProjectComponents/Requestor/Profile/RequestorProfile.js'
+// import RequestorProfile from './ProjectComponents/Requestor/Profile/RequestorProfile.js'
 import DataPrivacyNiKit from './ProjectComponents/Guest/Profile/ApplyRequestor/DataPrivacy.js'
 
 
@@ -223,7 +224,7 @@ export default function App() {
              <Stack.Screen name="SetAnAppointment" component={SetAnAppointment} />
              <Stack.Screen name="Donor Home" component={DonorHome} />
              <Stack.Screen name="Donor Notifications" component={DonorNotifications} />
-             <Stack.Screen name="Donor Profile" component={DonorProfile} />
+             <Stack.Screen name="DonorProfile" component={DonorProfile} />
              <Stack.Screen name="MedicalHistory" component={MedicalHistory} />
              <Stack.Screen name="SetPasswordDonor" component={SetPasswordDonor} />
              <Stack.Screen name="Donor Tabs" component={DonorTabs} />
@@ -249,7 +250,7 @@ export default function App() {
              <Stack.Screen name="RequestorEducLibrary" component={RequestorEducLibrary} />
              <Stack.Screen name="MakeRequest" component={MakeRequest} />
              <Stack.Screen name="MakeRequest2" component={MakeRequest2} />
-             <Stack.Screen name="Request Profile" component={RequestorProfile} />
+             <Stack.Screen name="RequestorProfile" component={RequestorProfile} />
              <Stack.Screen name="Requestor Tabs" component={RequestorTabs} />
              <Stack.Screen name="SetPasswordRequestor" component={SetPasswordRequestor} />
              <Stack.Screen name="Data Privacy Requestor" component={DataPrivacyNiKit} />

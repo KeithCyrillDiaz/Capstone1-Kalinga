@@ -10,19 +10,20 @@ import GuestProfile from '../ProjectComponents/Guest/GuestDashboard/GuestProfile
 import GuestHome from '../ProjectComponents/Guest/GuestDashboard/Home.js';
 
 import DonorHome from '../ProjectComponents/Donor/Dashboard/Home.js';
-import DonorProfile from '../ProjectComponents/Donor/Dashboard/Profile.js';
+import DonorProfile from '../ProjectComponents/Donor/Dashboard/DonorProfile.js';
+import DonorNotification from '../ProjectComponents/Requestor/Dashboard/Notifications.js';
 
 import RequestorHome from '../ProjectComponents/Requestor/Dashboard/Home.js';
 import RequestorProfile from '../ProjectComponents/Requestor/Dashboard/Profile.js';
 import RequestorNotification from '../ProjectComponents/Requestor/Dashboard/Notifications.js'
-import DonorNotification from '../ProjectComponents/Requestor/Dashboard/Notifications.js';
+
 
 
 const Tab = createBottomTabNavigator()
 
 
 const Tabs = () => {
-const userType = "Donor";
+const userType = "Requestor";
     return (
         
             <Tab.Navigator
