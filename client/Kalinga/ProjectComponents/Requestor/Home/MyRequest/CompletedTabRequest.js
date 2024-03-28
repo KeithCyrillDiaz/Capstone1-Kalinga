@@ -17,7 +17,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 
-const ApprovedTabRequest = () => {
+const CompletedTabRequest = () => {
 		const [inputValue, setInputValue] = useState('');
 		
 		const navigation = useNavigation();
@@ -59,50 +59,98 @@ const ApprovedTabRequest = () => {
 									<Text style = {styles.button}>Pending</Text>
 							</TouchableOpacity>
 							<TouchableOpacity onPress={() => navigatePage("ApprovedTabRequest")}>
-									<Text style = {styles.indicatedButton}>Approved</Text>
+									<Text style = {styles.button}>Approved</Text>
 							</TouchableOpacity>
 							<TouchableOpacity onPress={() => navigatePage("CompletedTabRequest")}>
-									<Text style = {styles.button}>Completed</Text>
+									<Text style = {styles.indicatedButton}>Completed</Text>
 							</TouchableOpacity>
 						</View>
 
-						<View style ={styles.boxContainer}>
-							<View style={{marginTop: 10}}>
-								<View style={styles.boxContentContainer}>	
-									<Text style={styles.boxContentBold}>Fullname: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>Juan Dela Cruz</Text>
+						<View style={styles.body}>
+
+          <View style={styles.columnContainer}>
+						<View style={styles.boxColContainer}>
+								<View style={styles.boxContentContainer}>
+										<Text style={styles.boxContentBold}>Amount of milk requested: </Text>
+										<Text style={[styles.boxContent, styles.limitText]}>XX mL</Text>
+								</View>
+								<View style={styles.boxContentContainer}>
+										<Text style={styles.boxContentBold}>MilkBank: </Text>
+										<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet</Text>
+								</View>
+								<View style={styles.boxContentContainer}>
+										<Text style={styles.boxContentBold}>Date and Time: </Text>
+										<Text style={[styles.boxContent, styles.limitText]}>XX:XX AM/PM  XX - XX - XXXX </Text>
 								</View>
 							</View>
-							<View style={styles.boxContentContainer}>
-								<Text style={styles.boxContentBold}>Phone Number: </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>09XXXXXXXXX</Text>
-							</View>
-							<View style={styles.boxContentContainer}>
-								<Text style={styles.boxContentBold}>Medical Condition: </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do</Text>
-							</View>
-							<View style={styles.boxContentContainer}>
-								<Text style={styles.boxContentBold}>Amount of milk requested (mL): </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>XX mL</Text>
-							</View>
-							<View style={styles.boxContentContainer}>
-								<Text style={styles.boxContentBold}>Milk Bank: </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do</Text>
-							</View>
-							<View style={styles.boxContentContainer}>
-								<Text style={styles.boxContentBold}>Address: </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do</Text>
-							</View>
-							<View style={styles.boxContentContainer}>
-								<Text style={styles.boxContentBold}>Time and Date: </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>XX - XX - XXXX</Text>
-							</View>
 
+						<View style={styles.boxColContainer}>
+							<View style={styles.boxContentContainer}>
+									<Text style={styles.boxContentBold}>Amount of milk requested: </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>XX mL</Text>
+							</View>
+							<View style={styles.boxContentContainer}>
+									<Text style={styles.boxContentBold}>MilkBank: </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet</Text>
+							</View>
+							<View style={styles.boxContentContainer}>
+									<Text style={styles.boxContentBold}>Date and Time: </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>XX:XX AM/PM  XX - XX - XXXX </Text>
+							</View>
 						</View>
 
-				</ScrollView>
+						<View style={styles.boxColContainer}>
+							<View style={styles.boxContentContainer}>
+									<Text style={styles.boxContentBold}>Amount of milk requested: </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>XX mL</Text>
+							</View>
+							<View style={styles.boxContentContainer}>
+									<Text style={styles.boxContentBold}>MilkBank: </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet</Text>
+							</View>
+							<View style={styles.boxContentContainer}>
+									<Text style={styles.boxContentBold}>Date and Time: </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>XX:XX AM/PM  XX - XX - XXXX </Text>
+							</View>
+						</View>
 
-		</SafeAreaView>
+						<View style={styles.boxColContainer}>
+							<View style={styles.boxContentContainer}>
+									<Text style={styles.boxContentBold}>Amount of milk requested: </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>XX mL</Text>
+							</View>
+							<View style={styles.boxContentContainer}>
+									<Text style={styles.boxContentBold}>MilkBank: </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet</Text>
+							</View>
+							<View style={styles.boxContentContainer}>
+									<Text style={styles.boxContentBold}>Date and Time: </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>XX:XX AM/PM  XX - XX - XXXX </Text>
+							</View>
+						</View>
+						
+						<View style={styles.boxColContainer}>
+							<View style={styles.boxContentContainer}>
+									<Text style={styles.boxContentBold}>Amount of milk requested: </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>XX mL</Text>
+							</View>
+							<View style={styles.boxContentContainer}>
+									<Text style={styles.boxContentBold}>MilkBank: </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet</Text>
+							</View>
+							<View style={styles.boxContentContainer}>
+									<Text style={styles.boxContentBold}>Date and Time: </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>XX:XX AM/PM  XX - XX - XXXX </Text>
+							</View>
+						</View>
+
+        </View>
+      </View>
+
+						
+		</ScrollView>
+
+	</SafeAreaView>
         
     );
 
@@ -160,21 +208,22 @@ const styles = StyleSheet.create ({
 		paddingHorizontal: 20,
 	},
 
-	boxContainer: {
+	boxColContainer: {
 		alignSelf:"center",
-		width: 320,
-		height: 400,
+		width: 350,
+		height: 130,
 		backgroundColor: "#FFE5EC",
-		marginTop: 30,
+		marginTop: 15,
 		borderRadius: 18,
+		justifyContent: 'center',
 		elevation: 3,
 	},
 
 	boxContentContainer: {
 		flexDirection: 'row', // Arrange children horizontally
-		padding: 10,
-		marginLeft: 10,
-		marginTop: 5,
+		padding: 5,
+		marginLeft: 20,
+		marginTop: 3,
 		marginRight:5,
 	},
 
@@ -191,12 +240,16 @@ const styles = StyleSheet.create ({
 		fontSize: 15,
 	},
 
-
 	limitText: {
     flexShrink: 1,
     overflow: 'hidden',
   },
+
+	
+   
+
+ 
 	
 });
 
-export default ApprovedTabRequest;
+export default CompletedTabRequest;
