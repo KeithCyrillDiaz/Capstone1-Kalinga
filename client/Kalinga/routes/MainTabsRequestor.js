@@ -22,7 +22,7 @@ const Tab = createBottomTabNavigator()
 
 
 const Tabs = () => {
-const userType = "Requestor";
+const userType = "Donor";
     return (
         
             <Tab.Navigator
