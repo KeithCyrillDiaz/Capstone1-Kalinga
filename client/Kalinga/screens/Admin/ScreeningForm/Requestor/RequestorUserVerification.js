@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView, Dimensions } from 'react-native'; // Import Dimensions
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView, Dimensions, StatusBar } from 'react-native'; // Import Dimensions
 import { useNavigation } from '@react-navigation/native';
 import { Octicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
-
+import { globalHeader } from '../../../../styles_kit/globalHeader';
 
 const handleLogIn = () => {
     navigation.navigate('LoginAdmin');
@@ -34,15 +34,17 @@ const UserVerification = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.header}>
-                
-                <Text style={styles.headerTitle}>Requestor Verification</Text>
+            <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
+            <View style={globalHeader.SmallHeader}>
+                <Text style={globalHeader.SmallHeaderTitle}>Requestor Verification</Text>
             </View>
             <SearchBar />
             <View styles={styles.title}>
                 <Text style={styles.titleText}>Pendings</Text>
             </View>
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <ScrollView contentContainerStyle={styles.scrollContainer}
+              showsVerticalScrollIndicator={false}
+            >
             <View style={styles.DonorContainer}>
                     <View style={styles.milkBankContainer}>
                       <View style={styles.milkBank}>
