@@ -38,7 +38,9 @@ const AdminMilkbanks = () => {
                 <Text style={globalHeader.SmallHeaderTitle}>MilkBanks</Text>
             </View>
             <SearchBar></SearchBar>
-            <ScrollView style = {styles.scrollView}>
+            <ScrollView style = {styles.scrollView}
+            showsVerticalScrollIndicator = {false}
+            >
                 
             <View style={styles.milkBankList}>
                  
