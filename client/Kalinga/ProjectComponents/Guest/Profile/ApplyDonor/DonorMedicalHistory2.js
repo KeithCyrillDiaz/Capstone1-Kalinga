@@ -6,12 +6,18 @@ import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-const DonorMedicalHistory2 = () => {
+const DonorMedicalHistory2 = ({route}) => {
     const navigation = useNavigation();
 
-    const navigatePage = (Page) => {
+    const { screeningFormData } = route.params; // Access formData from route.params
+    console.log(screeningFormData)
+  
+    const [formData, setFormData] = useState(screeningFormData);
+
+    const navigatePage = (Page, data) => {
+      console.log(screeningFormData)
       // Navigate to the next screen by route name
-      navigation.navigate(Page);
+      navigation.navigate(Page, data);
     };
 
     const [medicalAnsweredQuestions, setMedicalAnsweredQuestions] = useState([]);
@@ -23,10 +29,16 @@ const DonorMedicalHistory2 = () => {
         {
             const answeredQuestion = { id: questionId, answer: answer, type: questionType };
             setMedicalAnsweredQuestions(prevState => [...prevState.filter(item => item.id !== questionId), answeredQuestion]);
+            setFormData(prevData =>({...prevData,
+            [`MH${questionId}`]: answer
+            }))
         } else {
 
             const answeredQuestion = { id: questionId, answer: answer, type: questionType };
             setSexualAnsweredQuestions(prevState => [...prevState.filter(item => item.id !== questionId), answeredQuestion]);
+            setFormData(prevData =>({...prevData,
+              [`SH${questionId}`]: answer
+              }))
         }
 
     };
@@ -108,7 +120,7 @@ const DonorMedicalHistory2 = () => {
                     {renderQuestion(2, 'Nagkaroon ka na ba ng karanasang makipagtalik sa higit pa sa isang lalaki?', "Sexual History")}
                    
             </View>
-                     <TouchableOpacity style={styles.button} onPress={() => navigatePage("DonorUploadMedicalRequirements")}>
+                     <TouchableOpacity style={styles.button} onPress={() => navigatePage("DonorUploadMedicalRequirements", { screeningFormData: formData })}>
                         <Text style={styles.buttonTitle}>Next</Text>
                      </TouchableOpacity>
         </ScrollView>
