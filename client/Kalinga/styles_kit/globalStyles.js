@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 export const globalStyles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: 'white',
+      backgroundColor: '#FFF8EB',
       alignItems: 'center',
       justifyContent: 'center',
       width: '100%',
@@ -88,11 +88,12 @@ export const globalStyles = StyleSheet.create({
     },
 
     flex_start: {
-      flex: 1,
-      //justifyContent: "center"
-      alignItems: "flex-start",
-      marginLeft: "5%"
+    marginRight: 160,
     },
+
+    flex_start1: {
+      marginHorizontal: 30
+      },
 
     flex_end: {
       flex: 1,
