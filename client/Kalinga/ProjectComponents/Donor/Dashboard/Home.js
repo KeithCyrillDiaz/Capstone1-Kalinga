@@ -15,14 +15,13 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 
 const DonorHome = () => {
 
-    const FirstParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
+  const FirstParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
 
-    const SecondParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
+  const SecondParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
 
-    const ThridParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
+  const ThridParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
 
-    const UserName = "Rogine"
-
+  const UserName = "Rogine"
     const navigation = useNavigation();
     
     const navigatePage = (Page) => {
@@ -91,7 +90,11 @@ const DonorHome = () => {
               </View>
 
               <View style = {styles.flex_Row}>
+<<<<<<< HEAD
+                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("Set Appointment Form")}>
+=======
                 <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("SetAnAppointment")}>
+>>>>>>> 6acd6d29518674adfe97ed84e11efaea2d9a649a
                 <Ionicons name="calendar" size={70} color="#E60965" />
                   <View style = {styles.LabelCenter}>
                     <Text style = {styles.Label}>Make a Donation</Text>

@@ -32,9 +32,7 @@ const AdminMilkbanks = () => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.menuIcon}>
-                    <Octicons name="three-bars" size={24} color="white" />
-                </TouchableOpacity>
+                
                 <Text style={styles.headerTitle}>MilkBanks</Text>
             </View>
             <SearchBar />
@@ -270,7 +268,6 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
         elevation: 30,
-        flexDirection: 'row',
         alignItems: 'center',
         marginTop: 30,
         paddingVertical: 20
@@ -281,7 +278,6 @@ const styles = StyleSheet.create({
         color: 'white',
         textAlign: 'center',
         fontWeight: '700',
-        marginLeft: '25%',
     },
     menuIcon: {
         marginLeft: 20,
