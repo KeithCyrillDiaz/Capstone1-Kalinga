@@ -1,177 +1,204 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, TextInput, StyleSheet, SafeAreaView, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import React from 'react';
+import { ScrollView,Text, View, StatusBar, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Octicons } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+import { globalHeader } from '../../styles_kit/globalHeader.js';
+import { globalStyles } from '../../styles_kit/globalStyles.js';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
+import { SimpleLineIcons } from '@expo/vector-icons';
+import { FontAwesome6 } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
+
 
 
 
 const AdminMenu = () => {
-    const navigation = useNavigation(); 
+   
+    const navigation = useNavigation();
 
-    
-    const handleLogIn = () => {
-        navigation.navigate('LoginAdmin');
-    };
-
-    const handleDashboard = () => {
-        navigation.navigate('AdminDashboard');
-    };
-
-    const handleUser = () => {
-        navigation.navigate('AdminUser');
-    };
-
-    const handleMilkbanks = () => {
-        navigation.navigate('AdminMilkbanks');
-    };
-
-    const handleDonorVerification = () => {
-        navigation.navigate('DonorUserVerification');
-    };
-
-    const handleRequestorVerification = () => {
-        navigation.navigate('RequestorUserVerification');
-    };
-
-    
-
-
-
-
-    return (
-        <SafeAreaView style={styles.container}>
-              <View style={styles.header}>
-                <Text style={styles.headerTitle}>Menu</Text>
-              </View>
-                <View style={styles.Buttoncontainer}>
-                    <TouchableOpacity style={styles.MenuButton} onPress={handleDashboard}>
-                        <View style={styles.buttonContent}>
-                            <Octicons name="graph" size={24} color="#E60965" style={styles.icon} /> 
-                            <Text style={styles.MenuButtonText}>Dashboard</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.MenuButton} onPress={handleMilkbanks}>
-                            <View style={styles.buttonContent}>
-                                <Image
-                                    source={require('../../assets/milk.png')}
-                                    style={styles.icon}
-                                />
-                                <Text style={styles.MenuButtonText}>Milk Banks</Text>
-                            </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.MenuButton} onPress={handleUser}>
-                        <View style={styles.buttonContent}>
-                            <FontAwesome5 name="user" size={24} color="#E60965" style={styles.icon}/>
-                            <Text style={styles.MenuButtonText}>Verified Users</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.MenuButton} onPress={handleDonorVerification}>
-                            <View style={styles.buttonContent}>
-                            <Image
-                                    source={require('../../assets/Donor.png')}
-                                    style={styles.icon}
-                                />                                
-                                <Text style={styles.MenuButtonText}>Donor's Verification</Text>
-                            </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.MenuButton} onPress={handleRequestorVerification}>
-                            <View style={styles.buttonContent}>
-                            <Image
-                                    source={require('../../assets/Requestor.png')}
-                                    style={styles.icon}
-                                />                                
-                                <Text style={styles.MenuButtonText}>Requestor's Verification</Text>
-                            </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.SignOutButton} onPress={handleLogIn}>
-                            <View style={styles.buttonContent}>
-                                <Octicons name="sign-out" size={24} color="#E60965" style={styles.icon} />
-                                <Text style={styles.SignOutButtonText}>Sign out</Text>
-                            </View>
-                    </TouchableOpacity>
-                </View>
-        </SafeAreaView>
-      
-    )
-}
-
-export default AdminMenu;
-
-const styles = StyleSheet.create ({
-    header: {
-       marginTop:30,
-       paddingVertical: 20,
-       backgroundColor: '#E60965',
-       borderBottomLeftRadius: 30,
-       borderBottomRightRadius: 30,
-       elevation: 30,
-       justifyContent: 'center',
-       alignContent: 'center'
- 
-    },
-    headerTitle: {
-       fontFamily: 'Kurale-Regular',
-       fontSize:20,
-       color: 'white',
-       textAlign: 'center',
-       fontWeight: '700'
-
- 
-    },
-    container:{
-        flex: 1,
-        backgroundColor: '#FFF8EB',
-
-    },
-    Buttoncontainer:{
-        marginTop: 25,
-    },
-    MenuButton: {
-        backgroundColor: 'white',
-        marginHorizontal: 60,
-        width: '70%',
-        paddingVertical: 10,
-        borderRadius: 50,
-        borderColor: '#E60965',
-        borderWidth: 1,
-        marginTop: 10,
-
-    },
-    MenuButtonText: {
-        color: '#E60965',
-        fontSize: 20,
-        textAlign: 'center',
-        fontWeight: '700'
-    },
-    buttonContent: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
+    const navigatePage = (Page) => {
+        navigation.navigate(Page); // Navigate to the Login screen
         
-    },
 
-    SignOutButton: {
-        backgroundColor: 'white',
-        marginHorizontal: 60,
-        width: '70%',
-        paddingVertical: 10,
-        borderRadius: 50,
-        borderColor: '#E60965',
-        borderWidth: 1,
-        marginTop: 100,
+    };
+    
+    return (
+        <View style={globalStyles.container}>
+          <StatusBar barStyle="dark-content"  backgroundColor="white" />
+          <View style = {globalHeader.BigHeader}>
+          <View style ={styles.HeaderContainer1}>
+              <View>
+              <Image
+                source={require('../../assets/Kalinga_Logo.png')}
+                style={styles.img}
+             />
+              </View>
+              <View style ={styles.HeaderContainer2}>
+                      <Text style = {globalHeader.BigHeaderTitle}>Kalinga</Text>
+                      <Text style = {globalHeader.SubTitle}>Admin</Text>
+              </View>
+            </View>   
+          </View>
+                
+            
+  
+          <ScrollView style ={styles.AdminContainer}
+          overScrollMode='never' // Disable the over-scroll effect or the Jelly effect when reaching the end of the scroll
+          nestedScrollEnabled={true} // Enable nested scrolling
+          >
+            
+                <View style = {styles.flex_Row}>
+  
+                  <TouchableOpacity style = {styles.smallBackgroundBoxAdmin}  onPress={() => navigatePage("AdminDashboard")}>
+                  <SimpleLineIcons name="graph" size={70} color="#E60965" />
+                      <View style = {styles.LabelCenter}>
+                        <Text style = {styles.Label}>Dashboard</Text>
+                      </View>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity style = {styles.smallBackgroundBoxAdmin} onPress={() => navigatePage("AdminMilkbanks")}>
+                  <FontAwesome6 name="hospital" size={70} color="#E60965" />
+                      <View style = {styles.LabelCenter}>
+                        <Text style = {styles.Label}>Milk Banks</Text>
+                      </View>
+                    </TouchableOpacity>
+                  
+  
+                </View>
+  
+                <View style = {styles.flex_Row}>
+                <TouchableOpacity style = {styles.smallBackgroundBoxAdmin} onPress={() => navigatePage("RequestorUserVerification")}>
+                  <FontAwesome5 name="hands-helping" size={70} color="#E60965"/>
+                    <View style = {styles.LabelCenter}>
+                      <Text style = {styles.Label}>Requestor's Verification</Text>
+             
+                    </View>
+                  </TouchableOpacity>
+  
+                  <TouchableOpacity style = {styles.smallBackgroundBoxAdmin} onPress={() => navigatePage("DonorUserVerification")}>
+                  <FontAwesome5 name="hand-holding-heart" size={70} color="#E60965" />
+                    <View style = {styles.LabelCenter}>
+                      <Text style = {styles.Label}>Donor's Verification</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+  
+                <View style = {styles.flex_Row}>
+                <TouchableOpacity style = {styles.smallBackgroundBoxAdmin} onPress={() => navigatePage("AdminUser")}>
+                  <Ionicons name="calendar" size={70} color="#E60965" />
+                    <View style = {styles.LabelCenter}>
+                      <Text style = {styles.Label}>appointment</Text>
+                    </View>
+                  </TouchableOpacity>
+  
+                  <TouchableOpacity style = {styles.smallBackgroundBoxAdmin} onPress={() => navigatePage("SignOut")}>
+                  <FontAwesome name="sign-out" size={70} color="#E60965"/>
+                    <View style = {styles.LabelCenter}>
+                      <Text style = {styles.Label}>Sign-Out</Text>
+                     
+                    </View>
+                  </TouchableOpacity>
+                </View>
+         
+          </ScrollView>
+        </View>
+          
+        )
+    }
 
-    },
-    SignOutButtonText: {
-        color: '#E60965',
-        fontSize: 20,
-        textAlign: 'center',
-        fontWeight: '700'
-    },
-    icon: {
-        paddingRight: 10, 
-        width: 30,  // Set your desired width
-        height: 30,
-    },
- })
+    const styles = StyleSheet.create({
+        AdminContainer:{
+            backgroundColor: "#FFF8EB",
+            paddingVertical: 50
+        },
+        smallBackgroundBoxAdmin:{
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#FFE5EC',
+            borderRadius: 20,
+            width: 150,
+            height: 160,
+            marginRight: 10,
+            marginHorizontal: 10,
+            marginVertical: 10,
+            paddingBottom: 10,
+            paddingTop: 10,
+        },
+        flex_start:{ 
+          flex: 1,
+          marginTop: "5%",
+          marginBottom: "1%",
+          alignItems: "flex-start",
+          justifyContent: "center",
+          marginLeft: "3.5%",
+    
+        },
+    
+        flex_Row: {
+          flex: 1,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginLeft: "5%",
+          marginRight: "5%",
+          maxWidth: "90%",
+        },
+    
+        title: {
+          fontFamily: "Open-Sans-Bold",
+          fontSize: 20,
+          color: "#E60965"
+        },
+    
+        Label: {
+          textAlign: 'center',
+          fontSize: 17,
+          fontFamily: 'Open-Sans-Bold',
+          color: '#E60965',
+          //backgroundColor: "gray",
+        },
+    
+        subLabel: {
+          textAlign: 'center',
+          fontSize: 13,
+          fontFamily: 'Open-Sans-Regular',
+          color: '#E60965',
+          marginHorizontal: 10, 
+    
+          //backgroundColor: "pink",
+        },
+    
+        LabelCenter: {
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+    
+        ShortLabel:{
+          textAlign: 'center',
+          fontSize: 13,
+          fontFamily: 'Open-Sans-Regular',
+          color: '#E60965',
+          maxWidth: "100%",
+        },
+        HeaderContainer1:
+        {
+          flexDirection: "row"
+        },
+        HeaderContainer2:
+        {
+          flexDirection: "Column"
+        },
+        img:{
+          width: 100,
+          height: 100
+        }
+      
+      
+      })
+      
+    export default AdminMenu;
+    
+    

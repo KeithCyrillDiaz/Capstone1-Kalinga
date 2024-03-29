@@ -7,10 +7,12 @@ import {
   StatusBar,
   StyleSheet,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  Image
 } from 'react-native';
 import { globalStyles } from "../../../../styles_kit/globalStyles.js";
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
+import { useNavigation } from '@react-navigation/native';
 
 
 
@@ -22,7 +24,13 @@ const SetAppointment = () => {
   const SecondParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
 
   const ThridParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
+  
+  const navigation = useNavigation();
 
+  
+  const navigatePage = (Page) => {
+    navigation.navigate(Page); // Navigate to the specified screen
+};
   return (
       <SafeAreaView style = {globalStyles.SafeArea}>
           <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
@@ -40,9 +48,11 @@ const SetAppointment = () => {
                     <Text style = {styles.text}>Make a difference today! Set your donation appointment now and contribute to a meaningful cause. Your generosity can brighten lives and nurture hope.</Text>
                 </View>
 
-                <View style = {styles.img}>
-                  {/*Image*/}
-                  <Text>Img</Text>
+                <View>
+                <Image
+                source={require('../../../../assets/makereq.png')} 
+                style={styles.img}
+                 />
                   </View>
                 <View style = {styles.left}>
                     <Text style = {styles.note}>Note: All fields marked with (*) are required</Text>
@@ -127,7 +137,7 @@ const SetAppointment = () => {
                       *
                     </Text>
                 </View>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigatePage("SetDateTimeLocation")}>
                   <Text style = {styles.button}> Set Appointment </Text>
                 </TouchableOpacity>
                 
@@ -145,7 +155,6 @@ const SetAppointment = () => {
 
 
     img: {
-      backgroundColor: "pink",
       height: 200,
       width: 200,
       marginTop: 40
@@ -182,7 +191,8 @@ const SetAppointment = () => {
       //textAlign: "left",
       fontFamily: "Open-Sans-Light",
       fontSize: 12,
-      marginBottom: -20
+      marginBottom: -20,
+      color: "#E60965",
     },
     
     inputField: {

@@ -37,28 +37,11 @@ const DonorUploadAdmin = () => {
    
     return (
       <View style={globalStyles.container}>
-         <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
-            <View style = {globalHeader.SmallHeader}>
-              <Text style = {globalHeader.SmallHeaderTitle}>Donor Verification</Text>
-            </View>
-
         <ScrollView
         overScrollMode='never' // Disable the over-scroll effect or the Jelly effect when reaching the end of the scroll
         nestedScrollEnabled={true} // Enable nested scrolling
         showsVerticalScrollIndicator={false}
         >
-            
-            <View style = {styles.center}>
-                    <View style = {styles.row}>
-                        <TouchableOpacity>
-                            <Text style = {styles.indicatedTabsTitle}>Screening Form</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <Text style = {styles.tabsTitle}>Medical</Text>
-                            <Text style = {styles.indicatedTabsTitle2}>Requirements</Text>
-                        </TouchableOpacity>
-                    </View> 
-               </View>
 
                <View style ={styles.UploadContainer}>
                     <TouchableOpacity style={styles.Uploadbutton} onPress={() => navigatePage("")}>

@@ -73,6 +73,8 @@ import DonorSendFeedbackFailed from './ProjectComponents/Donor/Profile/DonorSett
 import DonorSendFeedbackSuccess from './ProjectComponents/Donor/Profile/DonorSettngs/DonorSendFeedbackSuccess.js'
 // import SetPasswordDonor from './ProjectComponents/Donor/SetPasswordDonor.js';
 import SetPasswordDonor from './ProjectComponents/Guest/Profile/ApplyDonor/SetPasswordDonor.js';
+import SetDateTimeLocation from './ProjectComponents/Donor/Home/MakeDonation/SetDateTimeLocation.js'
+import AppointmentConfirmation from './ProjectComponents/Donor/Home/MakeDonation/AppointmentConfirmation.js'
 
 {/* Requestor */}
 import RequestorForum from './ProjectComponents/Requestor/Home/Forum/RequestorForumPage.js'
@@ -118,6 +120,9 @@ import MedicalHistory from './screens/Admin/ScreeningForm/Donor/MedicalHistory.j
 import AdminMedicalHistory2 from './screens/Admin/ScreeningForm/Donor/AdminMedicalHistory2.js'
 import DonorInitialScreeningFormPage1 from './screens/Admin/ScreeningForm/Donor/DonorInitialScreeningFormPage1.js'
 import DonorInitialScreeningFormPage2 from './screens/Admin/ScreeningForm/Donor/DonorInitialScreeningFormPage2.js'
+import DonorInitialScreeningFormPage3 from './screens/Admin/ScreeningForm/Donor/DonorInitialScreeningFormPage3.js'
+import DonorInitialScreeningFormPage4 from './screens/Admin/ScreeningForm/Donor/DonorInitialScreeningFormPage4.js'
+
 import LoginAdmin from './screens/Admin/LoginAdmin';
 import AdminMenu from './screens/Admin/AdminMenu';
 //import Header from './screens/Admin/header';
@@ -127,7 +132,9 @@ import AdminMilkbanks from './screens/Admin/AdminMilkbanks';
 import DonorUserVerification from './screens/Admin/ScreeningForm/Donor/DonorUserVerification.js'; 
 import DonorUploadAdmin from './screens/Admin/ScreeningForm/Donor/DonorUploadAdmin.js';   //<Stack.Screen name="RequestorVerification" component={RequestorVerification} />
 //import RequestorVerification from './screens/Admin/RequestorVerification'; 
-        
+import DonorAppointmentConfirmation from './screens/Admin/ScreeningForm/Donor/DonorAppointmentConfirmation.js';
+import RequestorRequestConfirmation from './screens/Admin/ScreeningForm/Requestor/RequestorRequestConfirmation.js'
+import DonorForm from './screens/Admin/ScreeningForm/Donor//DonorForm.js'
 
 import RequestorInitialScreeningFormPage1 from './screens/Admin/ScreeningForm/Requestor/RequestorInitialScreeningFormPage1.js'
 import RequestorUserVerification from './screens/Admin/ScreeningForm/Requestor/RequestorUserVerification.js';   //<Stack.Screen name="RequestorVerification" component={RequestorVerification} />
@@ -233,6 +240,10 @@ export default function App() {
              <Stack.Screen name="DonorSendFeedback" component={DonorSendFeedback} />
              <Stack.Screen name="DonorSendFeedbackFailed" component={DonorSendFeedbackFailed} />
              <Stack.Screen name="DonorSendFeedbackSuccess" component={DonorSendFeedbackSuccess} />
+             <Stack.Screen name="SetDateTimeLocation" component={SetDateTimeLocation} />
+             <Stack.Screen name="AppointmentConfirmation" component={AppointmentConfirmation} />
+
+
 
 
             {/*Requestor*/}
@@ -280,8 +291,17 @@ export default function App() {
 
              <Stack.Screen name="DonorInitialScreeningFormPage1" component={DonorInitialScreeningFormPage1} />
              <Stack.Screen name="DonorInitialScreeningFormPage2" component={DonorInitialScreeningFormPage2} />
+             <Stack.Screen name="DonorInitialScreeningFormPage3" component={DonorInitialScreeningFormPage3} />
+             <Stack.Screen name="DonorInitialScreeningFormPage4" component={DonorInitialScreeningFormPage4} />
+
+
              <Stack.Screen name="AdminMedicalHistory2" component={AdminMedicalHistory2} />
              <Stack.Screen name="DonorUploadAdmin" component={DonorUploadAdmin} />
+             <Stack.Screen name="DonorAppointmentConfirmation" component={DonorAppointmentConfirmation} />
+             <Stack.Screen name="RequestorRequestConfirmation" component={RequestorRequestConfirmation} />
+             <Stack.Screen name="DonorForm" component={DonorForm} />
+
+
 
 
 

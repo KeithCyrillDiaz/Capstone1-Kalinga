@@ -5,23 +5,10 @@ import { Octicons } from '@expo/vector-icons';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { Feather } from '@expo/vector-icons';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
+import DonorInitialScreeningFormPage2 from './DonorInitialScreeningFormPage2.js'
+
 
 const Tab = createMaterialTopTabNavigator();
-
-
-
-const SearchBar = () => {
-    return (
-        <View style={styles.searchContainer}>
-            <Feather name="search" size={24} color="black" style={styles.searchIcon} />
-            <TextInput
-                style={styles.searchInput}
-                placeholder="Search Donors"
-                placeholderTextColor="#777"
-            />
-        </View>
-    );
-};
 
 
 const FirstScreen = ({  }) => {
@@ -30,101 +17,8 @@ const FirstScreen = ({  }) => {
     const navigatePage = (Page) => {
         navigation.navigate(Page); // Navigate to the Login screen
     }
-    return (
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-            <View style={styles.tabContent}>
-            <Text style = {styles.title}>Initial Screening Form</Text>
+   
 
-<View style = {globalStyles.flex_start}>
-  <Text style = {globalStyles.titleParagraph}>Personal Information</Text>
-</View>
-<View style = {styles.container}>
-      <TextInput
-          style={styles.BiginputField}
-          placeholder="Full Name"
-          placeholderTextColor="#E60965"
-      />
-      <View style = {globalStyles.flex_Row}>
-      <TextInput
-          style={styles.SmallinputField}
-          placeholder="Age"
-          placeholderTextColor="#E60965"
-      />
-      <TextInput
-          style={styles.SmallinputField}
-          placeholder="Birth Date"
-          placeholderTextColor="#E60965"
-      />
-      </View>
-      <TextInput
-          style={styles.BiginputField}
-          placeholder="Email Address"
-          placeholderTextColor="#E60965"
-      />
-       <TextInput
-          style={styles.BiginputField}
-          placeholder="Contact Number"
-          placeholderTextColor="#E60965"
-      />
-       <TextInput
-          style={styles.BiginputField}
-          placeholder="Home Address"
-          placeholderTextColor="#E60965"
-      /> 
-      
-</View>
-
-<View style = {globalStyles.flex_start}>
-  <Text style = {globalStyles.titleParagraph}>Infant Information</Text>
-</View>
-<View style = {styles.container}>
-      <TextInput
-          style={styles.BiginputField}
-          placeholder="Name of Child"
-          placeholderTextColor="#E60965"
-      />
-      <View style = {globalStyles.flex_Row}>
-      <TextInput
-          style={styles.SmallinputField}
-          placeholder="Age"
-          placeholderTextColor="#E60965"
-      />
-      <TextInput
-          style={styles.SmallinputField}
-          placeholder="Sex"
-          placeholderTextColor="#E60965"
-      />
-      </View>
-
-      <View style = {globalStyles.flex_Row}>
-      <TextInput
-          style={styles.SmallinputField}
-          placeholder="Birth Weight"
-          placeholderTextColor="#E60965"
-      />
-      <TextInput
-          style={styles.SmallinputField}
-          placeholder="Birthdate"
-          placeholderTextColor="#E60965"
-      />
-      </View>
-      <TextInput
-          style={styles.BiginputField}
-          placeholder="Age of Gestation"
-          placeholderTextColor="#E60965"
-      />
-       <TextInput
-          style={styles.BiginputField}
-          placeholder="Medical Condition"
-          placeholderTextColor="#E60965"
-      />
-      
-</View>
-
-
-            </View>
-        </ScrollView>
-    );
 };
 
 const SecondScreen = () => {
@@ -200,12 +94,12 @@ const SecondScreen = () => {
 
 
               <View style={styles.AdminButton}>
-                    <TouchableOpacity onPress={() => navigatePage("")}>
+                    <TouchableOpacity onPress={() => navigatePage("DonorInitialScreeningFormPage2")}>
                         <View style={styles.ApprovebuttonContainer}>
                             <Text style={styles.label}>Approve</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigatePage("")}>
+                    <TouchableOpacity onPress={() => navigatePage("DonorInitialScreeningFormPage2")}>
                         <View style={styles.DeclinebuttonContainer}>
                             <Text style={styles.label}>Decline</Text>
                         </View>
@@ -216,15 +110,14 @@ const SecondScreen = () => {
     );
 };
 
-const RequestorInitialScreeningFormPage1 = () => {
+const DonorInitialScreeningFormPage1 = () => {
     const navigation = useNavigation();
 
     
-
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.headerTitle}>Requestor Verification</Text>
+                <Text style={styles.headerTitle}>Donor Verification</Text>
             </View>
 
             <Tab.Navigator
@@ -251,10 +144,9 @@ const RequestorInitialScreeningFormPage1 = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent:"center",
+        justifyContent:"center"
     },
     Medicalcontainer:{
-        flex: 1,
         backgroundColor: '#FFF8EB',
         justifyContent:"center"
     },
@@ -285,6 +177,33 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#FFF8EB',
+    },
+    searchContainer: {
+        backgroundColor: '#FFF8EB',
+        width: '100%',
+        paddingVertical: 5,
+        marginBottom: 10,
+        alignItems: 'center',
+        justifyContent: 'center', // Center the content horizontally
+        borderRadius: 10,
+        flexDirection: 'row',
+        paddingHorizontal: 10,
+    },
+    searchIcon: {
+        position: 'absolute',
+        left: 15,
+        top: '60%',
+        transform: [{ translateY: -12 }],
+        color: '#E60965'
+    },
+    searchInput: {
+        flex: 1,
+        paddingLeft: 35, // Adjust this value to provide space for the icon
+        paddingVertical: 2,
+        fontSize: 16,
+        borderWidth: 1,
+        borderColor: '#E60965',
+        borderRadius: 10,
     },
     DonorContainer: {
         flexDirection: 'row',
@@ -355,7 +274,7 @@ const styles = StyleSheet.create({
         borderColor: "#E60965",
         paddingVertical: 5,
         paddingHorizontal: 15,
-        width: 300,
+        width: 350,
         marginVertical: 10,
         marginHorizontal:50,
         color: "#E60965",
@@ -368,7 +287,7 @@ const styles = StyleSheet.create({
         borderColor: "#E60965",
         paddingVertical: 5,
         paddingHorizontal: 15,
-        width: 300,
+        width: 350,
         marginVertical: 10,
         marginHorizontal:30,
         color: "#E60965",
@@ -380,10 +299,10 @@ const styles = StyleSheet.create({
         borderColor: "#E60965",
         paddingVertical: 5,
         paddingHorizontal: 20,
-        width: 130,
+        width: 160,
         marginVertical: 10,
         justifyContent: "center",
-        marginStart: 40,
+        marginStart: 35,
         color: "#E60965",
         backgroundColor: "white"
 
@@ -391,7 +310,7 @@ const styles = StyleSheet.create({
     title:{
         color: "#E60965",
         fontWeight: "bold",
-        marginVertical: 20,
+        marginVertical: 15,
         fontSize: 20
 
     },
@@ -400,8 +319,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 37,
         borderRadius: 20,
         paddingVertical: 5,
-        marginHorizontal: 10,
-        marginBottom: 15
+        marginHorizontal: 10
 
         
     },
@@ -410,9 +328,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 37,
         borderRadius: 20,
         paddingVertical: 5,
-        marginHorizontal: 10,
-        marginBottom: 15
-
+        marginHorizontal: 10
 
     },
     AdminButton:{
@@ -428,4 +344,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default RequestorInitialScreeningFormPage1;
+export default DonorInitialScreeningFormPage1;

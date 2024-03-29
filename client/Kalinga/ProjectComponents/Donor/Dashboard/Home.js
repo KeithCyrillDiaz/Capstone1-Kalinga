@@ -16,14 +16,13 @@ import { Feather } from '@expo/vector-icons';
 
 const DonorHome = () => {
 
-    const FirstParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
+  const FirstParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
 
-    const SecondParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
+  const SecondParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
 
-    const ThridParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
+  const ThridParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
 
-    const UserName = "Rogine"
-
+  const UserName = "Rogine"
     const navigation = useNavigation();
     const handleHomePress = () => {
       console.log("Home button pressed");
@@ -89,7 +88,7 @@ const DonorHome = () => {
               </View>
 
               <View style = {styles.flex_Row}>
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("Make a Donation")}>
+                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("Set Appointment Form")}>
                 <Ionicons name="calendar" size={70} color="#E60965" />
                   <View style = {styles.LabelCenter}>
                     <Text style = {styles.Label}>Make a Donation</Text>

@@ -1,16 +1,18 @@
 //Guest Home
 import React, { useState } from 'react';
-import { ScrollView,Text, View, StatusBar, StyleSheet, TouchableOpacity} from 'react-native';
+import { ScrollView,Text, View, StatusBar, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import { globalStyles } from "../../../../styles_kit/globalStyles.js";
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
 
 
 const DonorUploadMedicalRequirements = () => {
 
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const navigation = useNavigation();
 
@@ -19,10 +21,36 @@ const DonorUploadMedicalRequirements = () => {
     navigation.navigate(Page);
   };
 
+   
+  const handleImageUpload = async () => {
+    try {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+            Alert.alert('Permission Denied', 'Sorry, we need camera roll permissions to make this work!');
+            return;
+        }
+
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.cancelled) {
+            setSelectedImage(result.uri);
+        }
+    } catch (error) {
+        Alert.alert('Error', 'Failed to pick an image.');
+    }
+};
+
+
   const [isChecked, setIsChecked] = useState(false);
 
   const toggleCheckbox = () => {
     setIsChecked(!isChecked);
+  
 };
 
 
@@ -51,7 +79,7 @@ const DonorUploadMedicalRequirements = () => {
                 </Text>
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
-                    <TouchableOpacity style={styles.iconContainer}>
+                    <TouchableOpacity onPress={handleImageUpload}style={styles.iconContainer}>
                       <AntDesign name="picture" size={27} color="#E60965" />
                       <Text style={styles.verticalLine}>|</Text>
                       <AntDesign name="file1" size={24} color="#E60965" />
@@ -65,7 +93,7 @@ const DonorUploadMedicalRequirements = () => {
                 </Text>
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
-                    <TouchableOpacity style={styles.iconContainer}>
+                    <TouchableOpacity onPress={handleImageUpload}style={styles.iconContainer}>
                       <AntDesign name="picture" size={27} color="#E60965" />
                       <Text style={styles.verticalLine}>|</Text>
                       <AntDesign name="file1" size={24} color="#E60965" />
@@ -79,7 +107,7 @@ const DonorUploadMedicalRequirements = () => {
                 </Text>
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
-                    <TouchableOpacity style={styles.iconContainer}>
+                    <TouchableOpacity onPress={handleImageUpload}style={styles.iconContainer}>
                       <AntDesign name="picture" size={27} color="#E60965" />
                       <Text style={styles.verticalLine}>|</Text>
                       <AntDesign name="file1" size={24} color="#E60965" />
@@ -93,7 +121,7 @@ const DonorUploadMedicalRequirements = () => {
                 </Text>
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
-                    <TouchableOpacity style={styles.iconContainer}>
+                    <TouchableOpacity onPress={handleImageUpload} style={styles.iconContainer}>
                       <AntDesign name="picture" size={27} color="#E60965" />
                       <Text style={styles.verticalLine}>|</Text>
                       <AntDesign name="file1" size={24} color="#E60965" />
@@ -107,13 +135,17 @@ const DonorUploadMedicalRequirements = () => {
                 </Text>
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
-                    <TouchableOpacity style={styles.iconContainer}>
+                    <TouchableOpacity onPress={handleImageUpload} style={styles.iconContainer}>
                       <AntDesign name="picture" size={27} color="#E60965" />
                       <Text style={styles.verticalLine}>|</Text>
                       <AntDesign name="file1" size={24} color="#E60965" />
                     </TouchableOpacity>
                 </View>
             </View>
+            {selectedImage && (
+                        <Image source={{ uri: selectedImage }} style={styles.uploadedImage} />
+                    )}
+
 
       
 
@@ -196,6 +228,7 @@ const DonorUploadMedicalRequirements = () => {
 
 
     attachmentContainer: {
+      backgroundColor: "white",
         flexDirection: "row",
         alignItems: "center",
         justifyContent: 'space-between',
