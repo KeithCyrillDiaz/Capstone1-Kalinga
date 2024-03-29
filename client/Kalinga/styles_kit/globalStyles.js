@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 export const globalStyles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: 'white',
+      backgroundColor: '#FFF8EB',
       alignItems: 'center',
       justifyContent: 'center',
       width: '100%',
