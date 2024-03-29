@@ -10,15 +10,20 @@ import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 
 
-const DonorUploadMedicalRequirements = () => {
+const DonorUploadMedicalRequirements = ({route}) => {
 
-  const [selectedImage, setSelectedImage] = useState(null);
+  const { screeningFormData } = route.params; // Access formData from route.params
+  console.log("Retrieve:", screeningFormData)
+
+  const [formData, setFormData] = useState(screeningFormData);
+const [selectedImage, setSelectedImage] = useState(null);
 
   const navigation = useNavigation();
 
-  const navigatePage = (Page) => {
+  const navigatePage = (Page, data) => {
     // Navigate to the next screen by route name
-    navigation.navigate(Page);
+    console.log(data)
+    navigation.navigate(Page, data);
   };
 
    
@@ -156,7 +161,7 @@ const DonorUploadMedicalRequirements = () => {
             </TouchableOpacity>
 
             {/*Approved.js*/}
-            <TouchableOpacity style={[styles.button, { opacity: isChecked ? 1 : 0.5 }]} disabled={!isChecked} onPress={() => navigatePage("DonorApproved")}> 
+            <TouchableOpacity style={[styles.button, { opacity: isChecked ? 1 : 0.5 }]} disabled={!isChecked} onPress={() => navigatePage("DonorApproved", { screeningFormData: formData })}> 
                         <Text style={styles.buttonTitle}>Submit</Text>
             </TouchableOpacity>
 

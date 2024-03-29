@@ -26,21 +26,36 @@ const AdminMenu = () => {
     
     return (
         <View style={globalStyles.container}>
-          <StatusBar barStyle="dark-content"  backgroundColor="white" />
+          
+            <StatusBar barStyle="dark-content"  backgroundColor="white" />
+              <View style = {styles.header}>
+                      <View style={styles.row}>
+                        <Image
+                            source={require('../../assets/Kalinga_Logo.png')}
+                            style={styles.img}
+                        />
+                        <View>  
+                            <Text style = {styles.headerTitle}>Good Day!</Text>
+                            <Text style = {styles.SubTitle}>Welcome to Kalinga Admin!</Text>
+                        </View>   
+                  </View>
+              </View>
+            
+          {/* <StatusBar barStyle="dark-content"  backgroundColor="white" />
           <View style = {globalHeader.BigHeader}>
-          <View style ={styles.HeaderContainer1}>
-              <View>
-              <Image
-                source={require('../../assets/Kalinga_Logo.png')}
-                style={styles.img}
-             />
-              </View>
-              <View style ={styles.HeaderContainer2}>
-                      <Text style = {globalHeader.BigHeaderTitle}>Kalinga</Text>
-                      <Text style = {globalHeader.SubTitle}>Admin</Text>
-              </View>
-            </View>   
-          </View>
+              <View style ={styles.HeaderContainer1}>
+                <View>
+                <Image
+                  source={require('../../assets/Kalinga_Logo.png')}
+                  style={styles.img}
+              />
+                </View>
+                <View style ={styles.HeaderContainer2}>
+                        <Text style = {globalHeader.BigHeaderTitle}>Kalinga</Text>
+                        <Text style = {globalHeader.SubTitle}>Admin</Text>
+                </View>
+              </View>   
+          </View> */}
                 
             
   
@@ -109,6 +124,34 @@ const AdminMenu = () => {
     }
 
     const styles = StyleSheet.create({
+
+      header: {
+        backgroundColor: '#E60965', // Set the background color of the header
+        borderRadius: 34,
+        paddingTop: "12%",
+        paddingBottom: "5%",
+        marginTop: "-10%",
+        width: '100%', // the size will depend on the screen, this is better so it will look the same on all phones
+        justifyContent: 'flex-end',
+        alignItems: 'flex-start',
+      },
+
+      headerTitle: {
+        color: 'white',
+        fontSize: 30,
+        marginLeft: '7%',
+        fontFamily: 'Kurale',
+      },
+
+      SubTitle: {
+        color: 'white',
+        fontSize: 17,
+        marginLeft: '7%',
+        marginRight: '10%',
+        fontFamily: 'Kurale',
+      },
+
+
         AdminContainer:{
             backgroundColor: "#FFF8EB",
             paddingVertical: 50
@@ -134,6 +177,12 @@ const AdminMenu = () => {
           justifyContent: "center",
           marginLeft: "3.5%",
     
+        },
+
+        row: {
+          flexDirection: "row",
+          alignItems: "center"
+
         },
     
         flex_Row: {
@@ -193,7 +242,9 @@ const AdminMenu = () => {
         },
         img:{
           width: 100,
-          height: 100
+          height: 100,
+          flexShrink: 0,
+          marginRight: "-3%"
         }
       
       
