@@ -2,14 +2,13 @@
 import React from 'react';
 import { ScrollView,Text, View, StatusBar, StyleSheet, TouchableOpacity} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { globalHeader } from '../../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../../styles_kit/globalStyles.js';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
+
 
 
 
@@ -21,7 +20,7 @@ export default function RequestorHome() {
 
     const ThridParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
 
-    const UserName = "Rogine"
+    const UserName = "Beverly"
 
     const navigation = useNavigation();
     
@@ -42,13 +41,14 @@ export default function RequestorHome() {
         <ScrollView
         overScrollMode='never' // Disable the over-scroll effect or the Jelly effect when reaching the end of the scroll
         nestedScrollEnabled={true} // Enable nested scrolling
+        showsVerticalScrollIndicator={false}
         >
               <View style = {styles.flex_start}>
                 <Text style = {styles.title}>Requestor's Dashboard</Text>
               </View>
               <View style = {styles.flex_Row}>
-
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox}>
+              
+                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("RequestorTabsExploreAndMilkBank")}>
                     <MaterialIcons name="location-pin" size={70} color="#E60965" />
                     <View style = {styles.LabelCenter}>
                       <Text style = {styles.Label}>Milk Bank Locator</Text>
@@ -76,7 +76,7 @@ export default function RequestorHome() {
                   </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("RequestorForumPage")}>
+                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("RequestorForum")}>
                 <MaterialIcons name="forum" size={70} color="#E60965" />
                   <View style = {styles.LabelCenter}>
                     <Text style = {styles.Label}>Forum</Text>

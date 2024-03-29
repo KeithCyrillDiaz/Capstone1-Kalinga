@@ -41,7 +41,11 @@ const ApplyAs_Donor = () => {
       
       <View style={styles.rectangle}>
         <Text style={styles.dataprivacyactText}>Data Privacy Act</Text>
-        <ScrollView style={styles.scrollContainer}>
+        <ScrollView style={styles.scrollContainer}
+          showsVerticalScrollIndicator={false}
+          overScrollMode='never'
+          nestedScrollEnabled={true}
+        >
           <Text style={styles.paragraph}>
           <Text style={styles.paragraph}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse interdum consectetur libero id faucibus nisl tincidunt eget. Sit amet nisl purus in mollis nunc sed id semper. Nisi quis eleifend quam adipiscing vitae proin sagittis. Mi bibendum neque egestas congue quisque egestas diam in. Diam sollicitudin tempor id eu. Vitae tempus quam pellentesque nec. Auctor augue mauris augue neque. Diam quis enim lobortis scelerisque fermentum dui faucibus in. Scelerisque purus semper eget duis. Orci dapibus ultrices in iaculis nunc sed augue lacus viverra. Sit amet nulla facilisi morbi tempus iaculis urna. Congue quisque egestas diam in arcu cursus euismod. 

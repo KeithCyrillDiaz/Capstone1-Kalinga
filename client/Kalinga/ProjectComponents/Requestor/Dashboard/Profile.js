@@ -3,19 +3,24 @@ import React from 'react';
 import { ScrollView,Text, View, StatusBar, StyleSheet, SafeAreaView, TouchableOpacity} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { globalHeader } from '../../../styles_kit/globalHeader.js';
-import { globalStyles } from '../../../styles_kit/globalStyles.js';
 
 import { FontAwesome5 } from '@expo/vector-icons';
-import { FontAwesome6 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { Entypo } from "@expo/vector-icons";
 
 
+const RequestorProfile = () => {
 
+  const navigation = useNavigation();
+    
+const navigatePage = (Page) => {
+    navigation.navigate(Page); // Navigate to the Login screen
+    
 
-const DonorProfile = () => {
-
+};
     const FirstParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
 
     const SecondParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
@@ -55,7 +60,7 @@ const DonorProfile = () => {
 
                   <View style = {styles.box}>
                     
-                      <TouchableOpacity>
+                      <TouchableOpacity onPress={() => navigatePage("RequestorSavedArticles")} >
                         <View style = {styles.rowBox}>
                           <View style = {styles.rowMenu}>
                             <FontAwesome5 style = {styles.iconBookmark} name="bookmark" size={30} color="#E60965" />
@@ -64,13 +69,12 @@ const DonorProfile = () => {
                             </Text>
                           </View>
                           
-                          <FontAwesome6 name="greater-than" size={30} color="#E60965" />
+                          <Entypo name="chevron-right" size={30} color="#E60965" />
                         </View>
                       </TouchableOpacity>
                        
                  
                   <TouchableOpacity>
-
                       <View style = {styles.rowBox}>
                           <View style = {styles.rowMenu}>
                             <MaterialCommunityIcons style = {styles.iconBabyBottle} name="baby-bottle-outline" size={38} color="#E60965"/>
@@ -79,12 +83,12 @@ const DonorProfile = () => {
                             </Text>
                           </View>
                        
-                        <FontAwesome6 name="greater-than" size={30} color="#E60965" />
+                          <Entypo name="chevron-right" size={30} color="#E60965" />
                       </View>
 
                     </TouchableOpacity>
                     
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigatePage("RequestorSettingScreen")}>
                       <View style = {styles.rowBox}>
                             <View style = {styles.rowMenu}>
                               <Octicons style = {styles.icon} name="gear" size={30} color="#E60965" />
@@ -93,7 +97,7 @@ const DonorProfile = () => {
                               </Text>
                             </View>
                           
-                          <FontAwesome6 name="greater-than" size={30} color="#E60965" />
+                            <Entypo name="chevron-right" size={30} color="#E60965" />
                       </View>
                     </TouchableOpacity>
                 </View>
@@ -138,17 +142,22 @@ const DonorProfile = () => {
 
     rowMenu: {
       flexDirection: "row",
+      alignItems: "center",
+      height: 50,
+      justifyContent: "space-between",
+      marginHorizontal: "15%"
     },
 
     rowBox: {
       flexDirection: "row",
-      //backgroundColor: "gray",
+      // backgroundColor: "gray",
       alignItems: "center",
       height: 50,
       borderBottomWidth: .5,
       borderColor: "#E60965",
       marginBottom: 10,
-      justifyContent: "space-between"
+      justifyContent: "space-between",
+      paddingRight: "10%"
       
     },
 
@@ -206,5 +215,5 @@ const DonorProfile = () => {
    
   })
   
-export default DonorProfile;
+export default RequestorProfile;
 

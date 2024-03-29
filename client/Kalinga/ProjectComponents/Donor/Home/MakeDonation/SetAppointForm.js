@@ -18,14 +18,9 @@ import { useNavigation } from '@react-navigation/native';
 
 const SetAppointment = () => {
 
-
-  const FirstParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse'
-
-  const SecondParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
-
-  const ThridParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
-  
   const navigation = useNavigation();
+    
+
 
   
   const navigatePage = (Page) => {
@@ -41,7 +36,7 @@ const SetAppointment = () => {
            style = {globalStyles.ScrollView}
            overScrollMode='never' // Disable the over-scroll effect or the Jelly effect when reaching the end of the scroll
            nestedScrollEnabled={true} // Enable nested scrolling
-           
+           showsVerticalScrollIndicator={false}
            >
             <View style = {globalStyles.container}>
                 <View style = {styles.center}>
@@ -128,7 +123,7 @@ const SetAppointment = () => {
                   <View style = {styles.spaceBetween}>
                     <TextInput 
                               style = {styles.placeholderDesign}
-                              placeholder="Email Amount of milk to be donated (mL)"
+                              placeholder="Amount of milk to be donated (mL)"
                               placeholderTextColor="#E60965"
                           />
                   </View>
@@ -156,8 +151,8 @@ const SetAppointment = () => {
 
     img: {
       height: 200,
-      width: 200,
-      marginTop: 40
+      margin: 20,
+      marginBottom: 3,
     },
 
     center: {
@@ -238,8 +233,8 @@ const SetAppointment = () => {
       backgroundColor: "#E60965",
       marginTop: 20,
       color: "white",
-      padding: 20,
-      width: 200,
+      paddingVertical: 7,
+      paddingHorizontal: 30,
       textAlign: "center",
       borderRadius: 30,
       fontFamily: "Open-Sans-SemiBold",

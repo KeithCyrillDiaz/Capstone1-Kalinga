@@ -173,6 +173,7 @@ const DonorMedicalHistory = () => {
       borderRadius: 10,
       borderColor: '#E60965',
       height: 500,
+      backgroundColor: "#FFFFFF"
     },
 
     space: {

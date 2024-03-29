@@ -4,6 +4,7 @@ import * as Font from 'expo-font';
 import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
+
 //InitialScreenPages
 import SplashScreen from './ProjectComponents/InitialScreenPages/splashscreen';
 import Onboarding from './ProjectComponents/InitialScreenPages/Onboarding';
@@ -52,12 +53,10 @@ import OngoingDonations from './ProjectComponents/Donor/Home/MyDonations/Ongoing
 import DonationsHome from './ProjectComponents/Donor/Home/MyDonations/Donation_Home.js'
 import DonorSavedArticles from './ProjectComponents/Donor/Profile/SaveArticles/DonorSavedArticles.js'
 import DonorFavoriteArticles from './ProjectComponents/Donor/Profile/SaveArticles/DonorFavoriteArticles.js'
-import EarliestDate from './ProjectComponents/Donor/Home/MakeDonation/EarliestDate.js'
-import NearestDate from './ProjectComponents/Donor/Home/MakeDonation/NearestMilkBank.js'
-import SetAppointmentForm from './ProjectComponents/Donor/Home/MakeDonation/SetAppointForm.js'
+import SetAnAppointment from './ProjectComponents/Donor/Home/MakeDonation/SetAppointForm.js'
 import DonorHome from './ProjectComponents/Donor/Dashboard/Home.js'
 import DonorNotifications from './ProjectComponents/Donor/Dashboard/Notifications.js'
-import DonorProfile from './ProjectComponents/Donor/Dashboard/Profile.js'
+import DonorProfile from './ProjectComponents/Donor/Dashboard/DonorProfile.js'
 import DonorSettingScreen from './ProjectComponents/Donor/Profile/DonorSettngs/DonorSettingScreen.js'
 import DonorAboutUs from './ProjectComponents/Donor/Profile/DonorSettngs/DonorAboutUs.js'
 import DonorChangePassword from './ProjectComponents/Donor/Profile/DonorSettngs/DonorChangePassword.js'
@@ -100,10 +99,12 @@ import RequestorSavedArticles from './ProjectComponents/Requestor/Profile/SaveAr
 import RequestorFavoriteArticles from './ProjectComponents/Requestor/Profile/SaveArticles/RequestorFavoriteArticles.js'
 import ApprovedMessageRequest from './ProjectComponents/Requestor/Home/MyRequest/ApprovedMessageRequest.js';
 import ApprovedTabRequest from './ProjectComponents/Requestor/Home/MyRequest/ApprovedTabRequest.js';
+import RequestorProfile from './ProjectComponents/Requestor/Dashboard/Profile.js'
+
 
 
 //Requestor DUPLICATE THE DONOR PAGES
-import RequestorProfile from './ProjectComponents/Requestor/Profile/RequestorProfile.js'
+// import RequestorProfile from './ProjectComponents/Requestor/Profile/RequestorProfile.js'
 import DataPrivacyNiKit from './ProjectComponents/Guest/Profile/ApplyRequestor/DataPrivacy.js'
 
 
@@ -112,8 +113,9 @@ import DonorTabs from './routes/MainTabs.js'
 import GuestTabs from './routes/MainTabsGuest.js'
 import RequestorTabs from './routes/MainTabsRequestor.js'
 import SetPasswordRequestor from './ProjectComponents/Requestor/SetPasswordRequestor.js';
-
-
+import GuestTabsExploreAndMilkBank from './routes/GuestTabsExploreAndMilkBank.js'
+import RequestorTabsExploreAndMilkBank from './routes/RequestorTabsExploreAndMilkBank.js'
+import DonorTabsExploreAndMilkBank from './routes/DonorTabsExploreAndMilkBank.js'
 
 //Admin
 import MedicalHistory from './screens/Admin/ScreeningForm/Donor/MedicalHistory.js'
@@ -151,7 +153,10 @@ const getFonts = () => Font.loadAsync({
     "OpenSans_Condensed-Bold": require("./assets/Fonts/OpenSans_Condensed-Bold.ttf"),
     "OpenSans_Condensed-Regular": require("./assets/Fonts/OpenSans_Condensed-Regular.ttf"),
     "OpenSans-Regular": require("./assets/Fonts/OpenSans-Regular.ttf"),
+    "Open-Sans-SemiBold": require("./assets/Fonts/OpenSans-SemiBold.ttf"),
+    "Open-Sans-Light": require("./assets/Fonts/OpenSans-Light.ttf"),
     "Inter-Regular": require("./assets/Fonts/Inter-Regular.ttf"),
+
   });
 
 
@@ -181,6 +186,11 @@ export default function App() {
             <Stack.Screen name="LogIn" component={LogIn} />
   
 
+            {/*Routes*/}
+            <Stack.Screen name="GuestTabsExploreAndMilkBank" component={GuestTabsExploreAndMilkBank} />
+            <Stack.Screen name="RequestorTabsExploreAndMilkBank" component={RequestorTabsExploreAndMilkBank} />
+            <Stack.Screen name="DonorTabsExploreAndMilkBank" component={RequestorTabsExploreAndMilkBank} />
+
             <Stack.Screen name="SendCode" component={SendCode} />
             <Stack.Screen name="MobileNumber" component={MobileNumber} />
             <Stack.Screen name="MobileNumberExpired" component={MobileNumberExpired} />
@@ -200,7 +210,7 @@ export default function App() {
              <Stack.Screen name="Guest Explore" component={GuestExplore} />
              <Stack.Screen name="Guest Educational Contents" component={GuestEducContents} />
              <Stack.Screen name="Guest Educational Library" component={GuestEducLibrary} />
-             <Stack.Screen name="Guest Tabs" component={GuestTabs} />
+             <Stack.Screen name="GuestTabs" component={GuestTabs} />
              <Stack.Screen name="Screening Form" component={ScreeningForm} />
              <Stack.Screen name="ApplyAsDonorStack" component={ApplyAsDonorStack} />
 
@@ -218,12 +228,10 @@ export default function App() {
              <Stack.Screen name="Donations Home" component={DonationsHome} />
              <Stack.Screen name="DonorSavedArticles" component={DonorSavedArticles} />
              <Stack.Screen name="DonorFavoriteArticles" component={DonorFavoriteArticles} />
-             <Stack.Screen name="Nearest Date" component={NearestDate} />
-             <Stack.Screen name="Earliest Date" component={EarliestDate} />
-             <Stack.Screen name="Set Appointment Form" component={SetAppointmentForm} />
+             <Stack.Screen name="SetAnAppointment" component={SetAnAppointment} />
              <Stack.Screen name="Donor Home" component={DonorHome} />
              <Stack.Screen name="Donor Notifications" component={DonorNotifications} />
-             <Stack.Screen name="Donor Profile" component={DonorProfile} />
+             <Stack.Screen name="DonorProfile" component={DonorProfile} />
              <Stack.Screen name="MedicalHistory" component={MedicalHistory} />
              <Stack.Screen name="SetPasswordDonor" component={SetPasswordDonor} />
              <Stack.Screen name="Donor Tabs" component={DonorTabs} />
@@ -253,7 +261,7 @@ export default function App() {
              <Stack.Screen name="RequestorEducLibrary" component={RequestorEducLibrary} />
              <Stack.Screen name="MakeRequest" component={MakeRequest} />
              <Stack.Screen name="MakeRequest2" component={MakeRequest2} />
-             <Stack.Screen name="Request Profile" component={RequestorProfile} />
+             <Stack.Screen name="RequestorProfile" component={RequestorProfile} />
              <Stack.Screen name="Requestor Tabs" component={RequestorTabs} />
              <Stack.Screen name="SetPasswordRequestor" component={SetPasswordRequestor} />
              <Stack.Screen name="Data Privacy Requestor" component={DataPrivacyNiKit} />
@@ -275,6 +283,8 @@ export default function App() {
              <Stack.Screen name="RequestorFavoriteArticles" component={RequestorFavoriteArticles} />
              <Stack.Screen name="ApprovedMessageRequest" component={ApprovedMessageRequest} />
              <Stack.Screen name="ApprovedTabRequest" component={ApprovedTabRequest} />
+            
+         
 
 
 

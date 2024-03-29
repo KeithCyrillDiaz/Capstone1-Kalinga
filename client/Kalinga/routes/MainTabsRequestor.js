@@ -7,20 +7,22 @@ import { Ionicons } from '@expo/vector-icons';
 
 
 import GuestProfile from '../ProjectComponents/Guest/GuestDashboard/GuestProfile.js';
-import GuestHome from '../ProjectComponents/Guest/GuestDashboard/Home.js';
-
+import GuestHome from '../ProjectComponents/Guest/GuestDashboard/GuestHome.js';
+ 
 import DonorHome from '../ProjectComponents/Donor/Dashboard/Home.js';
-import DonorProfile from '../ProjectComponents/Donor/Dashboard/Profile.js';
+import DonorProfile from '../ProjectComponents/Donor/Dashboard/DonorProfile.js';
+import DonorNotification from '../ProjectComponents/Donor/Dashboard/Notifications.js';
 
 import RequestorHome from '../ProjectComponents/Requestor/Dashboard/Home.js';
 import RequestorProfile from '../ProjectComponents/Requestor/Dashboard/Profile.js';
+import RequestorNotification from '../ProjectComponents/Requestor/Dashboard/Notifications.js'
 
 
 const Tab = createBottomTabNavigator()
 
 
 const Tabs = () => {
-const userType = "Requestor";
+const userType = "Donor";
     return (
         
             <Tab.Navigator
@@ -53,9 +55,9 @@ const userType = "Requestor";
                 <Tab.Screen 
                     name = {"Home"}
                     component={
-                        userType === "Guest" ? GuestHome  // If statement. It heavy relies on the value of usertype
-                        : userType === "Donor" ? DonorHome
-                        : RequestorHome // Else condition
+                        userType === "Requestor" ? RequestorHome // If statement. It heavy relies on the value of usertype
+                        : DonorHome
+                         // Else condition
                     }
                     //component = {GuestHome} // palitan niyo to bai
                     options={{
@@ -71,9 +73,8 @@ const userType = "Requestor";
                 <Tab.Screen 
                     name = {"Notification"}
                     component={
-                        userType === "Guest" ? GuestHome  // If statement. It heavy relies on the value of usertype
-                        : userType === "Donor" ? DonorHome
-                        : RequestorHome // Else condition
+                        userType === "Requestor" ? RequestorNotification  // If statement. It heavy relies on the value of usertype
+                        : DonorNotification // Else condition
                     }
                     //component = {GuestHome} // palitan niyo to bai
                     options={{
@@ -89,9 +90,8 @@ const userType = "Requestor";
                 <Tab.Screen
                     name = {'Profile'} 
                     component={
-                        userType === "Guest" ? GuestProfile  // If statement. It heavy relies on the value of usertype
-                        : userType === "Donor" ? DonorProfile
-                        : RequestorProfile // Else condition
+                        userType === "Requestor" ? RequestorProfile   // If statement. It heavy relies on the value of usertype
+                        : DonorProfile
                     }
                     options={{
                         tabBarIcon: ({focused}) => (

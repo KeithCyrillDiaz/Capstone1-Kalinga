@@ -63,31 +63,31 @@ export default function SettingScreen() {
           <Text style={fontStyle.title}>General</Text>
           <View style={cardStyle.navContainer}>
             {/* Notification */}
-            <TouchableOpacity onPress={() => navigatePage("Notification")} style={cardStyle.link}>
+            <TouchableOpacity onPress={() => navigatePage("RequestorNotification")} style={cardStyle.link}>
               <Text style={cardStyle.linkTitle}>Notification</Text>
               <Entypo name="chevron-right" size={24} color="#E60965" />
             </TouchableOpacity>
 
             {/* Location */}
-            <TouchableOpacity onPress={() => navigatePage("LocationScreen")} style={cardStyle.link}>              
+            <TouchableOpacity onPress={() => navigatePage("RequestorLocationScreen")} style={cardStyle.link}>              
                 <Text style={cardStyle.linkTitle}>Location</Text>
               <Entypo name="chevron-right" size={24} color="#E60965" />
             </TouchableOpacity>
 
             {/* Change Password */}
-            <TouchableOpacity onPress={() => navigatePage("ChangePassword")} style={cardStyle.link}>
+            <TouchableOpacity onPress={() => navigatePage("RequestorChangePassword")} style={cardStyle.link}>
               <Text style={cardStyle.linkTitle}>Change Password</Text>
               <Entypo name="chevron-right" size={24} color="#E60965" />
               </TouchableOpacity>
 
             {/* Help and Support */}
-            <TouchableOpacity onPress={() => navigatePage("HelpAndSupport")} style={cardStyle.link}>
+            <TouchableOpacity onPress={() => navigatePage("RequestorHelpAndSupport")} style={cardStyle.link}>
               <Text style={cardStyle.linkTitle}>Help & Support</Text>
               <Entypo name="chevron-right" size={24} color="#E60965" />
               </TouchableOpacity>
 
             {/* About us */}
-            <TouchableOpacity onPress={() => navigatePage("AboutUs")} style={cardStyle.linkEnd}>
+            <TouchableOpacity onPress={() => navigatePage("RequestorAboutUs")} style={cardStyle.linkEnd}>
               <Text style={cardStyle.linkTitle}>About us</Text>
               <Entypo name="chevron-right" size={24} color="#E60965" />
               </TouchableOpacity>
@@ -97,14 +97,14 @@ export default function SettingScreen() {
         <View style={bodyStyle.section}>
           <Text style={fontStyle.title}>Feedback</Text>
           <View style={cardStyle.navContainer}>
-          <TouchableOpacity onPress={() => navigatePage("ReportBug")} style={cardStyle.link}>
+          <TouchableOpacity onPress={() => navigatePage("RequestorReportBug")} style={cardStyle.link}>
               {/* Report bug  */}
               <Text style={cardStyle.linkTitle}>Report Bug</Text>
               <Entypo name="chevron-right" size={24} color="#E60965" />
         </TouchableOpacity>
 
             {/* Seend feedback */}
-            <TouchableOpacity onPress={() => navigatePage("SendFeedback")} style={cardStyle.linkEnd}>
+            <TouchableOpacity onPress={() => navigatePage("RequestorSendFeedback")} style={cardStyle.linkEnd}>
               <Text style={cardStyle.linkTitle}>Send Feedback</Text>
               <Entypo name="chevron-right" size={24} color="#E60965" />
               </TouchableOpacity>
@@ -117,7 +117,7 @@ export default function SettingScreen() {
             justifyContent: "center",
             alignItems: "center",
           }}>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => navigatePage("LogIn")}>
             <View style={buttonStyle.primary}>
               <Text
                 style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>

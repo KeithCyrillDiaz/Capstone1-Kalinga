@@ -1,12 +1,12 @@
-import { StatusBar } from 'expo-status-bar';
+
 import  React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
+
 import Header from './GuestHeader';
-import * as Font from 'expo-font';
+
 import { useNavigation } from '@react-navigation/native';
 
 export default function GuestHome( onPress ) {
@@ -37,28 +37,26 @@ export default function GuestHome( onPress ) {
       <SafeAreaView style={styles.container}>
         <Header />
         <View style={styles.rowContainer}>
-          <TouchableOpacity onPress={() => navigatePage("Guest Explore")} style={styles.rowButton}> 
+          <TouchableOpacity onPress={() => navigatePage("GuestTabsExploreAndMilkBank")} style={styles.rowButton}> 
             <View style={styles.buttonRowContainer}>
               <MaterialIcons name="location-on" size={100} color="#E60965"/>
               <Text style={styles.button_H1}>Milk Bank Locator</Text>
-              <Text style={styles.button_H2}>Easily find human milk</Text>
-              <Text style={styles.button_H2_1}>banks near you</Text>
+              <Text style={styles.button_H2}>Easily find human milk banks near you</Text>
             </View>
           </TouchableOpacity> 
           <TouchableOpacity onPress={() => navigatePage("Guest Educational Library")} style={styles.rowButton}>
             <View style={styles.buttonRowContainer}>
-              <FontAwesome5 name="book-open" size={80} color="#E60965" />
-              <Text style={styles.button_H1}>Educational Library</Text>
-              <Text style={styles.button_H2}>Explore our</Text>
-              <Text style={styles.button_H2_1}>educational articles</Text>
+              <FontAwesome5 style = {styles.book} name="book-open" size={80} color="#E60965" />
+              <Text style={styles.educ}>Educational Library</Text>
+              <Text style={styles.button_H2}>Explore our educational articles</Text>
+      
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigatePage("Instant Messages")} style={styles.rowButton}>
             <View style={styles.buttonRowContainer}>
               <MaterialCommunityIcons name="robot" size={100} color="#E60965" />
               <Text style={styles.button_H1}>Instant Chat</Text>
-              <Text style={styles.button_H2}>Chatbot assistance</Text>
-              <Text style={styles.button_H2_1}>for FAQs</Text>
+              <Text style={styles.button_H2}>Chatbot assistance for FAQs</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -89,26 +87,24 @@ export default function GuestHome( onPress ) {
         </View>
       </View>
 
-      <View style={styles.bottomBorder}>
-        <View style={styles.iconbuttonContainer}>
-        <TouchableOpacity onPress={() => navigatePage("Guest Home")} style={styles.iconButton}>
-          <Feather name="home" size={45} color="white"/>
-          <Text style={styles.iconText}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigatePage("Guest Profile")}style={styles.iconButton}>
-          <MaterialIcons name="person-outline" size={50} color="white" />
-          <Text style={styles.iconText}>Profile</Text>
-          <View style={styles.line2}></View>
-        </TouchableOpacity>
-        </View>
-      </View>
-        <StatusBar style="auto" />
 
     </SafeAreaView>
     );
   };
 
 const styles = StyleSheet.create({
+
+  educ: {
+    fontFamily: 'OpenSans_Condensed-Bold',
+    color: '#E60965',
+    fontSize: 15,
+  },
+
+  book: {
+    marginTop:10,
+    marginBottom: 10,
+  },
+
   container: {
     flex: 1,
     backgroundColor: '#FFF8EB',
@@ -143,14 +139,15 @@ const styles = StyleSheet.create({
   button_H1: {
     fontFamily: 'OpenSans_Condensed-Bold',
     color: '#E60965',
-    fontSize: 17,
+    fontSize: 15,
     paddingTop: 5,
   },
 
   button_H2: {
     fontFamily: 'OpenSans-Regular',
     color: '#E60965',
-    fontSize: 12,
+    textAlign: "center",
+    fontSize: 10
   },
 
   button_H2_1: {

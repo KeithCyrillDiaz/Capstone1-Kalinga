@@ -1,22 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, StatusBar } from 'react-native';
 import * as Font from 'expo-font';
+import { globalHeader } from '../../../styles_kit/globalHeader';
+import { globalStyles } from '../../../styles_kit/globalStyles';
 
 export default function Header() {
   
        return (
-        <SafeAreaView style={styles.container}>
-          <View style={styles.header}>
-           <Text style={styles.headerTitle}>Good Day!</Text>
-           <Text style={styles.h2}>Discover the power of breastmilk for your baby's health and well-being.</Text>
-         </View>
-        </SafeAreaView>
+       <View>
+         <StatusBar barStyle="dark-content" backgroundColor="white" />
+              <View style = {styles.BigHeader}>
+              <Text style = {globalHeader.BigHeaderTitle}>Good Day!</Text>
+                  <Text style = {globalHeader.SubTitle}>Discover the power of breastmilk for your baby's health and well-being.</Text>
+              </View>
+       </View>
          
        );
      };
     
    
 const styles = StyleSheet.create ({
+
+   BigHeader: {
+      backgroundColor: '#E60965', // Set the background color of the header
+      borderRadius: 34,
+      paddingTop: "10%",
+      paddingBottom: "7%",
+      marginTop: "-10%",
+      width: '100%', // the size will depend on the screen, this is better so it will look the same on all phones
+      justifyContent: 'flex-end',
+      alignItems: 'flex-start',
+   
+  },
+
    header: {
       height: 180,
       backgroundColor: '#E60965',
