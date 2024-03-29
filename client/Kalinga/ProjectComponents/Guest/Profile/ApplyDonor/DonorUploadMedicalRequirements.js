@@ -12,14 +12,11 @@ import * as ImagePicker from 'expo-image-picker';
 
 const DonorUploadMedicalRequirements = ({route}) => {
 
-<<<<<<< HEAD
   const { screeningFormData } = route.params; // Access formData from route.params
   console.log("Retrieve:", screeningFormData)
 
   const [formData, setFormData] = useState(screeningFormData);
-=======
-  const [selectedImage, setSelectedImage] = useState(null);
->>>>>>> d9527e296ee01839eeb670ee5dc3841142adc81a
+const [selectedImage, setSelectedImage] = useState(null);
 
   const navigation = useNavigation();
 
