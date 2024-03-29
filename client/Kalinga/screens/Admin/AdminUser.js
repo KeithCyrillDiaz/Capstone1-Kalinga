@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView, StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Octicons } from '@expo/vector-icons';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { Feather } from '@expo/vector-icons';
+import { globalHeader } from '../../styles_kit/globalHeader';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -464,8 +465,9 @@ const AdminUser = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.headerTitle}>Appointments</Text>
+            <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
+            <View style={globalHeader.SmallHeader}>
+                <Text style={globalHeader.SmallHeaderTitle}>Appointment</Text>
             </View>
 
             <Tab.Navigator
