@@ -7,36 +7,61 @@ import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 
-const DonorScreeningFormPage2 = () => {
+const DonorScreeningFormPage2 = ({route}) => {
+  const { screeningFormData } = route.params; // Access formData from route.params
+  // console.log(screeningFormData)
+
+  const [formData, setFormData] = useState(screeningFormData);
+  // const { 
+  //   fullName, 
+  //   age, 
+  //   birthDate, 
+  //   email, 
+  //   contactNumber, 
+  //   homeAddress, 
+  //   childName, 
+  //   childAge, 
+  //   sex, 
+  //   hildBirthDate, 
+  //   birthWeight, 
+  //   ageOfGestation, 
+  //   medicalCondition,
+  // } = screeningFormData;
   
   const navigation = useNavigation();
 
-  const navigatePage = (Page) => {
+  const navigatePage = (Page, data) => {
     // Navigate to the next screen by route name
-    navigation.navigate(Page);
+    console.log(data)
+    navigation.navigate(Page, data);
   };
 
   const [selectedOption, setSelectedOption] = useState(null);
 
   const handleOptionSelect = (option) => {
       setSelectedOption(option);
+      
   };
 
   const [medicalAnsweredQuestions, setMedicalAnsweredQuestions] = useState([]);
 
-    const FirstParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
-
-    const SecondParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
-
-    const ThridParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
-
-    const UserName = "Rogine"
-
     const pressOption = (questionId, answer) => {
           const answeredQuestion = { id: questionId, answer: answer,};
           setMedicalAnsweredQuestions(prevState => [...prevState.filter(item => item.id !== questionId), answeredQuestion]);
+          setFormData(prevData => ({
+            ...prevData,
+            [`Q${questionId}`]: answer,
+            typeOfDonor: selectedOption // Update typeOfDonor field
+          }));
   };
 
+  const handleChangeText = (name, value) => {
+    setFormData(prevData => ({...prevData, 
+    [`Q${name}`]: value
+    
+    }))
+    // setScreeningFormData({ ...screeningFormData, [name]: value });
+};
 
     const renderQuestion = (questionId, questionText) => {
 
@@ -137,6 +162,7 @@ const DonorScreeningFormPage2 = () => {
                                   style={styles.BiginputField}
                                   multiline={true}
                                   textAlignVertical="top" // Align text to the top vertically
+                                  onChangeText={(value) => handleChangeText('A', value)}
                               /> 
                         
                 </View>
@@ -153,6 +179,7 @@ const DonorScreeningFormPage2 = () => {
                                   style={styles.BiginputField}
                                   multiline={true}
                                   textAlignVertical="top"  // Align text to the top vertically
+                                  onChangeText={(value) => handleChangeText('B', value)}
                               /> 
                         
                 </View>
@@ -170,7 +197,7 @@ const DonorScreeningFormPage2 = () => {
                 </View>
 
 
-                      <TouchableOpacity style = {styles.button}  onPress={() => navigatePage("DonorMedicalHistory")}>
+                      <TouchableOpacity style = {styles.button}  onPress={() => navigatePage("DonorMedicalHistory", { screeningFormData: formData })}>
                             <Text style = {styles.buttonTitle}>Next</Text>
                       </TouchableOpacity>
                 

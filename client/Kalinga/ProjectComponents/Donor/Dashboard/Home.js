@@ -90,11 +90,7 @@ const DonorHome = () => {
               </View>
 
               <View style = {styles.flex_Row}>
-<<<<<<< HEAD
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("Set Appointment Form")}>
-=======
                 <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("SetAnAppointment")}>
->>>>>>> 6acd6d29518674adfe97ed84e11efaea2d9a649a
                 <Ionicons name="calendar" size={70} color="#E60965" />
                   <View style = {styles.LabelCenter}>
                     <Text style = {styles.Label}>Make a Donation</Text>

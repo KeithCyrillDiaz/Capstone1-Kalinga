@@ -1,19 +1,20 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Octicons } from '@expo/vector-icons';
 import { Foundation } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { globalHeader } from '../../styles_kit/globalHeader';
 
 const AdminDashboard = () => {
     const navigation = useNavigation(); 
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.header}>
-            
-                <Text style={styles.headerTitle}>Dashboard</Text>
+            <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
+            <View style={globalHeader.SmallHeader}>
+                <Text style={globalHeader.SmallHeaderTitle}>Notifications</Text>
             </View>
             <View>
             <Text style={styles.MotherText}>Mothers</Text>
@@ -63,7 +64,7 @@ const styles = StyleSheet.create ({
         borderBottomRightRadius: 30,
         elevation: 30,
         alignItems: 'center',
-        marginTop:30,
+        marginTop: -20,
         paddingVertical: 20
         
 

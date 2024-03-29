@@ -7,13 +7,18 @@ import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import MedicalHistoryPage2 from './DonorMedicalHistory2.js'
 
-const DonorMedicalHistory = () => {
+const DonorMedicalHistory = ({route}) => {
 
+  const { screeningFormData } = route.params; // Access formData from route.params
+  // console.log(screeningFormData)
+
+  const [formData, setFormData] = useState(screeningFormData);
   const navigation = useNavigation();
 
-  const navigatePage = (Page) => {
+  const navigatePage = (Page, data) => {
     // Navigate to the next screen by route name
-    navigation.navigate(Page);
+    console.log(data)
+    navigation.navigate(Page, data);
   };
     const UserName = "Rogine"
 
@@ -23,6 +28,11 @@ const DonorMedicalHistory = () => {
  
         const answeredQuestion = { id: questionId, answer: answer, type: questionType};
         setMedicalAnsweredQuestions(prevState => [...prevState.filter(item => item.id !== questionId), answeredQuestion]);
+
+        setFormData(prevData => ({
+          ...prevData,
+          [`MH${questionId}`]: answer, // Update typeOfDonor field
+        }));
     };
 
     const renderQuestion = (questionId, questionText, questionType) => {
@@ -101,7 +111,7 @@ const DonorMedicalHistory = () => {
         </ScrollView>
 
                       {/*MedicalHistory2.js*/}
-                     <TouchableOpacity style={styles.button} onPress={() => navigatePage("DonorMedicalHistory2")}>
+                     <TouchableOpacity style={styles.button} onPress={() => navigatePage("DonorMedicalHistory2", { screeningFormData: formData })}>
                         <Text style={styles.buttonTitle}>Next</Text>
                      </TouchableOpacity>
       </View>
