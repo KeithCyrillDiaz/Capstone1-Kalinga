@@ -38,7 +38,7 @@ const UserVerification = () => {
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style={globalHeader.SmallHeader}>
-                <Text style={globalHeader.SmallHeaderTitle}>Set Appointment</Text>
+                <Text style={globalHeader.SmallHeaderTitle}>Donor Verification</Text>
             </View>
             <SearchBar />
             <View styles={styles.title}>
