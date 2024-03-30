@@ -14,7 +14,7 @@ const AdminDashboard = () => {
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style={globalHeader.SmallHeader}>
-                <Text style={globalHeader.SmallHeaderTitle}>Notifications</Text>
+                <Text style={globalHeader.SmallHeaderTitle}>Dashboard</Text>
             </View>
             <View>
             <Text style={styles.MotherText}>Mothers</Text>
