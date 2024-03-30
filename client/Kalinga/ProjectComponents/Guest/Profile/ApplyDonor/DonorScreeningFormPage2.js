@@ -234,6 +234,7 @@ const DonorScreeningFormPage2 = ({route}) => {
       // marginVertical: 30,
       //backgroundColor: "gray"
       paddingHorizontal: 20,
+   
   },
 
     title: {
@@ -366,6 +367,7 @@ const DonorScreeningFormPage2 = ({route}) => {
       box: {
         borderColor: '#E60965',
         borderWidth: 1,
+        elevation: 5
       },
 
       box1: {
@@ -376,7 +378,8 @@ const DonorScreeningFormPage2 = ({route}) => {
         borderRadius: 10,
         marginTop: 10,
         marginBottom: 20,
-        backgroundColor: "#FFFFFF"
+        backgroundColor: "#FFFFFF",
+        elevation: 5
       },
 
       box2: {
@@ -391,12 +394,13 @@ const DonorScreeningFormPage2 = ({route}) => {
         width: "100%",
         paddingVertical: 10,
         height: 150,
-        backgroundColor: "#FFFFFF"
+        backgroundColor: "#FFFFFF",
+        elevation: 5
       },
 
       box3: {
         borderColor: '#E60965',
-    
+        elevation: 5
       },
 
       text1: {
@@ -429,7 +433,8 @@ const DonorScreeningFormPage2 = ({route}) => {
         borderRadius: 10,
         borderColor: '#E60965',
         paddingVertical: 10,
-        backgroundColor: "#FFFFFF"
+        backgroundColor: "#FFFFFF",
+        elevation: 5
       }
    
 

@@ -196,7 +196,8 @@ const DonorMedicalHistory2 = ({route}) => {
       height: 210,
       paddingRight: 10,
       marginBottom: 10,
-      backgroundColor: "#FFFFFF"
+      backgroundColor: "#FFFFFF",
+      elevation: 5
     },
 
     form2: {
@@ -207,7 +208,8 @@ const DonorMedicalHistory2 = ({route}) => {
         height: 170,
         paddingRight: 10,
         marginBottom: 10,
-        backgroundColor: "#FFFFFF"
+        backgroundColor: "#FFFFFF",
+        elevation: 5
       },
 
     row: {
