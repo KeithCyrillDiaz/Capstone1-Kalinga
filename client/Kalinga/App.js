@@ -143,22 +143,21 @@ import RequestorUserVerification from './screens/Admin/ScreeningForm/Requestor/R
 import ForumPage from './ProjectComponents/Donor/Home/Forum/ForumPage.js';
 
 
-const getFonts = () => Font.loadAsync({
-    'Open-Sans-Bold' : require('./assets/Fonts/OpenSans_Condensed-Bold.ttf'),
-    'Open-Sans-Regular' : require('./assets/Fonts/OpenSans_Condensed-Regular.ttf'),
-    'Kurale' : require('./assets/Fonts/Kurale-Regular.ttf'),
-    'Inter-Bold' : require('./assets/Fonts/Inter-Bold.ttf'),
-    'Inter-Regular' : require('./assets/Fonts/Inter-Regular.ttf'),
-    "Kurale-Regular": require('./assets/Fonts/Kurale-Regular.ttf'),
-    "OpenSans_Condensed-Bold": require("./assets/Fonts/OpenSans_Condensed-Bold.ttf"),
-    "OpenSans_Condensed-Regular": require("./assets/Fonts/OpenSans_Condensed-Regular.ttf"),
-    "OpenSans-Regular": require("./assets/Fonts/OpenSans-Regular.ttf"),
-    "Open-Sans-SemiBold": require("./assets/Fonts/OpenSans-SemiBold.ttf"),
-    "Open-Sans-Light": require("./assets/Fonts/OpenSans-Light.ttf"),
-    "Inter-Regular": require("./assets/Fonts/Inter-Regular.ttf"),
-
+const getFonts = async () => {
+  await Font.loadAsync({
+    'Open-Sans-Bold': require('./assets/Fonts/OpenSans_Condensed-Bold.ttf'),
+    'Open-Sans-Regular': require('./assets/Fonts/OpenSans_Condensed-Regular.ttf'),
+    'Kurale': require('./assets/Fonts/Kurale-Regular.ttf'),
+    'Inter-Bold': require('./assets/Fonts/Inter-Bold.ttf'),
+    'Inter-Regular': require('./assets/Fonts/Inter-Regular.ttf'),
+    'OpenSans_Condensed-Bold': require('./assets/Fonts/OpenSans_Condensed-Bold.ttf'),
+    'OpenSans_Condensed-Regular': require('./assets/Fonts/OpenSans_Condensed-Regular.ttf'),
+    'OpenSans-Regular': require('./assets/Fonts/OpenSans-Regular.ttf'),
+    'Open-Sans-SemiBold': require('./assets/Fonts/OpenSans-SemiBold.ttf'),
+    'Open-Sans-Light': require('./assets/Fonts/OpenSans-Light.ttf'),
+    'Inter-Regular': require('./assets/Fonts/Inter-Regular.ttf'),
   });
-
+};
 
 export default function App() {
   const [fontsLoaded,  setFontsLoaded] = useState(false);
@@ -177,7 +176,7 @@ export default function App() {
     return (
 
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="LogIn" screenOptions={{ headerShown: false }}>
+          <Stack.Navigator initialRouteName="ApplyAsDonorStack" screenOptions={{ headerShown: false }}>
 
             {/*InitialScreen*/}
             <Stack.Screen name="Splash" component={SplashScreen} />

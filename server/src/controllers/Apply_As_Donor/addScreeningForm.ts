@@ -1,26 +1,24 @@
 import express from 'express'
-import { createScreeningForm, getScreeningFormByApplicantID } from '../db/screeningForms';
-import { random, passEncryption } from '../helpers/passwordEncryption'
-
+import { createScreeningForm, getScreeningFormByMaxApplicantID, getScreeningFormByName } from '../../db/ApplyAsDonor';
+import { random, passEncryption } from '../../helpers/passwordEncryption'
 
 export const addScreeningForm = async( req: express.Request, res: express.Response) => {
-   
 try {
     const {
         fullName,
-        Screening_ID,
-        Applicant_ID,
-        CompleteName,
-        parentAge,
-        address,
+        Age,
         birthday,
+        email,
+        address,
         contactNumber,
         homeAddress,
+    
+        //Infant Information
         NameOfChild,
-        childAge,
-        Sex,
-        DateOfBirth,
         BirthWeight,
+        Sex,
+        childAge,
+        DateOfBirth,
         AgeOfGestation,
         MedicalCondition,
         TypeOfDonor,
@@ -40,46 +38,65 @@ try {
         MH10,
         MH11,
         MH12,
+        MH13,
+        MH14,
         SH1,
         SH2,
-        createdAt,
-        updatedAt,
     } = req.body;
 
-    
 
     if(!fullName){
-
+        // console.log("fullName:", fullName)
         return res.sendStatus(400);
     };
 
-    const existingUser = await getScreeningFormByApplicantID(Applicant_ID)
+    const exisistingUser = await getScreeningFormByName(fullName)
 
-    if(existingUser){
-
+    if(exisistingUser){
+        console.log("existingUser")
         return res.sendStatus(400);
-    };
+    }
+
+    const maxApplicantID = await getScreeningFormByMaxApplicantID()
+    // console.log('test:', maxApplicantID)
+    let Applicant_ID: number;
+    let Screening_ID: number;
+
+    if(maxApplicantID === null){
+
+        Applicant_ID = 1;   
+       
+    } else {
+        // Increment the maximum Applicant_ID by 1
+        const maxApplicantIDValue = maxApplicantID.Applicant_ID as number
+        Applicant_ID = maxApplicantIDValue + 1;
+
+    }
 
     const moment = require('moment');
     const currentTime = moment();
     const formattedTime = currentTime.format('YYYY-MM-DD HH:mm:ss');
-
-    const salt = random(); 
+    console.log(' Applicant_ID:',  Applicant_ID)
+    Screening_ID = Applicant_ID;
+    
+    // const salt = random(); 
     const screeningForm = await createScreeningForm({
-        fullName,
         Screening_ID,
         Applicant_ID,
-        CompleteName,
-        parentAge,
-        address,
+        fullName,
+        Age,
         birthday,
+        email,
+        address,
         contactNumber,
         homeAddress,
+
+        //Infant Information
         NameOfChild,
-        childAge,
-        Sex,
-        DateOfBirth,
         BirthWeight,
+        Sex,
+        childAge,
+        DateOfBirth,
         AgeOfGestation,
         MedicalCondition,
         TypeOfDonor,
@@ -99,6 +116,8 @@ try {
         MH10,
         MH11,
         MH12,
+        MH13,
+        MH14,
         SH1,
         SH2,
         createdAt: formattedTime,
@@ -113,6 +132,7 @@ try {
     return res.status(200). json({message, screeningForm}) .end();
     
 } catch (error) {
+    console.log("ayaw")
     return res.sendStatus(400)
 }
 

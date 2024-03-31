@@ -28,61 +28,27 @@ const DonorUploadMedicalRequirements = ({route}) => {
   const [imageContainer, setImageContainer] = useState(false)
   const navigation = useNavigation();
 
-  // const images = {
-  //   "HepaB": {
-  //     "uri": "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540anonymous%252FKalinga-af65754e-b276-4374-b355-875428704307/ImagePicker/3fa2d964-ab38-4875-8fb0-46b2dfdf3590.png",
-  //     "name": "HepaB.jpg",
-  //     "type": "image/png"
-  //   },
-  //   "HIV": {
-  //     "uri": "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540anonymous%252FKalinga-af65754e-b276-4374-b355-875428704307/ImagePicker/3fa2d964-ab38-4875-8fb0-46b2dfdf3590.png",
-  //     "name": "HIV.jpg",
-  //     "type": "image/png"
-  //   }
-  // };
   const navigatePage = async (Page) => {
     try {
-      console.log('navigatePage');
+      console.log('try');
         // Send POST request to the specified URL with the form data
-        // const postScreeningForm = await axios.post("http://192.168.1.104:7000/kalinga/addScreeningForm", 
-        //       screeningFormData,
-        //       // selectedImeage,
-        //       // selectedFile
-        // );
-        // console.log('Test');
-        // // Log successful response from the backend
-        // console.log('Data saved successfully:', postScreeningForm.data);
-
-        // const formData = new FormData();
-        // formData.append('image', selectedImage);
-        // console.log("selectedImage", selectedImage)
-        // console.log("formData", formData)
-        const formData = new FormData();
-        for (const key in selectedImage) {
-          if (Object.hasOwnProperty.call(selectedImage, key)) {
-            const imageData = selectedImage[key];
-            console.log("TYPE:", imageData.type)
-            formData.append("images", {
-              uri: imageData.uri,
-              name: [key] + ".png",
-              type: imageData.type
-            });
-          }
-        }
-
-        console.log("FormData: ", formData)
+        const postScreeningForm = await axios.post("http://192.168.1.104:7000/kalinga/addScreeningForm", 
+              screeningFormData,
+              // selectedImage,
+              // selectedFile
+        );
+        console.log('Test');
+        // Log successful response from the backend
+        console.log('Data saved successfully:', postScreeningForm.data);
 
         const postImage = await axios.post("http://192.168.1.104:7000/kalinga/addMedicalRequirementsAsImage", 
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          }
+        // screeningFormData,
+              selectedImage,
+          // selectedFile
         );
-        
+          console.log('Test');
           // Log successful response from the backend
-          console.log('Data saved successfully:', postImage.data);
+          console.log('Data saved successfully:', response.data);
 
         // Navigate to the specified page
         navigation.navigate(Page);
@@ -96,7 +62,7 @@ const DonorUploadMedicalRequirements = ({route}) => {
  
 // }
    
-  const handleImageUpload = async (attachmentType, id) => {
+  const handleImageUpload = async (attachmentType) => {
     try {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
@@ -109,46 +75,25 @@ const DonorUploadMedicalRequirements = ({route}) => {
             allowsEditing: true,
             aspect: [Dimensions.get('window').width, Dimensions.get('window').height],
             quality: 1,
-            multiple: true, 
         });
 
         if (!result.cancelled && result.assets && result.assets.length > 0) {
-            let fileType = ''
-          result.assets.forEach(image => {
-            // Check if the type is "image" without a specific subtype
-            if (image.type === 'image' || !image.type.includes('/')) {
-                      fileType = image.type + "/jpeg"
-              // console.warn(`Incomplete or unknown image type for ${image.uri}`);
-            } else {
-              // Process the image with complete type information
-              fileType = image.type
-              console.log(`Image type: ${image.type}`);
-              // Other processing logic...
-            }
-          });
-
-          console.log("fileType: ", fileType)
           setSelectedImage(prevState => ({
               ...prevState,
             
-              // [attachmentType]: result.assets[0].uri
-              [attachmentType]: ({
-                uri: result.assets[0].uri,
-                name: attachmentType, 
-                type: fileType
-              })
+              [attachmentType]: result.assets[0].uri
               
           }));
-          // console.log("results: ", result.assets[0].uri);
-          // console.log("selectedImage after update:", selectedImage);
+          console.log("results: ", result.assets[0].uri);
+          console.log("selectedImage after update:", selectedImage);
           const numberOfObjects = Object.keys(selectedImage).length;
           if (numberOfObjects >= 3) setScrollableHorizontal(true);
           console.log("numberofObjects:", numberOfObjects)
           setImageContainer(true)
       }
           
-          // console.log("results: ", result.assets[0].uri)
-          // console.log("selectedImage after update:", selectedImage);
+          console.log("results: ", result.assets[0].uri)
+          console.log("selectedImage after update:", selectedImage);
           // console.log("selectedImage:", selectedImage)
 
           // console.log("results: ", result.assets[0].uri)
@@ -233,10 +178,10 @@ useEffect(() => {
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                        <TouchableOpacity onPress={()=>handleImageUpload('HepaB', 0)}>
+                        <TouchableOpacity onPress={()=>handleImageUpload('HepaB')}>
                           <AntDesign name="picture" size={27} color="#E60965" />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=> handleFileUpload('hepaB', 0)} style  = {{
+                        <TouchableOpacity onPress={()=> handleFileUpload('hepaB')} style  = {{
 
                           flexDirection: "row", alignItems: "center"
                         }}>
@@ -256,10 +201,10 @@ useEffect(() => {
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                        <TouchableOpacity onPress={()=>handleImageUpload('HIV', 1)}>
+                        <TouchableOpacity onPress={()=>handleImageUpload('HIV')}>
                           <AntDesign name="picture" size={27} color="#E60965" />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=> handleFileUpload('HIV', 1)}style  = {{
+                        <TouchableOpacity onPress={()=> handleFileUpload('HIV')}style  = {{
 
                           flexDirection: "row", alignItems: "center"
                         }}>
@@ -277,10 +222,10 @@ useEffect(() => {
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                        <TouchableOpacity onPress={()=>handleImageUpload('Syphillis', 2)}>
+                        <TouchableOpacity onPress={()=>handleImageUpload('Syphillis')}>
                           <AntDesign name="picture" size={27} color="#E60965" />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=> handleFileUpload('Syphillis', 2)} style  = {{
+                        <TouchableOpacity onPress={()=> handleFileUpload('Syphillis')} style  = {{
 
                           flexDirection: "row", alignItems: "center"
                         }}>
@@ -360,11 +305,11 @@ useEffect(() => {
                     horizontal={scrollableHorizontal}
                     contentContainerStyle={{ flexDirection: 'row', }}
                   >
-                      {Object.entries(selectedImage).map(([attachmentType, value]) => (
+                      {Object.entries(selectedImage).map(([key, uri]) => (
                                 <TouchableOpacity
-                                    key={attachmentType}
+                                    key={key}
                                     onPress={() => {
-                                        setSelectedImageUrl({uri: value.uri});
+                                        setSelectedImageUrl(uri);
                                         setModalVisible(true);
                                     }}
                                 >
@@ -374,9 +319,9 @@ useEffect(() => {
                                           color: "#E60965",
                                           marginTop: 7,
                                       
-                                        }}>{attachmentType}</Text>
+                                        }}>{key}</Text>
                                         <Image
-                                            source={{ uri: value.uri }}
+                                            source={{ uri: uri }}
                                             style={{ width: 100, height: 100, marginTop: 7, resizeMode: 'cover',}}
                                         />
                                     </View>

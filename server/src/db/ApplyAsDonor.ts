@@ -8,23 +8,22 @@ import mongoose from 'mongoose';
 
 const screeningFormSchema = new mongoose.Schema({
 
-    //Personal Information
-    fullName: {type: String},
     Screening_ID: {type: Number},
     Applicant_ID: {type: Number},
-    CompleteName: {type: String},
-    parentAge: {type: String},
+    fullName: {type: String},
+    Age: {type: String},
+    birthday: {type: String},
+    email: {type: String},
     address: {type: String},
-    birthday: {type: Date},
     contactNumber: {type: String},
     homeAddress: {type: String},
 
     //Infant Information
     NameOfChild: {type: String},
-    childAge: {type: Number},
-    Sex: {type: String},
-    DateOfBirth: {type: String},
     BirthWeight: {type: String},
+    Sex: {type: String},
+    childAge: {type: Number},
+    DateOfBirth: {type: String},
     AgeOfGestation: {type: String},
     MedicalCondition: {type: String},
 
@@ -47,6 +46,8 @@ const screeningFormSchema = new mongoose.Schema({
     MH10: {type: String},
     MH11: {type: String},
     MH12: {type: String},
+    MH13: {type: String},
+    MH14: {type: String},
 
     //SexualHistory
     SH1: {type: String},
@@ -59,25 +60,26 @@ const screeningFormSchema = new mongoose.Schema({
 
 });
 
+interface imageData{
+   [key:string]: {
+        uri: string,
+        name: string,
+        type: string,
+   }
+    
+}
 
-// const tokenSchema = new mongoose.Schema({
+const imageDataSchema = new mongoose.Schema<imageData>({}, {strict: false})
 
-//     token: {type: String},
-//     createdAt: { type: Date},
-//     expiry: {type:String} 
- 
 
-// });
-
-// const adminSchema = new mongoose.Schema({
-
-//     username: {type: String},
-//     password: {type: String},
- 
-// });
-
+export const MedicalRequirementsImagesModel = mongoose.model<imageData>('MedicalRequirements', imageDataSchema)
+export const createMedicalRequirementImages = (values: Record<string, any>) => new MedicalRequirementsImagesModel(values).save().then((MedicalRequirements) => MedicalRequirements.toObject())
 
 export const screeningFormModel = mongoose.model('ScreenignForm', screeningFormSchema)
 export const createScreeningForm = (values: Record<string, any>) => new screeningFormModel(values).save().then((ScreeningForm) => ScreeningForm.toObject())
-export const getScreeningFormByApplicantID = (Applicant_ID: string) => screeningFormModel.findOne({Applicant_ID})
+export const getScreeningFormByName = (fullName: string) => screeningFormModel.findOne({fullName})
+export const getScreeningFormByApplicantID = (Applicant_ID: number) => screeningFormModel.findOne({Applicant_ID})
+export const getScreeningFormByMaxApplicantID = () => screeningFormModel.findOne({}).sort({ Applicant_ID: -1 }).limit(1).select('Applicant_ID');
+export const getScreeningFormByMaxScreeningID = () => screeningFormModel.findOne({}).sort({ Screening_ID: -1 }).limit(1).select('Screening_ID');
+export const getScreeningFormByScreeningID = (Screening_ID: number) => screeningFormModel.findOne({Screening_ID})
 //export const deleteUserById = (id: string) => userModel.findOneAndDelete({_id: id})
