@@ -183,7 +183,9 @@ const DonorMedicalHistory = ({route}) => {
       borderRadius: 10,
       borderColor: '#E60965',
       height: 500,
-      backgroundColor: "#FFFFFF"
+      backgroundColor: "#FFFFFF",
+      elevation: 5,
+      margin: 10
     },
 
     space: {
