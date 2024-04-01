@@ -65,7 +65,8 @@ const DonorUploadMedicalRequirements = ({route}) => {
             formData.append("images", {
               uri: imageData.uri,
               name: [key] + ".png",
-              type: imageData.type
+              type: imageData.type,
+              // userType: imageData.userType
             });
           }
         }
@@ -135,7 +136,8 @@ const DonorUploadMedicalRequirements = ({route}) => {
               [attachmentType]: ({
                 uri: result.assets[0].uri,
                 name: attachmentType, 
-                type: fileType
+                type: fileType,
+                // userType: "Donor"
               })
               
           }));

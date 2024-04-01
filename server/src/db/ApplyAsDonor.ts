@@ -60,19 +60,38 @@ const screeningFormSchema = new mongoose.Schema({
 
 });
 
-interface imageData{
-   [key:string]: {
-        uri: string,
-        name: string,
-        type: string,
-   }
+const imageSchema = new mongoose.Schema({
+    fieldname: {type: String}, 
+    id: {type: String}, 
+    timeStamp: {type: String}, 
+    originalname: {type: String}, 
+    encoding: {type: String}, 
+    mimetype: {type: String}, 
+    destination: {type: String}, 
+    filename: {type: String}, 
+    path: {type: String}, 
+    size: {type: Number}, 
+    uploadedAt: {type: String}, 
+  
+})
+
+
+// interface imageData{
+//    [key:string]: {
+//         uri: string,
+//         name: string,
+//         type: string,
+//         userType: string
+//    }
     
-}
+// }
 
-const imageDataSchema = new mongoose.Schema<imageData>({}, {strict: false})
+// const imageDataSchema = new mongoose.Schema<imageData>({}, {strict: false})
 
+// export const MedicalRequirementsImagesModel = mongoose.model<imageData>('MedicalRequirements', imageDataSchema)
 
-export const MedicalRequirementsImagesModel = mongoose.model<imageData>('MedicalRequirements', imageDataSchema)
+export const MedicalRequirementsImagesModel = mongoose.model('DonorMRImages', imageSchema)
+
 export const createMedicalRequirementImages = (values: Record<string, any>) => new MedicalRequirementsImagesModel(values).save().then((MedicalRequirements) => MedicalRequirements.toObject())
 
 export const screeningFormModel = mongoose.model('ScreenignForm', screeningFormSchema)
