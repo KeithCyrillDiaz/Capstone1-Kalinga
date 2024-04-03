@@ -43,6 +43,8 @@ const DonorScreeningFormPage2 = ({route}) => {
       
   };
 
+  
+
   const [medicalAnsweredQuestions, setMedicalAnsweredQuestions] = useState([]);
 
     const pressOption = (questionId, answer) => {
@@ -80,6 +82,8 @@ const DonorScreeningFormPage2 = ({route}) => {
                 </View>
             </TouchableOpacity>
             <Text style={styles.question}>{questionText}</Text>
+           
+          
         </View>
 
         
@@ -171,7 +175,7 @@ const DonorScreeningFormPage2 = ({route}) => {
                     
                       <View>
                         <Text style = {styles.boxQuestion}>
-                          Paano mo nalaman ang tungkol sa (Name ng Client’s Milk Bank) ?
+                          Paano mo nalaman ang tungkol sa BreastMilk Bank ng Quezon City General Hospital?
                         </Text>
                       </View>
 
@@ -191,8 +195,8 @@ const DonorScreeningFormPage2 = ({route}) => {
                   </View>
 
 
-                    {renderQuestion(1, 'Nakapagbigay ka na ba ng iyong gatas dati?',"Medical History")}
-                    {renderQuestion(2, 'Ikaw ba ay natanggihan na magbigay ng iyong gatas/breastmilk? Kung oo, sa anong dahilan?', "Medical History")}
+                    {renderQuestion(1, 'Gusto mo bang magbigay ng gatas nang regular sa loob ng anim (6) na buwan?',"Medical History")}
+                    {renderQuestion(2, 'Papayagan ka ba ng iyong asawa na magbigay ng iyong gatas sa Human Milk Bank?', "Medical History")}
                 
                 </View>
 
@@ -212,6 +216,7 @@ const DonorScreeningFormPage2 = ({route}) => {
 
 
   const styles = StyleSheet.create({
+
 
     button: {
       backgroundColor: "#E60965",

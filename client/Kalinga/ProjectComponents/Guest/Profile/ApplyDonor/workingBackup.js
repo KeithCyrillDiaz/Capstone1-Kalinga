@@ -66,21 +66,6 @@ useEffect(() => {
   console.log("selectedImage:", JSON.stringify(selectedImage, null, 2));
 }, [selectedImage]);
 
-
-const selectedImages = {
-    "HepaB": {
-      "uri": "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540anonymous%252FKalinga-af65754e-b276-4374-b355-875428704307/ImagePicker/c269951b-57c5-437a-80c2-f0ebf5de8002.jpeg",
-      "name": "HepaB",
-      "type": "image"
-    },
-    "HIV": {
-      "uri": "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540anonymous%252FKalinga-af65754e-b276-4374-b355-875428704307/ImagePicker/ef253a16-8a2a-4745-acb4-f1e2a0b824c7.jpeg",
-      "name": "HIV",
-      "type": "image"
-    }
-  };
-
-  
 const uploadImage = async (imageUri) => {
   const formData = new FormData();
   formData.append('image', {

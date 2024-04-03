@@ -13,7 +13,7 @@ import {
 import { globalStyles } from "../../../../styles_kit/globalStyles.js";
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { useNavigation } from '@react-navigation/native';
-
+import randomatic from 'randomatic';
 
 
 const DonorScreeningForm = () => {
@@ -26,9 +26,13 @@ const DonorScreeningForm = () => {
     navigation.navigate(Page, data);
   };
 
+  const applicantId = randomatic('Aa0', 20);
+
   
 
   const [screeningFormData, setScreeningFormData] = useState({
+    applicantId: applicantId,
+    userType: "Donor",
     fullName: '',
     age: '',
     birthDate: '',
@@ -45,21 +49,25 @@ const DonorScreeningForm = () => {
     typeOfDonor: '',
     QA: '',
     QB: '',
+    QB_Reason: '',
     Q1: '',
     Q2: '',
     MH1: '',
     MH2: '',
+    MH2_Reason: '',
     MH3: '',
     MH4: '',
     MH5: '',
     MH6: '',
     MH7: '',
+    MH7_Reason: '',
     MH8: '',
     MH9: '',
     MH10: '',
     MH11: '',
     MH12: '',
     MH13: '',
+    MH13_Reason: '',
     MH14: '',
     SH1: '',
     SH2: '',
@@ -157,26 +165,26 @@ const handleChangeText = (name, value) => {
                     <View style = {globalStyles.flex_Row}>
                     <TextInput
                         style={styles.SmallinputField}
-                        placeholder="Birth Weight(kg)"
+                        placeholder="Birth Weight (kg)"
                         placeholderTextColor="#E60965"
                         keyboardType="numeric"
                         onChangeText={(value) => handleChangeText('birthWeight', value)}
                     />
                     <TextInput
                         style={styles.SmallinputField}
-                        placeholder="Sex"
+                        placeholder="Age: (Yr/Month)"
                         placeholderTextColor="#E60965"
-                        onChangeText={(value) => handleChangeText('sex', value)}
+                        onChangeText={(value) => handleChangeText('childAge', value)}
                     />
                     </View>
 
                     <View style = {globalStyles.flex_Row}>
                     <TextInput
-                        style={styles.ageInputField}
-                        placeholder="Age"
+                        style={styles.sexInputField}
+                        placeholder="Sex"
                         placeholderTextColor="#E60965"
-                        keyboardType="numeric"
-                        onChangeText={(value) => handleChangeText('childAge', value)}
+                        onChangeText={(value) => handleChangeText('sex', value)}
+                        
                     />
                     <TextInput
                         style={styles.birthDayInputField}
@@ -188,7 +196,7 @@ const handleChangeText = (name, value) => {
                     </View>
                     <TextInput
                         style={styles.BiginputField}
-                        placeholder="Age of Gestation"
+                        placeholder="Age of Gestation (Months)"
                         placeholderTextColor="#E60965"
                         keyboardType="numeric"
                         onChangeText={(value) => handleChangeText('ageOfGestation', value)}
@@ -316,6 +324,20 @@ const handleChangeText = (name, value) => {
         color: "#E60965",
         backgroundColor: "#FFFFFF",
         elevation: 5
+    },
+
+    sexInputField: {
+      borderWidth: 1,
+      borderRadius: 20,
+      borderColor: "#E60965",
+      paddingVertical: 5,
+      paddingHorizontal: 20,
+      width: "25%",
+      marginVertical: "1.5%",
+      marginHorizontal: "3%",
+      color: "#E60965",
+      backgroundColor: "#FFFFFF",
+      elevation: 5,
     },
 
     ageInputField: {

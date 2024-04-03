@@ -8,96 +8,127 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
-import ImageZoom from 'react-native-image-zoom-viewer';
 import * as DocumentPicker from 'expo-document-picker';
 import axios from 'axios';
+import { CommonActions } from '@react-navigation/native';
+import Spinner from 'react-native-loading-spinner-overlay';
+import ImageZoom from 'react-native-image-pan-zoom';
 
 
 const DonorUploadMedicalRequirements = ({route}) => {
 
-  const { screeningFormData } = route.params; // Access formData from route.params
-  // console.log("Retrieve:", screeningFormData)
-
+  const { screeningFormData } = route.params;
+  
   const [formData, setFormData] = useState(screeningFormData);
   const [selectedImage, setSelectedImage] = useState({});
   const [selectedFile, setSelectedFile] = useState({});
+  const [uploadedFiles, setUploadedFiles] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState('');
   const [fileContainer, setFileContainer] = useState(false)
   const [scrollableHorizontal, setScrollableHorizontal] = useState(false)
   const [imageContainer, setImageContainer] = useState(false)
   const navigation = useNavigation();
-
-  // const images = {
-  //   "HepaB": {
-  //     "uri": "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540anonymous%252FKalinga-af65754e-b276-4374-b355-875428704307/ImagePicker/3fa2d964-ab38-4875-8fb0-46b2dfdf3590.png",
-  //     "name": "HepaB.jpg",
-  //     "type": "image/png"
-  //   },
-  //   "HIV": {
-  //     "uri": "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540anonymous%252FKalinga-af65754e-b276-4374-b355-875428704307/ImagePicker/3fa2d964-ab38-4875-8fb0-46b2dfdf3590.png",
-  //     "name": "HIV.jpg",
-  //     "type": "image/png"
-  //   }
-  // };
+  const [isLoading, setIsLoading] = useState(false);
+ 
   const navigatePage = async (Page) => {
     try {
-      console.log('navigatePage');
+
+        setIsLoading(true);
         // Send POST request to the specified URL with the form data
-        // const postScreeningForm = await axios.post("http://192.168.1.104:7000/kalinga/addScreeningForm", 
-        //       screeningFormData,
-        //       // selectedImeage,
-        //       // selectedFile
-        // );
-        // console.log('Test');
-        // // Log successful response from the backend
-        // console.log('Data saved successfully:', postScreeningForm.data);
-
-        // const formData = new FormData();
-        // formData.append('image', selectedImage);
-        // console.log("selectedImage", selectedImage)
-        // console.log("formData", formData)
-        const formData = new FormData();
-        for (const key in selectedImage) {
-          if (Object.hasOwnProperty.call(selectedImage, key)) {
-            const imageData = selectedImage[key];
-            console.log("TYPE:", imageData.type)
-            formData.append("images", {
-              uri: imageData.uri,
-              name: [key] + ".png",
-              type: imageData.type,
-              // userType: imageData.userType
-            });
-          }
-        }
-
-        console.log("FormData: ", formData)
-
-        const postImage = await axios.post("http://192.168.1.104:7000/kalinga/addMedicalRequirementsAsImage", 
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          }
+        const postScreeningForm = await axios.post("http://192.168.1.104:7000/kalinga/addScreeningForm", 
+              screeningFormData,
         );
-        
-          // Log successful response from the backend
-          console.log('Data saved successfully:', postImage.data);
+        // Log successful response from the backend
+        console.log('Data saved successfully:', postScreeningForm.data);
 
-        // Navigate to the specified page
-        navigation.navigate(Page);
+        const formData = new FormData();
+        formData.append('image', selectedImage);
+
+      
+        if(Object.keys(selectedImage).length !== 0){
+            const uploadedImages = new FormData();
+
+            for (const key in selectedImage) {
+              const imageData = selectedImage[key];
+              const file = {
+                uri: imageData.uri,
+                type: 'image/jpeg', // Assuming all image types are JPEG
+                name: `${key}.png`,
+              };
+
+              uploadedImages.append('DonorImages', file); // Append the file directly
+              uploadedImages.append(`userType`, "Donor"); 
+              uploadedImages.append(`owner`, imageData.owner);// Append userType
+              uploadedImages.append(`ownerID`, imageData.ownerID);// Append userType
+            }
+    
+            setUploadedFiles(uploadedImages)
+    
+            const postImages = await axios.post("http://192.168.1.104:7000/kalinga/addMedicalRequirementsAsImage", 
+              uploadedImages,
+              {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }
+              }
+            );
+            console.log('Data saved successfully:', postImages.data);
+        }
+       
+          // Log successful response from the backend
+     
+            
+          if(Object.keys(selectedFile).length !== 0){
+
+              const uploadedFiles = new FormData();
+
+              for (const key in selectedFile) {
+                const imageData = selectedFile[key];
+                const file = {
+                  uri: imageData.uri,
+                  type: imageData.type, 
+                  name: imageData.name,
+                };
+                uploadedFiles.append('DonorFiles', file); // Append the file directly
+                uploadedFiles.append(`userType`, "Donor"); 
+                uploadedFiles.append(`owner`, imageData.owner);// Append userType
+                uploadedFiles.append(`ownerID`, imageData.ownerID);// Append userType
+                uploadedFiles.append(`requirementType`, imageData.requirementType); // Append owner
+              }
+      
+              setUploadedFiles(uploadedFiles)
+      
+              const postFiles = await axios.post("http://192.168.1.104:7000/kalinga/addMedicalRequirementsAsFile", 
+                uploadedFiles,
+                {
+                  headers: {
+                    'Content-Type': 'multipart/form-data'
+                  }
+                }
+              );
+              console.log('Data saved successfully:', postFiles.data);
+          }
+          
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0, //Reset the stack to 0 so the user cannot go back
+              routes: [{ name: Page }], // Replace 'Login' with the name of your login screen
+            })
+          );
+
     } catch (error) {
         // Handle error if the request fails
         console.error('Error saving data:', error);
+    } finally {
+      setIsLoading(false);
     }
+
+    
 };
 
-// const submitToDataBase = () => {
- 
-// }
    
-  const handleImageUpload = async (attachmentType, id) => {
+  const handleImageUpload = async (attachmentType) => {
     try {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
@@ -116,15 +147,14 @@ const DonorUploadMedicalRequirements = ({route}) => {
         if (!result.cancelled && result.assets && result.assets.length > 0) {
             let fileType = ''
           result.assets.forEach(image => {
-            // Check if the type is "image" without a specific subtype
+
             if (image.type === 'image' || !image.type.includes('/')) {
                       fileType = image.type + "/jpeg"
-              // console.warn(`Incomplete or unknown image type for ${image.uri}`);
+
             } else {
-              // Process the image with complete type information
+
               fileType = image.type
-              console.log(`Image type: ${image.type}`);
-              // Other processing logic...
+
             }
           });
 
@@ -132,30 +162,25 @@ const DonorUploadMedicalRequirements = ({route}) => {
           setSelectedImage(prevState => ({
               ...prevState,
             
-              // [attachmentType]: result.assets[0].uri
+
               [attachmentType]: ({
                 uri: result.assets[0].uri,
                 name: attachmentType, 
                 type: fileType,
-                // userType: "Donor"
+                userType: "Donor",
+                owner: screeningFormData.fullName,
+                ownerID: screeningFormData.applicantId
+            
               })
               
           }));
-          // console.log("results: ", result.assets[0].uri);
-          // console.log("selectedImage after update:", selectedImage);
+
           const numberOfObjects = Object.keys(selectedImage).length;
           if (numberOfObjects >= 3) setScrollableHorizontal(true);
-          console.log("numberofObjects:", numberOfObjects)
+
           setImageContainer(true)
       }
           
-          // console.log("results: ", result.assets[0].uri)
-          // console.log("selectedImage after update:", selectedImage);
-          // console.log("selectedImage:", selectedImage)
-
-          // console.log("results: ", result.assets[0].uri)
-          //   setSelectedImage(result.assets[0].uri);
-          // console.log("selectedImage:", selectedImage)  
         
     } catch (error) {
         Alert.alert('Error', 'Failed to pick an image.');
@@ -168,18 +193,39 @@ const handleFileUpload = async (attachmentType) => {
   try {
     const result = await DocumentPicker.getDocumentAsync();
     if (!result.cancelled && result.assets && result.assets.length > 0) {
+            if (
+              result.assets[0].mimeType === "application/pdf" ||
+              result.assets[0].mimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          ) {
+              if (result.assets[0].mimeType === "application/pdf") {
+                  fileName = attachmentType + ".pdf";
+                  fileType = result.assets[0].mimeType;
+              } else {
+
+                  fileType = "application/docx";
+                  fileName = attachmentType + ".docx";
+              }
+          } else {
+              fileName = attachmentType;
+          }
         // Create a new object to hold the updated selected file state
         const updatedSelectedFile = {
             ...selectedFile,
             [attachmentType]: {
+                // name: screeningFormData.fullName + "_" + attachmentType + result.assets[0].type,
                 name: result.assets[0].name,
                 uri: result.assets[0].uri,
-                type: attachmentType
+                type: fileType,
+                userType: "Donor",
+                owner: screeningFormData.fullName,
+                size: result.assets[0].size,
+                requirementType: attachmentType,
+                ownerID: screeningFormData.applicantId
             }
         };
         // Update the selectedFile state
         setSelectedFile(updatedSelectedFile);
-        console.log("updatedSelectedFile:", updatedSelectedFile)
+        // console.log("updatedSelectedFile:", updatedSelectedFile)
         setFileContainer(true)
     }
 }catch (error) {
@@ -188,13 +234,19 @@ const handleFileUpload = async (attachmentType) => {
   };
   
 
-useEffect(() => {
-  console.log("selectedImage:", JSON.stringify(selectedImage, null, 2));
-}, [selectedImage]);
+  //DO NOT DELETE THIS FOR CHECKING
+
+// useEffect(() => {
+//   console.log("selectedImage:", JSON.stringify(selectedImage, null, 2));
+// }, [selectedImage]);
 
 // useEffect(() => {
 //   console.log("selectedFile:", JSON.stringify(selectedFile, null, 2));
 // }, [selectedFile]);
+
+// useEffect(() => {
+//   console.log("formData:", JSON.stringify(uploadedFiles, null, 2));
+// }, [uploadedFiles]);
 
 
   const [isChecked, setIsChecked] = useState(false);
@@ -235,10 +287,10 @@ useEffect(() => {
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                        <TouchableOpacity onPress={()=>handleImageUpload('HepaB', 0)}>
+                        <TouchableOpacity onPress={()=>handleImageUpload('HepaB')}>
                           <AntDesign name="picture" size={27} color="#E60965" />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=> handleFileUpload('hepaB', 0)} style  = {{
+                        <TouchableOpacity onPress={()=> handleFileUpload('hepaB')} style  = {{
 
                           flexDirection: "row", alignItems: "center"
                         }}>
@@ -258,10 +310,10 @@ useEffect(() => {
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                        <TouchableOpacity onPress={()=>handleImageUpload('HIV', 1)}>
+                        <TouchableOpacity onPress={()=>handleImageUpload('HIV')}>
                           <AntDesign name="picture" size={27} color="#E60965" />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=> handleFileUpload('HIV', 1)}style  = {{
+                        <TouchableOpacity onPress={()=> handleFileUpload('HIV')}style  = {{
 
                           flexDirection: "row", alignItems: "center"
                         }}>
@@ -279,10 +331,10 @@ useEffect(() => {
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                        <TouchableOpacity onPress={()=>handleImageUpload('Syphillis', 2)}>
+                        <TouchableOpacity onPress={()=>handleImageUpload('Syphillis')}>
                           <AntDesign name="picture" size={27} color="#E60965" />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=> handleFileUpload('Syphillis', 2)} style  = {{
+                        <TouchableOpacity onPress={()=> handleFileUpload('Syphillis')} style  = {{
 
                           flexDirection: "row", alignItems: "center"
                         }}>
@@ -357,7 +409,7 @@ useEffect(() => {
                     marginTop: 20,
                     }}>
                     <ScrollView 
-                      showsHorizontalScrollIndicator={false}
+                      showsHorizontalScrollIndicator={true}
                       overScrollMode='never'
                     horizontal={scrollableHorizontal}
                     contentContainerStyle={{ flexDirection: 'row', }}
@@ -366,7 +418,8 @@ useEffect(() => {
                                 <TouchableOpacity
                                     key={attachmentType}
                                     onPress={() => {
-                                        setSelectedImageUrl({uri: value.uri});
+                                        setSelectedImageUrl(value.uri);
+                                        console.log("selectedImageUrl: ", selectedImageUrl)
                                         setModalVisible(true);
                                     }}
                                 >
@@ -445,7 +498,7 @@ useEffect(() => {
                   }}
               >
                   <View style={styles.modalContainer}>
-                  {/* <ImageZoom
+                  <ImageZoom
                       cropWidth={Dimensions.get('window').width}
                       cropHeight={Dimensions.get('window').height}
                       imageWidth={Dimensions.get('window').width}
@@ -453,12 +506,12 @@ useEffect(() => {
                       enableSwipeDown={true}
                       onSwipeDown={() => setModalVisible(false)} // Close modal on swipe down
                       style={{ backgroundColor: 'black' }} // Set background color to black to avoid seeing the underlying content
-                  > */}
+                  >
                       <Image
                           source={{ uri: selectedImageUrl }}
                           style={{ width: '100%', height: '100%' }}
                       />
-                  {/* </ImageZoom> */}
+                  </ImageZoom>
                       <TouchableHighlight
                           style={styles.closeButton}
                           onPress={() => {
@@ -470,7 +523,11 @@ useEffect(() => {
                   </View>
               </Modal>
 
-
+              <Spinner
+              visible={isLoading}
+              textContent={'Loading...'}
+              textStyle={{ color: '#FFF' }}
+            />
       
 
             <TouchableOpacity onPress={toggleCheckbox} style={styles.checkbox}>
@@ -484,8 +541,7 @@ useEffect(() => {
                         <Text style={styles.buttonTitle}>Submit</Text>
             </TouchableOpacity>
 
-     
-
+           
         </ScrollView>
 
       </View>
