@@ -1,11 +1,14 @@
 import express from 'express'
 import { createScreeningForm, getScreeningFormByMaxApplicantID, getScreeningFormByName } from '../../db/ApplyAsDonor';
 import { random, passEncryption } from '../../helpers/passwordEncryption'
+import randomatic from 'randomatic'
 
 export const addScreeningForm = async( req: express.Request, res: express.Response) => {
 try {
     const {
+        Applicant_ID,
         fullName,
+        userType,
         Age,
         birthday,
         email,
@@ -24,6 +27,7 @@ try {
         TypeOfDonor,
         QA,
         QB,
+        QB_Reason,
         Q1,
         Q2,
         MH1,
@@ -33,12 +37,14 @@ try {
         MH5,
         MH6,
         MH7,
+        MH7_Reason,
         MH8,
         MH9,
         MH10,
         MH11,
         MH12,
         MH13,
+        MH13_Reason,
         MH14,
         SH1,
         SH2,
@@ -46,43 +52,38 @@ try {
 
 
     if(!fullName){
-        // console.log("fullName:", fullName)
-        return res.sendStatus(400);
+        const message = {
+            code: 1, 
+            message: 'Invalid Input no Full Name'
+        }
+         return res.status(200). json({message}) .end();
     };
 
-    const exisistingUser = await getScreeningFormByName(fullName)
+    const existingUser = await getScreeningFormByName(fullName)
 
-    if(exisistingUser){
-        console.log("existingUser")
-        return res.sendStatus(400);
-    }
+    if(existingUser){
 
-    const maxApplicantID = await getScreeningFormByMaxApplicantID()
-    // console.log('test:', maxApplicantID)
-    let Applicant_ID: number;
-    let Screening_ID: number;
-
-    if(maxApplicantID === null){
-
-        Applicant_ID = 1;   
-       
-    } else {
-        // Increment the maximum Applicant_ID by 1
-        const maxApplicantIDValue = maxApplicantID.Applicant_ID as number
-        Applicant_ID = maxApplicantIDValue + 1;
+        if(existingUser.Applicant_ID === Applicant_ID){
+            const message = {
+                code: 1, 
+                message: 'Existing Applicant'
+            }
+             return res.json({message}) .end();
+        };
 
     }
+
+     const Screening_ID = randomatic('Aa0', 20);
 
     const moment = require('moment');
     const currentTime = moment();
     const formattedTime = currentTime.format('YYYY-MM-DD HH:mm:ss');
-    console.log(' Applicant_ID:',  Applicant_ID)
-    Screening_ID = Applicant_ID;
     
     // const salt = random(); 
     const screeningForm = await createScreeningForm({
         Screening_ID,
         Applicant_ID,
+        userType,
         fullName,
         Age,
         birthday,
@@ -102,6 +103,7 @@ try {
         TypeOfDonor,
         QA,
         QB,
+        QB_Reason,
         Q1,
         Q2,
         MH1,
@@ -111,12 +113,14 @@ try {
         MH5,
         MH6,
         MH7,
+        MH7_Reason,
         MH8,
         MH9,
         MH10,
         MH11,
         MH12,
         MH13,
+        MH13_Reason,
         MH14,
         SH1,
         SH2,
@@ -132,7 +136,7 @@ try {
     return res.status(200). json({message, screeningForm}) .end();
     
 } catch (error) {
-    console.log("ayaw")
+
     return res.sendStatus(400)
 }
 

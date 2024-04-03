@@ -12,7 +12,7 @@ import {
 import { globalStyles } from "../../../../styles_kit/globalStyles.js"
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { Octicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation , CommonActions } from '@react-navigation/native';
 
 const DonorApproved = () => {
 
@@ -20,7 +20,12 @@ const DonorApproved = () => {
 
   const navigatePage = (Page) => {
     // Navigate to the next screen by route name
-    navigation.navigate(Page);
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0, //Reset the stack to 0 so the user cannot go back
+        routes: [{ name: Page }], // Replace 'Login' with the name of your login screen
+      })
+    );
   }
 
     const FirstParagraph = 'Your request has been approved. Please pay the fee before proceeding to the next step'

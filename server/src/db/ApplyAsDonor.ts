@@ -8,8 +8,10 @@ import mongoose from 'mongoose';
 
 const screeningFormSchema = new mongoose.Schema({
 
-    Screening_ID: {type: Number},
-    Applicant_ID: {type: Number},
+    Screening_ID: {type: String},
+    Applicant_ID: {type: String},
+    userType: {type: String},
+
     fullName: {type: String},
     Age: {type: String},
     birthday: {type: String},
@@ -22,7 +24,7 @@ const screeningFormSchema = new mongoose.Schema({
     NameOfChild: {type: String},
     BirthWeight: {type: String},
     Sex: {type: String},
-    childAge: {type: Number},
+    childAge: {type: String},
     DateOfBirth: {type: String},
     AgeOfGestation: {type: String},
     MedicalCondition: {type: String},
@@ -30,6 +32,7 @@ const screeningFormSchema = new mongoose.Schema({
     TypeOfDonor:{type: String},
     QA: {type: String},
     QB: {type: String},
+    QB_Reason: {type: String},
     Q1: {type: String},
     Q2: {type: String},
 
@@ -41,12 +44,14 @@ const screeningFormSchema = new mongoose.Schema({
     MH5: {type: String},
     MH6: {type: String},
     MH7: {type: String},
+    MH7_Reason: {type: String},
     MH8: {type: String},
     MH9: {type: String},
     MH10: {type: String},
     MH11: {type: String},
     MH12: {type: String},
     MH13: {type: String},
+    MH13_Reason: {type: String},
     MH14: {type: String},
 
     //SexualHistory
@@ -56,45 +61,49 @@ const screeningFormSchema = new mongoose.Schema({
     //
     createdAt: {type: Date, default: Date.now},
     updatedAt: {type: Date, default: Date.now},
- 
+    
 
 });
 
 const imageSchema = new mongoose.Schema({
-    fieldname: {type: String}, 
-    id: {type: String}, 
-    timeStamp: {type: String}, 
-    originalname: {type: String}, 
-    encoding: {type: String}, 
-    mimetype: {type: String}, 
-    destination: {type: String}, 
-    filename: {type: String}, 
-    path: {type: String}, 
-    size: {type: Number}, 
-    uploadedAt: {type: String}, 
-  
-})
+    fieldname: { type: String }, 
+    originalname: { type: String }, 
+    encoding: { type: String }, 
+    mimetype: { type: String }, 
+    destination: { type: String }, 
+    filename: { type: String }, 
+    path: { type: String }, 
+    size: { type: Number }, 
+    uploadedAt: { type: String }, 
+    userType: { type: String }, // Add userType field if needed
+    owner: { type: String }, // Add owner field if needed
+    ownerID: { type: String }
+});
+
+const fileSchema = new mongoose.Schema({
+    fieldname: { type: String }, 
+    originalname: { type: String }, 
+    encoding: { type: String }, 
+    mimetype: { type: String }, 
+    destination: { type: String }, 
+    filename: { type: String }, 
+    path: { type: String }, 
+    size: { type: Number }, 
+    uploadedAt: { type: String }, 
+    userType: { type: String }, // Add userType field if needed
+    owner: { type: String }, // Add owner field if needed
+    ownerID: { type: String }
+});
 
 
-// interface imageData{
-//    [key:string]: {
-//         uri: string,
-//         name: string,
-//         type: string,
-//         userType: string
-//    }
-    
-// }
+export const MedicalRequirementsImagesModel = mongoose.model('Donor MR as Images', imageSchema)
+export const MedicalRequirementsFilesModel = mongoose.model('Donor MR as File', fileSchema)
+export const screeningFormModel = mongoose.model('Screening Forms', screeningFormSchema)
 
-// const imageDataSchema = new mongoose.Schema<imageData>({}, {strict: false})
-
-// export const MedicalRequirementsImagesModel = mongoose.model<imageData>('MedicalRequirements', imageDataSchema)
-
-export const MedicalRequirementsImagesModel = mongoose.model('DonorMRImages', imageSchema)
-
+export const createMedicalRequirementFiles = (values: Record<string, any>) => new MedicalRequirementsFilesModel(values).save().then((MedicalRequirements) => MedicalRequirements.toObject())
 export const createMedicalRequirementImages = (values: Record<string, any>) => new MedicalRequirementsImagesModel(values).save().then((MedicalRequirements) => MedicalRequirements.toObject())
 
-export const screeningFormModel = mongoose.model('ScreenignForm', screeningFormSchema)
+
 export const createScreeningForm = (values: Record<string, any>) => new screeningFormModel(values).save().then((ScreeningForm) => ScreeningForm.toObject())
 export const getScreeningFormByName = (fullName: string) => screeningFormModel.findOne({fullName})
 export const getScreeningFormByApplicantID = (Applicant_ID: number) => screeningFormModel.findOne({Applicant_ID})

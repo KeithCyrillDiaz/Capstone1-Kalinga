@@ -30,25 +30,34 @@ const DonorUploadMedicalRequirements = ({route}) => {
 
   const navigatePage = async (Page) => {
     try {
-      console.log('try');
+      console.log('navigatePage');
         // Send POST request to the specified URL with the form data
-        const postScreeningForm = await axios.post("http://192.168.1.104:7000/kalinga/addScreeningForm", 
-              screeningFormData,
-              // selectedImage,
-              // selectedFile
-        );
-        console.log('Test');
-        // Log successful response from the backend
-        console.log('Data saved successfully:', postScreeningForm.data);
+        // const postScreeningForm = await axios.post("http://192.168.1.104:7000/kalinga/addScreeningForm", 
+        //       screeningFormData,
+        //       // selectedImage,
+        //       // selectedFile
+        // );
+        // console.log('Test');
+        // // Log successful response from the backend
+        // console.log('Data saved successfully:', postScreeningForm.data);
 
+        const formData = new FormData();
+        Object.values(selectedImage).forEach(image => {
+          formData.append('file', image);
+        });
+        // console.log('formData: ', formData);
+        formData._parts.forEach(part => {
+          const [key, value] = part; // Destructure the part into key and value
+          console.log(`Key: ${key}, Value: `, value);
+      });
         const postImage = await axios.post("http://192.168.1.104:7000/kalinga/addMedicalRequirementsAsImage", 
         // screeningFormData,
-              selectedImage,
+          selectedImage
           // selectedFile
         );
-          console.log('Test');
+        
           // Log successful response from the backend
-          console.log('Data saved successfully:', response.data);
+          console.log('Data saved successfully:', postImage.data);
 
         // Navigate to the specified page
         navigation.navigate(Page);
@@ -62,7 +71,7 @@ const DonorUploadMedicalRequirements = ({route}) => {
  
 // }
    
-  const handleImageUpload = async (attachmentType) => {
+  const handleImageUpload = async (attachmentType, id) => {
     try {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
@@ -75,25 +84,31 @@ const DonorUploadMedicalRequirements = ({route}) => {
             allowsEditing: true,
             aspect: [Dimensions.get('window').width, Dimensions.get('window').height],
             quality: 1,
+            multiple: true, 
         });
 
         if (!result.cancelled && result.assets && result.assets.length > 0) {
           setSelectedImage(prevState => ({
               ...prevState,
             
-              [attachmentType]: result.assets[0].uri
+              // [attachmentType]: result.assets[0].uri
+              [attachmentType]: ({
+                uri: result.assets[0].uri,
+                name: attachmentType,
+                type: result.assets[0].type
+              })
               
           }));
-          console.log("results: ", result.assets[0].uri);
-          console.log("selectedImage after update:", selectedImage);
+          // console.log("results: ", result.assets[0].uri);
+          // console.log("selectedImage after update:", selectedImage);
           const numberOfObjects = Object.keys(selectedImage).length;
           if (numberOfObjects >= 3) setScrollableHorizontal(true);
           console.log("numberofObjects:", numberOfObjects)
           setImageContainer(true)
       }
           
-          console.log("results: ", result.assets[0].uri)
-          console.log("selectedImage after update:", selectedImage);
+          // console.log("results: ", result.assets[0].uri)
+          // console.log("selectedImage after update:", selectedImage);
           // console.log("selectedImage:", selectedImage)
 
           // console.log("results: ", result.assets[0].uri)
@@ -130,14 +145,19 @@ const handleFileUpload = async (attachmentType) => {
     }
   };
   
-
-useEffect(() => {
-  console.log("selectedImage:", JSON.stringify(selectedImage, null, 2));
-}, [selectedImage]);
+ //DO NOT DELETE THIS FOR CHECKING
+ 
+// useEffect(() => {
+//   console.log("selectedImage:", JSON.stringify(selectedImage, null, 2));
+// }, [selectedImage]);
 
 // useEffect(() => {
 //   console.log("selectedFile:", JSON.stringify(selectedFile, null, 2));
 // }, [selectedFile]);
+
+// useEffect(() => {
+//   console.log("formData:", JSON.stringify(uploadedFiles, null, 2));
+// }, [uploadedFiles]);
 
 
   const [isChecked, setIsChecked] = useState(false);
@@ -178,10 +198,10 @@ useEffect(() => {
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                        <TouchableOpacity onPress={()=>handleImageUpload('HepaB')}>
+                        <TouchableOpacity onPress={()=>handleImageUpload('HepaB', 0)}>
                           <AntDesign name="picture" size={27} color="#E60965" />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=> handleFileUpload('hepaB')} style  = {{
+                        <TouchableOpacity onPress={()=> handleFileUpload('hepaB', 0)} style  = {{
 
                           flexDirection: "row", alignItems: "center"
                         }}>
@@ -201,10 +221,10 @@ useEffect(() => {
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                        <TouchableOpacity onPress={()=>handleImageUpload('HIV')}>
+                        <TouchableOpacity onPress={()=>handleImageUpload('HIV', 1)}>
                           <AntDesign name="picture" size={27} color="#E60965" />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=> handleFileUpload('HIV')}style  = {{
+                        <TouchableOpacity onPress={()=> handleFileUpload('HIV', 1)}style  = {{
 
                           flexDirection: "row", alignItems: "center"
                         }}>
@@ -222,10 +242,10 @@ useEffect(() => {
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                        <TouchableOpacity onPress={()=>handleImageUpload('Syphillis')}>
+                        <TouchableOpacity onPress={()=>handleImageUpload('Syphillis', 2)}>
                           <AntDesign name="picture" size={27} color="#E60965" />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=> handleFileUpload('Syphillis')} style  = {{
+                        <TouchableOpacity onPress={()=> handleFileUpload('Syphillis', 2)} style  = {{
 
                           flexDirection: "row", alignItems: "center"
                         }}>
@@ -305,11 +325,11 @@ useEffect(() => {
                     horizontal={scrollableHorizontal}
                     contentContainerStyle={{ flexDirection: 'row', }}
                   >
-                      {Object.entries(selectedImage).map(([key, uri]) => (
+                      {Object.entries(selectedImage).map(([attachmentType, value]) => (
                                 <TouchableOpacity
-                                    key={key}
+                                    key={attachmentType}
                                     onPress={() => {
-                                        setSelectedImageUrl(uri);
+                                        setSelectedImageUrl({uri: value.uri});
                                         setModalVisible(true);
                                     }}
                                 >
@@ -319,9 +339,9 @@ useEffect(() => {
                                           color: "#E60965",
                                           marginTop: 7,
                                       
-                                        }}>{key}</Text>
+                                        }}>{attachmentType}</Text>
                                         <Image
-                                            source={{ uri: uri }}
+                                            source={{ uri: value.uri }}
                                             style={{ width: 100, height: 100, marginTop: 7, resizeMode: 'cover',}}
                                         />
                                     </View>
