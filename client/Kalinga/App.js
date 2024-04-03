@@ -188,6 +188,7 @@ export default function App() {
             <Stack.Screen name="GuestTabsExploreAndMilkBank" component={GuestTabsExploreAndMilkBank} />
             <Stack.Screen name="RequestorTabsExploreAndMilkBank" component={RequestorTabsExploreAndMilkBank} />
             <Stack.Screen name="DonorTabsExploreAndMilkBank" component={RequestorTabsExploreAndMilkBank} />
+            <Stack.Screen name="RequestorTabs" component = {RequestorTabs}/>
 
             <Stack.Screen name="SendCode" component={SendCode} />
             <Stack.Screen name="MobileNumber" component={MobileNumber} />

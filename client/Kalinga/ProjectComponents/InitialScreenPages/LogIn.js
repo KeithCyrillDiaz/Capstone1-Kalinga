@@ -13,7 +13,7 @@ const LogIn = () => {
     };
 
     const handleLogIn = () => {
-        navigation.navigate('LoginAdmin');
+        navigation.navigate('RequestorTabs');
     };
 
     const handleCreateAccount = () => {
