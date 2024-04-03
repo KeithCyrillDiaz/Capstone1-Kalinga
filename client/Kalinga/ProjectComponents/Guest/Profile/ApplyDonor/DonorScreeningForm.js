@@ -105,7 +105,7 @@ const handleChangeText = (name, value) => {
 
                 
 
-              <View style = {globalStyles.flex_start}>
+              <View style = {styles.flex_start}>
                 <Text style = {globalStyles.titleParagraph}>Personal Information</Text>
               </View>
               <View style = {styles.container}>
@@ -152,7 +152,7 @@ const handleChangeText = (name, value) => {
                     
               </View>
 
-              <View style = {globalStyles.flex_start}>
+              <View style = {styles.flex_start}>
                 <Text style = {styles.subtitle}>Infant Information</Text>
               </View>
               <View style = {styles.container}>
@@ -232,6 +232,14 @@ const handleChangeText = (name, value) => {
   }
 
   const styles = StyleSheet.create ({
+
+    flex_start: {
+      flex: 1,
+      // backgroundColor: "pink",
+      marginHorizontal: 30
+      
+    }, 
+
     SafeArea: {
         flex: 1,
         backgroundColor: '#FFF8EB',
