@@ -88,11 +88,12 @@ export const globalStyles = StyleSheet.create({
     },
 
     flex_start: {
-      flex: 1,
-      //justifyContent: "center"
-      alignItems: "flex-start",
-      marginLeft: "5%"
+    marginRight: 160,
     },
+
+    flex_start1: {
+      marginHorizontal: 30
+      },
 
     flex_end: {
       flex: 1,

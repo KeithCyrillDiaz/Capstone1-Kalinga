@@ -136,7 +136,6 @@ import DonorUploadAdmin from './screens/Admin/ScreeningForm/Donor/DonorUploadAdm
 //import RequestorVerification from './screens/Admin/RequestorVerification'; 
 import DonorAppointmentConfirmation from './screens/Admin/ScreeningForm/Donor/DonorAppointmentConfirmation.js';
 import RequestorRequestConfirmation from './screens/Admin/ScreeningForm/Requestor/RequestorRequestConfirmation.js'
-import DonorForm from './screens/Admin/ScreeningForm/Donor//DonorForm.js'
 
 import RequestorInitialScreeningFormPage1 from './screens/Admin/ScreeningForm/Requestor/RequestorInitialScreeningFormPage1.js'
 import RequestorUserVerification from './screens/Admin/ScreeningForm/Requestor/RequestorUserVerification.js';   //<Stack.Screen name="RequestorVerification" component={RequestorVerification} />
@@ -309,7 +308,6 @@ export default function App() {
              <Stack.Screen name="DonorUploadAdmin" component={DonorUploadAdmin} />
              <Stack.Screen name="DonorAppointmentConfirmation" component={DonorAppointmentConfirmation} />
              <Stack.Screen name="RequestorRequestConfirmation" component={RequestorRequestConfirmation} />
-             <Stack.Screen name="DonorForm" component={DonorForm} />
 
 
 
