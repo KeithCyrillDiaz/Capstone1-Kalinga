@@ -1,5 +1,5 @@
 //Guest EducLibrary
-import React from "react";
+import React, { useState } from "react";
 import { 
   ScrollView, 
   Text, 
@@ -13,18 +13,74 @@ import {
 import { globalStyles } from "../../../../styles_kit/globalStyles.js";
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { useNavigation } from '@react-navigation/native';
+import randomatic from 'randomatic';
 
 
 const DonorScreeningForm = () => {
 
     const navigation = useNavigation();
 
-  const navigatePage = (Page) => {
+  const navigatePage = (Page, data) => {
     // Navigate to the next screen by route name
-    navigation.navigate(Page);
+   console.log(data)
+    navigation.navigate(Page, data);
   };
 
+  const applicantId = randomatic('Aa0', 20);
+
+  
+
+  const [screeningFormData, setScreeningFormData] = useState({
+    applicantId: applicantId,
+    userType: "Donor",
+    fullName: '',
+    age: '',
+    birthDate: '',
+    email: '',
+    contactNumber: '',
+    homeAddress: '',
+    childName: '',
+    childAge: '',
+    sex: '',
+    childBirthDate: '',
+    birthWeight: '',
+    ageOfGestation: '',
+    medicalCondition: '',
+    typeOfDonor: '',
+    QA: '',
+    QB: '',
+    QB_Reason: '',
+    Q1: '',
+    Q2: '',
+    MH1: '',
+    MH2: '',
+    MH2_Reason: '',
+    MH3: '',
+    MH4: '',
+    MH5: '',
+    MH6: '',
+    MH7: '',
+    MH7_Reason: '',
+    MH8: '',
+    MH9: '',
+    MH10: '',
+    MH11: '',
+    MH12: '',
+    MH13: '',
+    MH13_Reason: '',
+    MH14: '',
+    SH1: '',
+    SH2: '',
+
+});
+
+// Handler to update the state with the entered values
+const handleChangeText = (name, value) => {
+    setScreeningFormData({ ...screeningFormData, [name]: value });
+};
+
   return (
+    
 
       <SafeAreaView style = {styles.SafeArea}>
           <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
@@ -49,7 +105,7 @@ const DonorScreeningForm = () => {
 
                 
 
-              <View style = {globalStyles.flex_start}>
+              <View style = {styles.flex_start}>
                 <Text style = {globalStyles.titleParagraph}>Personal Information</Text>
               </View>
               <View style = {styles.container}>
@@ -57,88 +113,110 @@ const DonorScreeningForm = () => {
                         style={styles.BiginputField}
                         placeholder="Full Name"
                         placeholderTextColor="#E60965"
+                        onChangeText={(value) => handleChangeText('fullName', value)}
                     />
                     <View style = {globalStyles.flex_Row}>
                     <TextInput
-                        style={styles.SmallinputField}
+                        style={styles.ageInputField}
                         placeholder="Age"
                         placeholderTextColor="#E60965"
+                          keyboardType="numeric"
+                        onChangeText={(value) => handleChangeText('age', value)}
                     />
                     <TextInput
-                        style={styles.SmallinputField}
-                        placeholder="Birth Date"
+                        style={styles.birthDayInputField}
+                        placeholder="Birth Date: MM/DD/YY"
                         placeholderTextColor="#E60965"
+                        onChangeText={(value) => handleChangeText('birthDate', value)}
                     />
                     </View>
                     <TextInput
                         style={styles.BiginputField}
                         placeholder="Email Address"
                         placeholderTextColor="#E60965"
+                        onChangeText={(value) => handleChangeText('email', value)}
                     />
                      <TextInput
                         style={styles.BiginputField}
                         placeholder="Contact Number"
                         placeholderTextColor="#E60965"
+                        keyboardType="numeric"
+                        onChangeText={(value) => handleChangeText('contactNumber', value)}
                     />
                      <TextInput
                         style={styles.BiginputField}
                         placeholder="Home Address"
                         placeholderTextColor="#E60965"
+                        onChangeText={(value) => handleChangeText('homeAddress', value)}
                     /> 
                     
               </View>
 
-              <View style = {globalStyles.flex_start}>
+              <View style = {styles.flex_start}>
                 <Text style = {styles.subtitle}>Infant Information</Text>
               </View>
               <View style = {styles.container}>
                     <TextInput
                         style={styles.BiginputField}
-                        placeholder="Name of Child"
+                        placeholder="Full Name of Child"
                         placeholderTextColor="#E60965"
+                        onChangeText={(value) => handleChangeText('childName', value)}
                     />
                     <View style = {globalStyles.flex_Row}>
                     <TextInput
                         style={styles.SmallinputField}
-                        placeholder="Age"
+                        placeholder="Birth Weight (kg)"
                         placeholderTextColor="#E60965"
+                        keyboardType="numeric"
+                        onChangeText={(value) => handleChangeText('birthWeight', value)}
                     />
                     <TextInput
                         style={styles.SmallinputField}
-                        placeholder="Sex"
+                        placeholder="Age: (Yr/Month)"
                         placeholderTextColor="#E60965"
+                        onChangeText={(value) => handleChangeText('childAge', value)}
                     />
                     </View>
 
                     <View style = {globalStyles.flex_Row}>
                     <TextInput
-                        style={styles.SmallinputField}
-                        placeholder="Birth Weight"
+                        style={styles.sexInputField}
+                        placeholder="Sex"
                         placeholderTextColor="#E60965"
+                        onChangeText={(value) => handleChangeText('sex', value)}
+                        
                     />
                     <TextInput
-                        style={styles.SmallinputField}
-                        placeholder="Birthdate"
+                        style={styles.birthDayInputField}
+                        placeholder="Birth Date: MM/DD/YY"
                         placeholderTextColor="#E60965"
+                  
+                        onChangeText={(value) => handleChangeText('childBirthDate', value)}
                     />
                     </View>
                     <TextInput
                         style={styles.BiginputField}
-                        placeholder="Age of Gestation"
+                        placeholder="Age of Gestation (Months)"
                         placeholderTextColor="#E60965"
+                        keyboardType="numeric"
+                        onChangeText={(value) => handleChangeText('ageOfGestation', value)}
                     />
                      <TextInput
                         style={styles.BiginputField}
                         placeholder="Medical Condition"
                         placeholderTextColor="#E60965"
+                        onChangeText={(value) => handleChangeText('medicalCondition', value)}
                     />
                     
               </View>
 
               <View style = {globalStyles.center}>
-                
-                    <TouchableOpacity style = {styles.AgreebuttonContainer} onPress={() => navigatePage("DonorScreeningForm2")}>
-                        <Text style = {styles.label}>Next</Text>
+
+                    <TouchableOpacity 
+                      style={styles.AgreebuttonContainer} 
+                      onPress={() => navigatePage("DonorScreeningForm2", { screeningFormData: screeningFormData })}
+                    >
+                      <Text style={styles.label}>Next</Text>
                     </TouchableOpacity>
              
             </View>
@@ -154,6 +232,14 @@ const DonorScreeningForm = () => {
   }
 
   const styles = StyleSheet.create ({
+
+    flex_start: {
+      flex: 1,
+      // backgroundColor: "pink",
+      marginHorizontal: 30
+      
+    }, 
+
     SafeArea: {
         flex: 1,
         backgroundColor: '#FFF8EB',
@@ -244,7 +330,50 @@ const DonorScreeningForm = () => {
         width: "90%",
         marginVertical: "1.5%",
         color: "#E60965",
-        backgroundColor: "#FFFFFF"
+        backgroundColor: "#FFFFFF",
+        elevation: 5
+    },
+
+    sexInputField: {
+      borderWidth: 1,
+      borderRadius: 20,
+      borderColor: "#E60965",
+      paddingVertical: 5,
+      paddingHorizontal: 20,
+      width: "25%",
+      marginVertical: "1.5%",
+      marginHorizontal: "3%",
+      color: "#E60965",
+      backgroundColor: "#FFFFFF",
+      elevation: 5,
+    },
+
+    ageInputField: {
+      borderWidth: 1,
+      borderRadius: 20,
+      borderColor: "#E60965",
+      paddingVertical: 5,
+      paddingHorizontal: 20,
+      width: "23%",
+      marginVertical: "1.5%",
+      marginHorizontal: "3%",
+      color: "#E60965",
+      backgroundColor: "#FFFFFF",
+      elevation: 5,
+    },
+
+    birthDayInputField: {
+      borderWidth: 1,
+      borderRadius: 20,
+      borderColor: "#E60965",
+      paddingVertical: 5,
+      paddingHorizontal: 20,
+      width: "70%",
+      marginVertical: "1.5%",
+      marginHorizontal: "3%",
+      color: "#E60965",
+      backgroundColor: "#FFFFFF",
+      elevation: 5,
     },
 
     SmallinputField: {
@@ -257,7 +386,8 @@ const DonorScreeningForm = () => {
         marginVertical: "1.5%",
         marginHorizontal: "3%",
         color: "#E60965",
-        backgroundColor: "#FFFFFF"
+        backgroundColor: "#FFFFFF",
+        elevation: 5,
     },
 
    

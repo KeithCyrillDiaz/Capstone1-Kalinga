@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView, Dimensions } from 'react-native'; // Added Dimensions
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView, Dimensions, StatusBar } from 'react-native'; // Added Dimensions
 import { useNavigation } from '@react-navigation/native';
 import { Octicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import PopOutMilkBank from '../../ProjectComponents/InitialScreenPages/PopOutMilkBank'; 
 import { FontAwesome5 } from '@expo/vector-icons';
+import { globalHeader } from '../../styles_kit/globalHeader';
+
 
 const SearchBar = () => {
     return (
@@ -31,220 +33,181 @@ const AdminMilkbanks = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.header}>
-                
-                <Text style={styles.headerTitle}>MilkBanks</Text>
+            <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
+            <View style={globalHeader.SmallHeader}>
+                <Text style={globalHeader.SmallHeaderTitle}>MilkBanks</Text>
             </View>
-            <SearchBar />
-
-            <ScrollView>
+            <SearchBar></SearchBar>
+            <ScrollView style = {styles.scrollView}
+            showsVerticalScrollIndicator = {false}
+            >
                 
-                <View style={[styles.milkBankList, { width: screenWidth }]}>
+            <View style={styles.milkBankList}>
                  
-                    <View style={styles.milkBank}>
+                    <View style={styles.test}>
                          <FontAwesome5 name="hospital-user" size={35} color="#E60965" />
-                     </View>
-                    
-                    <View style={styles.milkBank}>
-                        <View style={styles.DescriptionText}>
-                            <Text style={styles.MilkBankName}>Quezon City General Hospital</Text>
-                            <Text style={styles.MilkBankLocation}>Location: Quezon City</Text>
-                            <Text style={styles.MilkBankPhone}>Phone Number: +63 2 426 1314</Text>
-                        </View>
-                        
-                    </View>
-               
-                    <View style={styles.milkBank}>
-                        <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                            <Text style={styles.viewButtonText}>View</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                <View style={styles.horizontalLine} />
 
-                <View style={[styles.milkBankList, { width: screenWidth }]}>
-                 
-                    <View style={styles.milkBank}>
-                         <FontAwesome5 name="hospital-user" size={35} color="#E60965" />
-                     </View>
-                    
-                    <View style={styles.milkBank}>
+          
                         <View style={styles.DescriptionText}>
                             <Text style={styles.MilkBankName}>Quezon City General Hospital</Text>
                             <Text style={styles.MilkBankLocation}>Location: Quezon City</Text>
                             <Text style={styles.MilkBankPhone}>Phone Number: +63 2 426 1314</Text>
                         </View>
-                        
-                    </View>
-               
-                    <View style={styles.milkBank}>
                         <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
                             <Text style={styles.viewButtonText}>View</Text>
                         </TouchableOpacity>
                     </View>
-                </View>
-                <View style={styles.horizontalLine} />
+                    <View style={styles.horizontalLine} />
+                    
+                    <View style={styles.test}>
+                         <FontAwesome5 name="hospital-user" size={35} color="#E60965" />
 
-                <View style={[styles.milkBankList, { width: screenWidth }]}>
-                 
-                    <View style={styles.milkBank}>
-                         <FontAwesome5 name="hospital-user" size={35} color="#E60965" />
-                     </View>
-                    
-                    <View style={styles.milkBank}>
+          
                         <View style={styles.DescriptionText}>
                             <Text style={styles.MilkBankName}>Quezon City General Hospital</Text>
                             <Text style={styles.MilkBankLocation}>Location: Quezon City</Text>
                             <Text style={styles.MilkBankPhone}>Phone Number: +63 2 426 1314</Text>
                         </View>
-                        
-                    </View>
-               
-                    <View style={styles.milkBank}>
                         <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
                             <Text style={styles.viewButtonText}>View</Text>
                         </TouchableOpacity>
                     </View>
-                </View>
-                <View style={styles.horizontalLine} />
+                    <View style={styles.horizontalLine} />
 
-                <View style={[styles.milkBankList, { width: screenWidth }]}>
-                 
-                    <View style={styles.milkBank}>
+                    <View style={styles.test}>
                          <FontAwesome5 name="hospital-user" size={35} color="#E60965" />
-                     </View>
-                    
-                    <View style={styles.milkBank}>
-                        <View style={styles.DescriptionText}>
-                            <Text style={styles.MilkBankName}>Quezon City General Hospital</Text>
-                            <Text style={styles.MilkBankLocation}>Location: Quezon City</Text>
-                            <Text style={styles.MilkBankPhone}>Phone Number: +63 2 426 1314</Text>
-                        </View>
-                        
-                    </View>
-               
-                    <View style={styles.milkBank}>
-                        <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                            <Text style={styles.viewButtonText}>View</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                <View style={styles.horizontalLine} />
 
-                <View style={[styles.milkBankList, { width: screenWidth }]}>
-                 
-                    <View style={styles.milkBank}>
-                         <FontAwesome5 name="hospital-user" size={35} color="#E60965" />
-                     </View>
-                    
-                    <View style={styles.milkBank}>
+          
                         <View style={styles.DescriptionText}>
                             <Text style={styles.MilkBankName}>Quezon City General Hospital</Text>
                             <Text style={styles.MilkBankLocation}>Location: Quezon City</Text>
                             <Text style={styles.MilkBankPhone}>Phone Number: +63 2 426 1314</Text>
                         </View>
-                        
-                    </View>
-               
-                    <View style={styles.milkBank}>
                         <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
                             <Text style={styles.viewButtonText}>View</Text>
                         </TouchableOpacity>
                     </View>
-                </View>
-                <View style={styles.horizontalLine} />
+                    <View style={styles.horizontalLine} />
 
-                <View style={[styles.milkBankList, { width: screenWidth }]}>
-                 
-                    <View style={styles.milkBank}>
+                    <View style={styles.test}>
                          <FontAwesome5 name="hospital-user" size={35} color="#E60965" />
-                     </View>
-                    
-                    <View style={styles.milkBank}>
-                        <View style={styles.DescriptionText}>
-                            <Text style={styles.MilkBankName}>Quezon City General Hospital</Text>
-                            <Text style={styles.MilkBankLocation}>Location: Quezon City</Text>
-                            <Text style={styles.MilkBankPhone}>Phone Number: +63 2 426 1314</Text>
-                        </View>
-                        
-                    </View>
-               
-                    <View style={styles.milkBank}>
-                        <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                            <Text style={styles.viewButtonText}>View</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                <View style={styles.horizontalLine} />
 
-                <View style={[styles.milkBankList, { width: screenWidth }]}>
-                 
-                    <View style={styles.milkBank}>
-                         <FontAwesome5 name="hospital-user" size={35} color="#E60965" />
-                     </View>
-                    
-                    <View style={styles.milkBank}>
+          
                         <View style={styles.DescriptionText}>
                             <Text style={styles.MilkBankName}>Quezon City General Hospital</Text>
                             <Text style={styles.MilkBankLocation}>Location: Quezon City</Text>
                             <Text style={styles.MilkBankPhone}>Phone Number: +63 2 426 1314</Text>
                         </View>
-                        
-                    </View>
-               
-                    <View style={styles.milkBank}>
                         <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
                             <Text style={styles.viewButtonText}>View</Text>
                         </TouchableOpacity>
                     </View>
-                </View>
-                <View style={styles.horizontalLine} />
+                    <View style={styles.horizontalLine} />
 
-                <View style={[styles.milkBankList, { width: screenWidth }]}>
-                 
-                    <View style={styles.milkBank}>
+                    <View style={styles.test}>
                          <FontAwesome5 name="hospital-user" size={35} color="#E60965" />
-                     </View>
-                    
-                    <View style={styles.milkBank}>
-                        <View style={styles.DescriptionText}>
-                            <Text style={styles.MilkBankName}>Quezon City General Hospital</Text>
-                            <Text style={styles.MilkBankLocation}>Location: Quezon City</Text>
-                            <Text style={styles.MilkBankPhone}>Phone Number: +63 2 426 1314</Text>
-                        </View>
-                        
-                    </View>
-               
-                    <View style={styles.milkBank}>
-                        <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                            <Text style={styles.viewButtonText}>View</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                <View style={styles.horizontalLine} />
 
-                <View style={[styles.milkBankList, { width: screenWidth }]}>
-                 
-                    <View style={styles.milkBank}>
-                         <FontAwesome5 name="hospital-user" size={35} color="#E60965" />
-                     </View>
-                    
-                    <View style={styles.milkBank}>
+          
                         <View style={styles.DescriptionText}>
                             <Text style={styles.MilkBankName}>Quezon City General Hospital</Text>
                             <Text style={styles.MilkBankLocation}>Location: Quezon City</Text>
                             <Text style={styles.MilkBankPhone}>Phone Number: +63 2 426 1314</Text>
                         </View>
-                        
-                    </View>
-               
-                    <View style={styles.milkBank}>
                         <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
                             <Text style={styles.viewButtonText}>View</Text>
                         </TouchableOpacity>
                     </View>
+                    <View style={styles.horizontalLine} />
+                    
+                    <View style={styles.test}>
+                         <FontAwesome5 name="hospital-user" size={35} color="#E60965" />
+
+          
+                        <View style={styles.DescriptionText}>
+                            <Text style={styles.MilkBankName}>Quezon City General Hospital</Text>
+                            <Text style={styles.MilkBankLocation}>Location: Quezon City</Text>
+                            <Text style={styles.MilkBankPhone}>Phone Number: +63 2 426 1314</Text>
+                        </View>
+                        <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
+                            <Text style={styles.viewButtonText}>View</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.horizontalLine} />
+                    <View style={styles.test}>
+                         <FontAwesome5 name="hospital-user" size={35} color="#E60965" />
+
+          
+                        <View style={styles.DescriptionText}>
+                            <Text style={styles.MilkBankName}>Quezon City General Hospital</Text>
+                            <Text style={styles.MilkBankLocation}>Location: Quezon City</Text>
+                            <Text style={styles.MilkBankPhone}>Phone Number: +63 2 426 1314</Text>
+                        </View>
+                        <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
+                            <Text style={styles.viewButtonText}>View</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.horizontalLine} />
+                    <View style={styles.test}>
+                         <FontAwesome5 name="hospital-user" size={35} color="#E60965" />
+
+          
+                        <View style={styles.DescriptionText}>
+                            <Text style={styles.MilkBankName}>Quezon City General Hospital</Text>
+                            <Text style={styles.MilkBankLocation}>Location: Quezon City</Text>
+                            <Text style={styles.MilkBankPhone}>Phone Number: +63 2 426 1314</Text>
+                        </View>
+                        <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
+                            <Text style={styles.viewButtonText}>View</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.horizontalLine} />
+                    <View style={styles.test}>
+                         <FontAwesome5 name="hospital-user" size={35} color="#E60965" />
+
+          
+                        <View style={styles.DescriptionText}>
+                            <Text style={styles.MilkBankName}>Quezon City General Hospital</Text>
+                            <Text style={styles.MilkBankLocation}>Location: Quezon City</Text>
+                            <Text style={styles.MilkBankPhone}>Phone Number: +63 2 426 1314</Text>
+                        </View>
+                        <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
+                            <Text style={styles.viewButtonText}>View</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.horizontalLine} />
+                    <View style={styles.test}>
+                         <FontAwesome5 name="hospital-user" size={35} color="#E60965" />
+
+          
+                        <View style={styles.DescriptionText}>
+                            <Text style={styles.MilkBankName}>Quezon City General Hospital</Text>
+                            <Text style={styles.MilkBankLocation}>Location: Quezon City</Text>
+                            <Text style={styles.MilkBankPhone}>Phone Number: +63 2 426 1314</Text>
+                        </View>
+                        <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
+                            <Text style={styles.viewButtonText}>View</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.horizontalLine} />
+                    <View style={styles.test}>
+                         <FontAwesome5 name="hospital-user" size={35} color="#E60965" />
+
+          
+                        <View style={styles.DescriptionText}>
+                            <Text style={styles.MilkBankName}>Quezon City General Hospital</Text>
+                            <Text style={styles.MilkBankLocation}>Location: Quezon City</Text>
+                            <Text style={styles.MilkBankPhone}>Phone Number: +63 2 426 1314</Text>
+                        </View>
+                        <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
+                            <Text style={styles.viewButtonText}>View</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.horizontalLine} />
                 </View>
-                <View style={styles.horizontalLine} />
+            
+               
+               
+                    
 
                 
           
@@ -259,8 +222,17 @@ const AdminMilkbanks = () => {
 }
 
 const styles = StyleSheet.create({
+
+    scrollView:{
+
+        // backgroundColor: "pink",
+        width: "100%",
+        alignSelf: "center"
+    },
+
     container: {
         flex: 1,
+        // marginHorizontal:"10%",
         backgroundColor: '#FFF8EB',
     },
     header: {
@@ -313,26 +285,30 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     milkBankList: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingHorizontal: 20,
-        paddingVertical: 10,
+
     },
     milkBank: {
         flexDirection: 'row',
         paddingVertical: 10,
         paddingHorizontal: 5, 
-
+        
     },
+
+    test: {
+        flexDirection: 'row',
+        // backgroundColor: "pink",
+        alignItems: "center",
+        justifyContent: "center",
+        marginHorizontal: "10%"
+    },
+
+
     milkBankDescription: {
-        marginTop: 10,
-        textAlign: 'center',
-        color: 'black',
     },
     viewButton: {
         backgroundColor: 'white',
         height: '35%',
-        width: "40%",
+        width: "20%",
         borderRadius: 50,
         borderColor: '#E60965',
         borderWidth: 1,
@@ -353,11 +329,12 @@ const styles = StyleSheet.create({
     DescriptionText:
     {
         alignItems: 'baseline',
+        marginHorizontal:10,
         
     },
     MilkBankName:{
         fontWeight: '700',
-        fontSize: 20,
+        fontSize: 18,
         color: '#E60965'
 
     },

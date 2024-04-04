@@ -1,13 +1,26 @@
 import express from 'express';
-
 import { registerDonor } from '../controllers/registerDonor';
 import { registerRequestor } from '../controllers/registerRequestor';
-import { addScreeningForm } from '../controllers/addScreeningForm'
+import { addScreeningForm } from '../controllers/Apply_As_Donor/addScreeningForm'
+import { addMedicalRequirementsAsImage } from '../controllers/Apply_As_Donor/addMRImage'
+import { addMedicalRequirementsAsFile } from '../controllers/Apply_As_Donor/addMRFile'
+import multerConfiguration from '../helpers/multer';
+
+const upload = multerConfiguration();
 
 export default (router: express.Router) => {
   
     router.post('/kalinga/registerDonor', registerDonor);
     router.post('/kalinga/registerRequestor', registerRequestor);
+
     router.post('/kalinga/addScreeningForm', addScreeningForm);
+
+    //Donor
+    router.post('/kalinga/addMedicalRequirementsAsImage',  upload.array('DonorImages'), addMedicalRequirementsAsImage);
+    router.post('/kalinga/addMedicalRequirementsAsFile',  upload.array('DonorFiles'), addMedicalRequirementsAsFile);
+
+    router.post('/kalinga/addMRImageRequestor',  upload.array('RequestorImages'), addMedicalRequirementsAsImage);
+    router.post('/kalinga/addMRFileRequestor',  upload.array('RequestorFiles'), addMedicalRequirementsAsFile);
+    // router.post('/kalinga/addMedicalRequirementsAsImage', addMedicalRequirementsAsImage);
    
 } 

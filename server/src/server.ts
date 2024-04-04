@@ -6,7 +6,8 @@ import compression from 'compression';
 import cors from 'cors';
 import mongoose from 'mongoose'
 import router from './router';
-
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express ();
 
@@ -26,7 +27,12 @@ server.listen(7000, () => {
 });
 
 
-const MongoDb_URL = "mongodb://localhost:27017/KalingaBackend"
+const MongoDb_URL = process.env.MONGO_DB_URL;
+// console.log(process.env.MONGO_DB_URL);
+
+if (!MongoDb_URL) {
+    throw new Error("MongoDB URL is not defined");
+}
 
 mongoose.Promise = Promise;
 mongoose.connect(MongoDb_URL);

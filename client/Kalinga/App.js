@@ -27,10 +27,10 @@ import FacebookContinue from './ProjectComponents/InitialScreenPages/FacebookCon
 //import ApplyAsDonor from './screens/Guest/Apply_As_Donor/Approved.js'
 //import Approved from './screens/Guest/Apply_As_Requestor/Approved.js' <Stack.Screen name="Approved" component={Approved} />
 //import DonorApproved from './screens/Guest/Apply_As_Donor/Approved.js'  <Stack.Screen name="Donor Approved" component={DonorApproved} />
-import ApprovalMessage from './ProjectComponents/Guest/Profile/ApplyRequestor/ApprovalMessage.js'
-import MedicalAbstract from './ProjectComponents/Guest/Profile/ApplyRequestor/MedicalAbstract.js'
-import ReasonForRequesting from './ProjectComponents/Guest/Profile/ApplyRequestor/ReasonForRequesting.js'
-import ScreeningForm from './ProjectComponents/Guest/Profile/ApplyRequestor/ScreeningForm.js'
+// import ApprovalMessage from './ProjectComponents/Guest/Profile/ApplyRequestor/ApprovalMessage.js'
+// import MedicalAbstract from './ProjectComponents/Guest/Profile/ApplyRequestor/MedicalAbstract.js'
+// import ReasonForRequesting from './ProjectComponents/Guest/Profile/ApplyRequestor/ReasonForRequesting.js'
+// import ScreeningForm from './ProjectComponents/Guest/Profile/ApplyRequestor/ScreeningForm.js'
 import GuestEducContents from './ProjectComponents/Guest/Home/EducContents.js'
 import GuestEducLibrary from './ProjectComponents/Guest/Home/EducLibrary.js'
 import InstantMess from './ProjectComponents/Guest/Home/InstantMess.js'
@@ -38,6 +38,7 @@ import GuestExplore from './ProjectComponents/Guest/Home/Explore.js'
 import GuestHome from './ProjectComponents/Guest/GuestDashboard/GuestHome.js'
 import GuestProfile from './ProjectComponents/Guest/GuestDashboard/GuestProfile.js'
 import ApplyAsDonorStack from './ApplyAsDonorStack.js';
+import ApplyAsRequestorStack from './ProjectComponents/Guest/Profile/Apply_As_Requestor/ApplyAsRequestorStack.js'
 
 
 
@@ -105,7 +106,7 @@ import RequestorProfile from './ProjectComponents/Requestor/Dashboard/Profile.js
 
 //Requestor DUPLICATE THE DONOR PAGES
 // import RequestorProfile from './ProjectComponents/Requestor/Profile/RequestorProfile.js'
-import DataPrivacyNiKit from './ProjectComponents/Guest/Profile/ApplyRequestor/DataPrivacy.js'
+// import DataPrivacyNiKit from './ProjectComponents/Guest/Profile/ApplyRequestor/DataPrivacy.js'
 
 
 //Tabs
@@ -136,29 +137,27 @@ import DonorUploadAdmin from './screens/Admin/ScreeningForm/Donor/DonorUploadAdm
 //import RequestorVerification from './screens/Admin/RequestorVerification'; 
 import DonorAppointmentConfirmation from './screens/Admin/ScreeningForm/Donor/DonorAppointmentConfirmation.js';
 import RequestorRequestConfirmation from './screens/Admin/ScreeningForm/Requestor/RequestorRequestConfirmation.js'
-import DonorForm from './screens/Admin/ScreeningForm/Donor//DonorForm.js'
 
 import RequestorInitialScreeningFormPage1 from './screens/Admin/ScreeningForm/Requestor/RequestorInitialScreeningFormPage1.js'
 import RequestorUserVerification from './screens/Admin/ScreeningForm/Requestor/RequestorUserVerification.js';   //<Stack.Screen name="RequestorVerification" component={RequestorVerification} />
 import ForumPage from './ProjectComponents/Donor/Home/Forum/ForumPage.js';
 
 
-const getFonts = () => Font.loadAsync({
-    'Open-Sans-Bold' : require('./assets/Fonts/OpenSans_Condensed-Bold.ttf'),
-    'Open-Sans-Regular' : require('./assets/Fonts/OpenSans_Condensed-Regular.ttf'),
-    'Kurale' : require('./assets/Fonts/Kurale-Regular.ttf'),
-    'Inter-Bold' : require('./assets/Fonts/Inter-Bold.ttf'),
-    'Inter-Regular' : require('./assets/Fonts/Inter-Regular.ttf'),
-    "Kurale-Regular": require('./assets/Fonts/Kurale-Regular.ttf'),
-    "OpenSans_Condensed-Bold": require("./assets/Fonts/OpenSans_Condensed-Bold.ttf"),
-    "OpenSans_Condensed-Regular": require("./assets/Fonts/OpenSans_Condensed-Regular.ttf"),
-    "OpenSans-Regular": require("./assets/Fonts/OpenSans-Regular.ttf"),
-    "Open-Sans-SemiBold": require("./assets/Fonts/OpenSans-SemiBold.ttf"),
-    "Open-Sans-Light": require("./assets/Fonts/OpenSans-Light.ttf"),
-    "Inter-Regular": require("./assets/Fonts/Inter-Regular.ttf"),
-
+const getFonts = async () => {
+  await Font.loadAsync({
+    'Open-Sans-Bold': require('./assets/Fonts/OpenSans_Condensed-Bold.ttf'),
+    'Open-Sans-Regular': require('./assets/Fonts/OpenSans_Condensed-Regular.ttf'),
+    'Kurale': require('./assets/Fonts/Kurale-Regular.ttf'),
+    'Inter-Bold': require('./assets/Fonts/Inter-Bold.ttf'),
+    'Inter-Regular': require('./assets/Fonts/Inter-Regular.ttf'),
+    'OpenSans_Condensed-Bold': require('./assets/Fonts/OpenSans_Condensed-Bold.ttf'),
+    'OpenSans_Condensed-Regular': require('./assets/Fonts/OpenSans_Condensed-Regular.ttf'),
+    'OpenSans-Regular': require('./assets/Fonts/OpenSans-Regular.ttf'),
+    'Open-Sans-SemiBold': require('./assets/Fonts/OpenSans-SemiBold.ttf'),
+    'Open-Sans-Light': require('./assets/Fonts/OpenSans-Light.ttf'),
+    'Inter-Regular': require('./assets/Fonts/Inter-Regular.ttf'),
   });
-
+};
 
 export default function App() {
   const [fontsLoaded,  setFontsLoaded] = useState(false);
@@ -177,8 +176,9 @@ export default function App() {
     return (
 
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
-
+          <Stack.Navigator initialRouteName="ApplyAsRequestorStack" screenOptions={{ headerShown: false }}>
+          {/* <Stack.Navigator initialRouteName="Data Privacy Requestor" screenOptions={{ headerShown: false }}> */}
+          
             {/*InitialScreen*/}
             <Stack.Screen name="Splash" component={SplashScreen} />
             <Stack.Screen name="Onboard" component={Onboarding} /> 
@@ -190,6 +190,7 @@ export default function App() {
             <Stack.Screen name="GuestTabsExploreAndMilkBank" component={GuestTabsExploreAndMilkBank} />
             <Stack.Screen name="RequestorTabsExploreAndMilkBank" component={RequestorTabsExploreAndMilkBank} />
             <Stack.Screen name="DonorTabsExploreAndMilkBank" component={RequestorTabsExploreAndMilkBank} />
+            <Stack.Screen name="RequestorTabs" component = {RequestorTabs}/>
 
             <Stack.Screen name="SendCode" component={SendCode} />
             <Stack.Screen name="MobileNumber" component={MobileNumber} />
@@ -211,8 +212,10 @@ export default function App() {
              <Stack.Screen name="Guest Educational Contents" component={GuestEducContents} />
              <Stack.Screen name="Guest Educational Library" component={GuestEducLibrary} />
              <Stack.Screen name="GuestTabs" component={GuestTabs} />
-             <Stack.Screen name="Screening Form" component={ScreeningForm} />
+             {/* <Stack.Screen name="Screening Form" component={ScreeningForm} /> */}
              <Stack.Screen name="ApplyAsDonorStack" component={ApplyAsDonorStack} />
+             <Stack.Screen name="ApplyAsRequestorStack" component={ApplyAsRequestorStack}/>
+             
 
 
              {/*Donor*/}
@@ -264,8 +267,8 @@ export default function App() {
              <Stack.Screen name="RequestorProfile" component={RequestorProfile} />
              <Stack.Screen name="Requestor Tabs" component={RequestorTabs} />
              <Stack.Screen name="SetPasswordRequestor" component={SetPasswordRequestor} />
-             <Stack.Screen name="Data Privacy Requestor" component={DataPrivacyNiKit} />
-             <Stack.Screen name="Approval Message" component={ApprovalMessage} />
+             {/* <Stack.Screen name="Data Privacy Requestor" component={DataPrivacyNiKit} /> */}
+             {/* <Stack.Screen name="Approval Message" component={ApprovalMessage} /> */}
              <Stack.Screen name="RequestorSettingScreen" component={RequestorSettingScreen} />
              <Stack.Screen name="RequestorAboutUs" component={RequestorAboutUs} />
              <Stack.Screen name="RequestorChangePassword" component={RequestorChangePassword} />
@@ -291,8 +294,8 @@ export default function App() {
 
 
              {/*Admin*/}
-             <Stack.Screen name="Medical Abstract" component={MedicalAbstract} />
-             <Stack.Screen name="Reason For Requesting" component={ReasonForRequesting} />
+             {/* <Stack.Screen name="Medical Abstract" component={MedicalAbstract} />
+             <Stack.Screen name="Reason For Requesting" component={ReasonForRequesting} /> */}
              <Stack.Screen name="LoginAdmin" component={LoginAdmin} />
              <Stack.Screen name="AdminMenu" component={AdminMenu} />
              <Stack.Screen name="AdminDashboard" component={AdminDashboard} />
@@ -309,7 +312,6 @@ export default function App() {
              <Stack.Screen name="DonorUploadAdmin" component={DonorUploadAdmin} />
              <Stack.Screen name="DonorAppointmentConfirmation" component={DonorAppointmentConfirmation} />
              <Stack.Screen name="RequestorRequestConfirmation" component={RequestorRequestConfirmation} />
-             <Stack.Screen name="DonorForm" component={DonorForm} />
 
 
 

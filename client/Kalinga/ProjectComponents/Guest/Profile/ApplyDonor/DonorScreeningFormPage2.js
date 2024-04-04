@@ -7,36 +7,63 @@ import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 
-const DonorScreeningFormPage2 = () => {
+const DonorScreeningFormPage2 = ({route}) => {
+  const { screeningFormData } = route.params; // Access formData from route.params
+  // console.log(screeningFormData)
+
+  const [formData, setFormData] = useState(screeningFormData);
+  // const { 
+  //   fullName, 
+  //   age, 
+  //   birthDate, 
+  //   email, 
+  //   contactNumber, 
+  //   homeAddress, 
+  //   childName, 
+  //   childAge, 
+  //   sex, 
+  //   hildBirthDate, 
+  //   birthWeight, 
+  //   ageOfGestation, 
+  //   medicalCondition,
+  // } = screeningFormData;
   
   const navigation = useNavigation();
 
-  const navigatePage = (Page) => {
+  const navigatePage = (Page, data) => {
     // Navigate to the next screen by route name
-    navigation.navigate(Page);
+    console.log(data)
+    navigation.navigate(Page, data);
   };
 
   const [selectedOption, setSelectedOption] = useState(null);
 
   const handleOptionSelect = (option) => {
       setSelectedOption(option);
+      
   };
 
+  
+
   const [medicalAnsweredQuestions, setMedicalAnsweredQuestions] = useState([]);
-
-    const FirstParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
-
-    const SecondParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
-
-    const ThridParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
-
-    const UserName = "Rogine"
 
     const pressOption = (questionId, answer) => {
           const answeredQuestion = { id: questionId, answer: answer,};
           setMedicalAnsweredQuestions(prevState => [...prevState.filter(item => item.id !== questionId), answeredQuestion]);
+          setFormData(prevData => ({
+            ...prevData,
+            [`Q${questionId}`]: answer,
+            typeOfDonor: selectedOption // Update typeOfDonor field
+          }));
   };
 
+  const handleChangeText = (name, value) => {
+    setFormData(prevData => ({...prevData, 
+    [`Q${name}`]: value
+    
+    }))
+    // setScreeningFormData({ ...screeningFormData, [name]: value });
+};
 
     const renderQuestion = (questionId, questionText) => {
 
@@ -55,6 +82,8 @@ const DonorScreeningFormPage2 = () => {
                 </View>
             </TouchableOpacity>
             <Text style={styles.question}>{questionText}</Text>
+           
+          
         </View>
 
         
@@ -137,6 +166,7 @@ const DonorScreeningFormPage2 = () => {
                                   style={styles.BiginputField}
                                   multiline={true}
                                   textAlignVertical="top" // Align text to the top vertically
+                                  onChangeText={(value) => handleChangeText('A', value)}
                               /> 
                         
                 </View>
@@ -145,7 +175,7 @@ const DonorScreeningFormPage2 = () => {
                     
                       <View>
                         <Text style = {styles.boxQuestion}>
-                          Paano mo nalaman ang tungkol sa (Name ng Client’s Milk Bank) ?
+                          Paano mo nalaman ang tungkol sa BreastMilk Bank ng Quezon City General Hospital?
                         </Text>
                       </View>
 
@@ -153,6 +183,7 @@ const DonorScreeningFormPage2 = () => {
                                   style={styles.BiginputField}
                                   multiline={true}
                                   textAlignVertical="top"  // Align text to the top vertically
+                                  onChangeText={(value) => handleChangeText('B', value)}
                               /> 
                         
                 </View>
@@ -164,13 +195,13 @@ const DonorScreeningFormPage2 = () => {
                   </View>
 
 
-                    {renderQuestion(1, 'Nakapagbigay ka na ba ng iyong gatas dati?',"Medical History")}
-                    {renderQuestion(2, 'Ikaw ba ay natanggihan na magbigay ng iyong gatas/breastmilk? Kung oo, sa anong dahilan?', "Medical History")}
+                    {renderQuestion(1, 'Gusto mo bang magbigay ng gatas nang regular sa loob ng anim (6) na buwan?',"Medical History")}
+                    {renderQuestion(2, 'Papayagan ka ba ng iyong asawa na magbigay ng iyong gatas sa Human Milk Bank?', "Medical History")}
                 
                 </View>
 
 
-                      <TouchableOpacity style = {styles.button}  onPress={() => navigatePage("DonorMedicalHistory")}>
+                      <TouchableOpacity style = {styles.button}  onPress={() => navigatePage("DonorMedicalHistory", { screeningFormData: formData })}>
                             <Text style = {styles.buttonTitle}>Next</Text>
                       </TouchableOpacity>
                 
@@ -185,6 +216,7 @@ const DonorScreeningFormPage2 = () => {
 
 
   const styles = StyleSheet.create({
+
 
     button: {
       backgroundColor: "#E60965",
@@ -207,6 +239,7 @@ const DonorScreeningFormPage2 = () => {
       // marginVertical: 30,
       //backgroundColor: "gray"
       paddingHorizontal: 20,
+   
   },
 
     title: {
@@ -339,6 +372,7 @@ const DonorScreeningFormPage2 = () => {
       box: {
         borderColor: '#E60965',
         borderWidth: 1,
+        elevation: 5
       },
 
       box1: {
@@ -349,7 +383,8 @@ const DonorScreeningFormPage2 = () => {
         borderRadius: 10,
         marginTop: 10,
         marginBottom: 20,
-        backgroundColor: "#FFFFFF"
+        backgroundColor: "#FFFFFF",
+        elevation: 5
       },
 
       box2: {
@@ -364,12 +399,13 @@ const DonorScreeningFormPage2 = () => {
         width: "100%",
         paddingVertical: 10,
         height: 150,
-        backgroundColor: "#FFFFFF"
+        backgroundColor: "#FFFFFF",
+        elevation: 5
       },
 
       box3: {
         borderColor: '#E60965',
-    
+        elevation: 5
       },
 
       text1: {
@@ -402,7 +438,8 @@ const DonorScreeningFormPage2 = () => {
         borderRadius: 10,
         borderColor: '#E60965',
         paddingVertical: 10,
-        backgroundColor: "#FFFFFF"
+        backgroundColor: "#FFFFFF",
+        elevation: 5
       }
    
 
