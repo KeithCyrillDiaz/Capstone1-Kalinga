@@ -4,6 +4,7 @@ import { registerRequestor } from '../controllers/registerRequestor';
 import { addScreeningForm } from '../controllers/Apply_As_Donor/addScreeningForm'
 import { addMedicalRequirementsAsImage } from '../controllers/Apply_As_Donor/addMRImage'
 import { addMedicalRequirementsAsFile } from '../controllers/Apply_As_Donor/addMRFile'
+import { reqMedAbstractForm } from '../controllers/Apply_As_Requestor/req_medicalAbstract';
 import multerConfiguration from '../helpers/multer';
 
 const upload = multerConfiguration();
@@ -23,4 +24,5 @@ export default (router: express.Router) => {
     router.post('/kalinga/addMRFileRequestor',  upload.array('RequestorFiles'), addMedicalRequirementsAsFile);
     // router.post('/kalinga/addMedicalRequirementsAsImage', addMedicalRequirementsAsImage);
    
+    router.post('/req_MedAbstract', reqMedAbstractForm);
 } 
