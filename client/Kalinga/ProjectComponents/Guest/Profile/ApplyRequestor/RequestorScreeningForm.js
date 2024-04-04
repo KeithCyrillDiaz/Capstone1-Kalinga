@@ -1,5 +1,6 @@
 //Guest EducLibrary
 import React from "react";
+import { useState } from "react";
 import { 
   ScrollView, 
   Text, 
@@ -10,19 +11,47 @@ import {
   TouchableOpacity,
   TextInput, 
 } from 'react-native';
-import { globalStyles } from "../../../styles_kit/globalStyles.js"
-import { globalHeader } from "../../../styles_kit/globalHeader.js";
+import { globalStyles } from "../../../../styles_kit/globalStyles.js"
+import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { useNavigation } from '@react-navigation/native';
+
+import axios from "axios";
 
 const RequestorScreeningForm = () => {
 
-
     const navigation = useNavigation();
 
-    const navigatePage = (Page) => {
-      // Navigate to the next screen by route name
-      navigation.navigate(Page);
-    };
+    const navigatePage = async () => {
+		try {
+			const response = await axios.post("http://192.168.1.21:8081r/controller/registerReq", input);
+			// Handle success response...
+			console.log(response.input);
+			//navigation.navigate(Page); "RequestorMedicalAbstract"
+	  } catch (error) {
+			// Handle error...
+			console.error("Error:", error);
+	  }
+      };
+   
+    
+    const [input, setInput] = useState({
+        fullname: "",
+        age: "",
+        email: "",
+        phoneNum: "",
+        homeAddress: ""
+    });
+
+    const handleInput = (field, value) => {
+        setInput(prevState => ({
+            ...prevState,
+            [field]: value
+    }));
+
+	};
+
+    
+      
 
   return (
 
@@ -57,6 +86,7 @@ const RequestorScreeningForm = () => {
                         style={styles.BiginputField}
                         placeholder="Full Name"
                         placeholderTextColor="#E60965"
+                        onChange={handleInput}
                     />
                     <View style = {globalStyles.flex_Row}>
                     <TextInput
@@ -137,7 +167,7 @@ const RequestorScreeningForm = () => {
 
               <View style = {globalStyles.center}>
 
-                    <TouchableOpacity style = {styles.AgreebuttonContainer} onPress={() => navigatePage("RequestorMedicalAbstract")}>
+                    <TouchableOpacity style = {styles.AgreebuttonContainer} onPress={() => navigatePage()}>
                         <Text style = {styles.label}>Next</Text>
                     </TouchableOpacity>
           

@@ -1,5 +1,5 @@
 //Guest EducLibrary
-import React from "react";
+import React, { useState } from 'react';
 import { 
   ScrollView, 
   Text, 
@@ -10,18 +10,44 @@ import {
   TouchableOpacity,
   TextInput, 
 } from 'react-native';
-import { globalStyles } from "../../../styles_kit/globalStyles.js"
-import { globalHeader } from "../../../styles_kit/globalHeader.js";
+import { globalStyles } from "../../../../styles_kit/globalStyles.js"
+import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { useNavigation } from '@react-navigation/native';
 
-const RequestorMedicalAbstract = () => {
+import axios from "axios";
 
+const RequestorMedicalAbstract = () => {
   const navigation = useNavigation();
 
-  const navigatePage = (Page) => {
-    // Navigate to the next screen by route name
-    navigation.navigate(Page);
-  };
+  const navigatePage = async () => {
+  try {
+    const response = await axios.post("http://192.168.1.8:8080/req_MedAbstract", input);
+    // Handle success response...
+    console.log(response.input);
+    //navigation.navigate(Page); "RequestorReasonForRequesting" // "Reason For Requesting"
+  } catch (error) {
+    // Handle error...
+    console.error("Error:", error);
+  }
+    };
+ 
+  
+  const [input, setInput] = useState({
+      clinicalHistory: "",
+      complaint: "",
+      clinicalFindings: "",
+      diagnosis: "",
+      treatment: ""
+  });
+
+  const handleInput = (field, value) => {
+    setInput(prevInput => ({
+      ...prevInput,
+      [field]: value
+    }));
+  
+
+};
 
   return (
 
@@ -52,6 +78,8 @@ const RequestorMedicalAbstract = () => {
               <View style = {styles.container}>
                     <TextInput
                         style={styles.BiginputField}
+                        onChangeText={text => handleInput("clinicalHistory", text)}
+                        value={input.clinicalHistory}
                     />         
               </View>
 
@@ -61,6 +89,8 @@ const RequestorMedicalAbstract = () => {
               <View style = {styles.container}>
                     <TextInput
                         style={styles.BiginputField}
+                        onChangeText={text => handleInput("complaint", text)}
+                        value={input.complaint}
                     />         
               </View>
 
@@ -70,6 +100,8 @@ const RequestorMedicalAbstract = () => {
               <View style = {styles.container}>
                     <TextInput
                         style={styles.BiginputField}
+                        onChangeText={text => handleInput("clinicalFindings", text)}
+                        value={input.clinicalFindings}
                     />         
               </View>
 
@@ -79,6 +111,8 @@ const RequestorMedicalAbstract = () => {
               <View style = {styles.container}>
                     <TextInput
                         style={styles.BiginputField}
+                        onChangeText={text => handleInput("diagnosis", text)}
+                        value={input.diagnosis}
                     />         
               </View>
 
@@ -88,6 +122,8 @@ const RequestorMedicalAbstract = () => {
               <View style = {styles.container}>
                     <TextInput
                         style={styles.BiginputField}
+                        onChangeText={text => handleInput("treatment", text)}
+                        value={input.treatment}
                     />         
               </View>
 
@@ -95,7 +131,7 @@ const RequestorMedicalAbstract = () => {
 
               <View style = {globalStyles.center}>
             
-                    <TouchableOpacity style = {styles.AgreebuttonContainer} onPress={() => navigatePage("RequestorReasonForRequesting")}>
+                    <TouchableOpacity style = {styles.AgreebuttonContainer} onPress={() => navigatePage()}>
                         <Text style = {styles.label}>Next</Text>
                     </TouchableOpacity>
                
