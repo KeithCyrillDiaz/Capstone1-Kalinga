@@ -70,7 +70,7 @@ export default function GuestProfile() {
             <View style={styles.line}></View>
 
             <View style={styles.menuContainer}>
-            <TouchableOpacity onPress={() => navigatePage("Data Privacy Requestor")} >
+            <TouchableOpacity onPress={() => navigatePage("ApplyAsRequestorStack")} >
               <View style={styles.iconContainer}>
                 <FontAwesome name="handshake-o" size={24} color="#E60965" />              
                 <Text style={styles.menuText2}>Request Milk</Text>

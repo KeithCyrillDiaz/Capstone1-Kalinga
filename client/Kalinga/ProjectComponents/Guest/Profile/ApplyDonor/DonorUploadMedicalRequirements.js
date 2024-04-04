@@ -531,9 +531,16 @@ const handleFileUpload = async (attachmentType) => {
             </TouchableOpacity>
 
             {/*Approved.js*/}
-            <TouchableOpacity  style={[styles.button, { opacity: isChecked ? 1 : 0.5 }]} disabled={!isChecked} onPress={() => navigatePage("DonorApproved")}> 
-                        <Text style={styles.buttonTitle}>Submit</Text>
-            </TouchableOpacity>
+            <TouchableOpacity 
+            style={[
+              styles.button, 
+              { opacity: (isChecked && Object.keys(selectedImage).length + Object.keys(selectedFile).length >= 5) ? 1 : 0.5 } // Apply opacity based on conditions
+            ]}
+            disabled={!isChecked || Object.keys(selectedImage).length + Object.keys(selectedFile).length < 5} // Disable the button based on conditions
+            onPress={() => navigatePage("DonorApproved")}
+          > 
+            <Text style={styles.buttonTitle}>Submit</Text>
+          </TouchableOpacity>
 
            
         </ScrollView>

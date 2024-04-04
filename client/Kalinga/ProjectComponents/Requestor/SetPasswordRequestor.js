@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, StyleSheet, ScrollView, Alert, } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-
+import axios from 'axios';
 
 const SetPasswordDonor = () => {
-    const [Password, setPassword] = useState('');    
+    const [Password, setPassword] = useState(''); 
+    const [confirmPass, setConfirmPass] = useState('')
     const navigation = useNavigation(); 
 
     const handleBackButton = () => {
@@ -18,7 +19,27 @@ const SetPasswordDonor = () => {
         console.log("Send Code");
     };
 
-    const handleSubmitButton = () => {
+    const applicantId = "2024-04-05-123456"
+    const handleSubmitButton = async () => {
+
+        if(Password !== confirmPass){
+            Alert.alert('Passwords do not match. Please try again.');
+            return
+        }
+
+        try{
+
+            const response = await axios.post("http://192.168.1.104:7000/kalinga/registerDonor", Password);
+
+            console.log('Data saved successfully:', response.data);
+
+
+        } catch (error){
+
+        } 
+
+        
+
         navigation.navigate('LogIn'); 
     };
 
@@ -46,6 +67,7 @@ const SetPasswordDonor = () => {
                         placeholderTextColor="#F94892"
                         onChangeText={setPassword}
                         value={Password}
+                        secureTextEntry={true}
                     />
                     </View>
 
@@ -54,8 +76,9 @@ const SetPasswordDonor = () => {
                         style={styles.input}
                         placeholder="Confirm Passwod"
                         placeholderTextColor="#F94892"
-                        onChangeText={setPassword}
-                        value={Password}
+                        onChangeText={setConfirmPass}
+                        value={confirmPass}
+                        secureTextEntry={true}
                     />
                     </View>
 
