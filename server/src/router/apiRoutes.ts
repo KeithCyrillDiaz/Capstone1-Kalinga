@@ -18,6 +18,9 @@ export default (router: express.Router) => {
     //Donor
     router.post('/kalinga/addMedicalRequirementsAsImage',  upload.array('DonorImages'), addMedicalRequirementsAsImage);
     router.post('/kalinga/addMedicalRequirementsAsFile',  upload.array('DonorFiles'), addMedicalRequirementsAsFile);
+
+    router.post('/kalinga/addMRImageRequestor',  upload.array('RequestorImages'), addMedicalRequirementsAsImage);
+    router.post('/kalinga/addMRFileRequestor',  upload.array('RequestorFiles'), addMedicalRequirementsAsFile);
     // router.post('/kalinga/addMedicalRequirementsAsImage', addMedicalRequirementsAsImage);
    
 } 

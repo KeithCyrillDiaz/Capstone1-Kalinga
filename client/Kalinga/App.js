@@ -27,10 +27,10 @@ import FacebookContinue from './ProjectComponents/InitialScreenPages/FacebookCon
 //import ApplyAsDonor from './screens/Guest/Apply_As_Donor/Approved.js'
 //import Approved from './screens/Guest/Apply_As_Requestor/Approved.js' <Stack.Screen name="Approved" component={Approved} />
 //import DonorApproved from './screens/Guest/Apply_As_Donor/Approved.js'  <Stack.Screen name="Donor Approved" component={DonorApproved} />
-import ApprovalMessage from './ProjectComponents/Guest/Profile/ApplyRequestor/ApprovalMessage.js'
-import MedicalAbstract from './ProjectComponents/Guest/Profile/ApplyRequestor/MedicalAbstract.js'
-import ReasonForRequesting from './ProjectComponents/Guest/Profile/ApplyRequestor/ReasonForRequesting.js'
-import ScreeningForm from './ProjectComponents/Guest/Profile/ApplyRequestor/ScreeningForm.js'
+// import ApprovalMessage from './ProjectComponents/Guest/Profile/ApplyRequestor/ApprovalMessage.js'
+// import MedicalAbstract from './ProjectComponents/Guest/Profile/ApplyRequestor/MedicalAbstract.js'
+// import ReasonForRequesting from './ProjectComponents/Guest/Profile/ApplyRequestor/ReasonForRequesting.js'
+// import ScreeningForm from './ProjectComponents/Guest/Profile/ApplyRequestor/ScreeningForm.js'
 import GuestEducContents from './ProjectComponents/Guest/Home/EducContents.js'
 import GuestEducLibrary from './ProjectComponents/Guest/Home/EducLibrary.js'
 import InstantMess from './ProjectComponents/Guest/Home/InstantMess.js'
@@ -38,6 +38,7 @@ import GuestExplore from './ProjectComponents/Guest/Home/Explore.js'
 import GuestHome from './ProjectComponents/Guest/GuestDashboard/GuestHome.js'
 import GuestProfile from './ProjectComponents/Guest/GuestDashboard/GuestProfile.js'
 import ApplyAsDonorStack from './ApplyAsDonorStack.js';
+import ApplyAsRequestorStack from './ProjectComponents/Guest/Profile/Apply_As_Requestor/ApplyAsRequestorStack.js'
 
 
 
@@ -105,7 +106,7 @@ import RequestorProfile from './ProjectComponents/Requestor/Dashboard/Profile.js
 
 //Requestor DUPLICATE THE DONOR PAGES
 // import RequestorProfile from './ProjectComponents/Requestor/Profile/RequestorProfile.js'
-import DataPrivacyNiKit from './ProjectComponents/Guest/Profile/ApplyRequestor/DataPrivacy.js'
+// import DataPrivacyNiKit from './ProjectComponents/Guest/Profile/ApplyRequestor/DataPrivacy.js'
 
 
 //Tabs
@@ -175,8 +176,9 @@ export default function App() {
     return (
 
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="ApplyAsDonorStack" screenOptions={{ headerShown: false }}>
-
+          <Stack.Navigator initialRouteName="ApplyAsRequestorStack" screenOptions={{ headerShown: false }}>
+          {/* <Stack.Navigator initialRouteName="Data Privacy Requestor" screenOptions={{ headerShown: false }}> */}
+          
             {/*InitialScreen*/}
             <Stack.Screen name="Splash" component={SplashScreen} />
             <Stack.Screen name="Onboard" component={Onboarding} /> 
@@ -210,8 +212,10 @@ export default function App() {
              <Stack.Screen name="Guest Educational Contents" component={GuestEducContents} />
              <Stack.Screen name="Guest Educational Library" component={GuestEducLibrary} />
              <Stack.Screen name="GuestTabs" component={GuestTabs} />
-             <Stack.Screen name="Screening Form" component={ScreeningForm} />
+             {/* <Stack.Screen name="Screening Form" component={ScreeningForm} /> */}
              <Stack.Screen name="ApplyAsDonorStack" component={ApplyAsDonorStack} />
+             <Stack.Screen name="ApplyAsRequestorStack" component={ApplyAsRequestorStack}/>
+             
 
 
              {/*Donor*/}
@@ -263,8 +267,8 @@ export default function App() {
              <Stack.Screen name="RequestorProfile" component={RequestorProfile} />
              <Stack.Screen name="Requestor Tabs" component={RequestorTabs} />
              <Stack.Screen name="SetPasswordRequestor" component={SetPasswordRequestor} />
-             <Stack.Screen name="Data Privacy Requestor" component={DataPrivacyNiKit} />
-             <Stack.Screen name="Approval Message" component={ApprovalMessage} />
+             {/* <Stack.Screen name="Data Privacy Requestor" component={DataPrivacyNiKit} /> */}
+             {/* <Stack.Screen name="Approval Message" component={ApprovalMessage} /> */}
              <Stack.Screen name="RequestorSettingScreen" component={RequestorSettingScreen} />
              <Stack.Screen name="RequestorAboutUs" component={RequestorAboutUs} />
              <Stack.Screen name="RequestorChangePassword" component={RequestorChangePassword} />
@@ -290,8 +294,8 @@ export default function App() {
 
 
              {/*Admin*/}
-             <Stack.Screen name="Medical Abstract" component={MedicalAbstract} />
-             <Stack.Screen name="Reason For Requesting" component={ReasonForRequesting} />
+             {/* <Stack.Screen name="Medical Abstract" component={MedicalAbstract} />
+             <Stack.Screen name="Reason For Requesting" component={ReasonForRequesting} /> */}
              <Stack.Screen name="LoginAdmin" component={LoginAdmin} />
              <Stack.Screen name="AdminMenu" component={AdminMenu} />
              <Stack.Screen name="AdminDashboard" component={AdminDashboard} />
