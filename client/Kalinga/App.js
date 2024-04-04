@@ -38,7 +38,7 @@ import GuestExplore from './ProjectComponents/Guest/Home/Explore.js'
 import GuestHome from './ProjectComponents/Guest/GuestDashboard/GuestHome.js'
 import GuestProfile from './ProjectComponents/Guest/GuestDashboard/GuestProfile.js'
 import ApplyAsDonorStack from './ApplyAsDonorStack.js';
-import ApplyAsRequestorStack from './ProjectComponents/Guest/Profile/Apply_As_Requestor/ApplyAsRequestorStack.js'
+import ApplyAsRequestorStack from './ProjectComponents/Guest/Profile/ApplyRequestor/ApplyAsRequestorStack.js'
 
 
 
@@ -113,7 +113,7 @@ import RequestorProfile from './ProjectComponents/Requestor/Dashboard/Profile.js
 import DonorTabs from './routes/MainTabs.js'
 import GuestTabs from './routes/MainTabsGuest.js'
 import RequestorTabs from './routes/MainTabsRequestor.js'
-import SetPasswordRequestor from './ProjectComponents/Requestor/SetPasswordRequestor.js';
+import SetPassword from './ProjectComponents/Requestor/SetPasswordRequestor.js';
 import GuestTabsExploreAndMilkBank from './routes/GuestTabsExploreAndMilkBank.js'
 import RequestorTabsExploreAndMilkBank from './routes/RequestorTabsExploreAndMilkBank.js'
 import DonorTabsExploreAndMilkBank from './routes/DonorTabsExploreAndMilkBank.js'
@@ -176,7 +176,7 @@ export default function App() {
     return (
 
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="ApplyAsRequestorStack" screenOptions={{ headerShown: false }}>
+          <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
           {/* <Stack.Navigator initialRouteName="Data Privacy Requestor" screenOptions={{ headerShown: false }}> */}
           
             {/*InitialScreen*/}
@@ -184,7 +184,7 @@ export default function App() {
             <Stack.Screen name="Onboard" component={Onboarding} /> 
             <Stack.Screen name="GetStarted" component={GetStarted} />
             <Stack.Screen name="LogIn" component={LogIn} />
-  
+      
 
             {/*Routes*/}
             <Stack.Screen name="GuestTabsExploreAndMilkBank" component={GuestTabsExploreAndMilkBank} />
@@ -192,6 +192,7 @@ export default function App() {
             <Stack.Screen name="DonorTabsExploreAndMilkBank" component={RequestorTabsExploreAndMilkBank} />
             <Stack.Screen name="RequestorTabs" component = {RequestorTabs}/>
 
+            <Stack.Screen name="SetPassword" component={SetPassword} />
             <Stack.Screen name="SendCode" component={SendCode} />
             <Stack.Screen name="MobileNumber" component={MobileNumber} />
             <Stack.Screen name="MobileNumberExpired" component={MobileNumberExpired} />
@@ -266,7 +267,7 @@ export default function App() {
              <Stack.Screen name="MakeRequest2" component={MakeRequest2} />
              <Stack.Screen name="RequestorProfile" component={RequestorProfile} />
              <Stack.Screen name="Requestor Tabs" component={RequestorTabs} />
-             <Stack.Screen name="SetPasswordRequestor" component={SetPasswordRequestor} />
+             
              {/* <Stack.Screen name="Data Privacy Requestor" component={DataPrivacyNiKit} /> */}
              {/* <Stack.Screen name="Approval Message" component={ApprovalMessage} /> */}
              <Stack.Screen name="RequestorSettingScreen" component={RequestorSettingScreen} />
