@@ -96,8 +96,8 @@ const fileSchema = new mongoose.Schema({
 });
 
 
-export const MedicalRequirementsImagesModel = mongoose.model('Donor MR as Images', imageSchema)
-export const MedicalRequirementsFilesModel = mongoose.model('Donor MR as File', fileSchema)
+export const MedicalRequirementsImagesModel = mongoose.model('Images', imageSchema)
+export const MedicalRequirementsFilesModel = mongoose.model('Files', fileSchema)
 export const screeningFormModel = mongoose.model('Screening Forms', screeningFormSchema)
 
 export const createMedicalRequirementFiles = (values: Record<string, any>) => new MedicalRequirementsFilesModel(values).save().then((MedicalRequirements) => MedicalRequirements.toObject())

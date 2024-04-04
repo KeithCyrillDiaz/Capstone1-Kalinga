@@ -465,12 +465,6 @@ const handleFileUpload = async (attachmentType) => {
                                 alignItems: "center",
                                 justifyContent: "center"
                                 }}>
-                                  {/* <Text style={{ textAlign: "center", marginRight: 20 }}>
-                                      {attachmentType}: 
-                                  </Text>
-                                  <Text style={{ textAlign: "center" }}>
-                                      {file.name}
-                                  </Text> */}
 
                                   <View style = {styles.fileType}>
                                     <Text>{attachmentType}: </Text>
@@ -502,7 +496,7 @@ const handleFileUpload = async (attachmentType) => {
                       cropWidth={Dimensions.get('window').width}
                       cropHeight={Dimensions.get('window').height}
                       imageWidth={Dimensions.get('window').width}
-                      imageHeight={Dimensions.get('window').height * 0.7} // Adjust the height as needed
+                      imageHeight={Dimensions.get('window').height * 1} // Adjust the height as needed
                       enableSwipeDown={true}
                       onSwipeDown={() => setModalVisible(false)} // Close modal on swipe down
                       style={{ backgroundColor: 'black' }} // Set background color to black to avoid seeing the underlying content
