@@ -21,7 +21,7 @@ import mongoose from 'mongoose';
 
 const DonorSchema = new mongoose.Schema({
 
-    Donor_ID: {type: Number},
+    Donor_ID: {type:  String},
     userName: {type: String},
     MilkAmountDonated: {type: Number},
     fullName: {type: String},
@@ -29,11 +29,10 @@ const DonorSchema = new mongoose.Schema({
     password: {
             type: String,
             required: true,
-            select: true
         },
-    age: {type: Number},
+    age: {type: String},
     address: {type: String},
-    birthday: {type: Date},
+    birthday: {type: String},
     mobileNumber: {type: String},
     homeAddress: {type: String},
     NumberPost: {type: String},
@@ -49,7 +48,7 @@ const DonorSchema = new mongoose.Schema({
 
 const RequestorSchema = new mongoose.Schema({
 
-    Requestor_ID: {type: Number},
+    Requestor_ID: {type: String},
     userName: {type: String},
     MilkAmountReceived: {type: Number},
     fullName: {type: String},
@@ -57,11 +56,10 @@ const RequestorSchema = new mongoose.Schema({
     password: {
             type: String,
             required: true,
-            select: true
         },
-    age: {type: Number},
+    age: {type: String},
     address: {type: String},
-    birthday: {type: Date},
+    birthday: {type: String},
     mobileNumber: {type: String},
     homeAddress: {type: String},
     NumberPost: {type: String},
@@ -75,35 +73,18 @@ const RequestorSchema = new mongoose.Schema({
 });
 
 
-
-
-const tokenSchema = new mongoose.Schema({
-
-    token: {type: String},
-    createdAt: { type: Date},
-    expiry: {type:String} 
- 
-
-});
-
-const adminSchema = new mongoose.Schema({
-
-    username: {type: String},
-    password: {type: String},
- 
-});
 export const DonorModel = mongoose.model('Donor', DonorSchema)
 export const RequestorModel = mongoose.model('Requestor', RequestorSchema)
 
 export const getDonor = () => DonorModel.find()
 export const getDonorByEmail = (email: string) => DonorModel.findOne({email})
-export const getDonorById = (Donor_ID: number) => DonorModel.findOne({Donor_ID})
+export const getDonorById = (Donor_ID: string) => DonorModel.findOne({Donor_ID})
 export const createDonor = (values: Record<string, any>) => new DonorModel(values).save().then((donor) => donor.toObject())
 
 
 export const getRequestor = () => RequestorModel.find()
 export const getRequestorByEmail = (email: string) => RequestorModel.findOne({email})
-export const getRequestorById = (Donor_ID: number) => RequestorModel.findOne({Donor_ID})
+export const getRequestorById = (Requestor_ID: string) => RequestorModel.findOne({Requestor_ID})
 export const createRequestor = (values: Record<string, any>) => new RequestorModel(values).save().then((donor) => donor.toObject())
 
 //export const deleteUserById = (id: string) => userModel.findOneAndDelete({_id: id})

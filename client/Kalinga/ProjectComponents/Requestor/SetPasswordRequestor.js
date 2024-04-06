@@ -27,6 +27,8 @@ const SetPasswordDonor = () => {
             return
         }
 
+        const tokenResponse = await axios.get()
+
         try{
 
             const response = await axios.post("http://192.168.1.104:7000/kalinga/registerDonor", Password);

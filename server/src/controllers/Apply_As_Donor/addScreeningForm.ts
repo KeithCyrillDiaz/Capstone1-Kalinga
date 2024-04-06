@@ -1,10 +1,11 @@
 import express from 'express'
-import { createScreeningForm, getScreeningFormByMaxApplicantID, getScreeningFormByName } from '../../db/ApplyAsDonor';
-import { random, passEncryption } from '../../helpers/passwordEncryption'
+import { createScreeningForm, getScreeningFormByName } from '../../models/ApplyAsDonor';
 import randomatic from 'randomatic'
 
 export const addScreeningForm = async( req: express.Request, res: express.Response) => {
 try {
+
+    console.log(req.body.RFR)
     const {
         Applicant_ID,
         fullName,
@@ -27,27 +28,31 @@ try {
         TypeOfDonor,
         QA,
         QB,
-        QB_Reason,
         Q1,
         Q2,
+
+        //Medical History
         MH1,
         MH2,
+        MH2_Reason,
         MH3,
         MH4,
         MH5,
         MH6,
         MH7,
-        MH7_Reason,
         MH8,
+        MH8_Reason,
         MH9,
         MH10,
         MH11,
         MH12,
         MH13,
-        MH13_Reason,
         MH14,
+        MH14_Reason,
+        MH15,
         SH1,
         SH2,
+        RFR,
     } = req.body;
 
 
@@ -103,27 +108,34 @@ try {
         TypeOfDonor,
         QA,
         QB,
-        QB_Reason,
         Q1,
         Q2,
+
+        // Medical History
         MH1,
         MH2,
+        MH2_Reason,
         MH3,
         MH4,
         MH5,
         MH6,
         MH7,
-        MH7_Reason,
         MH8,
+        MH8_Reason,
         MH9,
         MH10,
         MH11,
         MH12,
         MH13,
-        MH13_Reason,
         MH14,
+        MH14_Reason,
+        MH15,
+
+        //SexualHistory
         SH1,
         SH2,
+        RFR,
+
         createdAt: formattedTime,
         updatedAt: formattedTime,
     });

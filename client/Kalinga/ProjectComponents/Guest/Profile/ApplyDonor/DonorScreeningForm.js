@@ -22,19 +22,17 @@ const DonorScreeningForm = () => {
 
   const navigatePage = (Page, data) => {
     // Navigate to the next screen by route name
-   console.log(data)
+  //  console.log(data)
     navigation.navigate(Page, data);
   };
 
   const applicantId = randomatic('Aa0', 20);
 
-  
-
   const [screeningFormData, setScreeningFormData] = useState({
-    applicantId: applicantId,
+    Applicant_ID: applicantId,
     userType: "Donor",
     fullName: '',
-    age: '',
+    Age: '',
     birthDate: '',
     email: '',
     contactNumber: '',
@@ -121,7 +119,7 @@ const handleChangeText = (name, value) => {
                         placeholder="Age"
                         placeholderTextColor="#E60965"
                           keyboardType="numeric"
-                        onChangeText={(value) => handleChangeText('age', value)}
+                        onChangeText={(value) => handleChangeText('Age', value)}
                     />
                     <TextInput
                         style={styles.birthDayInputField}

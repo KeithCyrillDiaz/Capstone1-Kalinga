@@ -16,7 +16,7 @@ const DonorMedicalHistory = ({route}) => {
 
   const navigatePage = (Page, data) => {
     // Navigate to the next screen by route name
-    console.log(data)
+    // console.log(data)
     navigation.navigate(Page, data);
   };
 
@@ -64,7 +64,7 @@ const DonorMedicalHistory = ({route}) => {
 
               <Text style={styles.question}>{questionText}</Text>
 
-             {(questionId === 2 || questionId === 7) && (
+             {(questionId === 2 || questionId === 8) && (
                 <TextInput
                 style={{
                   borderBottomColor: "#E60965",
@@ -72,9 +72,10 @@ const DonorMedicalHistory = ({route}) => {
                   width: "80%",
                   marginLeft: 20,
                   color: "black",
+                  paddingBottom: 2
                 }}
                 multiline={true}
-                textAlignVertical="top" // Align text to the top vertically
+                textAlignVertical="bottom" // Align text to the top vertically
                 onChangeText={isChecked === 'Yes' ? (value) => handleChangeText(`${questionId}_Reason`, value) : undefined}
                 editable={isChecked === 'Yes'}
               /> 
@@ -126,14 +127,15 @@ const DonorMedicalHistory = ({route}) => {
                     {renderQuestion(1, 'Nakapagbigay ka na ba ng iyong gatas dati?',"Medical History")}
                     {renderQuestion(2, 'Ikaw ba ay natanggihan na magbigay ng iyong gatas/breastmilk? Kung oo, sa anong dahilan?', "Medical History")}
                     {renderQuestion(3, 'Normal ba ang panganganak mo sa huli mong anak?', "Medical History")}
-                    {renderQuestion(4, 'Nagkaroon ka ba ng impeksiyon o sakit? Nagkaroon ka ba ng TB o sakit sa atay?',"Medical History")}
-                    {renderQuestion(5, 'Ikaw ba ay nasalinan ng dugo nitong nakaaran na 12 na buwan?', "Medical History")}
-                    {renderQuestion(6, 'Ikaw ba ay naging recipient ng organ o tissue mula sa ibang tao nitong nakaraang 12 na buwan?', "Medical History")}
-                    {renderQuestion(7, 'Nakainom ka ba ng alak nitong nakaraang 24 oras? Kung oo, gaano karami? ',"Medical History")}
-                    {renderQuestion(8, 'Regular ka bang gumagamit ng mga gamot gaya ng replacement/birth control hormones o pills?', "Medical History")}
-                    {renderQuestion(9, 'Gumagamit ka ba ng mga “megadose vitamins” o mga “herbal drugs”?', "Medical History")}
-                    {renderQuestion(10, 'Ikaw ba ay hindi kumakain ng karne o isang “vegetarian”?',"Medical History")}
-                    {renderQuestion(11, 'Kung oo, umiinom ka ba ng multivitamins?', "Medical History")}
+                    {renderQuestion(4, 'Nagkaroon ka ba ng impeksiyon o sakit?',"Medical History")}
+                    {renderQuestion(5, 'Nagkaroon ka ba ng TB o sakit sa atay?',"Medical History")}
+                    {renderQuestion(6, 'Ikaw ba ay nasalinan ng dugo nitong nakaaran na 12 na buwan?', "Medical History")}
+                    {renderQuestion(7, 'Ikaw ba ay naging recipient ng organ o tissue mula sa ibang tao nitong nakaraang 12 na buwan?', "Medical History")}
+                    {renderQuestion(8, 'Nakainom ka ba ng alak nitong nakaraang 24 oras? Kung oo, gaano karami? ',"Medical History")}
+                    {renderQuestion(9, 'Regular ka bang gumagamit ng mga gamot gaya ng replacement/birth control hormones o pills?', "Medical History")}
+                    {renderQuestion(10, 'Gumagamit ka ba ng mga “megadose vitamins” o mga “herbal drugs”?', "Medical History")}
+                    {renderQuestion(11, 'Ikaw ba ay hindi kumakain ng karne o isang “vegetarian”?',"Medical History")}
+                    {renderQuestion(12, 'Kung oo, umiinom ka ba ng multivitamins?', "Medical History")}
                     
                     <View style = {styles.space}></View>
             </ScrollView>
