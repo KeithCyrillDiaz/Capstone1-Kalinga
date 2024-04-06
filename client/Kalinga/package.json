@@ -16,6 +16,7 @@
     "@react-native-community/cli-platform-android": "^13.6.3",
     "@react-native-community/cli-platform-ios": "^13.6.3",
     "@react-native-community/datetimepicker": "^7.6.3",
+    "@react-native-picker/picker": "^2.7.2",
     "@react-navigation/bottom-tabs": "^6.5.14",
     "@react-navigation/material-top-tabs": "^6.6.11",
     "@react-navigation/stack": "^6.3.20",

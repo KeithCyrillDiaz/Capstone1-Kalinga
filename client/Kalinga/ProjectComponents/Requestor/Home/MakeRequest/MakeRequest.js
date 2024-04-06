@@ -25,14 +25,17 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
+import { Picker } from '@react-native-picker/picker';
+
 
 
 export default function RequestorProfile() {
     const [fullName, setFullName] = useState('');
     const [inputValue, setInputValue] = useState('');
-  
+    const [selectedCategory, setSelectedCategory] = useState('Healthy Baby'); // Default category
+
     const handleInputChange = (text) => {
-      setInputValue(text); // Update the local inputValue
+        setInputValue(text);
     };
   
     const handleSubmit = () => {
@@ -50,9 +53,12 @@ export default function RequestorProfile() {
     
     const navigatePage = (Page) => {
         navigation.navigate(Page); // Navigate to the Login screen
-        
 
+      
     };
+
+   
+
   
     return (
       <SafeAreaView style={globalStyles.container}>
@@ -114,13 +120,31 @@ export default function RequestorProfile() {
                         onChangeText={handleInputChange}
                         />    
 
-                    <TextInput
-                        style={styles.form1}
-                        value={inputValue}
-                        placeholder="Amount of milk to be requested (mL) *"
-                        placeholderTextColor="#E60965"
-                        onChangeText={handleInputChange}
-                        />   
+            <View style={styles.bodyForm1}>
+                <TextInput
+                    style={styles.form3}
+                    value={inputValue}
+                    placeholder="Amount of milk to be requested (mL) *"
+                    placeholderTextColor="#E60965"
+                    onChangeText={handleInputChange}
+                />
+
+              
+                  <View style={styles.dropdownContainer}>
+                  <Picker
+                    selectedValue={selectedCategory}
+                    onValueChange={(itemValue, itemIndex) => setSelectedCategory(itemValue)}
+                    style={styles.dropdown}
+                  >
+                    <Picker.Item label="Baby Category" value="Baby Category" />
+                    <Picker.Item label="Healthy Baby" value="Healthy Baby" style={styles.dropdownItem} />
+                    <Picker.Item label="Sick Baby" value="Sick Baby" style={styles.dropdownItem} />
+                    <Picker.Item label="Medically Fragile Baby" value="Medically Fragile Baby" style={styles.dropdownItem} />
+                    <Picker.Item label="Preterm Baby" value="Preterm Baby" style={styles.dropdownItem} />
+                  </Picker>
+                </View>
+              </View>
+          
 
                     <TextInput
                         style={styles.form2}
@@ -137,7 +161,7 @@ export default function RequestorProfile() {
                     </View>
                             
                 </View>
-                <TouchableOpacity style={styles.reqButton} onPress={() => navigatePage("MakeRequest2")}>
+                <TouchableOpacity style={styles.reqButton} onPress={() => navigatePage("MakeRequestReceipt")}>
                     <Text style={{ color: 'white' }}>Make a Request</Text>
                 </TouchableOpacity>
             </View>
@@ -193,13 +217,18 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     marginBottom: 10,
   },
-
   bodyForm: {
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
   },
 
+  bodyForm1:{
+    flexDirection: "row",
+    alignSelf:"center",
+  },
+
+ 
   form1: {
     height: 35,
     fontFamily: "OpenSans-Regular",
@@ -224,6 +253,20 @@ const styles = StyleSheet.create({
     width: '90%',
     alignSelf: 'center', // Center the input horizontally
     backgroundColor: '#fff', // Background color
+  },
+
+  form3:{
+    height: 52,
+    fontFamily: "OpenSans-Regular",
+    borderColor: '#E60965', // Border color
+    borderWidth: 1, // Border width
+    borderRadius: 10, // Border radius
+    paddingHorizontal: 10,
+    marginBottom: 5,
+    width: '30%',
+    alignSelf: 'center', // Center the input horizontally
+    backgroundColor: '#fff',
+    justifyContent: "space-between"
   },
   
   uploadContainer: {
@@ -256,6 +299,35 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginLeft: 100,
     margin: 20,
-  }
+  },
+
+  dropdownContainer: {
+        borderWidth: 1,
+        borderColor: '#E60965',
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        marginBottom: 5,
+        width: '55%',
+        alignSelf: 'center',
+        backgroundColor: '#fff',
+        height:10,
+        marginLeft: 20,
+        paddingBottom: 50
+
+},
+
+dropdown: {
+  height: 10,
+  color: '#E60965',
+
+
+
+},
+
+dropdownItem: {
+  fontFamily: 'OpenSans-Regular',
+  color: '#E60965',
+  
+}
 });
 

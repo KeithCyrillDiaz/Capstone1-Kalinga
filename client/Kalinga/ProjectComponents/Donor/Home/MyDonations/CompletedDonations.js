@@ -1,146 +1,204 @@
-//Guest EducLibrary
-import React, {useState} from "react";
-import { 
-  ScrollView, 
-  Text, View, 
-  SafeAreaView, 
-  StatusBar,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity
-} from 'react-native';
-import { globalStyles } from "../../../../styles_kit/globalStyles.js";
-import { globalHeader } from "../../../../styles_kit/globalHeader.js";
+import React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import { SafeAreaView, Text, View,ScrollView, StatusBar, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
+import { useNavigation } from '@react-navigation/native';
+
+
+import { MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
+
+import { globalHeader } from '../../../../styles_kit/globalHeader.js';
+import { globalStyles } from '../../../../styles_kit/globalStyles.js';
+
+import Tabs from './MyDonationsTabs.js';
 
 
 
-const CompletedDonations = () => {
+const Tab = createBottomTabNavigator()
 
 
-  const FirstParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse'
 
-  const SecondParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
+const OngoingDonations = () => {
+ 
 
-  const ThridParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
+  const navigation = useNavigation();
+const navigatePage = (Page) => {
+  navigation.navigate(Page); // Navigate to the Login screen
+  
 
-  return (
-      <SafeAreaView style = {styles.container}>
-            <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
-              <View style = {globalHeader.SmallHeader}>
-                  <Text style = {globalHeader.SmallHeaderTitle}>My Donations</Text>
-              </View>
+};
+    return (
+             <SafeAreaView style = {styles.container}>
+                <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
+                <View style = {globalHeader.SmallHeader}>
+                    <Text style = {globalHeader.SmallHeaderTitle}>My Donations</Text>
+                </View>
 
-           <ScrollView
-           style = {globalStyles.ScrollView}
-           overScrollMode='never' // Disable the over-scroll effect or the Jelly effect when reaching the end of the scroll
-           nestedScrollEnabled={true} // Enable nested scrolling
-           
-           >
-            <View style = {globalStyles.container}>
-                <View style = {styles.row}>
+                <ScrollView
+                 overScrollMode='never'
+                 nestedScrollEnabled={true}
+                
+                >
+                    <View style={styles.headerButton}>
+							<TouchableOpacity onPress={() => navigatePage("OngoingDonations")}>
+									<Text style = {styles.Tabbutton}>Ongoing</Text>
+							</TouchableOpacity>
+							<TouchableOpacity onPress={() => navigatePage("CompleteDonations")}>
+									<Text style = {styles.indicatedButton}>Copleted</Text>
+							</TouchableOpacity>
+							
+						</View>
                     
-                    <TouchableOpacity>
-                      <Text style = {styles.ongoingButton}>
-                        Ongoing
-                      </Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity>
-                      <Text style = {styles.completedButton}>
-                        Completed
-                      </Text>
-                    </TouchableOpacity>
-
+            <View>
+                <Image
+                source={require('../../../../assets/Kalinga_Logo.png')} 
+                style={styles.img}
+                 />
+                  </View>
+                <View style = {styles.OngoingTextContainer}>
+                    <Text style = {styles.OngoingText}>Any previous transaction will appear here</Text>
                 </View>
+                      
+                </ScrollView>
+        
+            </SafeAreaView>
+        
+    );
 
-                <View style = {styles.logoContainer}>
-                  <Text>
-                    Logo
-                  </Text>
-                 
-                </View>
-                <View style = {styles.flex}>
-                  <Text style = {styles.caption}>
-                      Any ongoing transaction will appear here
-                  </Text>
-                </View>
-               
-            </View>
+}
 
-
-            
-         </ScrollView>
-      </SafeAreaView>
-
-    )
-    
-  }
-
-  const styles = StyleSheet.create ({
+const styles = StyleSheet.create ({
 
     container: {
+        flex: 1,
+       //backgroundColor: "gray",
 
-      backgroundColor: "white",
-      height: "100%"
     },
-    row: {
-      //backgroundColor: "gray",
-      flexDirection: "row",
-      width: "90%",
-      paddingTop: "7%",
-      paddingBottom: "4%",
-      borderBottomWidth: 1,
-      borderColor: "#FFACC7"
-  },
 
-  ongoingButton: {
     
-    marginHorizontal: 10,
-    paddingHorizontal: 40,
-    paddingVertical: 15,
-    backgroundColor: "#FFE5EC",
-    color: "#E60965",
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#E60965",
+    img: {
+    
+      width: 200,
+      height: 200,
+      alignSelf: "center",
+      marginTop: 100
    
+    
   },
-
-  completedButton: {
-
-    backgroundColor: "#E60965",
-    color: "white",
-    borderRadius: 10,
-    padding: 20,
-    marginHorizontal: 45,
-    paddingHorizontal: 40,
-    paddingVertical: 15,
-   
+  OngoingTextContainer:{
+    alignSelf: "center"
   },
-
-  logoContainer: {
-    marginTop: "40%",
-    backgroundColor: "pink",
-    height: 200,
-    width: 200,
-
-  },
-
-  caption: {
-    fontFamily: "Open-Sans-SemiBold",
+  OngoingText:{
     color: "#E60965",
-    fontSize: 17,
-    textAlign: "center",
-    marginTop: 20,
+    fontSize: 15
   },
-
-  flex: {
-    //backgroundColor: "gray",
-    width: "70%"
-  }
-
-  })
-
-  export default CompletedDonations;
-
+    RowMilk: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        marginHorizontal: "10%",
+        marginTop: 50,
+        paddingLeft: 30,
+        flexDirection: "row",
+        //backgroundColor: "gray",
+        borderWidth: 3,
+        borderRadius: 20,
+        borderColor: "#E60965",
+        height: 270
   
+    }, RowAchievements: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        marginHorizontal: "10%",
+        marginTop: 30,
+        paddingLeft: 30,
+        flexDirection: "row",
+        //backgroundColor: "gray",
+        borderWidth: 3,
+        borderRadius: 20,
+        borderColor: "#E60965",
+        height: 270
+  
+    },
+
+    upperText: {
+        fontFamily: "Open-Sans-Bold",
+        fontSize: 18,
+        color: "#E60965",
+        marginRight: 50,
+    },
+
+    lowerText: {
+        fontFamily: "Open-Sans-Bold", // Need prata font
+        fontSize: 35,
+        color: "#E60965",
+        textAlign: "center",
+        marginRight: 50,
+        //backgroundColor: "red"
+    },
+
+    button: {
+        backgroundColor: "#E60965",
+        alignItems: "center",
+        justifyContent: "center",
+        marginHorizontal: "30%",
+        textAlign: "center",
+        marginTop: 20,
+        padding: 10,
+        borderRadius: 20,
+        color: "white",
+        fontFamily: "Open-Sans-Regular", //should be swmi Bold
+        fontSize: 17,
+    },
+
+    bottomText: {
+       // backgroundColor: "gray",
+        marginHorizontal: "10%",
+        textAlign: "center",
+        color: "#E60965",
+        marginVertical: 20,
+    },
+
+    
+	headerButton: {
+		flexDirection: "row",
+		alignItems: "center",
+		padding: 10,
+		paddingBottom: 18,
+		justifyContent: "space-evenly",
+		marginVertical: 10,
+		marginHorizontal: "3%",
+		borderBottomWidth: 1,
+		borderBlockColor: "#FFACC7"
+	},
+
+	Tabbutton: {
+		borderWidth: 1,
+		padding: 10,
+		paddingHorizontal: 18,
+		color: "#E60965",
+		borderColor: "#E60965",
+		fontFamily: "Open-Sans-Bold",
+		backgroundColor: "#FFE5EC",
+		borderRadius: 7,
+		fontSize: 18,
+
+	},
+	
+	indicatedButton: {
+		borderWidth: 1,
+		padding: 10,
+		paddingHorizontal: 18,
+		color: "white",
+		borderRadius: 7,
+		borderColor: "#E60965",
+		fontFamily: "Open-Sans-Bold",
+		backgroundColor: "#E60965",
+		fontSize: 18,
+
+	},
+});
+
+export default OngoingDonations;
