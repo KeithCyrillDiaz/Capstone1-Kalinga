@@ -94,7 +94,7 @@ export default function RequestorHome() {
                   </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("ApprovedMessageRequest")}>
+                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("MyRequestScreen")}>
                   <SimpleLineIcons name="graph" size={70} color="#E60965"s />
                   <View style = {styles.LabelCenter}>
                     <Text style = {styles.Label}>My Request</Text>

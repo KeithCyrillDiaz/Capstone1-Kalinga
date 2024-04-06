@@ -1,4 +1,4 @@
-import React, { useState }from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Octicons } from '@expo/vector-icons';
@@ -7,6 +7,11 @@ import { Feather } from '@expo/vector-icons';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import { AntDesign } from '@expo/vector-icons';
 import DonorUploadAdmin from './DonorUploadAdmin.js';
+import axios from 'axios'; // Import axios for making HTTP requests
+
+
+
+
 
 
 const Tab = createMaterialTopTabNavigator();
@@ -15,37 +20,77 @@ const Tab = createMaterialTopTabNavigator();
 const FirstScreen = ({  }) => {
     const navigation = useNavigation();
 
+   
+    const [formData, setFormData] = useState({
+        MH1:'',
+        MH2:'',
+        MH3:'',
+        MH4:'',
+        MH5:'',
+        MH6:'',
+        MH7:'',
+        MH8:'',
+        MH9:'',
+        MH10:'',
+        MH11:'',
+    });
+
     const navigatePage = (Page) => {
         navigation.navigate(Page); // Navigate to the Login screen
     }
-    const [medicalAnsweredQuestions, setMedicalAnsweredQuestions] = useState([]);
+    useState([]);
 
-    const pressOption = (questionId, answer, questionType) => {
- 
-        const answeredQuestion = { id: questionId, answer: answer, type: questionType};
-        setMedicalAnsweredQuestions(prevState => [...prevState.filter(item => item.id !== questionId), answeredQuestion]);
-    };
+  useEffect(() => {
+    fetchData(); // Fetch data when component mounts
+}, []);
 
-    const renderQuestion = (questionId, questionText, questionType) => {
+const fetchData = async () => {
+  try {
+      const response = await axios.get('http://192.168.254.103:7000/kalinga/getScreeningForms');
+      const data = response.data[0]; // Assuming you expect only one record
 
-          const isChecked = medicalAnsweredQuestions.find(item => item.id === questionId)?.answer;
+      // Set the fetched data to the state
+      setFormData((prevState) => ({
+        ...prevState,
+            MH1: data.MH1,
+            MH2: data.MH2,
+            MH3: data.MH3,
+            MH4: data.MH4,
+            MH5: data.MH5,
+            MH6: data.MH6,
+            MH7: data.MH7,
+            MH8: data.MH8,
+            MH9: data.MH9,
+            MH10: data.M10,
+            MH11: data.MH11,
+      }));
+      setSelectedOption(data.TypeOfDonor);
+  } catch (error) {
+      console.error('Error fetching data:', error);
+  }
+};
 
+
+    const renderQuestion = (questionId, questionText) => {
+      const isCheckedYes = formData[questionId] === 'Yes'; // Check if the answer is 'Yes'
+      const isCheckedNo = formData[questionId] === 'No'; // Check if the answer is 'No'
+    
       return (
-          <View style={styles.rowAlignment} key={questionId}>
-              <TouchableOpacity onPress={() => pressOption(questionId, 'Yes', questionType)}>
-                  <View style={[styles.circle, isChecked === 'Yes' && styles.checkedCircle]}>
-                      {isChecked === 'Yes' && <AntDesign name="checkcircle" size={18} color="#E60965" />}
-                  </View>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => pressOption(questionId, 'No', questionType)}>
-                  <View style={[styles.circle, isChecked === 'No' && styles.checkedCircle]}>
-                      {isChecked === 'No' && <AntDesign name="checkcircle" size={18} color="#E60965" />}
-                  </View>
-              </TouchableOpacity>
-              <Text style={styles.question}>{questionText}</Text>
-          </View>
+        <View style={styles.rowAlignment} key={questionId}>
+          <TouchableOpacity onPress={() => pressOption(questionId, 'Yes')}>
+            <View style={[styles.circle, isCheckedYes && styles.checkedCircle]}>
+              {isCheckedYes && <AntDesign name="checkcircle" size={18} color="#E60965" />}
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => pressOption(questionId, 'No')}>
+            <View style={[styles.circle, isCheckedNo && styles.checkedCircle]}>
+              {isCheckedNo && <AntDesign name="checkcircle" size={18} color="#E60965" />}
+            </View>
+          </TouchableOpacity>
+          <Text style={styles.question}>{questionText}</Text>
+        </View>
       );
-  };
+    };
 
    
     return (
@@ -70,17 +115,17 @@ const FirstScreen = ({  }) => {
                     <Text style = {styles.choices}>No</Text>
                 </View>
 
-                    {renderQuestion(1, 'Nakapagbigay ka na ba ng iyong gatas dati?',"Medical History")}
-                    {renderQuestion(2, 'Ikaw ba ay natanggihan na magbigay ng iyong gatas/breastmilk? Kung oo, sa anong dahilan?', "Medical History")}
-                    {renderQuestion(3, 'Normal ba ang panganganak mo sa huli mong anak?”?', "Medical History")}
-                    {renderQuestion(4, 'Nagkaroon ka ba ng impeksiyon o sakit? Nagkaroon ka ba ng TB o sakit sa atay?',"Medical History")}
-                    {renderQuestion(5, 'Ikaw ba ay nasalinan ng dugo nitong nakaaran na 12 na buwan?', "Medical History")}
-                    {renderQuestion(6, 'Ikaw ba ay naging recipient ng organ o tissue mula sa ibang tao nitong nakaraang 12 na buwan?', "Medical History")}
-                    {renderQuestion(7, 'Nakainom ka ba ng alak nitong nakaraang 24 oras? Kung oo, gaano karami? ',"Medical History")}
-                    {renderQuestion(8, 'Regular ka bang gumagamit ng mga gamot gaya ng replacement/birth control hormones o pills?', "Medical History")}
-                    {renderQuestion(9, 'Gumagamit ka ba ng mga “megadose vitamins” o mga “herbal drugs”?', "Medical History")}
-                    {renderQuestion(10, 'Ikaw ba ay hindi kumakain ng karne o isang “vegetarian”?',"Medical History")}
-                    {renderQuestion(11, 'Kung oo, umiinom ka ba ng multivitamins?', "Medical History")}
+                    {renderQuestion('MH1', 'Nakapagbigay ka na ba ng iyong gatas dati?',"Medical History")}
+                    {renderQuestion('MH2', 'Ikaw ba ay natanggihan na magbigay ng iyong gatas/breastmilk? Kung oo, sa anong dahilan?', "Medical History")}
+                    {renderQuestion('MH3', 'Normal ba ang panganganak mo sa huli mong anak?”?', "Medical History")}
+                    {renderQuestion('MH4', 'Nagkaroon ka ba ng impeksiyon o sakit? Nagkaroon ka ba ng TB o sakit sa atay?',"Medical History")}
+                    {renderQuestion('MH5', 'Ikaw ba ay nasalinan ng dugo nitong nakaaran na 12 na buwan?', "Medical History")}
+                    {renderQuestion('MH6', 'Ikaw ba ay naging recipient ng organ o tissue mula sa ibang tao nitong nakaraang 12 na buwan?', "Medical History")}
+                    {renderQuestion('MH7', 'Nakainom ka ba ng alak nitong nakaraang 24 oras? Kung oo, gaano karami? ',"Medical History")}
+                    {renderQuestion('MH8', 'Regular ka bang gumagamit ng mga gamot gaya ng replacement/birth control hormones o pills?', "Medical History")}
+                    {renderQuestion('MH9', 'Gumagamit ka ba ng mga “megadose vitamins” o mga “herbal drugs”?', "Medical History")}
+                    {renderQuestion('MH10', 'Ikaw ba ay hindi kumakain ng karne o isang “vegetarian”?',"Medical History")}
+                    {renderQuestion('MH11', 'Kung oo, umiinom ka ba ng multivitamins?', "Medical History")}
                     
                     <View style = {styles.space}></View>
             </ScrollView>

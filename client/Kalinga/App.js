@@ -75,6 +75,8 @@ import DonorSendFeedbackSuccess from './ProjectComponents/Donor/Profile/DonorSet
 import SetPasswordDonor from './ProjectComponents/Guest/Profile/ApplyDonor/SetPasswordDonor.js';
 import SetDateTimeLocation from './ProjectComponents/Donor/Home/MakeDonation/SetDateTimeLocation.js'
 import AppointmentConfirmation from './ProjectComponents/Donor/Home/MakeDonation/AppointmentConfirmation.js'
+import DonorHelpAndSupportMessage from './ProjectComponents/Donor/Profile/DonorSettngs/DonorHelpAndSupportMessage.js'
+import AppointmentConfirmationMessage from './ProjectComponents/Donor/Home/MakeDonation/AppointmentConfirmationMessage.js';
 
 {/* Requestor */}
 import RequestorForum from './ProjectComponents/Requestor/Home/Forum/RequestorForumPage.js'
@@ -101,6 +103,10 @@ import RequestorFavoriteArticles from './ProjectComponents/Requestor/Profile/Sav
 import ApprovedMessageRequest from './ProjectComponents/Requestor/Home/MyRequest/ApprovedMessageRequest.js';
 import ApprovedTabRequest from './ProjectComponents/Requestor/Home/MyRequest/ApprovedTabRequest.js';
 import RequestorProfile from './ProjectComponents/Requestor/Dashboard/Profile.js'
+import MakeRequestReceipt from './ProjectComponents/Requestor/Home/MakeRequest/MakeRequestReceipt.js'
+import MyRequestScreen from './ProjectComponents/Requestor/Home/MyRequest/MyRequestScreen.js';
+import CompletedTabRequest from './ProjectComponents/Requestor/Home/MyRequest/CompletedTabRequest.js';
+import PendingTabRequest from './ProjectComponents/Requestor/Home/MakeRequest/MakeRequestReceipt.js';
 
 
 
@@ -228,7 +234,7 @@ export default function App() {
              <Stack.Screen name="CompleteDonations" component={CompleteDonations} />
              <Stack.Screen name="My Donation Tabs" component={MyDonationTabs} />
              <Stack.Screen name="My Donations" component={MyDonations} />
-             <Stack.Screen name="Ongoing Donations" component={OngoingDonations} />
+             <Stack.Screen name="OngoingDonations" component={OngoingDonations} />
              <Stack.Screen name="Donations Home" component={DonationsHome} />
              <Stack.Screen name="DonorSavedArticles" component={DonorSavedArticles} />
              <Stack.Screen name="DonorFavoriteArticles" component={DonorFavoriteArticles} />
@@ -254,6 +260,11 @@ export default function App() {
              <Stack.Screen name="DonorSendFeedbackSuccess" component={DonorSendFeedbackSuccess} />
              <Stack.Screen name="SetDateTimeLocation" component={SetDateTimeLocation} />
              <Stack.Screen name="AppointmentConfirmation" component={AppointmentConfirmation} />
+             <Stack.Screen name="DonorHelpAndSupportMessage" component={DonorHelpAndSupportMessage} />
+             <Stack.Screen name="AppointmentConfirmationMessage" component={AppointmentConfirmationMessage} />
+
+
+
 
 
 
@@ -287,6 +298,15 @@ export default function App() {
              <Stack.Screen name="RequestorFavoriteArticles" component={RequestorFavoriteArticles} />
              <Stack.Screen name="ApprovedMessageRequest" component={ApprovedMessageRequest} />
              <Stack.Screen name="ApprovedTabRequest" component={ApprovedTabRequest} />
+             <Stack.Screen name="MakeRequestReceipt" component={MakeRequestReceipt} />
+             <Stack.Screen name="MyRequestScreen" component={MyRequestScreen} />
+             <Stack.Screen name="CompletedTabRequest" component={CompletedTabRequest} />
+             <Stack.Screen name="PendingTabRequest" component={PendingTabRequest} />
+
+
+
+
+
             
          
 

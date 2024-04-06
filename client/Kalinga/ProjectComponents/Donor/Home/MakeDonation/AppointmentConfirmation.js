@@ -136,7 +136,7 @@ const AppointmentConfirmation = () => {
                 </View>
 
                 <View style={styles.AdminButton}>
-                    <TouchableOpacity onPress={() => navigatePage("DonorInitialScreeningFormPage2")}>
+                    <TouchableOpacity onPress={() => navigatePage("AppointmentConfirmationMessage")}>
                         <View style={styles.ConfirmbuttonContainer}>
                             <Text style={styles.label}>Confirm</Text>
                         </View>
