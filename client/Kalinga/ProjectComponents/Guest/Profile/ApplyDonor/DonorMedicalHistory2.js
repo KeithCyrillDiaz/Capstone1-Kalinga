@@ -1,6 +1,6 @@
 //Guest Home
 import React, {useState} from 'react';
-import { ScrollView,Text, View, StatusBar, StyleSheet, TouchableOpacity} from 'react-native';
+import { ScrollView,Text, View, StatusBar, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
 import { globalStyles } from "../../../../styles_kit/globalStyles.js";
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { AntDesign } from '@expo/vector-icons';
@@ -10,7 +10,7 @@ const DonorMedicalHistory2 = ({route}) => {
     const navigation = useNavigation();
 
     const { screeningFormData } = route.params; // Access formData from route.params
-    console.log(screeningFormData)
+    // console.log(screeningFormData)
   
     const [formData, setFormData] = useState(screeningFormData);
 
@@ -19,28 +19,37 @@ const DonorMedicalHistory2 = ({route}) => {
       // Navigate to the next screen by route name
       navigation.navigate(Page, data);
     };
-
+    
     const [medicalAnsweredQuestions, setMedicalAnsweredQuestions] = useState([]);
     const [sexualAnsweredQuestions, setSexualAnsweredQuestions] = useState([]);
 
+    const handleChangeText = (value) => {
+      setFormData(prevData => ({...prevData, 
+      [`MH13_Reason`]: value
+      
+      }))
+      // setScreeningFormData({ ...screeningFormData, [name]: value });
+  };
 
     const pressOption = (questionId, answer, questionType) => {
         if(questionType === "Medical History")
         {
-            const answeredQuestion = { id: questionId, answer: answer, type: questionType };
-            setMedicalAnsweredQuestions(prevState => [...prevState.filter(item => item.id !== questionId), answeredQuestion]);
-            setFormData(prevData =>({...prevData,
-            [`MH${questionId}`]: answer
-            }))
-        } else {
-
+          console.log("answer", answer);
+          const answeredQuestion = { id: questionId, answer: answer, type: questionType};
+          setMedicalAnsweredQuestions(prevState => [...prevState.filter(item => item.id !== questionId), answeredQuestion]);
+          setFormData(prevData => ({
+            ...prevData,
+            [`MH${questionId}`]: answer, // Update typeOfDonor field
+          }));
+            
+       } 
+       else {
             const answeredQuestion = { id: questionId, answer: answer, type: questionType };
             setSexualAnsweredQuestions(prevState => [...prevState.filter(item => item.id !== questionId), answeredQuestion]);
             setFormData(prevData =>({...prevData,
               [`SH${questionId}`]: answer
               }))
         }
-
     };
     
     const UserName = "Rogine"
@@ -65,7 +74,29 @@ const DonorMedicalHistory2 = ({route}) => {
                         {isChecked === 'No' && <AntDesign name="checkcircle" size={18} color="#E60965" />}
                     </View>
                 </TouchableOpacity>
-                <Text style={styles.question}>{questionText}</Text>
+                <View style ={{
+                  flexDirection: "column"
+                }}>
+
+                  <Text style={styles.question}>{questionText}</Text>
+
+                {questionId === 13 && (
+                    <TextInput
+                    style={{
+                      borderBottomColor: "#E60965",
+                      borderBottomWidth: 1,
+                      width: "85%",
+                      marginLeft: 20,
+                      color: "black",
+                    }}
+                    multiline={true}
+                    textAlignVertical="top" // Align text to the top vertically
+                    onChangeText={isChecked === 'Yes' ? (value) => handleChangeText(value) : undefined}
+                    editable={isChecked === 'Yes'}
+                  /> 
+                  )} 
+
+              </View>
             </View>
         );
     };
@@ -193,10 +224,11 @@ const DonorMedicalHistory2 = ({route}) => {
       borderWidth: 1,
       borderRadius: 10,
       borderColor: '#E60965',
-      height: 210,
+      height: 230,
       paddingRight: 10,
       marginBottom: 10,
-      backgroundColor: "#FFFFFF"
+      backgroundColor: "#FFFFFF",
+      elevation: 5
     },
 
     form2: {
@@ -207,7 +239,8 @@ const DonorMedicalHistory2 = ({route}) => {
         height: 170,
         paddingRight: 10,
         marginBottom: 10,
-        backgroundColor: "#FFFFFF"
+        backgroundColor: "#FFFFFF",
+        elevation: 5
       },
 
     row: {

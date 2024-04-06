@@ -1,11 +1,10 @@
 //Guest Home
 import React, { useState } from 'react';
-import { ScrollView,Text, View, StatusBar, StyleSheet, TouchableOpacity} from 'react-native';
+import { ScrollView,Text, View, StatusBar, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
 import { globalStyles } from "../../../../styles_kit/globalStyles.js";
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import MedicalHistoryPage2 from './DonorMedicalHistory2.js'
 
 const DonorMedicalHistory = ({route}) => {
 
@@ -20,7 +19,15 @@ const DonorMedicalHistory = ({route}) => {
     console.log(data)
     navigation.navigate(Page, data);
   };
-    const UserName = "Rogine"
+
+
+  const handleChangeText = (name, value) => {
+    setFormData(prevData => ({...prevData, 
+    [`MH${name}`]: value
+    
+    }))
+    // setScreeningFormData({ ...screeningFormData, [name]: value });
+};
 
     const [medicalAnsweredQuestions, setMedicalAnsweredQuestions] = useState([]);
 
@@ -51,7 +58,29 @@ const DonorMedicalHistory = ({route}) => {
                       {isChecked === 'No' && <AntDesign name="checkcircle" size={18} color="#E60965" />}
                   </View>
               </TouchableOpacity>
+              <View style ={{
+              flexDirection: "column"
+            }}>
+
               <Text style={styles.question}>{questionText}</Text>
+
+             {(questionId === 2 || questionId === 7) && (
+                <TextInput
+                style={{
+                  borderBottomColor: "#E60965",
+                  borderBottomWidth: 1,
+                  width: "80%",
+                  marginLeft: 20,
+                  color: "black",
+                }}
+                multiline={true}
+                textAlignVertical="top" // Align text to the top vertically
+                onChangeText={isChecked === 'Yes' ? (value) => handleChangeText(`${questionId}_Reason`, value) : undefined}
+                editable={isChecked === 'Yes'}
+              /> 
+              )} 
+
+            </View>
           </View>
       );
   };
@@ -96,7 +125,7 @@ const DonorMedicalHistory = ({route}) => {
 
                     {renderQuestion(1, 'Nakapagbigay ka na ba ng iyong gatas dati?',"Medical History")}
                     {renderQuestion(2, 'Ikaw ba ay natanggihan na magbigay ng iyong gatas/breastmilk? Kung oo, sa anong dahilan?', "Medical History")}
-                    {renderQuestion(3, 'Normal ba ang panganganak mo sa huli mong anak?”?', "Medical History")}
+                    {renderQuestion(3, 'Normal ba ang panganganak mo sa huli mong anak?', "Medical History")}
                     {renderQuestion(4, 'Nagkaroon ka ba ng impeksiyon o sakit? Nagkaroon ka ba ng TB o sakit sa atay?',"Medical History")}
                     {renderQuestion(5, 'Ikaw ba ay nasalinan ng dugo nitong nakaaran na 12 na buwan?', "Medical History")}
                     {renderQuestion(6, 'Ikaw ba ay naging recipient ng organ o tissue mula sa ibang tao nitong nakaraang 12 na buwan?', "Medical History")}
@@ -108,12 +137,13 @@ const DonorMedicalHistory = ({route}) => {
                     
                     <View style = {styles.space}></View>
             </ScrollView>
+                                  {/*MedicalHistory2.js*/}
+                    <TouchableOpacity style={styles.button} onPress={() => navigatePage("DonorMedicalHistory2", { screeningFormData: formData })}>
+                        <Text style={styles.buttonTitle}>Next</Text>
+                    </TouchableOpacity>
         </ScrollView>
 
-                      {/*MedicalHistory2.js*/}
-                     <TouchableOpacity style={styles.button} onPress={() => navigatePage("DonorMedicalHistory2", { screeningFormData: formData })}>
-                        <Text style={styles.buttonTitle}>Next</Text>
-                     </TouchableOpacity>
+
       </View>
         
       )
@@ -183,7 +213,9 @@ const DonorMedicalHistory = ({route}) => {
       borderRadius: 10,
       borderColor: '#E60965',
       height: 500,
-      backgroundColor: "#FFFFFF"
+      backgroundColor: "#FFFFFF",
+      elevation: 5,
+      margin: 10
     },
 
     space: {

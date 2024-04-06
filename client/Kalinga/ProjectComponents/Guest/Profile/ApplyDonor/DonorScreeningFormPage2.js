@@ -43,6 +43,8 @@ const DonorScreeningFormPage2 = ({route}) => {
       
   };
 
+  
+
   const [medicalAnsweredQuestions, setMedicalAnsweredQuestions] = useState([]);
 
     const pressOption = (questionId, answer) => {
@@ -80,6 +82,8 @@ const DonorScreeningFormPage2 = ({route}) => {
                 </View>
             </TouchableOpacity>
             <Text style={styles.question}>{questionText}</Text>
+           
+          
         </View>
 
         
@@ -171,7 +175,7 @@ const DonorScreeningFormPage2 = ({route}) => {
                     
                       <View>
                         <Text style = {styles.boxQuestion}>
-                          Paano mo nalaman ang tungkol sa (Name ng Client’s Milk Bank) ?
+                          Paano mo nalaman ang tungkol sa BreastMilk Bank ng Quezon City General Hospital?
                         </Text>
                       </View>
 
@@ -191,8 +195,8 @@ const DonorScreeningFormPage2 = ({route}) => {
                   </View>
 
 
-                    {renderQuestion(1, 'Nakapagbigay ka na ba ng iyong gatas dati?',"Medical History")}
-                    {renderQuestion(2, 'Ikaw ba ay natanggihan na magbigay ng iyong gatas/breastmilk? Kung oo, sa anong dahilan?', "Medical History")}
+                    {renderQuestion(1, 'Gusto mo bang magbigay ng gatas nang regular sa loob ng anim (6) na buwan?',"Medical History")}
+                    {renderQuestion(2, 'Papayagan ka ba ng iyong asawa na magbigay ng iyong gatas sa Human Milk Bank?', "Medical History")}
                 
                 </View>
 
@@ -212,6 +216,7 @@ const DonorScreeningFormPage2 = ({route}) => {
 
 
   const styles = StyleSheet.create({
+
 
     button: {
       backgroundColor: "#E60965",
@@ -234,6 +239,7 @@ const DonorScreeningFormPage2 = ({route}) => {
       // marginVertical: 30,
       //backgroundColor: "gray"
       paddingHorizontal: 20,
+   
   },
 
     title: {
@@ -366,6 +372,7 @@ const DonorScreeningFormPage2 = ({route}) => {
       box: {
         borderColor: '#E60965',
         borderWidth: 1,
+        elevation: 5
       },
 
       box1: {
@@ -376,7 +383,8 @@ const DonorScreeningFormPage2 = ({route}) => {
         borderRadius: 10,
         marginTop: 10,
         marginBottom: 20,
-        backgroundColor: "#FFFFFF"
+        backgroundColor: "#FFFFFF",
+        elevation: 5
       },
 
       box2: {
@@ -391,12 +399,13 @@ const DonorScreeningFormPage2 = ({route}) => {
         width: "100%",
         paddingVertical: 10,
         height: 150,
-        backgroundColor: "#FFFFFF"
+        backgroundColor: "#FFFFFF",
+        elevation: 5
       },
 
       box3: {
         borderColor: '#E60965',
-    
+        elevation: 5
       },
 
       text1: {
@@ -429,7 +438,8 @@ const DonorScreeningFormPage2 = ({route}) => {
         borderRadius: 10,
         borderColor: '#E60965',
         paddingVertical: 10,
-        backgroundColor: "#FFFFFF"
+        backgroundColor: "#FFFFFF",
+        elevation: 5
       }
    
 
