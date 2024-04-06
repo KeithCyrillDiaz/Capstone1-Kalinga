@@ -11,11 +11,10 @@ const DonorMedicalHistory2 = ({route}) => {
 
     const { screeningFormData } = route.params; // Access formData from route.params
     // console.log(screeningFormData)
-  
     const [formData, setFormData] = useState(screeningFormData);
 
     const navigatePage = (Page, data) => {
-      // console.log(screeningFormData)
+      console.log(screeningFormData)
       // Navigate to the next screen by route name
       navigation.navigate(Page, data);
     };
@@ -23,20 +22,13 @@ const DonorMedicalHistory2 = ({route}) => {
     const [medicalAnsweredQuestions, setMedicalAnsweredQuestions] = useState([]);
     const [sexualAnsweredQuestions, setSexualAnsweredQuestions] = useState([]);
 
-    const handleChangeText = (value) => {
-      setFormData(prevData => ({...prevData, 
-      [`MH13_Reason`]: value
-      
-      }))
-      // setScreeningFormData({ ...screeningFormData, [name]: value });
-  };
-
     const pressOption = (questionId, answer, questionType) => {
         if(questionType === "Medical History")
         {
-          // console.log("answer", answer);
+          console.log("answer", answer);
           const answeredQuestion = { id: questionId, answer: answer, type: questionType};
           setMedicalAnsweredQuestions(prevState => [...prevState.filter(item => item.id !== questionId), answeredQuestion]);
+  
           setFormData(prevData => ({
             ...prevData,
             [`MH${questionId}`]: answer, // Update typeOfDonor field
@@ -74,13 +66,15 @@ const DonorMedicalHistory2 = ({route}) => {
                         {isChecked === 'No' && <AntDesign name="checkcircle" size={18} color="#E60965" />}
                     </View>
                 </TouchableOpacity>
-                <View style ={{
+                <Text style={styles.question}>{questionText}</Text>
+
+                {/* <View style ={{
                   flexDirection: "column"
                 }}>
 
                   <Text style={styles.question}>{questionText}</Text>
 
-                {questionId === 14 && (
+                {questionId === 13 && (
                     <TextInput
                     style={{
                       borderBottomColor: "#E60965",
@@ -88,16 +82,15 @@ const DonorMedicalHistory2 = ({route}) => {
                       width: "85%",
                       marginLeft: 20,
                       color: "black",
-                      paddingBottom: 2
                     }}
                     multiline={true}
-                    textAlignVertical="bottom" // Align text to the top vertically
+                    textAlignVertical="top" // Align text to the top vertically
                     onChangeText={isChecked === 'Yes' ? (value) => handleChangeText(value) : undefined}
                     editable={isChecked === 'Yes'}
                   /> 
                   )} 
 
-              </View>
+              </View> */}
             </View>
         );
     };
@@ -133,9 +126,9 @@ const DonorMedicalHistory2 = ({route}) => {
                         <Text style = {styles.choices}>Yes</Text>
                         <Text style = {styles.choices}>No</Text>
                     </View>
-                    {renderQuestion(13, 'Gumagamit ka ba ng bawal na gamot?',"Medical History")}
-                    {renderQuestion(14, 'Ikaw ba ay naninigarilyo? If yes, how many sticks or packs per day?', "Medical History")}
-                    {renderQuestion(15, 'Ikaw ba ay naoperahan na sa suso at nalagyan ng “silicone” or “artificial breast implants”?', "Medical History")}
+                    {renderQuestion(12, 'Gumagamit ka ba ng bawal na gamot?',"Medical History")}
+                    {renderQuestion(13, 'Ikaw ba ay naninigarilyo? If yes, how many sticks or packs per day?', "Medical History")}
+                    {renderQuestion(14, 'Ikaw ba ay naoperahan na sa suso at nalagyan ng “silicone” or “artificial breast implants”?', "Medical History")}
             </View>
 
             <Text style = {styles.title}>Sexual History</Text>

@@ -32,7 +32,7 @@ const DonorScreeningFormPage2 = ({route}) => {
 
   const navigatePage = (Page, data) => {
     // Navigate to the next screen by route name
-    console.log(data)
+    // console.log(data)
     navigation.navigate(Page, data);
   };
 

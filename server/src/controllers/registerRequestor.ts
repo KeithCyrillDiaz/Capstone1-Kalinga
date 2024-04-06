@@ -1,88 +1,64 @@
 import express from 'express'
-import {  createRequestor, getRequestorByEmail} from '../db/users';
+import moment from 'moment'
+import { getScreeningFormByApplicantID } from '../models/ApplyAsDonor'
+import { createRequestor } from '../models/users'
 import { random, passEncryption } from '../helpers/passwordEncryption'
 
+export const registerRequestor = async (req: express.Request, res: express.Response) => {
+    try{
+        console.log(req.body)
+        if(!req.body.Applicant_ID || !req.body.password){
+            return res.status(400).json({
+                messages: {
+                    code: 1,
+                    message: "Invalid Input"
+                }
+            })
+        }
+        const existingUser = await getScreeningFormByApplicantID(req.body.Applicant_ID)
 
-export const registerRequestor = async( req: express.Request, res: express.Response) => {
-   
-try {
-    const {
-        fullName,
-        password,
-        email,
-        Requestor_ID,
-        userName,
-        MilkAmountReceived,
-        age,
-        address,
-        birthday,
-        mobileNumber,
-        homeAddress,
-        NumberPost,
-        Badge_ID,
-        Community_ID,
-        Post_ID,
-        BookMark_ID,
-    } = req.body;
+        console.log("existinguser: ", existingUser)
 
+        if(!existingUser){
+            return res.status(400).json({
+                messages: {
+                    code: 1,
+                    message: "Invalid Applicant ID"
+                }
+            })
+        }
+        
+        const salt = random();
+        const newRequestor = await createRequestor({
+            fullName: existingUser.fullName,
+            password: passEncryption(salt, req.body.password),
+            email: existingUser.email,
+            Requestor_ID: existingUser.Applicant_ID,
+            userName: existingUser.email,
+            age: existingUser.Age,
+            address: existingUser.address,
+            birthday: existingUser.birthday,
+            mobileNumber: existingUser.contactNumber,
+            homeAddress: existingUser.homeAddress,
+            userType: "Requestor",
+            createdAt: moment().toDate(),
+            updatedAt: moment().toDate()
+        })
 
-    // console.log("password:", password)
-    // console.log("email:", email)
-    // console.log("fullName: ", fullName)
-
-    if(!fullName || !password || !email){
-        console.log("if error")
-        return res.sendStatus(400);
-    };
-
-    const existingUser = await getRequestorByEmail(email)
-
-    if(existingUser){
-        console.log("Existing User")
-        return res.sendStatus(400);
-    };
-
-    const moment = require('moment');
-    const currentTime = moment();
-    const formattedTime = currentTime.format('YYYY-MM-DD HH:mm:ss');
-
-    const salt = random(); 
-
-    const requestor = await createRequestor({
-        email,
-        fullName,
-        Requestor_ID,
-        userName,
-        MilkAmountReceived,
-        password: passEncryption(salt, password),
-        age,
-        address,
-        birthday,
-        mobileNumber,
-        homeAddress,
-        NumberPost,
-        Badge_ID,
-        Community_ID,
-        Post_ID,
-        BookMark_ID,
-        userType: "Requestor",
-        createdAt: formattedTime,
-        updatedAt: formattedTime,
-    });
-
-
-    const message = {
-        code: 0, 
-        message: 'Requestor Registered'
-    };
-
-    return res.status(200). json({message, requestor}) .end();
-    
-} catch (error) {
-    console.log("Error")
-    console.log(error)
-    return res.sendStatus(400)
-}
-
+        return res.status(200).json({
+            messages:{
+                code: 0,
+                messages: "Requestor Registered"
+            },
+            newRequestor
+        })
+    } catch(error){
+        return res.status(400).json({
+            messages:{
+                code: 1,
+                message: "Something went wrong"
+            }
+        })
+    }
 
 }

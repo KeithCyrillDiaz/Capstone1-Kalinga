@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const reqMedAbstractFormSchema = new mongoose.Schema({
-    
+    Applicant_ID: { type: String },
     clinicalHistory: { type: String },
     complaint: { type: String },
     clinicalFindings: { type: String },

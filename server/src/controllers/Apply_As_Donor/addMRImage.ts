@@ -1,5 +1,5 @@
 import express from 'express';
-import { createMedicalRequirementImages } from '../../db/ApplyAsDonor';
+import { createMedicalRequirementImages } from '../../models/ApplyAsDonor';
 
 
 export const addMedicalRequirementsAsImage = async (req: express.Request, res: express.Response) => {

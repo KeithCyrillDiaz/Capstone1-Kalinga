@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import express from 'express'
 
-import { screeningFormModel } from '../../../db/screeningForms'; // Import your MongoDB model
+import { screeningFormModel } from '../../../models/ApplyAsDonor'; // Import your MongoDB model
 
 export const getScreeningForms = async( req: express.Request, res: express.Response) => {
   try {

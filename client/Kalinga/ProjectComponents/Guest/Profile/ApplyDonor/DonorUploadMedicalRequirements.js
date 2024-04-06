@@ -158,7 +158,6 @@ const DonorUploadMedicalRequirements = ({route}) => {
             }
           });
 
-          console.log("fileType: ", fileType)
           setSelectedImage(prevState => ({
               ...prevState,
             
@@ -185,8 +184,6 @@ const DonorUploadMedicalRequirements = ({route}) => {
     } catch (error) {
         Alert.alert('Error', 'Failed to pick an image.');
     }
-
-    // console.log("selectedImage:", JSON.stringify(selectedImage, null, 2));
 };
 
 const handleFileUpload = async (attachmentType) => {
@@ -419,7 +416,6 @@ const handleFileUpload = async (attachmentType) => {
                                     key={attachmentType}
                                     onPress={() => {
                                         setSelectedImageUrl(value.uri);
-                                        console.log("selectedImageUrl: ", selectedImageUrl)
                                         setModalVisible(true);
                                     }}
                                 >

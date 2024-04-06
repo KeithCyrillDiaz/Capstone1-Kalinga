@@ -1,5 +1,5 @@
 import express from 'express';
-import { screeningFormModel } from '../db/screeningForms'; // Import your MongoDB model
+import { screeningFormModel } from '../models/ApplyAsDonor'; // Import your MongoDB model
 
 const router = express.Router();
 

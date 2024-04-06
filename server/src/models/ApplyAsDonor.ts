@@ -1,15 +1,10 @@
 import mongoose from 'mongoose';
 
-// const moment = require('moment');
-// const currentTime = moment();
-// const formattedTime = currentTime.format('YYYY-MM-DD HH:mm:ss');
-//console.log(formattedTime);
-
 
 const screeningFormSchema = new mongoose.Schema({
 
-    Screening_ID: {type: String},
     Applicant_ID: {type: String},
+    Screening_ID: {type: String},
     userType: {type: String},
 
     fullName: {type: String},
@@ -32,32 +27,35 @@ const screeningFormSchema = new mongoose.Schema({
     TypeOfDonor:{type: String},
     QA: {type: String},
     QB: {type: String},
-    QB_Reason: {type: String},
     Q1: {type: String},
     Q2: {type: String},
 
     // Medical History
     MH1: {type: String},
     MH2: {type: String},
+    MH2_Reason: {type: String},
     MH3: {type: String},
     MH4: {type: String},
     MH5: {type: String},
     MH6: {type: String},
     MH7: {type: String},
-    MH7_Reason: {type: String},
     MH8: {type: String},
+    MH8_Reason: {type: String},
     MH9: {type: String},
     MH10: {type: String},
     MH11: {type: String},
     MH12: {type: String},
     MH13: {type: String},
-    MH13_Reason: {type: String},
     MH14: {type: String},
+    MH14_Reason: {type: String},
+    MH15: {type: String},
 
     //SexualHistory
     SH1: {type: String},
     SH2: {type: String},
 
+    //Requestor
+    RFR: {type: String},
     //
     createdAt: {type: Date, default: Date.now},
     updatedAt: {type: Date, default: Date.now},
@@ -106,8 +104,8 @@ export const createMedicalRequirementImages = (values: Record<string, any>) => n
 
 export const createScreeningForm = (values: Record<string, any>) => new screeningFormModel(values).save().then((ScreeningForm) => ScreeningForm.toObject())
 export const getScreeningFormByName = (fullName: string) => screeningFormModel.findOne({fullName})
-export const getScreeningFormByApplicantID = (Applicant_ID: number) => screeningFormModel.findOne({Applicant_ID})
+export const getScreeningFormByApplicantID = (Applicant_ID: string) => screeningFormModel.findOne({Applicant_ID})
 export const getScreeningFormByMaxApplicantID = () => screeningFormModel.findOne({}).sort({ Applicant_ID: -1 }).limit(1).select('Applicant_ID');
 export const getScreeningFormByMaxScreeningID = () => screeningFormModel.findOne({}).sort({ Screening_ID: -1 }).limit(1).select('Screening_ID');
-export const getScreeningFormByScreeningID = (Screening_ID: number) => screeningFormModel.findOne({Screening_ID})
+export const getScreeningFormByScreeningID = (Screening_ID: string) => screeningFormModel.findOne({Screening_ID})
 //export const deleteUserById = (id: string) => userModel.findOneAndDelete({_id: id})

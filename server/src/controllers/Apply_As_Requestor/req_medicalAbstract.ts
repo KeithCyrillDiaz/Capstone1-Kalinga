@@ -1,9 +1,10 @@
 import express from 'express';
-import { createReqMedAbstract } from '../../db/req_medicalAbstractDB';
+import { createReqMedAbstract } from '../../models/req_medicalAbstractDB';
 
 export const reqMedAbstractForm = async (req: express.Request, res: express.Response) => {
     try {
         const { 
+            Applicant_ID,
             clinicalHistory,
             complaint,
             clinicalFindings,
@@ -12,7 +13,7 @@ export const reqMedAbstractForm = async (req: express.Request, res: express.Resp
         } = req.body;
 
         console.log("req.body: ", req.body)
-        if (!clinicalHistory || 
+        if (!Applicant_ID || !clinicalHistory || 
             !complaint || 
             !clinicalFindings || 
             !diagnosis || 
@@ -21,6 +22,7 @@ export const reqMedAbstractForm = async (req: express.Request, res: express.Resp
         }
 
         const medAbstract = await createReqMedAbstract({
+            Applicant_ID,
             clinicalHistory,
             complaint,
             clinicalFindings,
