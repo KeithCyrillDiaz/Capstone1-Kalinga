@@ -1,4 +1,4 @@
-import React, { useState }from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Octicons } from '@expo/vector-icons';
@@ -7,6 +7,8 @@ import { Feather } from '@expo/vector-icons';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import { AntDesign } from '@expo/vector-icons';
 import DonorUploadAdmin from './DonorUploadAdmin.js';
+import axios from 'axios'; // Import axios for making HTTP requests
+
 
 
 const Tab = createMaterialTopTabNavigator();
@@ -18,50 +20,63 @@ const FirstScreen = ({  }) => {
     const navigatePage = (Page) => {
         navigation.navigate(Page); // Navigate to the Login screen
     }
-    const [medicalAnsweredQuestions, setMedicalAnsweredQuestions] = useState([]);
-    const [sexualAnsweredQuestions, setSexualAnsweredQuestions] = useState([]);
+
+    const [formData, setFormData] = useState({
+        MH12:'',
+        MH13:'',
+        MH14:'',
+        SH1:'',
+        SH2:'',
+    });
+    useState([]);
+
+  useEffect(() => {
+    fetchData(); // Fetch data when component mounts
+}, []);
+
+const fetchData = async () => {
+  try {
+      const response = await axios.get('http://192.168.254.103:7000/kalinga/getScreeningForms');
+      const data = response.data[0]; // Assuming you expect only one record
+
+      // Set the fetched data to the state
+      setFormData((prevState) => ({
+        ...prevState,
+            MH12: data.MH12,
+            MH13: data.MH13,
+            MH14: data.MH14,
+            SH1: data.SH1,
+            SH2: data.SH2,
+            
+      }));
+      setSelectedOption(data.TypeOfDonor);
+  } catch (error) {
+      console.error('Error fetching data:', error);
+  }
+};
 
 
-    const pressOption = (questionId, answer, questionType) => {
-        if(questionType === "Medical History")
-        {
-            const answeredQuestion = { id: questionId, answer: answer, type: questionType };
-            setMedicalAnsweredQuestions(prevState => [...prevState.filter(item => item.id !== questionId), answeredQuestion]);
-        } else {
-
-            const answeredQuestion = { id: questionId, answer: answer, type: questionType };
-            setSexualAnsweredQuestions(prevState => [...prevState.filter(item => item.id !== questionId), answeredQuestion]);
-        }
-
-    };
+    const renderQuestion = (questionId, questionText) => {
+      const isCheckedYes = formData[questionId] === 'Yes'; // Check if the answer is 'Yes'
+      const isCheckedNo = formData[questionId] === 'No'; // Check if the answer is 'No'
     
-    const UserName = "Rogine"
-
-    const renderQuestion = (questionId, questionText, questionType) => {
-        let isChecked;
-        if (questionType === 'Medical History') {
-            isChecked = medicalAnsweredQuestions.find(item => item.id === questionId)?.answer;
-        } else {
-            isChecked = sexualAnsweredQuestions.find(item => item.id === questionId)?.answer;
-        }
-    
-        return (
-            <View style={styles.rowAlignment} key={questionId}>
-                <TouchableOpacity onPress={() => pressOption(questionId, 'Yes', questionType)}>
-                    <View style={[styles.circle, isChecked === 'Yes' && styles.checkedCircle]}>
-                        {isChecked === 'Yes' && <AntDesign name="checkcircle" size={18} color="#E60965" />}
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => pressOption(questionId, 'No', questionType)}>
-                    <View style={[styles.circle, isChecked === 'No' && styles.checkedCircle]}>
-                        {isChecked === 'No' && <AntDesign name="checkcircle" size={18} color="#E60965" />}
-                    </View>
-                </TouchableOpacity>
-                <Text style={styles.question}>{questionText}</Text>
+      return (
+        <View style={styles.rowAlignment} key={questionId}>
+          <TouchableOpacity onPress={() => pressOption(questionId, 'Yes')}>
+            <View style={[styles.circle, isCheckedYes && styles.checkedCircle]}>
+              {isCheckedYes && <AntDesign name="checkcircle" size={18} color="#E60965" />}
             </View>
-        );
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => pressOption(questionId, 'No')}>
+            <View style={[styles.circle, isCheckedNo && styles.checkedCircle]}>
+              {isCheckedNo && <AntDesign name="checkcircle" size={18} color="#E60965" />}
+            </View>
+          </TouchableOpacity>
+          <Text style={styles.question}>{questionText}</Text>
+        </View>
+      );
     };
-   
+
     return (
 
         
@@ -77,9 +92,9 @@ const FirstScreen = ({  }) => {
                         <Text style = {styles.choices}>Yes</Text>
                         <Text style = {styles.choices}>No</Text>
                     </View>
-                    {renderQuestion(12, 'Gumagamit ka ba ng bawal na gamot?',"Medical History")}
-                    {renderQuestion(13, 'Ikaw ba ay naninigarilyo? If yes, how many sticks or packs per day?', "Medical History")}
-                    {renderQuestion(14, 'Ikaw ba ay naoperahan na sa suso at nalagyan ng “silicone” or “artificial breast implants”?', "Medical History")}
+                    {renderQuestion('MH12', 'Gumagamit ka ba ng bawal na gamot?',"Medical History")}
+                    {renderQuestion('MH13', 'Ikaw ba ay naninigarilyo? If yes, how many sticks or packs per day?', "Medical History")}
+                    {renderQuestion('MH14', 'Ikaw ba ay naoperahan na sa suso at nalagyan ng “silicone” or “artificial breast implants”?', "Medical History")}
             </View>
 
             <Text style = {styles.title}>Sexual History</Text>
@@ -92,8 +107,8 @@ const FirstScreen = ({  }) => {
                         <Text style = {styles.choices}>No</Text>
                     </View>
                     
-                    {renderQuestion(1, 'Nagkaroon ka na ba ng mga sakit na nakukuha sa pakikipagtalik/sex?', "Sexual History")}
-                    {renderQuestion(2, 'Nagkaroon ka na ba ng karanasang makipagtalik sa higit pa sa isang lalaki?', "Sexual History")}
+                    {renderQuestion('SH1', 'Nagkaroon ka na ba ng mga sakit na nakukuha sa pakikipagtalik/sex?', "Sexual History")}
+                    {renderQuestion('SH2', 'Nagkaroon ka na ba ng karanasang makipagtalik sa higit pa sa isang lalaki?', "Sexual History")}
                    
             </View>
                      

@@ -86,6 +86,10 @@ const ApprovedTabRequest = () => {
 								<Text style={[styles.boxContent, styles.limitText]}>XX mL</Text>
 							</View>
 							<View style={styles.boxContentContainer}>
+								<Text style={styles.boxContentBold}>Baby Category: </Text>
+								<Text style={[styles.boxContent, styles.limitText]}>Medically Fragile Baby</Text>
+							</View>
+							<View style={styles.boxContentContainer}>
 								<Text style={styles.boxContentBold}>Milk Bank: </Text>
 								<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do</Text>
 							</View>

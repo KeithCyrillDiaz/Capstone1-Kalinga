@@ -12,8 +12,19 @@ import {
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import Header from "./Header";
+import { useNavigation } from '@react-navigation/native';
+
 
 export default function HelpAndSupport() {
+
+  const navigation = useNavigation();
+    
+
+
+  
+  const navigatePage = (Page) => {
+    navigation.navigate(Page); // Navigate to the specified screen
+  }
   return (
     <SafeAreaView style={bodyStyle.main}>
       <ScrollView stickyHeaderIndices={[1]}>
@@ -103,7 +114,7 @@ export default function HelpAndSupport() {
           <Text style={{ color: "#E60965" }}>
             Still need assistance? Help is a mail away
           </Text>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => navigatePage("DonorHelpAndSupportMessage")}>
             <View style={buttonStyle.primary}>
               <Text
                 style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>

@@ -150,9 +150,12 @@ const SetAppointment = () => {
 
 
     img: {
-      height: 200,
-      margin: 20,
-      marginBottom: 3,
+    
+        width: 200,
+        height: 200,
+        margin: 20,
+        marginBottom: 3,
+      
     },
 
     center: {
