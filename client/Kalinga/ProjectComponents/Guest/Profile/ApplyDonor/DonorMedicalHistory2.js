@@ -25,7 +25,7 @@ const DonorMedicalHistory2 = ({route}) => {
 
     const handleChangeText = (value) => {
       setFormData(prevData => ({...prevData, 
-      [`MH13_Reason`]: value
+      [`MH14_Reason`]: value
       
       }))
       // setScreeningFormData({ ...screeningFormData, [name]: value });

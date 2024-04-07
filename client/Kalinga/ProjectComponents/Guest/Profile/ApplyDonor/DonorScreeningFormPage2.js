@@ -12,21 +12,6 @@ const DonorScreeningFormPage2 = ({route}) => {
   // console.log(screeningFormData)
 
   const [formData, setFormData] = useState(screeningFormData);
-  // const { 
-  //   fullName, 
-  //   age, 
-  //   birthDate, 
-  //   email, 
-  //   contactNumber, 
-  //   homeAddress, 
-  //   childName, 
-  //   childAge, 
-  //   sex, 
-  //   hildBirthDate, 
-  //   birthWeight, 
-  //   ageOfGestation, 
-  //   medicalCondition,
-  // } = screeningFormData;
   
   const navigation = useNavigation();
 

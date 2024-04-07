@@ -12,7 +12,7 @@ const ApplyAs_DonorISF = () => {
     Applicant_ID: applicantId,
     userType: "Requestor",
     fullName: '',
-    age: '',
+    Age: '',
     birthDate: '',
     email: '',
     contactNumber: '',
@@ -92,7 +92,7 @@ const handleChangeText = (name, value) => {
               placeholder="Age"
               style={styles.inputField}
              
-              onChangeText={(value) => handleChangeText('age', value)}
+              onChangeText={(value) => handleChangeText('Age', value)}
               keyboardType="numeric"
             />
           </View>

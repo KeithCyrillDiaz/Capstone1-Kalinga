@@ -5,7 +5,7 @@ import moment from 'moment';
 
 export const generateToken = async (req: express.Request, res: express.Response) => {
     try{
-
+        console.log("body: ", req.body)
         const authHeader = req.headers.authorization
         if(!authHeader){
             return res.status(400).json({

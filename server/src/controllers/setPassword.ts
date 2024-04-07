@@ -33,8 +33,7 @@ export const setPassword = async (req: express.Request, res: express.Response) =
             Donor_ID: existingUser.Applicant_ID,
             userName: existingUser.email,
             age: existingUser.Age,
-            address: existingUser.address,
-            birthday: existingUser.birthday,
+            birthDate: existingUser.birthDate,
             mobileNumber: existingUser.contactNumber,
             homeAddress: existingUser.homeAddress,
         })

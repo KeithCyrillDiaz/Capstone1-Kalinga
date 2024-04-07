@@ -12,7 +12,6 @@ export const reqMedAbstractForm = async (req: express.Request, res: express.Resp
             treatment
         } = req.body;
 
-        console.log("req.body: ", req.body)
         if (!Applicant_ID || !clinicalHistory || 
             !complaint || 
             !clinicalFindings || 
