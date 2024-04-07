@@ -52,10 +52,10 @@ const ReasonForRequesting = ({route}) => {
       
         setIsLoading(true);
         // Send POST request to the specified URL with the form data
-        // const postScreeningForm = await axios.post("http://192.168.1.104:7000/kalinga/addScreeningForm", 
-        //   screeningFormData,
-        // );
-        // // Log successful response from the backend
+        const postScreeningForm = await axios.post("http://192.168.1.104:7000/kalinga/addScreeningForm", 
+          screeningFormData,
+        );
+        // Log successful response from the backend
         // console.log('Data saved successfully:', postScreeningForm.data);
 
         const response = await axios.post("http://192.168.1.104:7000/req_MedAbstract", input);
@@ -125,7 +125,7 @@ const ReasonForRequesting = ({route}) => {
                   }
                 }
               );
-              console.log('Data saved successfully:', postFiles.data);
+              // console.log('Data saved successfully:', postFiles.data);
           }
           
           navigation.dispatch(
