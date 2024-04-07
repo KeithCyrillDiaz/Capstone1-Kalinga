@@ -40,7 +40,7 @@ const FirstScreen = ({route}) => {
        
         const fetchscreeningForm = async () => {
            try {
-                console.log("test",Applicant_ID)
+                // console.log("test",Applicant_ID)
                 const response = await axios.get(`http://192.168.1.104:7000/kalinga/getScreeningFormsApplicant_ID/${Applicant_ID}`)
                 // console.log( "test", response.data.screeningForm)
                 setScreeningFormID(response.data.screeningForm)
@@ -173,8 +173,20 @@ const FirstScreen = ({route}) => {
     );
 };
 
-const SecondScreen = (route) => {
+const SecondScreen = ({route}) => {
     const navigation = useNavigation();
+    const Applicant_ID = route.params.screeningformId
+
+    const [medicalAbstractForm, setMedicalAbstractForm] = useState({})
+
+    const fetchMedicalAbstract = async () => {
+        const response = await axios.get(`http://192.168.1.104:7000/kalinga/getMedicalAbstractByID/${Applicant_ID}`)
+        setMedicalAbstractForm(response.data.medicalAbstract)
+    }
+
+    useEffect(() => {
+        fetchMedicalAbstract();
+    },[])
 
     const navigatePage = (Page) => {
         navigation.navigate(Page); // Navigate to the Login screen
@@ -193,6 +205,8 @@ const SecondScreen = (route) => {
               <View style = {styles.container}>
                     <TextInput
                         style={styles.BiginputField1}
+                        value={medicalAbstractForm.clinicalHistory}
+                        editable={false}
                     />         
               </View>
 
@@ -202,6 +216,8 @@ const SecondScreen = (route) => {
               <View style = {styles.container}>
                     <TextInput
                         style={styles.BiginputField1}
+                        value={medicalAbstractForm.complaint}
+                        editable={false}
                     />         
               </View>
 
@@ -211,6 +227,8 @@ const SecondScreen = (route) => {
               <View style = {styles.container}>
                     <TextInput
                         style={styles.BiginputField1}
+                        value={medicalAbstractForm.clinicalFindings}
+                        editable={false}
                     />         
               </View>
 
@@ -220,6 +238,8 @@ const SecondScreen = (route) => {
               <View style = {styles.container}>
                     <TextInput
                         style={styles.BiginputField1}
+                        value={medicalAbstractForm.diagnosis}
+                        editable={false}
                     />         
               </View>
 
@@ -229,6 +249,8 @@ const SecondScreen = (route) => {
               <View style = {styles.container}>
                     <TextInput
                         style={styles.BiginputField1}
+                        value={medicalAbstractForm.treatment}
+                        editable={false}
                     />         
               </View>
 
@@ -252,6 +274,7 @@ const SecondScreen = (route) => {
 const RequestorInitialScreeningFormPage1 = ({route}) => {
 
     const screeningformId = route.params
+   
     const navigation = useNavigation();
 
     
