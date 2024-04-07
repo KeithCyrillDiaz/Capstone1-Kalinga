@@ -52,9 +52,9 @@ const UserVerification = () => {
                       </View>
                     </View>
                     <View style={styles.InfoContainer}>
-                        <Text style={styles.MilkBankName}>Lorem Ipsum</Text>
-                         <Text style={styles.MilkBankLocation}>loremipsum@gmail.com</Text>
-                         <Text style={styles.MilkBankPhone}>7/12/2023 8:37pm</Text>
+                        <Text style={styles.DonorFullName}>Lorem Ipsum</Text>
+                         <Text style={styles.DonorEmail}>loremipsum@gmail.com</Text>
+                         <Text style={styles.DonorContactNumner}>7/12/2023 8:37pm</Text>
                     </View>
                     <View style ={styles.ButtonContainer}>
                     <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
@@ -73,287 +73,7 @@ const UserVerification = () => {
                     <View style={styles.line} />
             </View>
 
-            <View style={styles.DonorContainer}>
-                    <View style={styles.milkBankContainer}>
-                      <View style={styles.milkBank}>
-                       <FontAwesome name="user-circle-o" size={50} color="#E60965"/>                  
-                      </View>
-                    </View>
-                    <View style={styles.InfoContainer}>
-                        <Text style={styles.MilkBankName}>Lorem Ipsum</Text>
-                         <Text style={styles.MilkBankLocation}>loremipsum@gmail.com</Text>
-                         <Text style={styles.MilkBankPhone}>7/12/2023 8:37pm</Text>
-                    </View>
-                    <View style ={styles.ButtonContainer}>
-                    <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>View</Text>
-                       </TouchableOpacity>
-                       <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>Message</Text>
-                       </TouchableOpacity>
-                       <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>Delete</Text>
-                       </TouchableOpacity>
-                    </View>
-                    
-                </View>
-            <View style={styles.lineContainer}>
-                    <View style={styles.line} />
-            </View>
-
-            <View style={styles.DonorContainer}>
-                    <View style={styles.milkBankContainer}>
-                      <View style={styles.milkBank}>
-                       <FontAwesome name="user-circle-o" size={50} color="#E60965"/>                  
-                      </View>
-                    </View>
-                    <View style={styles.InfoContainer}>
-                        <Text style={styles.MilkBankName}>Lorem Ipsum</Text>
-                         <Text style={styles.MilkBankLocation}>loremipsum@gmail.com</Text>
-                         <Text style={styles.MilkBankPhone}>7/12/2023 8:37pm</Text>
-                    </View>
-                    <View style ={styles.ButtonContainer}>
-                    <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>View</Text>
-                       </TouchableOpacity>
-                       <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>Message</Text>
-                       </TouchableOpacity>
-                       <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>Delete</Text>
-                       </TouchableOpacity>
-                    </View>
-                    
-                </View>
-            <View style={styles.lineContainer}>
-                    <View style={styles.line} />
-            </View>
-
-            <View style={styles.DonorContainer}>
-                    <View style={styles.milkBankContainer}>
-                      <View style={styles.milkBank}>
-                       <FontAwesome name="user-circle-o" size={50} color="#E60965"/>                  
-                      </View>
-                    </View>
-                    <View style={styles.InfoContainer}>
-                        <Text style={styles.MilkBankName}>Lorem Ipsum</Text>
-                         <Text style={styles.MilkBankLocation}>loremipsum@gmail.com</Text>
-                         <Text style={styles.MilkBankPhone}>7/12/2023 8:37pm</Text>
-                    </View>
-                    <View style ={styles.ButtonContainer}>
-                    <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>View</Text>
-                       </TouchableOpacity>
-                       <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>Message</Text>
-                       </TouchableOpacity>
-                       <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>Delete</Text>
-                       </TouchableOpacity>
-                    </View>
-                    
-                </View>
-            <View style={styles.lineContainer}>
-                    <View style={styles.line} />
-            </View>
-
-            <View style={styles.DonorContainer}>
-                    <View style={styles.milkBankContainer}>
-                      <View style={styles.milkBank}>
-                       <FontAwesome name="user-circle-o" size={50} color="#E60965"/>                  
-                      </View>
-                    </View>
-                    <View style={styles.InfoContainer}>
-                        <Text style={styles.MilkBankName}>Lorem Ipsum</Text>
-                         <Text style={styles.MilkBankLocation}>loremipsum@gmail.com</Text>
-                         <Text style={styles.MilkBankPhone}>7/12/2023 8:37pm</Text>
-                    </View>
-                    <View style ={styles.ButtonContainer}>
-                    <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>View</Text>
-                       </TouchableOpacity>
-                       <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>Message</Text>
-                       </TouchableOpacity>
-                       <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>Delete</Text>
-                       </TouchableOpacity>
-                    </View>
-                    
-                </View>
-            <View style={styles.lineContainer}>
-                    <View style={styles.line} />
-            </View>
-
-            <View style={styles.DonorContainer}>
-                    <View style={styles.milkBankContainer}>
-                      <View style={styles.milkBank}>
-                       <FontAwesome name="user-circle-o" size={50} color="#E60965"/>                  
-                      </View>
-                    </View>
-                    <View style={styles.InfoContainer}>
-                        <Text style={styles.MilkBankName}>Lorem Ipsum</Text>
-                         <Text style={styles.MilkBankLocation}>loremipsum@gmail.com</Text>
-                         <Text style={styles.MilkBankPhone}>7/12/2023 8:37pm</Text>
-                    </View>
-                    <View style ={styles.ButtonContainer}>
-                    <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>View</Text>
-                       </TouchableOpacity>
-                       <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>Message</Text>
-                       </TouchableOpacity>
-                       <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>Delete</Text>
-                       </TouchableOpacity>
-                    </View>
-                    
-                </View>
-            <View style={styles.lineContainer}>
-                    <View style={styles.line} />
-            </View>
-
-            <View style={styles.DonorContainer}>
-                    <View style={styles.milkBankContainer}>
-                      <View style={styles.milkBank}>
-                       <FontAwesome name="user-circle-o" size={50} color="#E60965"/>                  
-                      </View>
-                    </View>
-                    <View style={styles.InfoContainer}>
-                        <Text style={styles.MilkBankName}>Lorem Ipsum</Text>
-                         <Text style={styles.MilkBankLocation}>loremipsum@gmail.com</Text>
-                         <Text style={styles.MilkBankPhone}>7/12/2023 8:37pm</Text>
-                    </View>
-                    <View style ={styles.ButtonContainer}>
-                    <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>View</Text>
-                       </TouchableOpacity>
-                       <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>Message</Text>
-                       </TouchableOpacity>
-                       <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>Delete</Text>
-                       </TouchableOpacity>
-                    </View>
-                    
-                </View>
-            <View style={styles.lineContainer}>
-                    <View style={styles.line} />
-            </View>
-
-            <View style={styles.DonorContainer}>
-                    <View style={styles.milkBankContainer}>
-                      <View style={styles.milkBank}>
-                       <FontAwesome name="user-circle-o" size={50} color="#E60965"/>                  
-                      </View>
-                    </View>
-                    <View style={styles.InfoContainer}>
-                        <Text style={styles.MilkBankName}>Lorem Ipsum</Text>
-                         <Text style={styles.MilkBankLocation}>loremipsum@gmail.com</Text>
-                         <Text style={styles.MilkBankPhone}>7/12/2023 8:37pm</Text>
-                    </View>
-                    <View style ={styles.ButtonContainer}>
-                    <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>View</Text>
-                       </TouchableOpacity>
-                       <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>Message</Text>
-                       </TouchableOpacity>
-                       <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>Delete</Text>
-                       </TouchableOpacity>
-                    </View>
-                    
-                </View>
-            <View style={styles.lineContainer}>
-                    <View style={styles.line} />
-            </View>
-
-            <View style={styles.DonorContainer}>
-                    <View style={styles.milkBankContainer}>
-                      <View style={styles.milkBank}>
-                       <FontAwesome name="user-circle-o" size={50} color="#E60965"/>                  
-                      </View>
-                    </View>
-                    <View style={styles.InfoContainer}>
-                        <Text style={styles.MilkBankName}>Lorem Ipsum</Text>
-                         <Text style={styles.MilkBankLocation}>loremipsum@gmail.com</Text>
-                         <Text style={styles.MilkBankPhone}>7/12/2023 8:37pm</Text>
-                    </View>
-                    <View style ={styles.ButtonContainer}>
-                    <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>View</Text>
-                       </TouchableOpacity>
-                       <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>Message</Text>
-                       </TouchableOpacity>
-                       <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>Delete</Text>
-                       </TouchableOpacity>
-                    </View>
-                    
-                </View>
-            <View style={styles.lineContainer}>
-                    <View style={styles.line} />
-            </View>
-
-            <View style={styles.DonorContainer}>
-                    <View style={styles.milkBankContainer}>
-                      <View style={styles.milkBank}>
-                       <FontAwesome name="user-circle-o" size={50} color="#E60965"/>                  
-                      </View>
-                    </View>
-                    <View style={styles.InfoContainer}>
-                        <Text style={styles.MilkBankName}>Lorem Ipsum</Text>
-                         <Text style={styles.MilkBankLocation}>loremipsum@gmail.com</Text>
-                         <Text style={styles.MilkBankPhone}>7/12/2023 8:37pm</Text>
-                    </View>
-                    <View style ={styles.ButtonContainer}>
-                    <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>View</Text>
-                       </TouchableOpacity>
-                       <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>Message</Text>
-                       </TouchableOpacity>
-                       <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>Delete</Text>
-                       </TouchableOpacity>
-                    </View>
-                    
-                </View>
-            <View style={styles.lineContainer}>
-                    <View style={styles.line} />
-            </View>
-
-            <View style={styles.DonorContainer}>
-                    <View style={styles.milkBankContainer}>
-                      <View style={styles.milkBank}>
-                       <FontAwesome name="user-circle-o" size={50} color="#E60965"/>                  
-                      </View>
-                    </View>
-                    <View style={styles.InfoContainer}>
-                        <Text style={styles.MilkBankName}>Lorem Ipsum</Text>
-                         <Text style={styles.MilkBankLocation}>loremipsum@gmail.com</Text>
-                         <Text style={styles.MilkBankPhone}>7/12/2023 8:37pm</Text>
-                    </View>
-                    <View style ={styles.ButtonContainer}>
-                    <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>View</Text>
-                       </TouchableOpacity>
-                       <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>Message</Text>
-                       </TouchableOpacity>
-                       <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>Delete</Text>
-                       </TouchableOpacity>
-                    </View>
-                    
-                </View>
-            <View style={styles.lineContainer}>
-                    <View style={styles.line} />
-            </View>
-              
-           
+            
         </ScrollView>
         </SafeAreaView>
     );
@@ -492,17 +212,17 @@ DescriptionText:
     alignItems: 'baseline',
     
 },
-MilkBankName:{
+DonorFullName:{
     fontWeight: '700',
     fontSize: 20,
     color: '#E60965'
 
 },
-MilkBankLocation:{
+DonorEmail:{
     fontSize: 15,
     color: '#E60965'
 },
-MilkBankPhone:{
+DonorContactNumner:{
     fontSize: 15,
     color: '#E60965'
 },

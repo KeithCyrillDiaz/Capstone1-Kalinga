@@ -1,39 +1,93 @@
-//Guest Home
-import React, {useState} from 'react';
-import { ScrollView,Text, View, StatusBar, StyleSheet, TouchableOpacity} from 'react-native';
+
+import React, { useState, useEffect } from 'react';
+import { ScrollView,Text, View, StatusBar, StyleSheet, TouchableOpacity,Images} from 'react-native';
 import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import { AntDesign } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native'; // Import useRoute hook
+import axios from 'axios'; // Import axios for making HTTP requests
+
 
 const DonorUploadAdmin = () => {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
 
     const navigatePage = (Page) => {
-
-      navigation.navigate(Page);
-    };
-
-    const [medicalAnsweredQuestions, setMedicalAnsweredQuestions] = useState([]);
-    const [sexualAnsweredQuestions, setSexualAnsweredQuestions] = useState([]);
-
-
-    const pressOption = (questionId, answer, questionType) => {
-        if(questionType === "Medical History")
-        {
-            const answeredQuestion = { id: questionId, answer: answer, type: questionType };
-            setMedicalAnsweredQuestions(prevState => [...prevState.filter(item => item.id !== questionId), answeredQuestion]);
-        } else {
-
-            const answeredQuestion = { id: questionId, answer: answer, type: questionType };
-            setSexualAnsweredQuestions(prevState => [...prevState.filter(item => item.id !== questionId), answeredQuestion]);
-        }
+        navigation.navigate(Page); // Navigate to the Login screen
+        
 
     };
-    
-    const UserName = "Rogine"
+    const route = useRoute();
+    const [ownerID, setOwnerID] = useState(route.params?.screeningformId?.ownerID || '');
+    const [formData, setFormData] = useState({});
 
-    
+  
+
+  useEffect(() => {
+    fetchData(); // Fetch data when component mounts
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      // Fetch images and files for each specific field based on ownerID
+
+      // Hepa B Test Result
+      const hepaBImagesResponse = await axios.get(`http://192.168.254.104:7000/kalinga/getMedicalImages/${ownerID}?field=hepaB`);
+      const hepaBFilesResponse = await axios.get(`http://192.168.254.104:7000/kalinga/getMedicalFiles/${ownerID}?field=hepaB`);
+      const hepaBData = {
+        images: hepaBImagesResponse.data,
+        files: hepaBFilesResponse.data,
+        
+      };
+      if (!hepaBImagesResponse.data) {
+        console.error('Error fetching Hepa B images');
+        return; // Exit the function or handle the error as needed
+      }
+
+      // HIV 1 & 2 Test Result
+      const hivImagesResponse = await axios.get(`http://192.168.254.104:7000/kalinga/getMedicalImages/${ownerID}?field=hiv`);
+      const hivFilesResponse = await axios.get(`http://192.168.254.104:7000/kalinga/getMedicalFiles/${ownerID}?field=hiv`);
+      const hivData = {
+        images: hivImagesResponse.data,
+        files: hivFilesResponse.data,
+      };
+
+      // Syphillis Test Result
+      const syphillisImagesResponse = await axios.get(`http://192.168.254.104:7000/kalinga/getMedicalImages/${ownerID}?field=syphillis`);
+      const syphillisFilesResponse = await axios.get(`http://192.168.254.104:7000/kalinga/getMedicalFiles/${ownerID}?field=syphillis`);
+      const syphillisData = {
+        images: syphillisImagesResponse.data,
+        files: syphillisFilesResponse.data,
+      };
+
+      // Pregnancy Booklet
+      const pregnancyImagesResponse = await axios.get(`http://192.168.254.104:7000/kalinga/getMedicalImages/${ownerID}?field=pregnancy`);
+      const pregnancyFilesResponse = await axios.get(`http://192.168.254.104:7000/kalinga/getMedicalFiles/${ownerID}?field=pregnancy`);
+      const pregnancyData = {
+        images: pregnancyImagesResponse.data,
+        files: pregnancyFilesResponse.data,
+      };
+
+      // Government ID
+      const govIDImagesResponse = await axios.get(`http://192.168.254.104:7000/kalinga/getMedicalImages/${ownerID}?field=governmentID`);
+      const govIDFilesResponse = await axios.get(`http://192.168.254.104:7000/kalinga/getMedicalFiles/${ownerID}?field=governmentID`);
+      const govIDData = {
+        images: govIDImagesResponse.data,
+        files: govIDFilesResponse.data,
+      };
+
+      // Set the fetched data to the state
+      setFormData({
+        hepaB: hepaBData,
+        hiv: hivData,
+        syphillis: syphillisData,
+        pregnancy: pregnancyData,
+        governmentID: govIDData,
+      });
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+ 
    
     return (
       <View style={globalStyles.container}>
@@ -44,21 +98,61 @@ const DonorUploadAdmin = () => {
         >
 
                <View style ={styles.UploadContainer}>
-                    <TouchableOpacity style={styles.Uploadbutton} onPress={() => navigatePage("")}>
-                            <Text style={styles.UploadbuttonTitle}>Hepa B Test Result</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.Uploadbutton} onPress={() => navigatePage("")}>
-                        <Text style={styles.UploadbuttonTitle}>HIV 1 & 2 Test Result </Text>
-                     </TouchableOpacity>
-                     <TouchableOpacity style={styles.Uploadbutton} onPress={() => navigatePage("")}>
-                        <Text style={styles.UploadbuttonTitle}>Syphillis Test Result</Text>
-                     </TouchableOpacity>
-                     <TouchableOpacity style={styles.Uploadbutton} onPress={() => navigatePage("")}>
-                        <Text style={styles.UploadbuttonTitle}>Pregnancy Booklet</Text>
-                     </TouchableOpacity>
-                     <TouchableOpacity style={styles.Uploadbutton} onPress={() => navigatePage("")}>
-                        <Text style={styles.UploadbuttonTitle}>Government ID </Text>
-                     </TouchableOpacity>
+                    <TouchableOpacity
+                    style={styles.Uploadbutton}
+                    onPress={() =>
+                      navigation.navigate('ImageViewer', {
+                        images: formData.hepaB.images,
+                        files: formData.hepaB.files,
+                      })
+                    }
+                  >
+                    <Text style={styles.UploadbuttonTitle}>View Hepa B Images</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.Uploadbutton}
+                    onPress={() =>
+                      navigation.navigate('ImageViewer', {
+                        images: formData.hiv.images,
+                        files: formData.hiv.files,
+                      })
+                    }
+                  >
+                    <Text style={styles.UploadbuttonTitle}>View Hepa B Images</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.Uploadbutton}
+                    onPress={() =>
+                      navigation.navigate('ImageViewer', {
+                        images: formData.syphillis.images,
+                        files: formData.syphillis.files,
+                      })
+                    }
+                  >
+                    <Text style={styles.UploadbuttonTitle}>View Hepa B Images</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.Uploadbutton}
+                    onPress={() =>
+                      navigation.navigate('ImageViewer', {
+                        images: formData.pregnancy.images,
+                        files: formData.pregnancy.files,
+                      })
+                    }
+                  >
+                    <Text style={styles.UploadbuttonTitle}>View Hepa B Images</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.Uploadbutton}
+                    onPress={() =>
+                      navigation.navigate('ImageViewer', {
+                        images: formData.governmentID.images,
+                        files: formData.governmentID.files,
+                      })
+                    }
+                  >
+                    <Text style={styles.UploadbuttonTitle}>View Hepa B Images</Text>
+                  </TouchableOpacity>
                </View>
 
             <View style ={styles.ButtonContainer}>
@@ -286,4 +380,3 @@ ButtonContainer:{
   })
   
 export default DonorUploadAdmin;
-
