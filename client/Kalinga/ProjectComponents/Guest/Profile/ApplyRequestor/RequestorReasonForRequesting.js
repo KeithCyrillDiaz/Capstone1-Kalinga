@@ -187,7 +187,7 @@ const ReasonForRequesting = ({route}) => {
                   type: fileType,
                   userType: "Donor",
                   owner: screeningFormData.fullName,
-                  ownerID: screeningFormData.applicantId
+                  ownerID: screeningFormData.Applicant_ID
               
                 })
                 
@@ -237,8 +237,7 @@ const ReasonForRequesting = ({route}) => {
                   userType: "Donor",
                   owner: screeningFormData.fullName,
                   size: result.assets[0].size,
-                  requirementType: attachmentType,
-                  ownerID: screeningFormData.applicantId
+                  requirementType: attachment.Applicant_ID
               }
           };
           // Update the selectedFile state
