@@ -12,7 +12,8 @@ import {
   TouchableOpacity, 
   Dimensions,
   Image,
-  TouchableHighlight
+  TouchableHighlight,
+  Alert
 } from 'react-native';
 import { globalStyles } from "../../../../styles_kit/globalStyles.js"
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
@@ -135,6 +136,8 @@ const ReasonForRequesting = ({route}) => {
 
     } catch (error) {
         // Handle error if the request fails
+        setIsLoading(false);
+        Alert.alert('Something Went Wrong: Please Try Again');
         console.error('Error saving data:', error);
     } finally {
       setIsLoading(false);

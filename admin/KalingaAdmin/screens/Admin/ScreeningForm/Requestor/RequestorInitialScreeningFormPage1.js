@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Octicons } from '@expo/vector-icons';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { Feather } from '@expo/vector-icons';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
+import axios from 'axios';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -24,110 +25,155 @@ const SearchBar = () => {
 };
 
 
-const FirstScreen = ({  }) => {
+const FirstScreen = ({route}) => {
+
+    const Applicant_ID = route.params.screeningformId
+    // console.log("FS id: ", Applicant_ID)
+    const [screeningFormID, setScreeningFormID] = useState({})
     const navigation = useNavigation();
 
     const navigatePage = (Page) => {
         navigation.navigate(Page); // Navigate to the Login screen
     }
+
+    useEffect(()=>{
+       
+        const fetchscreeningForm = async () => {
+           try {
+                console.log("test",Applicant_ID)
+                const response = await axios.get(`http://192.168.1.104:7000/kalinga/getScreeningFormsApplicant_ID/${Applicant_ID}`)
+                // console.log( "test", response.data.screeningForm)
+                setScreeningFormID(response.data.screeningForm)
+                // console.log("ScreeningFormID: ", screeningFormID)
+
+           } catch(error) {
+
+           }
+
+        }
+        fetchscreeningForm();
+    },[])
+
     return (
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <ScrollView
+         contentContainerStyle={styles.scrollContainer}
+         overScrollMode='never'
+         >
             <View style={styles.tabContent}>
             <Text style = {styles.title}>Initial Screening Form</Text>
 
-<View style = {globalStyles.flex_start}>
-  <Text style = {globalStyles.titleParagraph}>Personal Information</Text>
-</View>
-<View style = {styles.container}>
-      <TextInput
-          style={styles.BiginputField}
-          placeholder="Full Name"
-          placeholderTextColor="#E60965"
-      />
-      <View style = {globalStyles.flex_Row}>
-      <TextInput
-          style={styles.SmallinputField}
-          placeholder="Age"
-          placeholderTextColor="#E60965"
-      />
-      <TextInput
-          style={styles.SmallinputField}
-          placeholder="Birth Date"
-          placeholderTextColor="#E60965"
-      />
-      </View>
-      <TextInput
-          style={styles.BiginputField}
-          placeholder="Email Address"
-          placeholderTextColor="#E60965"
-      />
-       <TextInput
-          style={styles.BiginputField}
-          placeholder="Contact Number"
-          placeholderTextColor="#E60965"
-      />
-       <TextInput
-          style={styles.BiginputField}
-          placeholder="Home Address"
-          placeholderTextColor="#E60965"
-      /> 
-      
-</View>
+            <View style = {styles.screeningFormcontainer}>
 
-<View style = {globalStyles.flex_start}>
-  <Text style = {globalStyles.titleParagraph}>Infant Information</Text>
-</View>
-<View style = {styles.container}>
-      <TextInput
-          style={styles.BiginputField}
-          placeholder="Name of Child"
-          placeholderTextColor="#E60965"
-      />
-      <View style = {globalStyles.flex_Row}>
-      <TextInput
-          style={styles.SmallinputField}
-          placeholder="Age"
-          placeholderTextColor="#E60965"
-      />
-      <TextInput
-          style={styles.SmallinputField}
-          placeholder="Sex"
-          placeholderTextColor="#E60965"
-      />
-      </View>
+                <Text style = {[
+                    globalStyles.titleParagraph, {alignSelf: "flex-start",
+                    }]}>Personal Information
+                </Text>
 
-      <View style = {globalStyles.flex_Row}>
-      <TextInput
-          style={styles.SmallinputField}
-          placeholder="Birth Weight"
-          placeholderTextColor="#E60965"
-      />
-      <TextInput
-          style={styles.SmallinputField}
-          placeholder="Birthdate"
-          placeholderTextColor="#E60965"
-      />
-      </View>
-      <TextInput
-          style={styles.BiginputField}
-          placeholder="Age of Gestation"
-          placeholderTextColor="#E60965"
-      />
-       <TextInput
-          style={styles.BiginputField}
-          placeholder="Medical Condition"
-          placeholderTextColor="#E60965"
-      />
-      
-</View>
+                    <TextInput
+                        style={styles.BiginputField}
+                        placeholder="Full Name"
+                        placeholderTextColor="#E60965"
+                        value={"Name: " + screeningFormID.fullName}
+                        editable={false}
+                    />
+                    <View style = {styles.flex_Row}>
+                        <TextInput
+                            style={styles.ageInputField}
+                            placeholder="Age"
+                            placeholderTextColor="#E60965"
+                            value={"Age: " + screeningFormID.Age}
+                            editable={false}
+                        />
+                        <TextInput
+                            style={styles.birthDateInputField}
+                            placeholder="Birth Date"
+                            placeholderTextColor="#E60965"
+                            value={"Birthday: " + screeningFormID.birthDate}
+                            editable={false}
+                        />
+                    </View>
+                    <TextInput
+                        style={styles.BiginputField}
+                        placeholder="Email Address"
+                        placeholderTextColor="#E60965"
+                        value={"Email: " + screeningFormID.email}
+                        editable={false}
+                    />
+                    <TextInput
+                        style={styles.BiginputField}
+                        placeholder="Contact Number"
+                        placeholderTextColor="#E60965"
+                        value={"Contact Number: " + screeningFormID.contactNumber}
+                        editable={false}
+                    />
+                    <TextInput
+                        style={styles.BiginputField}
+                        placeholder="Home Address"
+                        placeholderTextColor="#E60965"
+                        value={"Address: " + screeningFormID.homeAddress}
+                        editable={false}
+                    /> 
+
+                <Text style = {[
+                    globalStyles.titleParagraph, {alignSelf: "flex-start"
+                    }]}>Infant Information
+
+                </Text>
+                    <View style = {styles.flex_Row}>
+
+                    <TextInput
+                        style={styles.birthDateInputField}
+                        placeholder="Birthdate"
+                        placeholderTextColor="#E60965"
+                        value={"Birthday: " + screeningFormID.childBirthDate}
+                        editable={false}
+                    />
+                    
+                    <TextInput
+                        style={styles.childSexInputField}
+                        placeholder="Sex"
+                        placeholderTextColor="#E60965"
+                        value={"Sex: " + screeningFormID.sex}
+                        editable={false}
+                    />
+                    </View>
+
+                    <View style = {styles.flex_Row}>
+
+                    <TextInput
+                        style={styles.ageInputField}
+                        placeholder="Age"
+                        placeholderTextColor="#E60965"
+                        value={"Age: " + screeningFormID.childAge}
+                        editable={false}
+                    />
+
+                    <TextInput
+                        style={styles.birthDateInputField }
+                        placeholder="Birth Weight"
+                        placeholderTextColor="#E60965"
+                        value={"Birth Weight: " + screeningFormID.birthWeight}
+                        editable={false}
+                    />
+                   
+                   
+                    </View>
+                    <TextInput
+                        style={styles.BiginputField}
+                        placeholder="Age of Gestation"
+                        placeholderTextColor="#E60965"
+                        value={"Age of Gestation: " + screeningFormID.ageOfGestation}
+                        editable={false}
+                    />
+                </View>
 
 
             </View>
-        </ScrollView>
+    </ScrollView>
     );
 };
 
-const SecondScreen = () => {
+const SecondScreen = (route) => {
     const navigation = useNavigation();
 
     const navigatePage = (Page) => {
@@ -186,19 +232,6 @@ const SecondScreen = () => {
                     />         
               </View>
 
-              
-              <View style = {styles.container}>
-                    <TextInput
-                        style={styles.BiginputField1}
-                        placeholder="Prescription"
-                        placeholderTextColor="#E60965"
-
-
-                    />         
-              </View>
-
-
-
               <View style={styles.AdminButton}>
                     <TouchableOpacity onPress={() => navigatePage("")}>
                         <View style={styles.ApprovebuttonContainer}>
@@ -216,7 +249,9 @@ const SecondScreen = () => {
     );
 };
 
-const RequestorInitialScreeningFormPage1 = () => {
+const RequestorInitialScreeningFormPage1 = ({route}) => {
+
+    const screeningformId = route.params
     const navigation = useNavigation();
 
     
@@ -241,22 +276,44 @@ const RequestorInitialScreeningFormPage1 = () => {
                     },
                 }}
             >
-                <Tab.Screen name="Screening Form" component={FirstScreen} />
-                <Tab.Screen name="Medical Requirements" component={SecondScreen} />
+                <Tab.Screen name="Screening Form" component={FirstScreen} initialParams={{screeningformId} } />
+                <Tab.Screen name="Medical Requirements" component={SecondScreen} initialParams={{screeningformId}} />
             </Tab.Navigator>
         </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
+
+    flex_Row: {
+        width: "95%",
+        flexDirection: "row",
+        justifyContent: "space-between",
+
+    },
+    scrollContainer: {
+        backgroundColor: '#FFF8EB',
+        flex: 1
+    },
     container: {
         flex: 1,
         justifyContent:"center",
+        // backgroundColor: "pink"
     },
+
+    screeningFormcontainer: {
+        // backgroundColor: "pink",
+        flex: 1,
+        marginHorizontal: "10%",
+        alignItems: "center"
+    },
+
     Medicalcontainer:{
         flex: 1,
-        backgroundColor: '#FFF8EB',
-        justifyContent:"center"
+        // backgroundColor: 'pink',
+        justifyContent:"center",
+        alignSelf: "center",
+
     },
     header: {
         backgroundColor: '#E60965',
@@ -284,109 +341,90 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: '#FFF8EB',
     },
-    DonorContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        marginRight: 100
-    },
-    donorInfoContainer: {
-        flex: 1,
-        alignItems: 'center',
-    },
-    lineContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    line: {
-        borderBottomColor: '#E60965',
-        borderBottomWidth: 0.2,
-        flex: 1,
-    },
-    DonorSecondContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        marginRight: 30
-    },
-    donorInfoSecondContainer: {
-        flex: 1,
-        alignItems: 'center',
-    },
-    logInButton: {
-        backgroundColor: 'white',
-        height: '90%',
-        width: "25%",
-        borderRadius: 50,
-        borderColor: '#E60965',
-        borderWidth: 1,
-        alignItems: 'center',
-    },
-    logInButtonText: {
-        color: '#E60965',
-        fontSize: 15,
 
-    },
-    scrollContainer: {
-        flexGrow: 1,
-        paddingBottom: 20
-    },
-    AgreebuttonContainer:{
-        backgroundColor: "#E60965",
-        paddingHorizontal: 37,
-        borderRadius: 20,
-        justifyContent: "center",
-        paddingVertical: 5,
-        marginTop: "-25%"
-    },
     text: {
         fontFamily: "Open-Sans-Regular",
         fontSize: 15,
         textAlign: "justify",
         marginTop: "5%",
     },
+
+    BiginputField1: {
+        borderWidth: 1,
+        borderRadius: 10,
+        borderColor: "#E60965",
+        paddingVertical: 5,
+        paddingLeft: 15,
+        width: 300,
+        marginVertical: 10,
+        color: "#E60965",
+        backgroundColor: "white"
+    },
+    
     BiginputField: {
         borderWidth: 1,
         borderRadius: 10,
         borderColor: "#E60965",
         paddingVertical: 5,
-        paddingHorizontal: 15,
+        paddingLeft: 15,
         width: 300,
         marginVertical: 10,
-        marginHorizontal:50,
         color: "#E60965",
         backgroundColor: "white"
 
     },
-    BiginputField1:{
+
+    ageInputField:{
         borderWidth: 1,
         borderRadius: 10,
         borderColor: "#E60965",
         paddingVertical: 5,
-        paddingHorizontal: 15,
-        width: 300,
+        paddingLeft: 15,
+        width: 90,
         marginVertical: 10,
-        marginHorizontal:30,
+        justifyContent: "center",
         color: "#E60965",
-        backgroundColor: "white"
+        backgroundColor: "white",
     },
+
+    birthDateInputField :{
+        borderWidth: 1,
+        borderRadius: 10,
+        borderColor: "#E60965",
+        paddingVertical: 5,
+        paddingLeft: 15,
+        width: 190,
+        marginVertical: 10,
+        justifyContent: "center",
+        color: "#E60965",
+        backgroundColor: "white",  
+    },
+
+    childSexInputField: {
+        borderWidth: 1,
+        borderRadius: 10,
+        borderColor: "#E60965",
+        paddingVertical: 5,
+        paddingLeft: 15,
+        width: 100,
+        marginVertical: 10,
+        justifyContent: "center",
+        color: "#E60965",
+        backgroundColor: "white",
+    },
+
     SmallinputField: {
         borderWidth: 1,
         borderRadius: 10,
         borderColor: "#E60965",
         paddingVertical: 5,
-        paddingHorizontal: 20,
+        paddingLeft: 15,
         width: 130,
         marginVertical: 10,
         justifyContent: "center",
-        marginStart: 40,
         color: "#E60965",
-        backgroundColor: "white"
-
+        backgroundColor: "white",
     },
     title:{
         color: "#E60965",

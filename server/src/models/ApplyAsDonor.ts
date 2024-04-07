@@ -9,20 +9,19 @@ const screeningFormSchema = new mongoose.Schema({
 
     fullName: {type: String},
     Age: {type: String},
-    birthday: {type: String},
+    birthDate: {type: String},
     email: {type: String},
-    address: {type: String},
     contactNumber: {type: String},
     homeAddress: {type: String},
 
     //Infant Information
-    NameOfChild: {type: String},
-    BirthWeight: {type: String},
-    Sex: {type: String},
+    childName: {type: String},
+    birthWeight: {type: String},
+    sex: {type: String},
     childAge: {type: String},
-    DateOfBirth: {type: String},
-    AgeOfGestation: {type: String},
-    MedicalCondition: {type: String},
+    childBirthDate: {type: String},
+    ageOfGestation: {type: String},
+    medicalCondition: {type: String},
 
     TypeOfDonor:{type: String},
     QA: {type: String},
@@ -103,6 +102,8 @@ export const createMedicalRequirementImages = (values: Record<string, any>) => n
 
 
 export const createScreeningForm = (values: Record<string, any>) => new screeningFormModel(values).save().then((ScreeningForm) => ScreeningForm.toObject())
+
+export const getScreeningFormByUserType = (userType: string) => screeningFormModel.find({userType})
 export const getScreeningFormByName = (fullName: string) => screeningFormModel.findOne({fullName})
 export const getScreeningFormByApplicantID = (Applicant_ID: string) => screeningFormModel.findOne({Applicant_ID})
 export const getScreeningFormByMaxApplicantID = () => screeningFormModel.findOne({}).sort({ Applicant_ID: -1 }).limit(1).select('Applicant_ID');

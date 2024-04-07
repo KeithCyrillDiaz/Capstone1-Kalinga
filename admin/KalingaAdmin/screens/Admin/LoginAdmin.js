@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, TextInput, StyleSheet, SafeAreaView, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
+import axios from 'axios'
 
 const LogIn = () => {
     const navigation = useNavigation();
@@ -9,8 +10,12 @@ const LogIn = () => {
     const [password, setPassword] = useState('');
 
     const handleLogIn = () => {
+
+
         navigation.navigate('AdminMenu');
     };
+
+
 
     
 

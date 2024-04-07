@@ -5,6 +5,7 @@ import { addScreeningForm } from '../controllers/Apply_As_Donor/addScreeningForm
 import { reqMedAbstractForm } from '../controllers/Apply_As_Requestor/req_medicalAbstract';
 import { setPassword } from '../controllers/setPassword';
 import { sendEmail } from '../controllers/Apply_As_Donor/sendEmail';
+import { getScreeningFormsUserType, getScreeningFormApplicantID } from '../controllers/Admin/Requestor/getScreeningForms';
 
 export default (router: express.Router) => {
   
@@ -15,4 +16,6 @@ export default (router: express.Router) => {
     router.post('/kalinga/addScreeningForm', addScreeningForm);
     router.post('/req_MedAbstract', reqMedAbstractForm);
     router.post('/kalinga/sendEmail', sendEmail)
+    router.get('/kalinga/getScreeningFormsUserType/:userType', getScreeningFormsUserType)
+    router.get('/kalinga/getScreeningFormsApplicant_ID/:Applicant_ID', getScreeningFormApplicantID)
 } 
