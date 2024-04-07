@@ -52,11 +52,11 @@ const ReasonForRequesting = ({route}) => {
       
         setIsLoading(true);
         // Send POST request to the specified URL with the form data
-        const postScreeningForm = await axios.post("http://192.168.1.104:7000/kalinga/addScreeningForm", 
-          screeningFormData,
-        );
-        // Log successful response from the backend
-        console.log('Data saved successfully:', postScreeningForm.data);
+        // const postScreeningForm = await axios.post("http://192.168.1.104:7000/kalinga/addScreeningForm", 
+        //   screeningFormData,
+        // );
+        // // Log successful response from the backend
+        // console.log('Data saved successfully:', postScreeningForm.data);
 
         const response = await axios.post("http://192.168.1.104:7000/req_MedAbstract", input);
   //   // Handle success response...
@@ -107,6 +107,7 @@ const ReasonForRequesting = ({route}) => {
                   type: imageData.type, 
                   name: imageData.name,
                 };
+                console.log(`ownerID`, imageData.ownerID)
                 uploadedFiles.append('RequestorFiles', file); // Append the file directly
                 uploadedFiles.append(`userType`, "Requestor"); 
                 uploadedFiles.append(`owner`, imageData.owner);// Append userType
@@ -124,7 +125,7 @@ const ReasonForRequesting = ({route}) => {
                   }
                 }
               );
-              // console.log('Data saved successfully:', postFiles.data);
+              console.log('Data saved successfully:', postFiles.data);
           }
           
           navigation.dispatch(
@@ -175,17 +176,17 @@ const ReasonForRequesting = ({route}) => {
   
               }
             });
-  
-            console.log("fileType: ", fileType)
+            
+            console.log("fileType: ", screeningFormData.Applicant_ID)
             setSelectedImage(prevState => ({
                 ...prevState,
               
-  
+            
                 [attachmentType]: ({
                   uri: result.assets[0].uri,
                   name: attachmentType, 
                   type: fileType,
-                  userType: "Donor",
+                  userType: "Requestor",
                   owner: screeningFormData.fullName,
                   ownerID: screeningFormData.Applicant_ID
               
@@ -234,10 +235,11 @@ const ReasonForRequesting = ({route}) => {
                   name: result.assets[0].name,
                   uri: result.assets[0].uri,
                   type: fileType,
-                  userType: "Donor",
+                  userType: "Requestor",
                   owner: screeningFormData.fullName,
                   size: result.assets[0].size,
-                  requirementType: attachment.Applicant_ID
+                  requirementType: attachmentType,
+                  ownerID: screeningFormData.Applicant_ID
               }
           };
           // Update the selectedFile state

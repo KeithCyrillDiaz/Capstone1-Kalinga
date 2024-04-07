@@ -5,7 +5,9 @@ import { createMedicalRequirementFiles } from '../../models/ApplyAsDonor';
 export const addMedicalRequirementsAsFile = async (req: express.Request, res: express.Response) => {
     try {
         const files = req.files;
-        const body = req.body
+        const body = req.body;
+
+        console.log(files)
 
         if (!files) {
             return res.status(400).send('No filess uploaded.');
