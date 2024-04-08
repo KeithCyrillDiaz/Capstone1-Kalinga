@@ -1,3 +1,4 @@
+// server.js or server.ts
 import express from 'express';
 import http from 'http';
 import bodyParser from 'body-parser';
@@ -17,10 +18,9 @@ app.use(cors({
 
 app.use(compression());
 app.use(cookieParser());
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
-const server = http.createServer(app)
-
+const server = http.createServer(app);
 
 server.listen(7000, () => {
     console.log("Server Running on http://localhost:7000/");
@@ -38,5 +38,7 @@ mongoose.Promise = Promise;
 mongoose.connect(MongoDb_URL);
 mongoose.connection.on('error', (error:Error) => console.log(error));
 
-
+// Use your router for all routes starting from /
 app.use('/', router());
+
+//export default app;

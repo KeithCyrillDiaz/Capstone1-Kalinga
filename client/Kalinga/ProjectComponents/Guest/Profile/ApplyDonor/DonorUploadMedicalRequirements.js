@@ -36,7 +36,7 @@ const DonorUploadMedicalRequirements = ({route}) => {
 
         setIsLoading(true);
         // Send POST request to the specified URL with the form data
-        const postScreeningForm = await axios.post("http://192.168.1.104:7000/kalinga/addScreeningForm", 
+        const postScreeningForm = await axios.post("http://192.168.254.104:7000/kalinga/addScreeningForm", 
               screeningFormData,
         );
         // Log successful response from the backend
@@ -65,7 +65,7 @@ const DonorUploadMedicalRequirements = ({route}) => {
     
             setUploadedFiles(uploadedImages)
     
-            const postImages = await axios.post("http://192.168.1.104:7000/kalinga/addMedicalRequirementsAsImage", 
+            const postImages = await axios.post("http://192.168.254.104:7000/kalinga/addMedicalRequirementsAsImage", 
               uploadedImages,
               {
                 headers: {
@@ -99,7 +99,7 @@ const DonorUploadMedicalRequirements = ({route}) => {
       
               setUploadedFiles(uploadedFiles)
       
-              const postFiles = await axios.post("http://192.168.1.104:7000/kalinga/addMedicalRequirementsAsFile", 
+              const postFiles = await axios.post("http://192.168.254.104:7000/kalinga/addMedicalRequirementsAsFile", 
                 uploadedFiles,
                 {
                   headers: {

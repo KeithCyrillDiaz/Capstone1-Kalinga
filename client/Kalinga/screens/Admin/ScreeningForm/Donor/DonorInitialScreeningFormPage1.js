@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView } from 'react-native';
 import axios from 'axios';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native'; // Import useRoute hook
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import DonorUploadAdmin from './DonorUploadAdmin.js';
@@ -10,7 +10,10 @@ import DonorUploadAdmin from './DonorUploadAdmin.js';
 const Tab = createMaterialTopTabNavigator();
 
 
-const FirstScreen = () => {
+const FirstScreen = ({route}) => {
+    
+    const Applicant_ID= route.params.screeningFormId
+  
     const navigation = useNavigation();
 
     const [formData, setFormData] = useState({
@@ -29,23 +32,29 @@ const FirstScreen = () => {
         MedicalCondition: '',
     });
 
-    useEffect(() => {
-        fetchData(); // Fetch data when component mounts
-    }, []);
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://192.168.254.103:7000/kalinga/getScreeningForms');
-            const data = response.data[0]; // Assuming you expect only one record
+            const response = await axios.get(`http://192.168.254.104:7000/kalinga/getScreeningFormsApplicant_ID/${Applicant_ID}`);
+            const data = response.data.screeningForms; // Assuming you expect only one record
+            console.log("data",data)
             setFormData(data);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     };
+    
+    useEffect(() => {
+        fetchData(); // Fetch data when component mounts
+    }, []);
 
     const navigatePage = (Page) => {
         navigation.navigate(Page); // Navigate to the specified screen
     };
+
+    const handleViewPress = (Applicant_ID) =>{
+        navigation.navigate('DonorInitialScreeningFormPage2',{Applicant_ID});
+    }
 
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -151,7 +160,7 @@ const FirstScreen = () => {
 
                 </View>
                 <View style={globalStyles.center}>
-                    <TouchableOpacity onPress={() => navigatePage("DonorInitialScreeningFormPage2")}>
+                    <TouchableOpacity onPress={() => handleViewPress(Applicant_ID)}>
                         <View style={styles.AgreebuttonContainer}>
                             <Text style={styles.label}>Next</Text>
                         </View>
@@ -167,17 +176,19 @@ const FirstScreen = () => {
   
 
 const SecondScreen = () => {
+    const route = useRoute()
   const navigation = useNavigation();
 
   const navigatePage = (Page) => {
       navigation.navigate(Page); // Navigate to the Login screen
   }
   return (
-      <DonorUploadAdmin></DonorUploadAdmin>
+      <DonorUploadAdmin route ={route}/>
   );
 };
 
-const DonorInitialScreeningFormPage1 = () => {
+const DonorInitialScreeningFormPage1 = ({route}) => {
+    const screeningFormId = route.params
   const navigation = useNavigation();
 
   
@@ -201,8 +212,8 @@ const DonorInitialScreeningFormPage1 = () => {
                   },
               }}
           >
-              <Tab.Screen name="Screening Form" component={FirstScreen} />
-              <Tab.Screen name="Medical Requirements" component={SecondScreen} />
+              <Tab.Screen name="Screening Form" component={FirstScreen} initialParams = {{screeningFormId}} />
+              <Tab.Screen name="Medical Requirements" component={SecondScreen} initialParams = {{screeningFormId}} />
           </Tab.Navigator>
       </SafeAreaView>
   );

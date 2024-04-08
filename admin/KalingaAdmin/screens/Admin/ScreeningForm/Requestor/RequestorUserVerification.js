@@ -8,6 +8,7 @@ import { globalHeader } from '../../../../styles_kit/globalHeader';
 import axios from 'axios';
 import Spinner from 'react-native-loading-spinner-overlay';
 
+const expoIpAddress = "192.168.1.104";
 const handleLogIn = () => {
     navigation.navigate('LoginAdmin');
 };
@@ -37,7 +38,7 @@ const UserVerification = () => {
     const fetchScreeningFormIDs = async () => {
         try {
             setIsLoading(true)
-            const response = await axios.get("http://192.168.1.104:7000/kalinga/getScreeningFormsUserType/Requestor");
+            const response = await axios.get(`http://${expoIpAddress}:7000/kalinga/getScreeningFormsUserType/Requestor`);
             // console.log(response.data.screeningForms); 
             // 
             setScreeningForms(response.data.screeningForms)// Check if data is received
@@ -74,7 +75,6 @@ const UserVerification = () => {
         // console.log("data: ", data)
         // setSelectedFormId(data)
         // console.log("SelectedFormId: ", selectedFormId)
-
         navigation.navigate('RequestorInitialScreeningFormPage1', data);
     };
     return (
