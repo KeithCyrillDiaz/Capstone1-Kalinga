@@ -13,7 +13,7 @@ import DonorUploadAdmin from './DonorUploadAdmin.js';
 const Tab = createMaterialTopTabNavigator();
 
 
-const FirstScreen = ({  }) => {
+const FirstScreen = ({route}) => {
     const navigation = useNavigation();
 
     const navigatePage = (Page) => {

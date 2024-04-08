@@ -147,6 +147,7 @@ import RequestorRequestConfirmation from './screens/Admin/ScreeningForm/Requesto
 import RequestorInitialScreeningFormPage1 from './screens/Admin/ScreeningForm/Requestor/RequestorInitialScreeningFormPage1.js'
 import RequestorUserVerification from './screens/Admin/ScreeningForm/Requestor/RequestorUserVerification.js';   //<Stack.Screen name="RequestorVerification" component={RequestorVerification} />
 import ForumPage from './ProjectComponents/Donor/Home/Forum/ForumPage.js';
+import ImageViewer from './screens/Admin/ScreeningForm/Donor/ImageViewer.js';
 
 
 const getFonts = async () => {
@@ -333,24 +334,11 @@ export default function App() {
              <Stack.Screen name="DonorUploadAdmin" component={DonorUploadAdmin} />
              <Stack.Screen name="DonorAppointmentConfirmation" component={DonorAppointmentConfirmation} />
              <Stack.Screen name="RequestorRequestConfirmation" component={RequestorRequestConfirmation} />
-
-
-
-
-
-  
              <Stack.Screen name="RequestorInitialScreeningFormPage1" component={RequestorInitialScreeningFormPage1} />
-
-
-             
-             
-             
-
-
-
-
              <Stack.Screen name="DonorUserVerification" component={DonorUserVerification} />
              <Stack.Screen name="RequestorUserVerification" component={RequestorUserVerification} />
+             <Stack.Screen name="ImageViewer" component={ImageViewer} />
+
 
 
 
