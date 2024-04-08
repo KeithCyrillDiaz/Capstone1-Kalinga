@@ -182,7 +182,7 @@ const SecondScreen = ({route}) => {
     const [medicalAbstractForm, setMedicalAbstractForm] = useState({})
 
     const fetchMedicalAbstract = async () => {
-        const response = await axios.get(`http://192.168.1.104:7000/kalinga/getMedicalAbstractByID/${Applicant_ID}`)
+        const response = await axios.get(`http://${expoIpAddress}:7000/kalinga/getMedicalAbstractByID/${Applicant_ID}`)
         setMedicalAbstractForm(response.data.medicalAbstract)
     }
 
