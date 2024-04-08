@@ -1,12 +1,14 @@
-import React from 'react';
+import React  from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView, Dimensions, StatusBar } from 'react-native'; // Import Dimensions
 import { useNavigation } from '@react-navigation/native';
 import { Octicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { globalHeader } from '../../../../styles_kit/globalHeader';
+import { useState, useEffect } from 'react';
+import axios from 'axios'; // Import axios for making HTTP requests
 
-
+const expoIpAddress = "192.168.1.104";
 
 const handleLogIn = () => {
     navigation.navigate('LoginAdmin');
@@ -26,57 +28,76 @@ const SearchBar = () => {
 };
 
 const UserVerification = () => {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
 
-    const handleViewPress = () => {
-        navigation.navigate('DonorInitialScreeningFormPage1');
-    };
+  const [screeningForms, setScreeningForms] = useState([])
+  const [refreshing, setRefreshing] = useState(false);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
-    const screenWidth = Dimensions.get('window').width; // Get the screen width
+  const fetchScreeningFormIDs = async () => {
+      try {
+          setIsLoading(true)
+          const response = await axios.get(`http://${expoIpAddress}:7000/kalinga/getScreeningFormsUserType/Donor`);
+          // console.log(response.data.screeningForms); 
+          // 
+          setScreeningForms(response.data.screeningForms)// Check if data is received
 
-    return (
-        <SafeAreaView style={styles.container}>
+      } catch (error) {
+          console.error("Error fetching screening form IDs:", error);
+      } finally{
+          setIsLoading(false)
+      }
+  };
+  
+
+  useEffect(() => {
+    fetchScreeningFormIDs();
+}, []);
+  
+const handleViewPress = (Applicant_ID) => {
+  console.log("id", Applicant_ID)
+  navigation.navigate('DonorInitialScreeningFormPage1',  Applicant_ID );
+};
+  return (
+            <SafeAreaView style={styles.container}>
             <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style={globalHeader.SmallHeader}>
-                <Text style={globalHeader.SmallHeaderTitle}>Set Appointment</Text>
+                <Text style={globalHeader.SmallHeaderTitle}>Donor Verification</Text>
             </View>
-            <SearchBar />
+            <SearchBar /> 
             <View styles={styles.title}>
                 <Text style={styles.titleText}>Pendings</Text>
             </View>
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
-            <View style={styles.DonorContainer}>
-                    <View style={styles.milkBankContainer}>
-                      <View style={styles.milkBank}>
-                       <FontAwesome name="user-circle-o" size={50} color="#E60965"/>                  
+          <ScrollView contentContainerStyle={styles.scrollContainer}>
+          {screeningForms.map((form, index) => (
+                  <View key={index} style={styles.DonorContainer}>
+                      <View style={styles.milkBankContainer}>
+                          <View style={styles.milkBank}>
+                              <FontAwesome name="user-circle-o" size={50} color="#E60965" />
+                          </View>
                       </View>
+                      <View style={styles.InfoContainer}>
+                          <Text style={styles.MilkBankName}>{form.fullName}</Text>
+                          <Text style={styles.MilkBankLocation}>{form.email}</Text>
+                          <Text style={styles.MilkBankPhone}>{form.contactNumber}</Text>
+                      </View>
+                      <View style={styles.ButtonContainer}>
+                        <TouchableOpacity style={styles.viewButton} onPress={() => handleViewPress(form.Applicant_ID)}>
+                            <Text style={styles.viewButtonText}>View</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
+                            <Text style={styles.viewButtonText}>Message</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
+                            <Text style={styles.viewButtonText}>Delete</Text>
+                        </TouchableOpacity>
                     </View>
-                    <View style={styles.InfoContainer}>
-                        <Text style={styles.DonorFullName}>Lorem Ipsum</Text>
-                         <Text style={styles.DonorEmail}>loremipsum@gmail.com</Text>
-                         <Text style={styles.DonorContactNumner}>7/12/2023 8:37pm</Text>
-                    </View>
-                    <View style ={styles.ButtonContainer}>
-                    <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>View</Text>
-                       </TouchableOpacity>
-                       <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>Message</Text>
-                       </TouchableOpacity>
-                       <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
-                         <Text style={styles.viewButtonText}>Delete</Text>
-                       </TouchableOpacity>
-                    </View>
-                    
-                </View>
-            <View style={styles.lineContainer}>
-                    <View style={styles.line} />
-            </View>
-
-            
-        </ScrollView>
-        </SafeAreaView>
-    );
+                  </View>
+              ))}
+          </ScrollView>
+      </SafeAreaView>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -86,7 +107,13 @@ const styles = StyleSheet.create({
   DonorContainer:{
     flexDirection: "row",
     justifyContent: "space-between",
-    
+    width: "100%",
+    marginVertical: 10,
+    paddingBottom: 20,
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "#E60965"
+
   },
   header: {
     backgroundColor: '#E60965',
@@ -103,6 +130,7 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     fontWeight: '700',
+    
   },
   menuIcon: {
     marginLeft: 20,
@@ -116,12 +144,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFF8EB',
 },
-InfoContainer:{
-  marginTop: 10,
-  marginHorizontal: 20
-},
+
 milkBankContainer:{
-  marginHorizontal: 10
+  marginHorizontal: 10,
+},
+
+InfoContainer: {
+    width: "60%"
 },
 searchContainer: {
     backgroundColor: '#FFF8EB',
@@ -192,12 +221,14 @@ viewButton: {
     borderWidth: 1,
     alignItems: 'center',
     marginRight: 80,
-    marginVertical: 1
-    
+    marginVertical: 1,
+    marginBottom: 3,
 },
 viewButtonText: {
     color: '#E60965',
-    fontSize: 15,
+    fontSize: 12,
+    alignItems: "center",
+  
 },
 
 horizontalLine: {
@@ -212,25 +243,22 @@ DescriptionText:
     alignItems: 'baseline',
     
 },
-DonorFullName:{
+MilkBankName:{
     fontWeight: '700',
-    fontSize: 20,
+    fontSize: 19,
     color: '#E60965'
 
 },
-DonorEmail:{
+MilkBankLocation:{
     fontSize: 15,
     color: '#E60965'
 },
-DonorContactNumner:{
-    fontSize: 15,
+MilkBankPhone:{
+    fontSize: 9,
     color: '#E60965'
 },
 ButtonContainer:{
     flexDirection: "column",
-    marginTop: 10,
-    marginHorizontal: 20
-
 },
 lineContainer: {
   flexDirection: 'row',

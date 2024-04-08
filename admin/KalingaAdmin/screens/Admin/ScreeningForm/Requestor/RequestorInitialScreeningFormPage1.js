@@ -7,6 +7,8 @@ import { Feather } from '@expo/vector-icons';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import axios from 'axios';
 
+const expoIpAddress = "192.168.1.104";
+
 const Tab = createMaterialTopTabNavigator();
 
 
@@ -41,7 +43,7 @@ const FirstScreen = ({route}) => {
         const fetchscreeningForm = async () => {
            try {
                 console.log("test",Applicant_ID)
-                const response = await axios.get(`http://192.168.1.104:7000/kalinga/getScreeningFormsApplicant_ID/${Applicant_ID}`)
+                const response = await axios.get(`http://${expoIpAddress}:7000/kalinga/getScreeningFormsApplicant_ID/${Applicant_ID}`)
                 // console.log( "test", response.data.screeningForm)
                 setScreeningFormID(response.data.screeningForm)
                 // console.log("ScreeningFormID: ", screeningFormID)
