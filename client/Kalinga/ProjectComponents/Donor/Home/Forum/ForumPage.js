@@ -49,11 +49,11 @@ const ForumPage = () => {
     
 
   
-  const FirstParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse'
+  const FirstParagraph = 'Im looking for some advice on how to properly store breast milk. Any tips or suggestions would be greatly appreciated!'
 
-  const SecondParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
+  const SecondParagraph = ''
 
-  const ThridParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
+  const ThridParagraph = ''
 
   return (
       <SafeAreaView style = {globalStyles.SafeArea}>

@@ -36,8 +36,7 @@ export default function HelpAndSupport() {
             We’re here to help you with anything and everything on Kalinga
           </Text>
           <Text style={{ color: "#E60965" }}>
-            Share your concern or check our frequently asked questions listed
-            below.
+            Share your concern or check our frequently asked questions listed below.
           </Text>
         </View>
 
@@ -73,25 +72,25 @@ export default function HelpAndSupport() {
           <DropdownItem
             title={"How can I become a breast milk donor on Kalinga? "}
             description={
-              "The Kalinga App is a dedicated platform connecting breast milk donors with recipients. It facilitates the safe and voluntary sharing of breast milk to support infants in need."
+              "Start the donation process by completing the Donor Application Form and waiting for administrator verification. After approval, you can now schedule your doantion appointment. Make sure to wait for appointment confirmation before donating at the hospital."
             }
           />
           <DropdownItem
             title={"How can I become a breast milk requestor on Kalinga? "}
             description={
-              "The Kalinga App is a dedicated platform connecting breast milk donors with recipients. It facilitates the safe and voluntary sharing of breast milk to support infants in need."
+              "Begin by filling out the Requestor Application Form and awaiting administrator verification. Once approved, proceed to make your request by completing the request form. Then, await confirmation from the administrator."
             }
           />
           <DropdownItem
             title={"Is there any cost associated with using the Kalinga App?"}
             description={
-              "The Kalinga App is a dedicated platform connecting breast milk donors with recipients. It facilitates the safe and voluntary sharing of breast milk to support infants in need."
+              "Payment is only necessary when requesting for milk."
             }
           />
           <DropdownItem
             title={"How can I provide feedback or report issues with the app?"}
             description={
-              "The Kalinga App is a dedicated platform connecting breast milk donors with recipients. It facilitates the safe and voluntary sharing of breast milk to support infants in need."
+              "Go to Settings and navigate the 'Report Bug' or 'Send Feedback' option to write about any issues you encounter."
             }
           />
           <DropdownItem

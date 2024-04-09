@@ -113,7 +113,7 @@ const DonorProfile = () => {
   const styles = StyleSheet.create({
 
     safeArea:{ 
-      backgroundColor: "white",
+      backgroundColor: "#FFF8EB",
       height: "100%"
     },
 
