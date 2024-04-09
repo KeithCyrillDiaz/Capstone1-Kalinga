@@ -141,7 +141,7 @@ export const globalStyles = StyleSheet.create({
 
     titleParagraph:{
       fontFamily: 'Open-Sans-Bold',
-      fontSize: 20,
+      fontSize: 25,
       color: '#E60965',
     },
     
