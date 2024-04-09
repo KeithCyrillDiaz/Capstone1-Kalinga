@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { View, StyleSheet} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
-
-
 const apiKey = process.env.GOOGLE_MAPS_API_KEY;
 
+
 const MapContainer = () => {
+
 
     const defaultCenter = {
         latitude: 14.5995,

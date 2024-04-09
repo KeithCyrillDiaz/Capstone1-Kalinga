@@ -9,7 +9,11 @@ import { AntDesign } from '@expo/vector-icons';
 import DonorUploadAdmin from './DonorUploadAdmin.js';
 import axios from 'axios'; // Import axios for making HTTP requests
 
-const expoIpAddress = "192.168.1.104";
+
+const expoIpAddress = process.env.EXPO_IP_ADDRESS;
+if(expoIpAddress === "") console.log("empty")
+// const expoIpAddress = "192.168.1.104";
+
 const Tab = createMaterialTopTabNavigator();
 
 
@@ -206,7 +210,7 @@ const styles = StyleSheet.create({
         paddingVertical: 20
     },
     headerTitle: {
-        fontFamily: 'Kurale-Regular',
+        fontFamily: 'Kurale',
         fontSize: 20,
         color: 'white',
         justifyContent: "center",

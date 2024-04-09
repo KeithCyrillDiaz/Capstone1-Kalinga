@@ -7,7 +7,13 @@ import { Feather } from '@expo/vector-icons';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import axios from 'axios';
 
-const expoIpAddress = "192.168.1.104";
+
+const expoIpAddress = process.env.EXPO_IP_ADDRESS;
+if(expoIpAddress === "") console.log("empty")
+// const expoIpAddress = "192.168.1.104";
+
+// const expoIpAddress = Config.EXPO_IP_ADDRESS;
+   
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -28,7 +34,8 @@ const SearchBar = () => {
 
 
 const FirstScreen = ({route}) => {
-
+    
+    console.log("datas: ", expoIpAddress)
     const Applicant_ID = route.params.screeningformId
     // console.log("FS id: ", Applicant_ID)
     const [screeningFormID, setScreeningFormID] = useState({})
@@ -43,7 +50,7 @@ const FirstScreen = ({route}) => {
         const fetchscreeningForm = async () => {
            try {
                 console.log("test",Applicant_ID)
-                const response = await axios.get(`http://${expoIpAddress}:7000/kalinga/getScreeningFormsApplicant_ID/${Applicant_ID}`)
+                const response = await axios.get(`http://${expoIpAddress}:7000/kalinga/getScreeningFormsID/${Applicant_ID}`)
                 // console.log( "test", response.data.screeningForm)
                 setScreeningFormID(response.data.screeningForm)
                 // console.log("ScreeningFormID: ", screeningFormID)
@@ -63,6 +70,9 @@ const FirstScreen = ({route}) => {
          >
             <View style={styles.tabContent}>
             <Text style = {styles.title}>Initial Screening Form</Text>
+            {/* <Text style = {styles.title}>{EXPO_IP_ADDRESS}</Text> */}
+
+           
 
             <View style = {styles.screeningFormcontainer}>
 
@@ -175,8 +185,20 @@ const FirstScreen = ({route}) => {
     );
 };
 
-const SecondScreen = (route) => {
+const SecondScreen = ({route}) => {
     const navigation = useNavigation();
+    const Applicant_ID = route.params.screeningformId
+
+    const [medicalAbstractForm, setMedicalAbstractForm] = useState({})
+
+    const fetchMedicalAbstract = async () => {
+        const response = await axios.get(`http://${expoIpAddress}:7000/kalinga/getMedicalAbstractByID/${Applicant_ID}`)
+        setMedicalAbstractForm(response.data.medicalAbstract)
+    }
+
+    useEffect(() => {
+        fetchMedicalAbstract();
+    },[])
 
     const navigatePage = (Page) => {
         navigation.navigate(Page); // Navigate to the Login screen
@@ -195,6 +217,8 @@ const SecondScreen = (route) => {
               <View style = {styles.container}>
                     <TextInput
                         style={styles.BiginputField1}
+                        value={medicalAbstractForm.clinicalHistory}
+                        editable={false}
                     />         
               </View>
 
@@ -204,6 +228,8 @@ const SecondScreen = (route) => {
               <View style = {styles.container}>
                     <TextInput
                         style={styles.BiginputField1}
+                        value={medicalAbstractForm.complaint}
+                        editable={false}
                     />         
               </View>
 
@@ -213,6 +239,8 @@ const SecondScreen = (route) => {
               <View style = {styles.container}>
                     <TextInput
                         style={styles.BiginputField1}
+                        value={medicalAbstractForm.clinicalFindings}
+                        editable={false}
                     />         
               </View>
 
@@ -222,6 +250,8 @@ const SecondScreen = (route) => {
               <View style = {styles.container}>
                     <TextInput
                         style={styles.BiginputField1}
+                        value={medicalAbstractForm.diagnosis}
+                        editable={false}
                     />         
               </View>
 
@@ -231,6 +261,8 @@ const SecondScreen = (route) => {
               <View style = {styles.container}>
                     <TextInput
                         style={styles.BiginputField1}
+                        value={medicalAbstractForm.treatment}
+                        editable={false}
                     />         
               </View>
 
@@ -254,6 +286,7 @@ const SecondScreen = (route) => {
 const RequestorInitialScreeningFormPage1 = ({route}) => {
 
     const screeningformId = route.params
+   
     const navigation = useNavigation();
 
     
@@ -327,7 +360,7 @@ const styles = StyleSheet.create({
         paddingVertical: 20
     },
     headerTitle: {
-        fontFamily: 'Kurale-Regular',
+        fontFamily: 'Kurale',
         fontSize: 20,
         color: 'white',
         justifyContent: "center",

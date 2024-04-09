@@ -7,6 +7,9 @@ export const addMedicalRequirementsAsImage = async (req: express.Request, res: e
         const images = req.files;
         const body = req.body
 
+        console.log("Body:", body)
+        console.log("Img:", images)
+
         if (!images) {
             return res.status(400).send('No images uploaded.');
         }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView, Dimensions, StatusBar } from 'react-native'; // Import Dimensions
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView, StatusBar } from 'react-native'; // Import Dimensions
 import { useNavigation } from '@react-navigation/native';
 import { Octicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
@@ -8,7 +8,11 @@ import { globalHeader } from '../../../../styles_kit/globalHeader';
 import axios from 'axios';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-const expoIpAddress = "192.168.1.104";
+
+const expoIpAddress = process.env.EXPO_IP_ADDRESS;
+if(expoIpAddress === "") console.log("empty")
+// const expoIpAddress = "192.168.1.104";
+
 const handleLogIn = () => {
     navigation.navigate('LoginAdmin');
 };
@@ -28,6 +32,8 @@ const SearchBar = () => {
 
 
 const UserVerification = () => {
+
+    // console.log("expo", `${expoIpAddress}`)
     const navigation = useNavigation();
 
     const [screeningForms, setScreeningForms] = useState([])
@@ -75,7 +81,6 @@ const UserVerification = () => {
         // console.log("data: ", data)
         // setSelectedFormId(data)
         // console.log("SelectedFormId: ", selectedFormId)
-
         navigation.navigate('RequestorInitialScreeningFormPage1', data);
     };
     return (
@@ -154,7 +159,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20
   },
   headerTitle: {
-    fontFamily: 'Kurale-Regular',
+    fontFamily: 'Kurale',
     fontSize: 20,
     color: 'white',
     textAlign: 'center',

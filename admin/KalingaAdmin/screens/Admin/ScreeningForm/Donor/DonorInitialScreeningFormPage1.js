@@ -6,7 +6,9 @@ import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import DonorUploadAdmin from './DonorUploadAdmin.js';
 
-const expoIpAddress = "192.168.1.104";
+const expoIpAddress = process.env.EXPO_IP_ADDRESS;
+if(expoIpAddress === undefined) console.log("empty")
+// const expoIpAddress = "192.168.1.104";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -302,7 +304,7 @@ const styles = StyleSheet.create({
       paddingVertical: 20
   },
   headerTitle: {
-      fontFamily: 'Kurale-Regular',
+      fontFamily: 'Kurale',
       fontSize: 20,
       color: 'white',
       justifyContent: "center",

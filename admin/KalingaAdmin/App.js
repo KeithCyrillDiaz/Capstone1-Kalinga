@@ -3,11 +3,8 @@ import React, {useState, useEffect} from 'react';
 import * as Font from 'expo-font';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { EXPO_IP_ADDRESS, REACT_NATIVE_EXPO_IP_ADDRESS} from '@env'
 
-
-
-
-//Admin
 import MedicalHistory from './screens/Admin/ScreeningForm/Donor/MedicalHistory.js'
 import AdminMedicalHistory2 from './screens/Admin/ScreeningForm/Donor/AdminMedicalHistory2.js'
 import DonorInitialScreeningFormPage1 from './screens/Admin/ScreeningForm/Donor/DonorInitialScreeningFormPage1.js'
@@ -49,9 +46,15 @@ const getFonts = async () => {
 };
 
 export default function App() {
+ 
   const [fontsLoaded,  setFontsLoaded] = useState(false);
 
   useEffect(() => {
+    const expoIpAddress = process.env.EXPO_IP_ADDRESS;
+    if(expoIpAddress === undefined){
+      console.log("empty")
+    } else  console.log("expo ", expoIpAddress)
+    console.log("ip", process.env.REACT_NATIVE_EXPO_IP_ADDRESS)
     async function loadFonts() {
       await getFonts();
       setFontsLoaded(true); 
