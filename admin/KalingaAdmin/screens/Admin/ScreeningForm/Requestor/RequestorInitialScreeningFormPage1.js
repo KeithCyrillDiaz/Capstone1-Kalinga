@@ -8,9 +8,9 @@ import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import axios from 'axios';
 
 
-const expoIpAddress = process.env.EXPO_IP_ADDRESS;
-if(expoIpAddress === "") console.log("empty")
-// const expoIpAddress = "192.168.1.104";
+// const expoIpAddress = process.env.EXPO_IP_ADDRESS;
+// if(expoIpAddress === "") console.log("empty")
+const expoIpAddress = "192.168.100.72";
 
 // const expoIpAddress = Config.EXPO_IP_ADDRESS;
    
