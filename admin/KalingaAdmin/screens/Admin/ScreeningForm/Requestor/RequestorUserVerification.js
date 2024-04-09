@@ -9,9 +9,9 @@ import axios from 'axios';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 
-const expoIpAddress = process.env.EXPO_IP_ADDRESS;
-if(expoIpAddress === "") console.log("empty")
-// const expoIpAddress = "192.168.1.104";
+// const expoIpAddress = process.env.EXPO_IP_ADDRESS;
+// if(expoIpAddress === "") console.log("empty")
+const expoIpAddress = "192.168.100.72";
 
 const handleLogIn = () => {
     navigation.navigate('LoginAdmin');
