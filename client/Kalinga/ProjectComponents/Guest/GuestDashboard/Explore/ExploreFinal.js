@@ -4,8 +4,6 @@ import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import MapContainer from './map.js';
 import { FontAwesome5 } from '@expo/vector-icons';
 
-const MAP_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
-
 const GuestExplore = () => {
 
   const [search, setSearch] = useState('');

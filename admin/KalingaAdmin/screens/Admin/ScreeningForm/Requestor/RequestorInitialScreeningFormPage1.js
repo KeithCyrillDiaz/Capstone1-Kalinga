@@ -7,7 +7,13 @@ import { Feather } from '@expo/vector-icons';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import axios from 'axios';
 
-const expoIpAddress = "192.168.1.104";
+
+const expoIpAddress = process.env.EXPO_IP_ADDRESS;
+if(expoIpAddress === "") console.log("empty")
+// const expoIpAddress = "192.168.1.104";
+
+// const expoIpAddress = Config.EXPO_IP_ADDRESS;
+   
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -28,7 +34,8 @@ const SearchBar = () => {
 
 
 const FirstScreen = ({route}) => {
-
+    
+    console.log("datas: ", expoIpAddress)
     const Applicant_ID = route.params.screeningformId
     // console.log("FS id: ", Applicant_ID)
     const [screeningFormID, setScreeningFormID] = useState({})
@@ -43,7 +50,7 @@ const FirstScreen = ({route}) => {
         const fetchscreeningForm = async () => {
            try {
                 console.log("test",Applicant_ID)
-                const response = await axios.get(`http://${expoIpAddress}:7000/kalinga/getScreeningFormsApplicant_ID/${Applicant_ID}`)
+                const response = await axios.get(`http://${expoIpAddress}:7000/kalinga/getScreeningFormsID/${Applicant_ID}`)
                 // console.log( "test", response.data.screeningForm)
                 setScreeningFormID(response.data.screeningForm)
                 // console.log("ScreeningFormID: ", screeningFormID)
@@ -63,6 +70,9 @@ const FirstScreen = ({route}) => {
          >
             <View style={styles.tabContent}>
             <Text style = {styles.title}>Initial Screening Form</Text>
+            {/* <Text style = {styles.title}>{EXPO_IP_ADDRESS}</Text> */}
+
+           
 
             <View style = {styles.screeningFormcontainer}>
 
@@ -350,7 +360,7 @@ const styles = StyleSheet.create({
         paddingVertical: 20
     },
     headerTitle: {
-        fontFamily: 'Kurale-Regular',
+        fontFamily: 'Kurale',
         fontSize: 20,
         color: 'white',
         justifyContent: "center",

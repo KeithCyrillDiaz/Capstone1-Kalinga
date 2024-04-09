@@ -12,7 +12,7 @@ export default (router: express.Router) => {
     router.post('/req_MedAbstract', reqMedAbstractForm);
  
     router.get('/kalinga/getScreeningFormsUserType/:userType', getScreeningFormsUserType)
-    router.get('/kalinga/getScreeningFormsApplicant_ID/:Applicant_ID', getScreeningFormApplicantID)
+    router.get('/kalinga/getScreeningFormsID/:Applicant_ID', getScreeningFormApplicantID)
 
     router.get('/kalinga/getScreeningFormsApplicant_ID/:Applicant_ID', getScreeningFormByID)
 } 

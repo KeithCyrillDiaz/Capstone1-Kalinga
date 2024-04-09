@@ -7,7 +7,10 @@ import { AntDesign } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native'; // Import useRoute hook
 import axios from 'axios'; // Import axios for making HTTP requests
 
-const expoIpAddress = "192.168.1.104";
+
+const expoIpAddress = process.env.EXPO_IP_ADDRESS;
+if(expoIpAddress === "") console.log("empty")
+// const expoIpAddress = "192.168.1.104";
 
 const DonorUploadAdmin = () => {
   const navigation = useNavigation();
