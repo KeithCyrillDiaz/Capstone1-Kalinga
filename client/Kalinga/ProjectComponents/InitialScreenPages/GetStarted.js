@@ -6,7 +6,7 @@ const GetStarted = () => {
     const navigation = useNavigation();
 
     const handleGetStarted = () => {
-        navigation.navigate('Donor Tabs'); 
+        navigation.navigate('RequestorTabs'); 
     };
 
     return (
