@@ -2,6 +2,7 @@ import express from 'express'
 import multer from '../helpers/multer';
 import { addMedicalRequirementsAsImage } from '../controllers/Apply_As_Donor/addMRImage'
 import { addMedicalRequirementsAsFile } from '../controllers/Apply_As_Donor/addMRFile'
+import { getImage } from '../controllers//Admin/DonorScreeningForm/getImageByName'
 
 const upload = multer()
 
@@ -11,4 +12,5 @@ export default (router: express.Router) => {
 
     router.post('/kalinga/addMRImageRequestor',  upload.array('RequestorImages'), addMedicalRequirementsAsImage);
     router.post('/kalinga/addMRFileRequestor',  upload.array('RequestorFiles'), addMedicalRequirementsAsFile);
+    router.get('/kalinga/images/:imageName', getImage)
 }

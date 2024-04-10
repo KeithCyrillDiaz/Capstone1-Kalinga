@@ -8,6 +8,7 @@ import cors from 'cors';
 import mongoose from 'mongoose'
 import router from './router';
 import dotenv from 'dotenv';
+import path from 'path';
 dotenv.config();
 
 const app = express ();
@@ -19,6 +20,7 @@ app.use(cors({
 app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());
+
 
 const server = http.createServer(app);
 

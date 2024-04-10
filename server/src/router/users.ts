@@ -15,4 +15,5 @@ export default (router: express.Router) => {
     router.get('/kalinga/getScreeningFormsID/:Applicant_ID', getScreeningFormApplicantID)
 
     router.get('/kalinga/getScreeningFormsApplicant_ID/:Applicant_ID', getScreeningFormByID)
+    
 } 

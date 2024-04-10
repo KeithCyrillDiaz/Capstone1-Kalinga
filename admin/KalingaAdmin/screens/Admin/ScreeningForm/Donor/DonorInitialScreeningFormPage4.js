@@ -17,7 +17,7 @@ const expoIpAddress = "192.168.100.72";
 const Tab = createMaterialTopTabNavigator();
 
 
-const FirstScreen = ({route  }) => {
+const FirstScreen = ({route}) => {
   const Applicant_ID= route.params.screeningFormId.Applicant_ID
 
     const navigation = useNavigation();
