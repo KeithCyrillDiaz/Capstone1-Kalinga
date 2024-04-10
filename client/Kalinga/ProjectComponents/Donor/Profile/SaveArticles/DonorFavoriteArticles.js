@@ -84,7 +84,7 @@ const FavoriteArticles = () => {
                             <Text>Img</Text>
                         </View> 
                         <Text style = {styles.text}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            Empowering Mothers: The Definitive Resource for Kalinga Breastfeeding Accomplishment.
                         </Text>
                     </View>
 
@@ -96,7 +96,7 @@ const FavoriteArticles = () => {
                             <Text>Img</Text>
                         </View> 
                         <Text style = {styles.text}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            Motherhood: Kalinga's Game-Changing Approach to Breast Milk Donation and Sharing 
                         </Text>
                     </View>
 
@@ -108,7 +108,7 @@ const FavoriteArticles = () => {
                             <Text>Img</Text>
                         </View> 
                         <Text style = {styles.text}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            Breast Milk Nutrition: Introducing the Benefits with Kalinga
                         </Text>
                     </View>
 
@@ -120,7 +120,7 @@ const FavoriteArticles = () => {
                             <Text>Img</Text>
                         </View> 
                         <Text style = {styles.text}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            Motherhood: Kalinga's Game-Changing Approach to Breast Milk Donation and Sharing 
                         </Text>
                     </View>
 
@@ -132,7 +132,7 @@ const FavoriteArticles = () => {
                             <Text>Img</Text>
                         </View> 
                         <Text style = {styles.text}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            A Breastfeeding Journey with Kalinga: From the Stools to Satisfaction.
                         </Text>
                     </View>
 

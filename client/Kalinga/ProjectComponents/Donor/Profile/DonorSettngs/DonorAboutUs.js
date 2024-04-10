@@ -43,8 +43,8 @@ export default function AboutUs() {
               justifyContent: "center",
               alignItems: "center",
             }}>
-            <DeveloperProfile name={"Alisha Arafol"} role={"Role"} />
-            <DeveloperProfile name={"Rogine Cubelo"} role={"Role"} />
+            <DeveloperProfile name={"Alisha Arafol"} role={"UI/UX Designer & Front-End Developer"} />
+            <DeveloperProfile name={"Rogine Cubelo"} role={"Group Leader & Full Stack Developer"} />
           </View>
         </View>
 
@@ -54,11 +54,11 @@ export default function AboutUs() {
             justifyContent: "center",
             alignItems: "center",
           }}>
-          <DeveloperProfile name={"Beverly Somodio"} role={"Role"} />
-          <DeveloperProfile name={"Keith Diaz"} role={"Role"} />
+          <DeveloperProfile name={"Beverly Somodio"} role={"Full Stack Developer"} />
+          <DeveloperProfile name={"Keith Diaz"} role={"Full Stack Developer"} />
         </View>
 
-        <DeveloperProfile name={"Jeannah Padasas"} role={"Role"} />
+        <DeveloperProfile name={"Jeannah Padasas"} role={"UI/UX Designer & Quality Assurance"} />
         <Text
           style={{
             marginVertical: 24,
@@ -66,7 +66,7 @@ export default function AboutUs() {
             fontSize: 16,
             color: "#E60965",
           }}>
-          Get in touch with us at KalingaApp@gmail.com
+          Get in touch with us at No.reply.kalingabreastmilkapp@gmail.com
         </Text>
       </ScrollView>
     </SafeAreaView>

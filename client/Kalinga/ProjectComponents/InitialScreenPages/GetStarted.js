@@ -6,7 +6,8 @@ const GetStarted = () => {
     const navigation = useNavigation();
 
     const handleGetStarted = () => {
-        navigation.navigate("ApplyAsDonorStack"); 
+        // navigation.navigate("ApplyAsDonorStack"); 
+        navigation.navigate('RequestorTabs'); 
     };
 
     return (

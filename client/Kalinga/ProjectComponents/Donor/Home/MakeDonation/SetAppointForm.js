@@ -133,7 +133,7 @@ const SetAppointment = () => {
                     </Text>
                 </View>
                 <TouchableOpacity onPress={() => navigatePage("SetDateTimeLocation")}>
-                  <Text style = {styles.button}> Set Appointment </Text>
+                  <Text style = {styles.button}> Next </Text>
                 </TouchableOpacity>
                 
             </View>

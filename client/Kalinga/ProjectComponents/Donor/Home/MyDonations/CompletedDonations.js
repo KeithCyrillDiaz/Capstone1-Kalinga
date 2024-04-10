@@ -45,7 +45,7 @@ const navigatePage = (Page) => {
 									<Text style = {styles.Tabbutton}>Ongoing</Text>
 							</TouchableOpacity>
 							<TouchableOpacity onPress={() => navigatePage("CompleteDonations")}>
-									<Text style = {styles.indicatedButton}>Copleted</Text>
+									<Text style = {styles.indicatedButton}>Completed</Text>
 							</TouchableOpacity>
 							
 						</View>

@@ -97,7 +97,7 @@ const PendingTabRequest = () => {
 								<View style={styles.boxContainer}>
 										<View style={styles.boxContentContainer}>
 											<Text style={styles.boxLabel}>Full Name</Text>
-											<Text style={[styles.boxContent, styles.limitText]}>Rogine Cubelo</Text>
+											<Text style={[styles.boxContent, styles.limitText]}></Text>
 										</View>
 								</View>
 							</View>
@@ -105,28 +105,28 @@ const PendingTabRequest = () => {
 							<View style={styles.boxContainer}>
 								<View style={styles.boxContentContainer}>
 									<Text style={styles.boxLabel}>Phone Number</Text>
-									<Text style={[styles.boxContent, styles.limitText]}>09XXXXXXXXX</Text>
+									<Text style={[styles.boxContent, styles.limitText]}></Text>
 								</View>
 							</View>
 
 							<View style={styles.boxContainer}>
 								<View style={styles.boxContentContainer}>
 									<Text style={styles.boxLabel}>Email Address</Text>
-									<Text style={[styles.boxContent, styles.limitText]}>xxxx@gmail.com</Text>
+									<Text style={[styles.boxContent, styles.limitText]}></Text>
 								</View>
 							</View>
 
 							<View style={styles.boxContainer2}>
 								<View style={styles.boxContentContainer}>
 									<Text style={styles.boxLabel}>Home Address</Text>
-									<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet, consectetur adipiscing elit </Text>
+									<Text style={[styles.boxContent, styles.limitText]}></Text>
 								</View>
 							</View>
 
 							<View style={styles.boxContainer}>
 								<View style={styles.boxContentContainer}>
 									<Text style={styles.boxLabel}>Medical Condition (if applicable)</Text>
-									<Text style={[styles.boxContent, styles.limitText]}>xxxx@gmail.com</Text>
+									<Text style={[styles.boxContent, styles.limitText]}></Text>
 								</View>
 							</View>
 			
@@ -158,7 +158,7 @@ const PendingTabRequest = () => {
 							<View style={styles.boxContainer2}>
 								<View style={styles.boxContentContainer}>
 									<Text style={styles.boxLabel}>Reason for Requesting</Text>
-									<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet, consectetur adipiscing elit </Text>
+									<Text style={[styles.boxContent, styles.limitText]}></Text>
 								</View>
 							</View>
 
@@ -184,12 +184,12 @@ const PendingTabRequest = () => {
                             <View style={styles.DonorButton}>
                                 <TouchableOpacity onPress={() => navigatePage("MakeRequest2")}>
                                     <View style={styles.ConfirmbuttonContainer}>
-                                        <Text style={styles.label}>Approve</Text>
+                                        <Text style={styles.label}>Confirm</Text>
                                     </View>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => navigatePage("DonorInitialScreeningFormPage2")}>
                                     <View style={styles.CancelbuttonContainer}>
-                                        <Text style={styles.label}>Decline</Text>
+                                        <Text style={styles.label}>Cancel</Text>
                                     </View>
                                 </TouchableOpacity>
                 </View>

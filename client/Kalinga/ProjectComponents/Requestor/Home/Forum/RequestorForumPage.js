@@ -49,11 +49,11 @@ const ForumPage = () => {
     
 
   
-  const FirstParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse'
+  const FirstParagraph = 'Im searching for the best containers to store breast milk. Any recommendations for easy-to-use, durable, and freezer-safe options?'
 
-  const SecondParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
+  const SecondParagraph = ''
 
-  const ThridParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
+  const ThridParagraph = ''
 
   return (
       <SafeAreaView style = {globalStyles.SafeArea}>
@@ -94,7 +94,7 @@ const ForumPage = () => {
                                 <View style = {styles.flex_Row}>
                                     <MaterialIcons name="verified" size={14} color="#E60965"/>
                                     <Text style = {styles.UserType}>
-                                        Donor
+                                        Requestor
                                     </Text>
                                 </View>
                             </View>
@@ -141,7 +141,7 @@ const ForumPage = () => {
                                                     <View style = {styles.flex_Row}>
                                                         <MaterialIcons name="verified" size={14} color="#E60965"/>
                                                         <Text style = {styles.UserType}>
-                                                            Donor
+                                                            Requestor
                                                         </Text>
                                                     </View>
                                                     <View>
