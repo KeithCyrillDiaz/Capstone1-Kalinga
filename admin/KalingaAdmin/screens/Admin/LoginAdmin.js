@@ -1,22 +1,55 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, TextInput, StyleSheet, SafeAreaView, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, Image, TouchableOpacity, TextInput, StyleSheet, SafeAreaView, ScrollView, KeyboardAvoidingView, Platform, Alert} from 'react-native';
 import { useNavigation, CommonActions } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios'
 
 const LogIn = () => {
-    const navigation = useNavigation();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
 
-    const handleLogIn = () => {
-// Navigate to the next screen by route name
-        navigation.dispatch(
-            CommonActions.reset({
-            index: 0, //Reset the stack to 0 so the user cannot go back
-            routes: [{ name: 'AdminMenu'}], // Replace 'Login' with the name of your login screen
-            })
-        );
+    const expoIpAddress = "192.168.1.3"
+    const navigation = useNavigation();
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    let result;
+
+    const handleLogIn = async () => {
+        // Regular expression to check for special characters
+        const specialCharsRegex = /[!@#$%^&*(),.?":{}|<>]/;
+        
+        if(username === "" || password === "") {
+            Alert.alert('Invalid Credentials', 'Please Enter Username or Password');
+            return;
+        }
+        // Check if email contains special characters
+        if (specialCharsRegex.test(username)) {
+            Alert.alert('Invalid Email', 'Email cannot contain special characters');
+            return;
+        }
+    
+        // Check if password contains special characters
+        if (specialCharsRegex.test(password)) {
+            Alert.alert('Invalid Password', 'Password cannot contain special characters');
+            return;
+        }
+    
+        // Proceed with login request
+        try {
+         
+            const LogIn = await axios.post(`http://${expoIpAddress}:7000/kalinga/adminLoginIn`, {username, password});
+
+            if (LogIn.status === 200) {
+                navigation.dispatch(
+                    CommonActions.reset({
+                        index: 0,
+                        routes: [{ name: 'AdminMenu' }],
+                    })
+                );
+            } 
+        } catch (error) {
+                Alert.alert('Login Failed', 'Invalid email or password');
+
+
+        }
     };
 
 
@@ -29,7 +62,9 @@ const LogIn = () => {
             style={styles.gradient}
         >
             <SafeAreaView style={styles.container}>
-                <ScrollView contentContainerStyle={styles.scrollContainer}>
+                <ScrollView contentContainerStyle={styles.scrollContainer}
+                showsVerticalScrollIndicator = {false}
+                >
                 <KeyboardAvoidingView
                     behavior={Platform.OS === "ios" ? "padding" : null}
                     style={styles.SecondContainer}
@@ -46,10 +81,10 @@ const LogIn = () => {
                 <View style={styles.inputContainer}>
                     <TextInput
                         style={styles.input}
-                        placeholder="Username or Email Address"
+                        placeholder="Username"
                         placeholderTextColor="#F94892"
-                        onChangeText={setEmail}
-                        value={email}
+                        onChangeText={setUsername}
+                        value={username}
                     />
                     <TextInput
                         style={styles.input}

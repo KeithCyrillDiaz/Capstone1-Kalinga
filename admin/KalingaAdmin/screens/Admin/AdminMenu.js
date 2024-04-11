@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView,Text, View, StatusBar, StyleSheet, TouchableOpacity, Image} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, CommonActions } from '@react-navigation/native';
 import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
@@ -17,8 +17,16 @@ import { FontAwesome } from '@expo/vector-icons';
 const AdminMenu = () => {
    
     const navigation = useNavigation();
-    // console.log("Navigation state:", navigation.getState());
     const navigatePage = (Page) => {
+      if(Page === "LoginAdmin"){
+        navigation.dispatch(
+          CommonActions.reset({
+              index: 0,
+              routes: [{ name: Page }],
+          })
+      );
+      return
+      }
         navigation.navigate(Page); // Navigate to the Login screen
         
 
