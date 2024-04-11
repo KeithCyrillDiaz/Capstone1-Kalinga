@@ -4,7 +4,9 @@ import { reqMedAbstractForm, getMedicalAbstract } from '../controllers/Apply_As_
 import { getImage } from '../controllers/Admin/DonorScreeningForm/getImageByID';
 
 import { getScreeningFormsUserType, getScreeningFormApplicantID } from '../controllers/Admin/Requestor/getScreeningForms';
-import { sendEmail } from '../controllers/Apply_As_Donor/sendEmail';
+import { getScreeningFormByID } from '../controllers/Admin/DonorScreeningForm/getScreeningFormsByApplicantID';
+
+
 export default (router: express.Router) => {
   
     router.post('/kalinga/addScreeningForm', addScreeningForm);
@@ -13,11 +15,13 @@ export default (router: express.Router) => {
     router.get('/kalinga/getScreeningFormsUserType/:userType', getScreeningFormsUserType)
     router.get('/kalinga/getScreeningFormsApplicant_ID/:Applicant_ID', getScreeningFormApplicantID)
 
+    router.get('/kalinga/getScreeningFormsApplicant_ID/:Applicant_ID', getScreeningFormByID)
+
     router.get('/kalinga/getMedicalAbstractByID/:Applicant_ID', getMedicalAbstract)
 
     router.get('/kalinga/getMedicalRequirementImage/:ownerID', getImage)
     
-    router.post('/kalinga/sendEmail', sendEmail)
+
 
     
 } 
