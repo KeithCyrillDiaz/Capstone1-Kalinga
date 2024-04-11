@@ -7,8 +7,8 @@ import { globalStyles } from '../../../styles_kit/globalStyles';
 export default function Header() {
   
        return (
-       <View>
-         <StatusBar barStyle="dark-content" backgroundColor="white" />
+       <View style = {{marginTop: "5%"}}>
+         <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
               <View style = {styles.BigHeader}>
               <Text style = {globalHeader.BigHeaderTitle}>Good Day!</Text>
                   <Text style = {globalHeader.SubTitle}>Discover the power of breastmilk for your baby's health and well-being.</Text>

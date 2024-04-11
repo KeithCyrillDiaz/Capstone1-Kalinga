@@ -102,7 +102,7 @@ export const createMedicalRequirementFiles = (values: Record<string, any>) => ne
 
 export const createMedicalRequirementImages = (values: Record<string, any>) => new MedicalRequirementsImagesModel(values).save().then((MedicalRequirements) => MedicalRequirements.toObject())
 
-export const getMRImage = (ownerID: string) => MedicalRequirementsImagesModel.findOne({ownerID})
+export const getMRImage = (ownerID: string) => MedicalRequirementsImagesModel.find({ownerID})
 export const createScreeningForm = (values: Record<string, any>) => new screeningFormModel(values).save().then((ScreeningForm) => ScreeningForm.toObject())
 
 export const getScreeningFormByUserType = (userType: string) => screeningFormModel.find({userType})

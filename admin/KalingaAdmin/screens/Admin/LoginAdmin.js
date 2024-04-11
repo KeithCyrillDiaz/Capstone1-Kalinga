@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, TextInput, StyleSheet, SafeAreaView, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, CommonActions } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios'
 
@@ -10,9 +10,13 @@ const LogIn = () => {
     const [password, setPassword] = useState('');
 
     const handleLogIn = () => {
-
-
-        navigation.navigate('AdminMenu');
+// Navigate to the next screen by route name
+        navigation.dispatch(
+            CommonActions.reset({
+            index: 0, //Reset the stack to 0 so the user cannot go back
+            routes: [{ name: 'AdminMenu'}], // Replace 'Login' with the name of your login screen
+            })
+        );
     };
 
 

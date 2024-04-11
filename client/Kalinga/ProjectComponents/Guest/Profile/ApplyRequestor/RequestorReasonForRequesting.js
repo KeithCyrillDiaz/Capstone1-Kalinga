@@ -44,7 +44,7 @@ const ReasonForRequesting = ({route}) => {
     const handleChangeText = (name, value) => {
       screeningFormData[name] = value
   };
-
+    const expoIpAddress = "192.168.1.3"
     const navigation = useNavigation();
     const navigatePage = async (Page) => {
 
@@ -52,13 +52,13 @@ const ReasonForRequesting = ({route}) => {
       
         setIsLoading(true);
         // Send POST request to the specified URL with the form data
-        const postScreeningForm = await axios.post("http://192.168.1.104:7000/kalinga/addScreeningForm", 
+        const postScreeningForm = await axios.post(`http://${expoIpAddress}:7000/kalinga/addScreeningForm`, 
           screeningFormData,
         );
         // Log successful response from the backend
         // console.log('Data saved successfully:', postScreeningForm.data);
 
-        const response = await axios.post("http://192.168.1.104:7000/req_MedAbstract", input);
+        const response = await axios.post(`http://${expoIpAddress}:7000/req_MedAbstract`, input);
   //   // Handle success response...
           
         const formData = new FormData();
@@ -82,7 +82,7 @@ const ReasonForRequesting = ({route}) => {
     
             // setUploadedFiles(uploadedImages)
     
-            const postImages = await axios.post("http://192.168.1.104:7000/kalinga/addMRImageRequestor", 
+            const postImages = await axios.post(`http://${expoIpAddress}:7000/kalinga/addMRImageRequestor`, 
               uploadedImages,
               {
                 headers: {
@@ -117,7 +117,7 @@ const ReasonForRequesting = ({route}) => {
       
               // setUploadedFiles(uploadedFiles)
       
-              const postFiles = await axios.post("http://192.168.1.104:7000/kalinga/addMRFileRequestor", 
+              const postFiles = await axios.post(`http://${expoIpAddress}:7000/kalinga/addMRFileRequestor`, 
                 uploadedFiles,
                 {
                   headers: {
@@ -333,11 +333,11 @@ const ReasonForRequesting = ({route}) => {
                   <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                      <TouchableOpacity onPress={()=>handleImageUpload('GovernmentID')}>
+                      <TouchableOpacity onPress={()=>handleImageUpload('Government_ID')}>
                         <AntDesign name="picture" size={27} color="#E60965" />
                       </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>
-                        <TouchableOpacity onPress={()=>handleFileUpload('GovernmentID')}>
+                        <TouchableOpacity onPress={()=>handleFileUpload('Government_ID')}>
                         <AntDesign name="file1" size={24} color="#E60965" />
                       </TouchableOpacity>
                   </View>

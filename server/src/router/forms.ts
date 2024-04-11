@@ -1,7 +1,7 @@
 import express from 'express';
 import { addScreeningForm } from '../controllers/Apply_As_Donor/addScreeningForm'
 import { reqMedAbstractForm, getMedicalAbstract } from '../controllers/Apply_As_Requestor/req_medicalAbstract';
-import { getImage } from '../controllers/Admin/DonorScreeningForm/getImage';
+import { getImage } from '../controllers/Admin/DonorScreeningForm/getImageByID';
 
 import { getScreeningFormsUserType, getScreeningFormApplicantID } from '../controllers/Admin/Requestor/getScreeningForms';
 import { sendEmail } from '../controllers/Apply_As_Donor/sendEmail';

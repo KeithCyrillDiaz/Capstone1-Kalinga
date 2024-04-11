@@ -4,6 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Linking } from 'react-native';
+import { globalStyles } from '../../../styles_kit/globalStyles';
 
 import Header from './GuestHeader';
 
@@ -16,13 +17,14 @@ export default function GuestHome({ onPress }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      <Header />
       <ScrollView
-        style = {globalStyles.ScrollView}
+        style = {globalStyles.scrollView}
         overScrollMode='never'
         nestedScrollEnabled={true}>
           
-      <Header />
+    
       <View style={styles.rowContainer}>
         <TouchableOpacity onPress={() => navigatePage("GuestTabsExploreAndMilkBank")} style={styles.rowButton}>
           <View style={styles.buttonRowContainer}>
@@ -95,7 +97,7 @@ export default function GuestHome({ onPress }) {
     </View>
     </ScrollView>
       
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -145,7 +147,7 @@ const styles = StyleSheet.create({
   button_H1: {
     fontFamily: 'OpenSans_Condensed-Bold',
     color: '#E60965',
-    fontSize: 18,
+    fontSize: 15,
     paddingTop: 5,
   },
 
@@ -153,20 +155,20 @@ const styles = StyleSheet.create({
     fontFamily: 'OpenSans-Regular',
     color: '#E60965',
     textAlign: "center",
-    fontSize: 12
+    fontSize: 10
   },
 
   button_H1_1: {
     fontFamily: 'OpenSans_Condensed-Bold',
     color: '#E60965',
-    fontSize: 19,
+    fontSize: 15,
   },
 
   button_H2_1: {
     fontFamily: 'OpenSans-Regular',
     color: '#E60965',
     textAlign: "justify",
-    fontSize: 15,
+    fontSize: 12,
     paddingTop: 5,
     margin:5
   },
