@@ -1,13 +1,13 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import DonorDataPrivacy from './ProjectComponents/Guest/Profile/ApplyDonor/DonorDataPrivacy'
-import DonorScreeningForm from './ProjectComponents/Guest/Profile/ApplyDonor/DonorScreeningForm'
-import DonorScreeningForm2 from './ProjectComponents/Guest/Profile/ApplyDonor/DonorScreeningFormPage2'
-import DonorMedicalHistory from './ProjectComponents/Guest/Profile/ApplyDonor/DonorMedicalHistory';
-import DonorMedicalHistory2 from './ProjectComponents/Guest/Profile/ApplyDonor/DonorMedicalHistory2';
-import DonorUploadMedicalRequirements from './ProjectComponents/Guest/Profile/ApplyDonor/DonorUploadMedicalRequirements';
-import DonorApproved from './ProjectComponents/Guest/Profile/ApplyDonor/DonorApproved'
-import SetPasswordDonor from './ProjectComponents/Guest/Profile/ApplyDonor/SetPasswordDonor'
+import DonorDataPrivacy from './DonorDataPrivacy'
+import DonorScreeningForm from './DonorScreeningForm'
+import DonorScreeningForm2 from './DonorScreeningFormPage2'
+import DonorMedicalHistory from './DonorMedicalHistory';
+import DonorMedicalHistory2 from './DonorMedicalHistory2';
+import DonorUploadMedicalRequirements from './DonorUploadMedicalRequirements';
+import DonorApproved from './DonorApproved'
+import SetPasswordDonor from './SetPasswordDonor'
 const Stack = createStackNavigator();
 
 const ApplyAsDonorStack = () => {

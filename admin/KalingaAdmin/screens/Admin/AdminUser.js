@@ -505,7 +505,7 @@ const styles = StyleSheet.create({
         paddingVertical: 20
     },
     headerTitle: {
-        fontFamily: 'Kurale-Regular',
+        fontFamily: 'Kurale',
         fontSize: 20,
         color: 'white',
         alignSelf: "center",

@@ -11,7 +11,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 
 // const expoIpAddress = process.env.EXPO_IP_ADDRESS;
 // if(expoIpAddress === "") console.log("empty")
-const expoIpAddress = "192.168.100.72";
+const expoIpAddress = "192.168.1.3";
 
 const handleLogIn = () => {
     navigation.navigate('LoginAdmin');
@@ -83,6 +83,8 @@ const UserVerification = () => {
         // console.log("SelectedFormId: ", selectedFormId)
         navigation.navigate('RequestorInitialScreeningFormPage1', data);
     };
+
+    
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle="dark-content" translucent backgroundColor="white" />

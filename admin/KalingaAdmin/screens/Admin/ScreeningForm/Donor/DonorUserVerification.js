@@ -1,6 +1,6 @@
 import React  from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView, Dimensions, StatusBar } from 'react-native'; // Import Dimensions
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView, Dimensions, StatusBar, BackHandler } from 'react-native'; // Import Dimensions
+import { useNavigation, CommonActions } from '@react-navigation/native';
 import { Octicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
@@ -11,11 +11,7 @@ import axios from 'axios'; // Import axios for making HTTP requests
 
 // const expoIpAddress = process.env.EXPO_IP_ADDRESS;
 // if(expoIpAddress === "") console.log("empty")
-const expoIpAddress = "192.168.100.72";
-
-const handleLogIn = () => {
-    navigation.navigate('LoginAdmin');
-};
+const expoIpAddress = "192.168.1.3";
 
 const SearchBar = () => {
     return (
@@ -56,8 +52,26 @@ const UserVerification = () => {
 
   useEffect(() => {
     fetchScreeningFormIDs();
-}, []);
+
+    const backAction = () => {
+      // Navigate to the Admin Menu screen
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1, // Reset the stack to index 1, leaving the first screen behind
+          routes: [{ name: "AdminMenu" }], // Navigate to DonorUserVerification screen
+        })
+      );
+      // Prevent default back behavior
+      return true;
+    };
   
+    // Add event listener for hardware back button press
+    const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+  
+    // Clean up event listener on component unmount
+    return () => backHandler.remove();
+}, []);
+
 const handleViewPress = (Applicant_ID) => {
   console.log("id", Applicant_ID)
   navigation.navigate('DonorInitialScreeningFormPage1',  Applicant_ID );

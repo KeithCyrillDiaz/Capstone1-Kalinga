@@ -12,6 +12,10 @@ const transporter = nodemailer.createTransport({
 export const sendEmail = async (req: express.Request, res: express.Response) => {
     try{
 
+        console.log(req.body.email)
+        console.log(process.env.NM_EMAIL)
+        console.log(process.env.NM_PASS)
+
        const result = await transporter.sendMail({
             from: process.env.NM_EMAIL,
             to: req.body.email,

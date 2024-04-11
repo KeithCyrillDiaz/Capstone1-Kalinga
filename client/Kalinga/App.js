@@ -37,7 +37,7 @@ import InstantMess from './ProjectComponents/Guest/Home/InstantMess.js'
 import GuestExplore from './ProjectComponents/Guest/Home/Explore.js'
 import GuestHome from './ProjectComponents/Guest/GuestDashboard/GuestHome.js'
 import GuestProfile from './ProjectComponents/Guest/GuestDashboard/GuestProfile.js'
-import ApplyAsDonorStack from './ApplyAsDonorStack.js';
+import ApplyAsDonorStack from './ProjectComponents/Guest/Profile/ApplyDonor/ApplyAsDonorStack.js';
 import ApplyAsRequestorStack from './ProjectComponents/Guest/Profile/ApplyRequestor/ApplyAsRequestorStack.js'
 
 

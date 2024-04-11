@@ -17,7 +17,7 @@ import { FontAwesome } from '@expo/vector-icons';
 const AdminMenu = () => {
    
     const navigation = useNavigation();
-
+    // console.log("Navigation state:", navigation.getState());
     const navigatePage = (Page) => {
         navigation.navigate(Page); // Navigate to the Login screen
         

@@ -1,55 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { Octicons } from '@expo/vector-icons';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { Feather } from '@expo/vector-icons';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView, Modal, Image, Dimensions, TouchableHighlight, Alert } from 'react-native';
+import { useNavigation, CommonActions } from '@react-navigation/native';
+
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import axios from 'axios';
-
-
-// const expoIpAddress = process.env.EXPO_IP_ADDRESS;
-// if(expoIpAddress === "") console.log("empty")
-const expoIpAddress = "192.168.100.72";
-
-// const expoIpAddress = Config.EXPO_IP_ADDRESS;
-   
+import { AntDesign } from '@expo/vector-icons';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import ImageZoom from 'react-native-image-pan-zoom';
 
 const Tab = createMaterialTopTabNavigator();
 
+// const expoIpAddress = process.env.EXPO_IP_ADDRESS;
+// if(expoIpAddress === "") console.log("empty")
+const expoIpAddress = "192.168.1.3";
+
+// const expoIpAddress = Config.EXPO_IP_ADDRESS;
 
 
-const SearchBar = () => {
-    return (
-        <View style={styles.searchContainer}>
-            <Feather name="search" size={24} color="black" style={styles.searchIcon} />
-            <TextInput
-                style={styles.searchInput}
-                placeholder="Search Donors"
-                placeholderTextColor="#777"
-            />
-        </View>
-    );
-};
 
 
-const FirstScreen = ({route}) => {
+export const FirstScreen = ({route}) => {
     
-    console.log("datas: ", expoIpAddress)
     const Applicant_ID = route.params.screeningformId
     // console.log("FS id: ", Applicant_ID)
     const [screeningFormID, setScreeningFormID] = useState({})
     const navigation = useNavigation();
 
-    const navigatePage = (Page) => {
-        navigation.navigate(Page); // Navigate to the Login screen
-    }
-
     useEffect(()=>{
        
         const fetchscreeningForm = async () => {
            try {
-                console.log("test",Applicant_ID)
                 const response = await axios.get(`http://${expoIpAddress}:7000/kalinga/getScreeningFormsID/${Applicant_ID}`)
                 // console.log( "test", response.data.screeningForm)
                 setScreeningFormID(response.data.screeningForm)
@@ -181,115 +161,233 @@ const FirstScreen = ({route}) => {
 
 
             </View>
+
+           
     </ScrollView>
     );
 };
 
-const SecondScreen = ({route}) => {
-    const navigation = useNavigation();
+export const SecondScreen = ({route}) => {
+
     const Applicant_ID = route.params.screeningformId
+    const navigation = useNavigation();
 
     const [medicalAbstractForm, setMedicalAbstractForm] = useState({})
+    const [modalVisible, setModalVisible] = useState(false);
+    const [images, setImages] = useState({})
+    const [url, setUrl] = useState("")
+    const [owner, setOwner] = useState("")
+
+    const fetchData = async () => {
+        try {
+  
+            const response = await axios.get(`http://${expoIpAddress}:7000/kalinga/getMedicalRequirementImage/${Applicant_ID}`);
+            const result = response.data.image
+            // console.log('result: ', result)
+            setImages(result)
+            setOwner(result[0].owner)
+            
+           
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+
+    const handleImage = (imageName) => {
+        images.forEach(image => {
+          if(image.originalname === imageName) {
+            setUrl(`http://${expoIpAddress}:7000/kalinga/getImage/${image.filename}`)
+          }// Print the originalname property of each image object
+          setModalVisible(true)
+      });
+      }
+
 
     const fetchMedicalAbstract = async () => {
         const response = await axios.get(`http://${expoIpAddress}:7000/kalinga/getMedicalAbstractByID/${Applicant_ID}`)
         setMedicalAbstractForm(response.data.medicalAbstract)
+       
     }
 
     useEffect(() => {
         fetchMedicalAbstract();
+        fetchData();
     },[])
 
-    const navigatePage = (Page) => {
-        navigation.navigate(Page); // Navigate to the Login screen
-    }
+    const approvedUser = (Page) => {
+
+        Alert.alert(
+          'Confirmation',
+          `Are you sure you want to approve ${owner} as donor?`,
+          [
+            {
+              text: 'No',
+              style: 'cancel',
+            },
+            {
+              text: 'Yes',
+              onPress: () =>  navigatePage(Page, owner), // Call a function when "Yes" is pressed
+            },
+          ],
+          { cancelable: false }
+        );
+      };
+  
+     
+  
+      const declinedUser = (Page) => {
+  
+        Alert.alert(
+          'Confirmation',
+          `Are you sure you want to decline ${owner} as donor?`,
+          [
+            {
+              text: 'No',
+              style: 'cancel',
+            },
+            {
+              text: 'Yes',
+              onPress: () => navigatePage(Page, owner), // Call a function when "Yes" is pressed
+            },
+          ],
+          { cancelable: false }
+        );
+      };
+  
+      const navigatePage = (Page, owner) => {
+        // Navigate to the next screen by route name
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0, //Reset the stack to 0 so the user cannot go back
+            routes: [{ name: Page, params: owner }], // Replace 'Login' with the name of your login screen
+          })
+        );
+      }
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style = {styles.Medicalcontainer}>
-
-            <View style={styles.tabContent}>
-            <Text style = {styles.title}>Medical Abstract of Infant</Text>
-              </View>
-              
-              <View style = {globalStyles.flex_start1}>
-                <Text style = {globalStyles.titleParagraph}>Clinical History</Text>
+            <View style = {styles.Medicalcontainer}>
+                <View style={styles.tabContent}>
+                    <Text style = {styles.title}>Medical Abstract of Infant</Text>
                 </View>
-              <View style = {styles.container}>
-                    <TextInput
-                        style={styles.BiginputField1}
-                        value={medicalAbstractForm.clinicalHistory}
-                        editable={false}
-                    />         
-              </View>
+                
+                <View style = {globalStyles.flex_start1}>
+                    <Text style = {globalStyles.titleParagraph}>Clinical History</Text>
+                </View>
+                        <TextInput
+                            style={styles.BiginputField1}
+                            value={medicalAbstractForm.clinicalHistory}
+                            editable={false}
+                        />         
 
-              <View style = {globalStyles.flex_start1}>
-                <Text style = {globalStyles.titleParagraph}>Presenting Complaint</Text>
-              </View>
-              <View style = {styles.container}>
-                    <TextInput
-                        style={styles.BiginputField1}
-                        value={medicalAbstractForm.complaint}
-                        editable={false}
-                    />         
-              </View>
+                <View style = {globalStyles.flex_start1}>
+                    <Text style = {globalStyles.titleParagraph}>Presenting Complaint</Text>
+                </View>
+                        <TextInput
+                            style={styles.BiginputField1}
+                            value={medicalAbstractForm.complaint}
+                            editable={false}
+                        />         
+         
 
-              <View style = {globalStyles.flex_start1}>
-                <Text style = {globalStyles.titleParagraph}>Clinical Findings</Text>
-              </View>
-              <View style = {styles.container}>
-                    <TextInput
-                        style={styles.BiginputField1}
-                        value={medicalAbstractForm.clinicalFindings}
-                        editable={false}
-                    />         
-              </View>
+                <View style = {globalStyles.flex_start1}>
+                    <Text style = {globalStyles.titleParagraph}>Clinical Findings</Text>
+                </View>
+                        <TextInput
+                            style={styles.BiginputField1}
+                            value={medicalAbstractForm.clinicalFindings}
+                            editable={false}
+                        />         
 
-              <View style = {globalStyles.flex_start1}>
-                <Text style = {globalStyles.titleParagraph}>Diagnostics</Text>
-              </View>
-              <View style = {styles.container}>
-                    <TextInput
-                        style={styles.BiginputField1}
-                        value={medicalAbstractForm.diagnosis}
-                        editable={false}
-                    />         
-              </View>
+                <View style = {globalStyles.flex_start1}>
+                    <Text style = {globalStyles.titleParagraph}>Diagnostics</Text>
+                </View>
+                        <TextInput
+                            style={styles.BiginputField1}
+                            value={medicalAbstractForm.diagnosis}
+                            editable={false}
+                        />         
 
-              <View style = {globalStyles.flex_start1}>
-                <Text style = {globalStyles.titleParagraph}>Treatment and Interventions</Text>
-              </View>
-              <View style = {styles.container}>
-                    <TextInput
-                        style={styles.BiginputField1}
-                        value={medicalAbstractForm.treatment}
-                        editable={false}
-                    />         
-              </View>
-
-              <View style={styles.AdminButton}>
-                    <TouchableOpacity onPress={() => navigatePage("")}>
-                        <View style={styles.ApprovebuttonContainer}>
-                            <Text style={styles.label}>Approve</Text>
-                        </View>
+                <View style = {globalStyles.flex_start1}>
+                    <Text style = {globalStyles.titleParagraph}>Treatment and Interventions</Text>
+                </View>
+                        <TextInput
+                            style={styles.BiginputField1}
+                            value={medicalAbstractForm.treatment}
+                            editable={false}
+                        />         
+                <View style ={styles.UploadContainer}>
+                        <TouchableOpacity
+                        style={styles.Uploadbutton}
+                        onPress={() =>handleImage('Government_ID.png')}
+                        >
+                        <Text style={styles.UploadbuttonTitle}>View Government ID</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigatePage("")}>
-                        <View style={styles.DeclinebuttonContainer}>
-                            <Text style={styles.label}>Decline</Text>
-                        </View>
+                    <TouchableOpacity
+                        style={styles.Uploadbutton}
+                        onPress={() => handleImage('Prescription.png')}
+                    >
+                        <Text style={styles.UploadbuttonTitle}>View Prescription</Text>
                     </TouchableOpacity>
+
+                </View>
+               
+
+                <View style={styles.AdminButton}>
+                        <TouchableOpacity onPress={() => approvedUser("AdminApprovedRequestor")}>
+                            <View style={styles.Approvedbutton}>
+                                <Text style={styles.ApprovedbuttonTitle}>Approve</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => declinedUser("AdminDeclinedRequestor")}>
+                            <View style={styles.Declinebutton}>
+                                <Text style={styles.DeclinebuttonTitle}>Decline</Text>
+                            </View>
+                        </TouchableOpacity>
                 </View>
             </View>
+
+            <Modal
+                  animationType="slide"
+                  transparent={true}
+                  visible={modalVisible}
+                  onRequestClose={() => {
+                      setModalVisible(!modalVisible);
+                  }}
+              >
+                  <View style={styles.modalContainer}>
+                  <ImageZoom
+                      cropWidth={Dimensions.get('window').width}
+                      cropHeight={Dimensions.get('window').height}
+                      imageWidth={Dimensions.get('window').width}
+                      imageHeight={Dimensions.get('window').height * 1} // Adjust the height as needed
+                      enableSwipeDown={true}
+                      onSwipeDown={() => setModalVisible(false)} // Close modal on swipe down
+                      style={{ backgroundColor: 'black' }} // Set background color to black to avoid seeing the underlying content
+                  >
+                      <Image
+                          source={{ uri: url}}
+                          style={{ width: '100%', height: '100%' }}
+                      />
+                  </ImageZoom>
+                      <TouchableHighlight
+                          style={styles.closeButton}
+                          onPress={() => {
+                              setModalVisible(!modalVisible);
+                          }}
+                      >
+                          <AntDesign name="close" size={24} color="black" />
+                      </TouchableHighlight>
+                  </View>
+              </Modal>
+
+            
         </ScrollView>
     );
 };
-
-const RequestorInitialScreeningFormPage1 = ({route}) => {
+export const RequestorInitialScreeningFormPage1 = ({route}) => {
 
     const screeningformId = route.params
    
-    const navigation = useNavigation();
-
-    
 
     return (
         <SafeAreaView style={styles.container}>
@@ -316,9 +414,58 @@ const RequestorInitialScreeningFormPage1 = ({route}) => {
             </Tab.Navigator>
         </SafeAreaView>
     );
-};
+}; 
+
+
 
 const styles = StyleSheet.create({
+
+    
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      
+    },
+    modalContent: {
+        width: '80%',
+        aspectRatio: 1,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        overflow: 'hidden',
+    },
+    closeButton: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        zIndex: 1,
+    },
+
+    UploadContainer:{
+        justifyContent: "center",
+
+      },
+    
+      Uploadbutton: {
+        backgroundColor: "white",
+        width: 250,
+        height: 40,
+        alignSelf: "center",
+        marginVertical: 10,
+        paddingVertical: 10,
+        borderRadius: 10,
+        borderColor: "#E60965",
+        borderWidth: 1
+      },
+    
+      UploadbuttonTitle: {
+        color: "#E60965",
+        textAlign: "center",
+        fontSize: 15,
+        fontFamily: "Open-Sans-SemiBold",
+      },
+    
 
     flex_Row: {
         width: "95%",
@@ -468,36 +615,47 @@ const styles = StyleSheet.create({
         fontSize: 20
 
     },
-    ApprovebuttonContainer: {
-        backgroundColor: '#E60965',
-        paddingHorizontal: 37,
-        borderRadius: 20,
-        paddingVertical: 5,
-        marginHorizontal: 10,
-        marginBottom: 15
 
-        
-    },
-    DeclinebuttonContainer: {
-        backgroundColor: '#E60965',
-        paddingHorizontal: 37,
-        borderRadius: 20,
-        paddingVertical: 5,
-        marginHorizontal: 10,
-        marginBottom: 15
-
-
-    },
-    AdminButton:{
+    AdminButton: {
         flexDirection: "row",
-        justifyContent:"center",
-        marginTop: 20
+        alignItems: "center",
+        justifyContent: "center",
+        justifyContent: "space-evenly",
+        marginVertical: 20,
     },
-    label: {
-        color: 'white',
-        fontFamily: 'Open-Sans-Bold',
+
+    Approvedbutton: {
+        backgroundColor: "#E60965",
+        width: 100,
+        alignSelf: "center",
+
+        paddingVertical: 7,
+        borderRadius: 30,
+      },
+  
+      ApprovedbuttonTitle: {
+        color: "#FFFFFF",
+        textAlign: "center",
         fontSize: 15,
-    }
+        fontFamily: "Open-Sans-SemiBold",
+      },
+
+      Declinebutton: {
+        backgroundColor: "white",
+        width: 100,
+        alignSelf: "center",
+        paddingVertical: 7,
+        borderRadius: 30,
+        borderWidth: 1,
+        borderColor: "#E60965"
+      },
+  
+      DeclinebuttonTitle: {
+        color: "#E60965",
+        textAlign: "center",
+        fontSize: 15,
+        fontFamily: "Open-Sans-SemiBold",
+      },
 
 });
 

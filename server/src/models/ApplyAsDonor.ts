@@ -98,9 +98,11 @@ export const MedicalRequirementsFilesModel = mongoose.model('Files', fileSchema)
 export const screeningFormModel = mongoose.model('Screening Forms', screeningFormSchema)
 
 export const createMedicalRequirementFiles = (values: Record<string, any>) => new MedicalRequirementsFilesModel(values).save().then((MedicalRequirements) => MedicalRequirements.toObject())
+
+
 export const createMedicalRequirementImages = (values: Record<string, any>) => new MedicalRequirementsImagesModel(values).save().then((MedicalRequirements) => MedicalRequirements.toObject())
 
-
+export const getMRImage = (ownerID: string) => MedicalRequirementsImagesModel.find({ownerID})
 export const createScreeningForm = (values: Record<string, any>) => new screeningFormModel(values).save().then((ScreeningForm) => ScreeningForm.toObject())
 
 export const getScreeningFormByUserType = (userType: string) => screeningFormModel.find({userType})

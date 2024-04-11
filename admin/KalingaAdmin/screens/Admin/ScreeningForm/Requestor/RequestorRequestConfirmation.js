@@ -8,6 +8,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 
+
 const RequestorRequestConfirmation = () => {
     const navigation = useNavigation();
     const [selectedImage, setSelectedImage] = useState(null);

@@ -35,8 +35,8 @@ const DonorHome = () => {
     };
 
     return (
-      <View style={globalStyles.container}>
-        <StatusBar barStyle="dark-content"  backgroundColor="white" />
+      <View style={[globalStyles.container, {marginTop: "-5%"}]}>
+        <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
               <View style = {globalHeader.BigHeader}>
               <Text style = {globalHeader.BigHeaderTitle}>Good Day, {UserName}!</Text>
                   <Text style = {globalHeader.SubTitle}>Discover the power of breastmilk for your baby's health and well-being.</Text>

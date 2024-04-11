@@ -9,12 +9,11 @@ export const globalHeader = {
         //backgroundColor: "red"
        },
 
-       BigHeader: {
+    BigHeader: {
         backgroundColor: '#E60965', // Set the background color of the header
         borderRadius: 34,
         paddingTop: "12%",
-        
-        //marginTop: "-10%",
+        paddingBottom: "10%",
         width: '100%', // the size will depend on the screen, this is better so it will look the same on all phones
         justifyContent: 'flex-end',
         alignItems: 'flex-start',

@@ -1,96 +1,109 @@
 
 import React, { useState, useEffect } from 'react';
-import { ScrollView,Text, View, StatusBar, StyleSheet, TouchableOpacity,Images} from 'react-native';
+import { ScrollView,Text, View, StatusBar, StyleSheet, TouchableOpacity, Dimensions, Image, Modal, TouchableHighlight, Alert} from 'react-native';
 import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import { AntDesign } from '@expo/vector-icons';
-import { useNavigation, useRoute } from '@react-navigation/native'; // Import useRoute hook
+import { useNavigation, CommonActions} from '@react-navigation/native'; // Import useRoute hook
 import axios from 'axios'; // Import axios for making HTTP requests
+import ImageZoom from 'react-native-image-pan-zoom';
 
 
 // const expoIpAddress = process.env.EXPO_IP_ADDRESS;
 // if(expoIpAddress === "") console.log("empty")
-const expoIpAddress = "192.168.100.72";
+const expoIpAddress = "192.168.1.3";
 
-const DonorUploadAdmin = () => {
+const DonorUploadAdmin = ({ route }) => {
+
+  const Applicant_ID = route.params.screeningFormId
+  
+  const [modalVisible, setModalVisible] = useState(false);
+  const [images, setImages] = useState({});
+  const [url, setUrl] = useState("");
+  const [owner, setOwner] = useState("")
+
   const navigation = useNavigation();
 
-    const navigatePage = (Page) => {
-        navigation.navigate(Page); // Navigate to the Login screen
-        
 
+    const approvedUser = (Page) => {
+
+      Alert.alert(
+        'Confirmation',
+        `Are you sure you want to approve ${owner} as donor?`,
+        [
+          {
+            text: 'No',
+            style: 'cancel',
+          },
+          {
+            text: 'Yes',
+            onPress: () =>  navigatePage(Page, owner), // Call a function when "Yes" is pressed
+          },
+        ],
+        { cancelable: false }
+      );
     };
-    const route = useRoute();
-    const [ownerID, setOwnerID] = useState(route.params?.screeningformId?.ownerID || '');
-    const [formData, setFormData] = useState({});
 
-  
+   
+
+    const declinedUser = (Page) => {
+
+      Alert.alert(
+        'Confirmation',
+        `Are you sure you want to decline ${owner} as donor?`,
+        [
+          {
+            text: 'No',
+            style: 'cancel',
+          },
+          {
+            text: 'Yes',
+            onPress: () => navigatePage(Page, owner), // Call a function when "Yes" is pressed
+          },
+        ],
+        { cancelable: false }
+      );
+    };
+
+    const navigatePage = (Page, owner) => {
+      // Navigate to the next screen by route name
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0, //Reset the stack to 0 so the user cannot go back
+          routes: [{ name: Page, params: owner }], // Replace 'Login' with the name of your login screen
+        })
+      );
+    }
+
+    const fetchData = async () => {
+      try {
+
+          const response = await axios.get(`http://${expoIpAddress}:7000/kalinga/getMedicalRequirementImage/${Applicant_ID}`);
+          const result = response.data.image
+          // console.log('result: ', result)
+          setImages(result)
+          setOwner(result[0].owner)
+          
+         
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
   useEffect(() => {
+    // console.log( "ID", Applicant_ID)
     fetchData(); // Fetch data when component mounts
   }, []);
 
-  const fetchData = async () => {
-    try {
-      // Fetch images and files for each specific field based on ownerID
-
-      // Hepa B Test Result
-      const hepaBImagesResponse = await axios.get(`http://${expoIpAddress}:7000/kalinga/getMedicalImages/${ownerID}?field=hepaB`);
-      const hepaBFilesResponse = await axios.get(`http://${expoIpAddress}:7000/kalinga/getMedicalFiles/${ownerID}?field=hepaB`);
-      const hepaBData = {
-        images: hepaBImagesResponse.data,
-        files: hepaBFilesResponse.data,
-        
-      };
-      if (!hepaBImagesResponse.data) {
-        console.error('Error fetching Hepa B images');
-        return; // Exit the function or handle the error as needed
-      }
-
-      // HIV 1 & 2 Test Result
-      const hivImagesResponse = await axios.get(`http://${expoIpAddress}:7000/kalinga/getMedicalImages/${ownerID}?field=hiv`);
-      const hivFilesResponse = await axios.get(`http://${expoIpAddress}:7000/kalinga/getMedicalFiles/${ownerID}?field=hiv`);
-      const hivData = {
-        images: hivImagesResponse.data,
-        files: hivFilesResponse.data,
-      };
-
-      // Syphillis Test Result
-      const syphillisImagesResponse = await axios.get(`http://${expoIpAddress}:7000/kalinga/getMedicalImages/${ownerID}?field=syphillis`);
-      const syphillisFilesResponse = await axios.get(`http://${expoIpAddress}:7000/kalinga/getMedicalFiles/${ownerID}?field=syphillis`);
-      const syphillisData = {
-        images: syphillisImagesResponse.data,
-        files: syphillisFilesResponse.data,
-      };
-
-      // Pregnancy Booklet
-      const pregnancyImagesResponse = await axios.get(`http://${expoIpAddress}:7000/kalinga/getMedicalImages/${ownerID}?field=pregnancy`);
-      const pregnancyFilesResponse = await axios.get(`http://${expoIpAddress}:7000/kalinga/getMedicalFiles/${ownerID}?field=pregnancy`);
-      const pregnancyData = {
-        images: pregnancyImagesResponse.data,
-        files: pregnancyFilesResponse.data,
-      };
-
-      // Government ID
-      const govIDImagesResponse = await axios.get(`http://${expoIpAddress}:7000/kalinga/getMedicalImages/${ownerID}?field=governmentID`);
-      const govIDFilesResponse = await axios.get(`http://${expoIpAddress}:7000/kalinga/getMedicalFiles/${ownerID}?field=governmentID`);
-      const govIDData = {
-        images: govIDImagesResponse.data,
-        files: govIDFilesResponse.data,
-      };
-
-      // Set the fetched data to the state
-      setFormData({
-        hepaB: hepaBData,
-        hiv: hivData,
-        syphillis: syphillisData,
-        pregnancy: pregnancyData,
-        governmentID: govIDData,
-      });
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
+ 
+  const handleImage = (imageName) => {
+    images.forEach(image => {
+      if(image.originalname === imageName) {
+        setUrl(`http://${expoIpAddress}:7000/kalinga/getImage/${image.filename}`)
+      }// Print the originalname property of each image object
+      setModalVisible(true)
+  });
+  }
  
    
     return (
@@ -100,73 +113,83 @@ const DonorUploadAdmin = () => {
         nestedScrollEnabled={true} // Enable nested scrolling
         showsVerticalScrollIndicator={false}
         >
-
                <View style ={styles.UploadContainer}>
                     <TouchableOpacity
                     style={styles.Uploadbutton}
-                    onPress={() =>
-                      navigation.navigate('ImageViewer', {
-                        images: formData.hepaB.images,
-                        files: formData.hepaB.files,
-                      })
-                    }
-                  >
-                    <Text style={styles.UploadbuttonTitle}>View Hepa B Images</Text>
+                    onPress={() =>handleImage('HepaB.png')}
+                    >
+                    <Text style={styles.UploadbuttonTitle}>View Hepa B Result</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.Uploadbutton}
-                    onPress={() =>
-                      navigation.navigate('ImageViewer', {
-                        images: formData.hiv.images,
-                        files: formData.hiv.files,
-                      })
-                    }
+                    onPress={() => handleImage('HIV.png')}
                   >
-                    <Text style={styles.UploadbuttonTitle}>View Hepa B Images</Text>
+                    <Text style={styles.UploadbuttonTitle}>View HIV Result</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.Uploadbutton}
-                    onPress={() =>
-                      navigation.navigate('ImageViewer', {
-                        images: formData.syphillis.images,
-                        files: formData.syphillis.files,
-                      })
-                    }
+                    onPress={() =>handleImage('Syphillis.png')}
+
                   >
-                    <Text style={styles.UploadbuttonTitle}>View Hepa B Images</Text>
+                    <Text style={styles.UploadbuttonTitle}>View Syphillis Result</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.Uploadbutton}
-                    onPress={() =>
-                      navigation.navigate('ImageViewer', {
-                        images: formData.pregnancy.images,
-                        files: formData.pregnancy.files,
-                      })
-                    }
+                    onPress={() =>handleImage('Pregnancy Book.png')}
+
                   >
-                    <Text style={styles.UploadbuttonTitle}>View Hepa B Images</Text>
+                    <Text style={styles.UploadbuttonTitle}>View Pregnancy Book</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.Uploadbutton}
-                    onPress={() =>
-                      navigation.navigate('ImageViewer', {
-                        images: formData.governmentID.images,
-                        files: formData.governmentID.files,
-                      })
-                    }
+                    onPress={() =>handleImage('Government_ID.png')}
                   >
-                    <Text style={styles.UploadbuttonTitle}>View Hepa B Images</Text>
+                    <Text style={styles.UploadbuttonTitle}>View Government ID Result</Text>
                   </TouchableOpacity>
                </View>
 
             <View style ={styles.ButtonContainer}>
-                    <TouchableOpacity style={styles.Approvedbutton} onPress={() => navigatePage("")}>
+                    <TouchableOpacity style={styles.Approvedbutton} onPress={() => approvedUser("AdminApprovedDonor")}>
                         <Text style={styles.ApprovedbuttonTitle}>Approved</Text>
                      </TouchableOpacity>
-                     <TouchableOpacity style={styles.Declinebutton} onPress={() => navigatePage("")}>
+                     <TouchableOpacity style={styles.Declinebutton} onPress={() => declinedUser("AdminDeclinedDonor")}>
                         <Text style={styles.DeclinebuttonTitle}>Decline</Text>
                      </TouchableOpacity>
             </View>
+
+            <Modal
+                  animationType="slide"
+                  transparent={true}
+                  visible={modalVisible}
+                  onRequestClose={() => {
+                      setModalVisible(!modalVisible);
+                  }}
+              >
+                  <View style={styles.modalContainer}>
+                  <ImageZoom
+                      cropWidth={Dimensions.get('window').width}
+                      cropHeight={Dimensions.get('window').height}
+                      imageWidth={Dimensions.get('window').width}
+                      imageHeight={Dimensions.get('window').height * 1} // Adjust the height as needed
+                      enableSwipeDown={true}
+                      onSwipeDown={() => setModalVisible(false)} // Close modal on swipe down
+                      style={{ backgroundColor: 'black' }} // Set background color to black to avoid seeing the underlying content
+                  >
+                      <Image
+                          source={{ uri: url}}
+                          style={{ width: '100%', height: '100%' }}
+                      />
+                  </ImageZoom>
+                      <TouchableHighlight
+                          style={styles.closeButton}
+                          onPress={() => {
+                              setModalVisible(!modalVisible);
+                          }}
+                      >
+                          <AntDesign name="close" size={24} color="black" />
+                      </TouchableHighlight>
+                  </View>
+              </Modal>
                      
         </ScrollView>
       </View>
@@ -176,6 +199,28 @@ const DonorUploadAdmin = () => {
 
 
   const styles = StyleSheet.create({
+
+    
+    modalContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    
+  },
+  modalContent: {
+      width: '80%',
+      aspectRatio: 1,
+      backgroundColor: 'white',
+      borderRadius: 10,
+      overflow: 'hidden',
+  },
+  closeButton: {
+      position: 'absolute',
+      top: 10,
+      right: 10,
+      zIndex: 1,
+  },
 
     center: {
       //backgroundColor: "gray",

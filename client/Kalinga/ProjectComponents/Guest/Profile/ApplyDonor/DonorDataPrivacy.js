@@ -11,11 +11,9 @@ import {
 import { globalStyles } from "../../../../styles_kit/globalStyles.js";
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { useNavigation } from '@react-navigation/native';
-
-
+import DataPrivacyPolicyText from './DataPrivacyText.js';
 
 const DonorDataPrivacy = () => {
-
 
   const navigation = useNavigation();
 
@@ -23,14 +21,6 @@ const DonorDataPrivacy = () => {
     // Navigate to the next screen by route name
     navigation.navigate(Page);
   }
-
-  //const { width, height } = Dimensions.get('window');
-  
-  const FirstParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
-
-  const SecondParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse interdum consectetur libero id faucibus nisl tincidunt eget. Sit amet nisl purus in mollis nunc sed id semper. Nisi quis eleifend quam adipiscing vitae proin sagittis. Mi bibendum neque egestas congue quisque egestas diam in. Diam sollicitudin tempor id eu. Vitae tempus quam pellentesque nec. Auctor augue mauris augue neque. Diam quis enim lobortis scelerisque fermentum dui faucibus in. Scelerisque purus semper eget duis. Orci dapibus ultrices in iaculis nunc sed augue lacus viverra. Sit amet nulla facilisi morbi tempus iaculis urna. Congue quisque egestas diam in arcu cursus euismod. '
-
-  const ThirdParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse interdum consectetur libero id faucibus nisl tincidunt eget. Sit amet nisl purus in mollis nunc sed id semper. Nisi quis eleifend quam adipiscing vitae proin sagittis. Mi bibendum neque egestas congue quisque egestas diam in. Diam sollicitudin tempor id eu. Vitae tempus quam pellentesque nec. Auctor augue mauris augue neque. Diam quis enim lobortis scelerisque fermentum dui faucibus in. Scelerisque purus semper eget duis.  '
 
   return (
 
@@ -47,9 +37,7 @@ const DonorDataPrivacy = () => {
           >
               <View style = {styles.container}>
                 <Text style = {globalStyles.titleParagraph}>Data Privacy Act</Text>
-                <Text style = {styles.text}>{FirstParagraph}</Text>
-                <Text style = {styles.text}>{SecondParagraph}</Text>
-                <Text style = {styles.text}>{ThirdParagraph}</Text>
+                <Text style = {styles.paragraphText}>{DataPrivacyPolicyText}</Text>
               </View>
 
               <View style = {globalStyles.center}>
@@ -65,10 +53,7 @@ const DonorDataPrivacy = () => {
             </View>
 
         </ScrollView>
-
-           
-            
-
+        
       </SafeAreaView>
 
     )
@@ -127,22 +112,14 @@ const DonorDataPrivacy = () => {
         marginHorizontal: "5%"
     },
 
-    text: {
-        fontFamily: "Open-Sans-Regular",
-        fontSize: 15,
-        textAlign: "justify",
-        marginTop: "5%",
-    },
-
     container: {
       flex: 1,
       backgroundColor: '#FFE5EC',
       alignItems: 'center',
-      justifyContent: 'center',
-      marginHorizontal: "5%",
+      marginHorizontal: "4%",
       marginTop: "5%",
-      marginBottom: "-25%",
-      paddingVertical: "10%",
+      marginBottom: "-20%",
+      paddingVertical: "5%",
       paddingHorizontal: "5%",
       borderRadius: 27,
 
@@ -150,11 +127,19 @@ const DonorDataPrivacy = () => {
 
     flex_start: {
       flex: 1,
-      //justifyContent: "center"
       alignItems: "flex-start",
       marginLeft: "5%",
       marginVertical: "2.5%"
+    },
+
+    paragraphText: {
+      fontFamily: 'Open-Sans-Regular',
+      fontSize: 17,
+      marginHorizontal: '4%',
+      textAlign: 'justify',
+      color: '#E60965',
     }
+    
 
   })
 
