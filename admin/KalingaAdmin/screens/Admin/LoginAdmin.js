@@ -52,10 +52,6 @@ const LogIn = () => {
         }
     };
 
-
-
-    
-
     return (
         <LinearGradient
             colors={['#EF5487', '#EB90AC', '#E690AA', '#E36A91', '#EB7AA9']}

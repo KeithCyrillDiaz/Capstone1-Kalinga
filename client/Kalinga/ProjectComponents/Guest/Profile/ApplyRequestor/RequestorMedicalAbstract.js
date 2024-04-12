@@ -13,7 +13,6 @@ import {
 import { globalStyles } from "../../../../styles_kit/globalStyles.js"
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { useNavigation } from '@react-navigation/native';
-import axios from "axios";
 const RequestorMedicalAbstract = ({route}) => {
 
   const { screeningFormData } = route.params;

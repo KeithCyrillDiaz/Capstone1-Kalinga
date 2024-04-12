@@ -5,10 +5,7 @@ import { useNavigation, useRoute } from '@react-navigation/native'; // Import us
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import DonorUploadAdmin from './DonorUploadAdmin.js';
-
-// const expoIpAddress = process.env.EXPO_IP_ADDRESS;
-// if(expoIpAddress === "") console.log("empty")
-const expoIpAddress = "192.168.1.3";
+import { BASED_URL } from '../../../../../../Constant.js';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -24,7 +21,7 @@ const FirstScreen = ({route}) => {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get(`http://${expoIpAddress}:7000/kalinga/getScreeningFormsApplicant_ID/${Applicant_ID}`);
+            const response = await axios.get(`${BASED_URL}/kalinga/getScreeningFormsApplicant_ID/${Applicant_ID}`);
             const data = response.data.screeningForms; // Assuming you expect only one record
             console.log("data",data)
             setFormData(data);
