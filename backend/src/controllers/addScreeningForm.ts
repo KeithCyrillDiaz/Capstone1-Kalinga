@@ -1,5 +1,5 @@
 import express from 'express'
-import { createScreeningForm, getScreeningFormByApplicantID } from '../db/screeningForms';
+import { createScreeningForm, getScreeningFormByApplicantID } from '../models/ApplyAsDonor';
 import { random, passEncryption } from '../helpers/passwordEncryption'
 
 
