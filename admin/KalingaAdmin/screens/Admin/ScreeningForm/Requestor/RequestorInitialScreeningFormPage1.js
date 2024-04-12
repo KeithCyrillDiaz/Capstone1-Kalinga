@@ -7,14 +7,10 @@ import axios from 'axios';
 import { AntDesign } from '@expo/vector-icons';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import ImageZoom from 'react-native-image-pan-zoom';
+import { BASED_URL } from '../../../../../../Constant.js';
 
 const Tab = createMaterialTopTabNavigator();
 
-// const expoIpAddress = process.env.EXPO_IP_ADDRESS;
-// if(expoIpAddress === "") console.log("empty")
-const expoIpAddress = "192.168.1.3";
-
-// const expoIpAddress = Config.EXPO_IP_ADDRESS;
 
 
 
@@ -30,7 +26,7 @@ export const FirstScreen = ({route}) => {
        
         const fetchscreeningForm = async () => {
            try {
-                const response = await axios.get(`http://${expoIpAddress}:7000/kalinga/getScreeningFormsID/${Applicant_ID}`)
+                const response = await axios.get(`${BASED_URL}/kalinga/getScreeningFormsID/${Applicant_ID}`)
                 // console.log( "test", response.data.screeningForm)
                 setScreeningFormID(response.data.screeningForm)
                 // console.log("ScreeningFormID: ", screeningFormID)
@@ -181,7 +177,7 @@ export const SecondScreen = ({route}) => {
     const fetchData = async () => {
         try {
   
-            const response = await axios.get(`http://${expoIpAddress}:7000/kalinga/getMedicalRequirementImage/${Applicant_ID}`);
+            const response = await axios.get(`${BASED_URL}/kalinga/getMedicalRequirementImage/${Applicant_ID}`);
             const result = response.data.image
             // console.log('result: ', result)
             setImages(result)
@@ -196,7 +192,7 @@ export const SecondScreen = ({route}) => {
     const handleImage = (imageName) => {
         images.forEach(image => {
           if(image.originalname === imageName) {
-            setUrl(`http://${expoIpAddress}:7000/kalinga/getImage/${image.filename}`)
+            setUrl(`${BASED_URL}/kalinga/getImage/${image.filename}`)
           }// Print the originalname property of each image object
           setModalVisible(true)
       });
@@ -204,7 +200,7 @@ export const SecondScreen = ({route}) => {
 
 
     const fetchMedicalAbstract = async () => {
-        const response = await axios.get(`http://${expoIpAddress}:7000/kalinga/getMedicalAbstractByID/${Applicant_ID}`)
+        const response = await axios.get(`${BASED_URL}/kalinga/getMedicalAbstractByID/${Applicant_ID}`)
         setMedicalAbstractForm(response.data.medicalAbstract)
        
     }

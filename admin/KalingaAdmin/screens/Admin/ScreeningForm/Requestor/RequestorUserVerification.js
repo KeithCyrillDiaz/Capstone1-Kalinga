@@ -7,11 +7,7 @@ import { Feather } from '@expo/vector-icons';
 import { globalHeader } from '../../../../styles_kit/globalHeader';
 import axios from 'axios';
 import Spinner from 'react-native-loading-spinner-overlay';
-
-
-// const expoIpAddress = process.env.EXPO_IP_ADDRESS;
-// if(expoIpAddress === "") console.log("empty")
-const expoIpAddress = "192.168.1.3";
+import { BASED_URL } from '../../../../../../Constant';
 
 const handleLogIn = () => {
     navigation.navigate('LoginAdmin');
@@ -44,7 +40,7 @@ const UserVerification = () => {
     const fetchScreeningFormIDs = async () => {
         try {
             setIsLoading(true)
-            const response = await axios.get(`http://${expoIpAddress}:7000/kalinga/getScreeningFormsUserType/Requestor`);
+            const response = await axios.get(`${BASED_URL}/kalinga/getScreeningFormsUserType/Requestor`);
             // console.log(response.data.screeningForms); 
             // 
             setScreeningForms(response.data.screeningForms)// Check if data is received

@@ -13,12 +13,13 @@ import axios from 'axios';
 import { CommonActions } from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import ImageZoom from 'react-native-image-pan-zoom';
+import { BASED_URL } from '../../../../../../Constant.js';
 
 
 const DonorUploadMedicalRequirements = ({route}) => {
 
   const { screeningFormData } = route.params;
-  const expoIpAddress = "192.168.1.3"
+
   
   const [formData, setFormData] = useState(screeningFormData);
   const [selectedImage, setSelectedImage] = useState({});
@@ -37,7 +38,7 @@ const DonorUploadMedicalRequirements = ({route}) => {
 
         setIsLoading(true);
         // Send POST request to the specified URL with the form data
-        const postScreeningForm = await axios.post(`http://${expoIpAddress}:7000/kalinga/addScreeningForm`, 
+        const postScreeningForm = await axios.post(`${BASED_URL}/kalinga/addScreeningForm`, 
               screeningFormData,
         );
         // Log successful response from the backend
@@ -66,7 +67,7 @@ const DonorUploadMedicalRequirements = ({route}) => {
     
             setUploadedFiles(uploadedImages)
     
-            const postImages = await axios.post(`http://${expoIpAddress}:7000/kalinga/addMedicalRequirementsAsImage`, 
+            const postImages = await axios.post(`${BASED_URL}/kalinga/addMedicalRequirementsAsImage`, 
               uploadedImages,
               {
                 headers: {
@@ -100,7 +101,7 @@ const DonorUploadMedicalRequirements = ({route}) => {
       
               setUploadedFiles(uploadedFiles)
       
-              const postFiles = await axios.post(`http://${expoIpAddress}:7000/kalinga/addMedicalRequirementsAsFile`, 
+              const postFiles = await axios.post(`${BASED_URL}/kalinga/addMedicalRequirementsAsFile`, 
                 uploadedFiles,
                 {
                   headers: {

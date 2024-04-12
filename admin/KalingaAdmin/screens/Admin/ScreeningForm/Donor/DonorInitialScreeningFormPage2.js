@@ -1,18 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native'; // Import useRoute hook
-import { Octicons } from '@expo/vector-icons';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { Feather } from '@expo/vector-icons';
-import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import { AntDesign } from '@expo/vector-icons';
 import DonorUploadAdmin from './DonorUploadAdmin.js'
 import axios from 'axios'; // Import axios for making HTTP requests
+import { BASED_URL } from '../../../../../../Constant.js';
 
-
-// const expoIpAddress = process.env.EXPO_IP_ADDRESS;
-// if(expoIpAddress === "") console.log("empty")
-const expoIpAddress = "192.168.1.3";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -47,7 +41,7 @@ const FirstScreen = ({route}) => {
 
     const fetchData = async () => {
       try {
-          const response = await axios.get(`http://${expoIpAddress}:7000/kalinga/getScreeningFormsApplicant_ID/${Applicant_ID}`);
+          const response = await axios.get(`${BASED_URL}/kalinga/getScreeningFormsApplicant_ID/${Applicant_ID}`);
           const data = response.data.screeningForms; // Assuming you expect only one record
       setFormData((prevState) => ({
         ...prevState,

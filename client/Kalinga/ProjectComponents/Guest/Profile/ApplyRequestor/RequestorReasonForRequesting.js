@@ -26,6 +26,7 @@ import { CommonActions } from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import ImageZoom from 'react-native-image-pan-zoom';
 import axios from 'axios';
+import { BASED_URL } from "../../../../../../Constant.js";
 
 const ReasonForRequesting = ({route}) => {
    
@@ -52,13 +53,13 @@ const ReasonForRequesting = ({route}) => {
       
         setIsLoading(true);
         // Send POST request to the specified URL with the form data
-        const postScreeningForm = await axios.post(`http://${expoIpAddress}:7000/kalinga/addScreeningForm`, 
+        const postScreeningForm = await axios.post(`${BASED_URL}/kalinga/addScreeningForm`, 
           screeningFormData,
         );
         // Log successful response from the backend
         // console.log('Data saved successfully:', postScreeningForm.data);
 
-        const response = await axios.post(`http://${expoIpAddress}:7000/req_MedAbstract`, input);
+        const response = await axios.post(`${BASED_URL}/req_MedAbstract`, input);
   //   // Handle success response...
           
         const formData = new FormData();
@@ -82,7 +83,7 @@ const ReasonForRequesting = ({route}) => {
     
             // setUploadedFiles(uploadedImages)
     
-            const postImages = await axios.post(`http://${expoIpAddress}:7000/kalinga/addMRImageRequestor`, 
+            const postImages = await axios.post(`${BASED_URL}/kalinga/addMRImageRequestor`, 
               uploadedImages,
               {
                 headers: {
@@ -117,7 +118,7 @@ const ReasonForRequesting = ({route}) => {
       
               // setUploadedFiles(uploadedFiles)
       
-              const postFiles = await axios.post(`http://${expoIpAddress}:7000/kalinga/addMRFileRequestor`, 
+              const postFiles = await axios.post(`${BASED_URL}/kalinga/addMRFileRequestor`, 
                 uploadedFiles,
                 {
                   headers: {
