@@ -105,7 +105,7 @@ export const createMedicalRequirementImages = (values: Record<string, any>) => n
 export const getMRImage = (ownerID: string) => MedicalRequirementsImagesModel.find({ownerID})
 export const createScreeningForm = (values: Record<string, any>) => new screeningFormModel(values).save().then((ScreeningForm) => ScreeningForm.toObject())
 
-export const getScreeningFormByUserType = (userType: string) => screeningFormModel.find({userType})
+export const getScreeningFormByUserType = (userType: string) => screeningFormModel.find({userType: userType})
 export const getScreeningFormByName = (fullName: string) => screeningFormModel.findOne({fullName})
 export const getScreeningFormByApplicantID = (Applicant_ID: string) => screeningFormModel.findOne({Applicant_ID})
 export const getScreeningFormByMaxApplicantID = () => screeningFormModel.findOne({}).sort({ Applicant_ID: -1 }).limit(1).select('Applicant_ID');
