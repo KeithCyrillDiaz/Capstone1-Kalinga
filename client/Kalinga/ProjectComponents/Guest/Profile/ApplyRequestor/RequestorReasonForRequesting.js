@@ -26,7 +26,7 @@ import { CommonActions } from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import ImageZoom from 'react-native-image-pan-zoom';
 import axios from 'axios';
-import { BASED_URL } from "../../../../../../Constant.js";
+import { BASED_URL } from "../../../../MyConstants.js";
 
 const ReasonForRequesting = ({route}) => {
    

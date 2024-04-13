@@ -13,7 +13,7 @@ import axios from 'axios';
 import { CommonActions } from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import ImageZoom from 'react-native-image-pan-zoom';
-import { BASED_URL } from '../../../../../../Constant.js';
+import { BASED_URL } from '../../../../MyConstants.js';
 
 
 const DonorUploadMedicalRequirements = ({route}) => {
@@ -66,8 +66,8 @@ const DonorUploadMedicalRequirements = ({route}) => {
             }
     
             setUploadedFiles(uploadedImages)
-    
-            const postImages = await axios.post(`${BASED_URL}/kalinga/addMedicalRequirementsAsImage`, 
+            const postImages = await axios.post(`${BASED_URL}/kalinga/addMedicalRequirementsAsImageInGdrive`,
+            // const postImages = await axios.post(`${BASED_URL}/kalinga/addMedicalRequirementsAsImage`, 
               uploadedImages,
               {
                 headers: {

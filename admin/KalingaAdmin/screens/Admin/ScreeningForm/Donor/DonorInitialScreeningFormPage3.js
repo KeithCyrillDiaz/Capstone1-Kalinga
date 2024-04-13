@@ -5,7 +5,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { AntDesign } from '@expo/vector-icons';
 import DonorUploadAdmin from './DonorUploadAdmin.js';
 import axios from 'axios'; // Import axios for making HTTP requests
-import { BASED_URL } from '../../../../../../Constant.js';
+import { BASED_URL } from '../../../../MyConstants.js';
 
 
 const Tab = createMaterialTopTabNavigator();

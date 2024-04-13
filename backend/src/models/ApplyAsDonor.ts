@@ -71,6 +71,9 @@ const imageSchema = new mongoose.Schema({
     filename: { type: String }, 
     path: { type: String }, 
     size: { type: Number }, 
+    link: {type: String},
+    gdriveId: {type: String},
+    gdriveName: {type: String},
     uploadedAt: { type: String }, 
     userType: { type: String }, // Add userType field if needed
     owner: { type: String }, // Add owner field if needed

@@ -16,7 +16,7 @@ const multerConfiguration = () => {
                 if(file.fieldname === "RequestorImages" ) subfolder = 'Requestor/Images';
                 else subfolder = 'Requestor/Files'
                
-            }
+            } else subfolder = "test"
             
             // Construct full upload path
             uploadPath = path.join(__dirname, uploadPath, subfolder);
@@ -28,6 +28,7 @@ const multerConfiguration = () => {
                     fs.mkdirSync(path.join(__dirname, `../../uploads/Donor/Files`), {recursive: true})
                     fs.mkdirSync(path.join(__dirname, `../../uploads/Requestor/Images`), {recursive: true})
                     fs.mkdirSync(path.join(__dirname, `../../uploads/Requestor/Files`), {recursive: true})
+                    fs.mkdirSync(path.join(__dirname, `../../uploads/test`), {recursive: true})
                     // fs.mkdirSync(uploadPath, { recursive: true });
                 } catch (err) {
                     console.error("Error creating directory:", err);
