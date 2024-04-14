@@ -1,10 +1,10 @@
 import express from 'express'
 import moment from 'moment'
-import { getScreeningFormByApplicantID } from '../models/ApplyAsDonor'
-import { createRequestor } from '../models/users'
-import { random, passEncryption } from '../helpers/passwordEncryption'
+import { getScreeningFormByApplicantID } from '../../models/ApplyAsDonor'
+import { createDonor } from '../../models/users'
+import { random, passEncryption } from '../../helpers/passwordEncryption'
 
-export const registerRequestor = async (req: express.Request, res: express.Response) => {
+export const registerDonor = async (req: express.Request, res: express.Response) => {
     try{
         console.log(req.body)
         if(!req.body.Applicant_ID || !req.body.password){
@@ -29,17 +29,17 @@ export const registerRequestor = async (req: express.Request, res: express.Respo
         }
         
         const salt = random();
-        const newRequestor = await createRequestor({
+        const newDonor = await createDonor({
             fullName: existingUser.fullName,
             password: passEncryption(salt, req.body.password),
             email: existingUser.email,
-            Requestor_ID: existingUser.Applicant_ID,
+            Donor_ID: existingUser.Applicant_ID,
             userName: existingUser.email,
             age: existingUser.Age,
             birthDate: existingUser.birthDate,
             mobileNumber: existingUser.contactNumber,
             homeAddress: existingUser.homeAddress,
-            userType: "Requestor",
+            userType: "Donor",
             createdAt: moment().toDate(),
             updatedAt: moment().toDate()
         })
@@ -47,9 +47,9 @@ export const registerRequestor = async (req: express.Request, res: express.Respo
         return res.status(200).json({
             messages:{
                 code: 0,
-                messages: "Requestor Registered"
+                messages: "Donor Registered"
             },
-            newRequestor
+            newDonor
         })
     } catch(error){
         return res.status(400).json({

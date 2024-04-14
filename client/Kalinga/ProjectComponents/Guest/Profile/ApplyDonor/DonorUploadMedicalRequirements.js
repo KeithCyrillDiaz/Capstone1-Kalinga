@@ -148,7 +148,6 @@ const DonorUploadMedicalRequirements = ({route}) => {
             allowsEditing: true,
             aspect: [Dimensions.get('window').width, Dimensions.get('window').height],
             quality: 1,
-            multiple: true, 
         });
 
         if (!result.cancelled && result.assets && result.assets.length > 0) {

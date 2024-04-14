@@ -66,7 +66,7 @@ try {
 
     if(existingUser){
 
-        if(existingUser.Applicant_ID === Applicant_ID){
+        if(existingUser.userType === userType){
             const message = {
                 code: 1, 
                 message: 'Existing Applicant'
@@ -75,6 +75,7 @@ try {
         };
 
     }
+    
 
      const Screening_ID = randomatic('Aa0', 20);
 
