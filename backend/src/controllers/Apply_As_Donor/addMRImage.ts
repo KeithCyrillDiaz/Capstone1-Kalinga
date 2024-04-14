@@ -1,7 +1,7 @@
 import express from 'express';
 import { createMedicalRequirementImages } from '../../models/ApplyAsDonor';
 import { UploadFiles } from '../../helpers/GdriveUploader'
-
+import fs from 'fs'
 export const addMedicalRequirementsAsImage = async (req: express.Request, res: express.Response) => {
     try {
 
@@ -49,11 +49,12 @@ export const addMedicalRequirementsAsImage = async (req: express.Request, res: e
             //   userType: req.body.userType[0], 
             //   owner: req.body.owner[0],
             //   ownerID: req.body.ownerID[0]
-       
           };
-
           await createMedicalRequirementImages(imageData);
-
+        }
+        //delete the files in backend Server files
+        for (const image of images as any[]) {
+            fs.unlinkSync(image.path);
         }
      }
         
