@@ -20,7 +20,6 @@ const multerConfiguration = () => {
             // Construct full upload path
    
             uploadPath = path.join(__dirname, uploadPath, subfolder);
-            console.log("destination1: ", uploadPath)
             // Create directory if it doesn't exist
             if (!fs.existsSync(uploadPath)) {
                 try {
@@ -34,7 +33,6 @@ const multerConfiguration = () => {
                     return;
                 }
             }
-            console.log("destination2: ", uploadPath)
             cb(null, uploadPath);
         },
         filename: function (req, file, cb) {

@@ -3,25 +3,22 @@ import  React, { useState, useEffect } from 'react';
 import { globalStyles } from "../../../styles_kit/globalStyles.js";
 import { globalHeader } from "../../../styles_kit/globalHeader.js";
 import { FontAwesome5 } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, CommonActions } from '@react-navigation/native';
 
 
 import { 
-  ScrollView, 
   Text, 
   View, 
   SafeAreaView, 
   StatusBar, 
   StyleSheet, 
   TouchableOpacity,
-  TextInput,
-  KeyboardAvoidingView
+  BackHandler
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
+
 
 export default function GuestProfile() {
 
@@ -37,6 +34,8 @@ export default function GuestProfile() {
   const navigatePage = (Page) => {
     navigation.navigate(Page); // Navigate to the Login screen
 };
+
+
 
     return (
       <SafeAreaView style={globalStyles.container}>

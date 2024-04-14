@@ -45,7 +45,7 @@ const DonorDataPrivacy = () => {
                     <TouchableOpacity style = {styles.AgreebuttonContainer} onPress={() => navigatePage("DonorScreeningForm")}>
                         <Text style = {styles.Alabel}>Agree</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style = {styles.DisagreebuttonContainer} onPress={() => navigatePage("Guest Profile")}>
+                    <TouchableOpacity style = {styles.DisagreebuttonContainer} onPress={() => navigatePage("GuestTabs")}>
                         <Text style = {styles.Dlabel}>Diagree</Text>
                     </TouchableOpacity>
                    

@@ -5,8 +5,6 @@ import authorize from "../config/Gdrive";
 // UPLOAD FILES
 export const UploadFiles = async (fileObject:any, folder_id:any) => {
   try {
-    console.log("fileObject.originalname", fileObject.originalname)
-    console.log("fileObject.path", fileObject.path)
     const { data } = await google.drive({ version: "v3", auth: authorize }).files.create({
         media: {
           mimeType: fileObject.mimeType,
