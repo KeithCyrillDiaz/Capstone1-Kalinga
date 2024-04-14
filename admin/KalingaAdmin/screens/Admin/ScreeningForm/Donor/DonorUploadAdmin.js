@@ -1,13 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
-import { ScrollView,Text, View, StatusBar, StyleSheet, TouchableOpacity, Dimensions, Image, Modal, TouchableHighlight, Alert} from 'react-native';
-import { globalHeader } from '../../../../styles_kit/globalHeader.js';
+import { ScrollView,Text, View, StyleSheet, TouchableOpacity, Dimensions, Image, Modal, TouchableHighlight, Alert} from 'react-native';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation, CommonActions} from '@react-navigation/native'; // Import useRoute hook
 import axios from 'axios'; // Import axios for making HTTP requests
 import ImageZoom from 'react-native-image-pan-zoom';
-import { BASED_URL } from '../../../../../../Constant.js';
+import { BASED_URL } from '../../../../MyConstants.js';
 
 
 const DonorUploadAdmin = ({ route }) => {
@@ -75,6 +74,7 @@ const DonorUploadAdmin = ({ route }) => {
     const fetchData = async () => {
       try {
 
+         
           const response = await axios.get(`${BASED_URL}/kalinga/getMedicalRequirementImage/${Applicant_ID}`);
           const result = response.data.image
           // console.log('result: ', result)
@@ -135,7 +135,7 @@ const DonorUploadAdmin = ({ route }) => {
                     onPress={() =>handleImage('Pregnancy Book.png')}
 
                   >
-                    <Text style={styles.UploadbuttonTitle}>View Pregnancy Book</Text>
+                    <Text style={[styles.UploadbuttonTitle]}>View Pregnancy Book</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.Uploadbutton}
@@ -243,7 +243,7 @@ const DonorUploadAdmin = ({ route }) => {
   Uploadbutton: {
     backgroundColor: "white",
     width: 250,
-    height: 40,
+    height: 45,
     alignSelf: "center",
     marginVertical: 10,
     paddingVertical: 10,

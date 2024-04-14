@@ -3,10 +3,10 @@ import { View, Text, Image, TouchableOpacity, TextInput, StyleSheet, SafeAreaVie
 import { useNavigation, CommonActions } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios'
+import { BASED_URL } from '../../MyConstants';
 
 const LogIn = () => {
 
-    const expoIpAddress = "192.168.1.3"
     const navigation = useNavigation();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -35,7 +35,7 @@ const LogIn = () => {
         // Proceed with login request
         try {
          
-            const LogIn = await axios.post(`http://${expoIpAddress}:7000/kalinga/adminLoginIn`, {username, password});
+            const LogIn = await axios.post(`${BASED_URL}/kalinga/adminLoginIn`, {username, password});
 
             if (LogIn.status === 200) {
                 navigation.dispatch(

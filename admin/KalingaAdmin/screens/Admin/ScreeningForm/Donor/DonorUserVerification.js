@@ -7,7 +7,7 @@ import { Feather } from '@expo/vector-icons';
 import { globalHeader } from '../../../../styles_kit/globalHeader';
 import { useState, useEffect } from 'react';
 import axios from 'axios'; // Import axios for making HTTP requests
-
+import { BASED_URL } from '../../../../MyConstants';
 
 // const expoIpAddress = process.env.EXPO_IP_ADDRESS;
 // if(expoIpAddress === "") console.log("empty")
@@ -37,7 +37,7 @@ const UserVerification = () => {
   const fetchScreeningFormIDs = async () => {
       try {
           setIsLoading(true)
-          const response = await axios.get(`http://${expoIpAddress}:7000/kalinga/getScreeningFormsUserType/Donor`);
+          const response = await axios.get(`${BASED_URL}/kalinga/getScreeningFormsUserType/Donor`);
           // console.log(response.data.screeningForms); 
           // 
           setScreeningForms(response.data.screeningForms)// Check if data is received

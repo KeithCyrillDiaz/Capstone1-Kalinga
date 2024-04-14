@@ -7,7 +7,7 @@ import { Feather } from '@expo/vector-icons';
 import { globalHeader } from '../../../../styles_kit/globalHeader';
 import axios from 'axios';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { BASED_URL } from '../../../../../../Constant';
+import { BASED_URL } from '../../../../MyConstants.js';
 
 const handleLogIn = () => {
     navigation.navigate('LoginAdmin');

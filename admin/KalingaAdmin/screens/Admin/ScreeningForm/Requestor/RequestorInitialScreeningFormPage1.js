@@ -7,7 +7,7 @@ import axios from 'axios';
 import { AntDesign } from '@expo/vector-icons';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import ImageZoom from 'react-native-image-pan-zoom';
-import { BASED_URL } from '../../../../../../Constant.js';
+import { BASED_URL } from '../../../../MyConstants.js';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -26,7 +26,7 @@ export const FirstScreen = ({route}) => {
        
         const fetchscreeningForm = async () => {
            try {
-                const response = await axios.get(`${BASED_URL}/kalinga/getScreeningFormsID/${Applicant_ID}`)
+                const response = await axios.get(`${BASED_URL}/kalinga/getScreeningFormsRequestorApplicant_ID/${Applicant_ID}`)
                 // console.log( "test", response.data.screeningForm)
                 setScreeningFormID(response.data.screeningForm)
                 // console.log("ScreeningFormID: ", screeningFormID)

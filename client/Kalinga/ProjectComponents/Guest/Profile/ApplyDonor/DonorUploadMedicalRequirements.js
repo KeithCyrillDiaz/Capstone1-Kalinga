@@ -13,7 +13,7 @@ import axios from 'axios';
 import { CommonActions } from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import ImageZoom from 'react-native-image-pan-zoom';
-import { BASED_URL } from '../../../../../../Constant.js';
+import { BASED_URL } from '../../../../MyConstants.js';
 
 
 const DonorUploadMedicalRequirements = ({route}) => {
@@ -44,6 +44,8 @@ const DonorUploadMedicalRequirements = ({route}) => {
         // Log successful response from the backend
         console.log('Data saved successfully:', postScreeningForm.data);
 
+             
+
         const formData = new FormData();
         formData.append('image', selectedImage);
 
@@ -53,10 +55,13 @@ const DonorUploadMedicalRequirements = ({route}) => {
 
             for (const key in selectedImage) {
               const imageData = selectedImage[key];
+              const parts = imageData.name.split(".");
+              const extension = parts[1]; // Extension part
+              console.log(imageData.name)
               const file = {
                 uri: imageData.uri,
                 type: 'image/jpeg', // Assuming all image types are JPEG
-                name: `${key}.png`,
+                name: `${key}.${extension}`,
               };
 
               uploadedImages.append('DonorImages', file); // Append the file directly
@@ -66,8 +71,8 @@ const DonorUploadMedicalRequirements = ({route}) => {
             }
     
             setUploadedFiles(uploadedImages)
-    
-            const postImages = await axios.post(`${BASED_URL}/kalinga/addMedicalRequirementsAsImage`, 
+            const postImages = await axios.post(`${BASED_URL}/kalinga/addMedicalRequirementsAsImage`,
+            // const postImages = await axios.post(`${BASED_URL}/kalinga/addMedicalRequirementsAsImage`, 
               uploadedImages,
               {
                 headers: {
@@ -87,10 +92,13 @@ const DonorUploadMedicalRequirements = ({route}) => {
 
               for (const key in selectedFile) {
                 const imageData = selectedFile[key];
+                const parts = imageData.name.split(".");
+                const extension = parts[1]; // Extension part
+
                 const file = {
                   uri: imageData.uri,
                   type: imageData.type, 
-                  name: imageData.name,
+                  name: `${key}.${extension}`
                 };
                 uploadedFiles.append('DonorFiles', file); // Append the file directly
                 uploadedFiles.append(`userType`, "Donor"); 

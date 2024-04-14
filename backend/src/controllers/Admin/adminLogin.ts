@@ -19,7 +19,7 @@ export const AdminLogIn = async (req: express.Request, res: express.Response) =>
                 }
             })
         }
-        if(process.env.USERNAMEE !== req.body.username && process.env.PASSWORD !== req.body.password){
+        if(process.env.USERNAMEE !== req.body.username || process.env.PASSWORD !== req.body.password){
             return res.status(400).json({
                 messages: {
                     code: 1,
