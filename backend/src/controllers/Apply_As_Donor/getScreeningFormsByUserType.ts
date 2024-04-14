@@ -1,5 +1,5 @@
 import express from 'express'
-import { getScreeningFormByApplicantID, getScreeningFormByUserType } from '../../../models/ApplyAsDonor';
+import { getScreeningFormByApplicantID, getScreeningFormByUserType } from '../../models/ApplyAsDonor';
 
 
 export const getScreeningFormsByUserType = async (req: express.Request, res: express.Response) => {

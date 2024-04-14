@@ -1,5 +1,5 @@
 import express from 'express'
-import { getMRImage } from '../../../models/ApplyAsDonor'
+import { getMRImage } from '../../models/ApplyAsDonor'
 
 
 export const getImage = async (req: express.Request, res: express.Response) =>{
