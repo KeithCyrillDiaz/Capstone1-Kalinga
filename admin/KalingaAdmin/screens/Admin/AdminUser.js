@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView, StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Octicons } from '@expo/vector-icons';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { Feather } from '@expo/vector-icons';
-import { globalHeader } from '../../styles_kit/globalHeader';
+import { globalHeader } from '../../../../client/Kalinga/styles_kit/globalHeader';
+import axios from 'axios';
+
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -24,435 +26,136 @@ const SearchBar = () => {
 };
 
 
-const FirstScreen = ({  }) => {
+const FirstScreen = ({}) => {
     const navigation = useNavigation();
 
-    const navigatePage = (Page) => {
-        navigation.navigate(Page); // Navigate to the Login screen
-    }
+    const [appointments, setAppointments] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const fetchDonorAppointments = async () => {
+        try {
+            setIsLoading(true);
+            const response = await axios.get('http://192.168.254.103:7000/kalinga/getAppointmentByUserType/Donor');
+            setAppointments(response.data.appointment); // Assuming the data structure has an 'appointment' key containing the array
+        } catch (error) {
+            console.error('Error fetching donor appointments:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchDonorAppointments();
+    }, []);
+
+    const handleViewPress = (appointment) => {
+        console.log("id", appointment.AppointmentDonorID);
+        navigation.navigate('DonorAppointmentConfirmation', { formData: appointment.AppointmentDonorID });
+    };
+    
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-            <View style={styles.tabContent}>
-                <SearchBar />
-                <View style={styles.DonorContainer}>
-                    <View style={styles.donorInfoContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
+        <View style={styles.tabContent}>
+            <SearchBar />
+            <View style={styles.DonorContainer}>
+                <View style={styles.donorInfoContainer}>
+                    <Text>Name</Text>
                 </View>
-                <View style={styles.lineContainer}>
-                    <View style={styles.line} />
+                <View style={styles.donorInfoContainer}>
+                    <Text>Phone Number</Text>
                 </View>
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton}onPress={() => navigatePage("DonorAppointmentConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton}onPress={() => navigatePage("DonorAppointmentConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton}onPress={() => navigatePage("DonorAppointmentConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton}onPress={() => navigatePage("DonorAppointmentConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton}onPress={() => navigatePage("DonorAppointmentConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton}onPress={() => navigatePage("DonorAppointmentConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton}onPress={() => navigatePage("DonorAppointmentConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton}onPress={() => navigatePage("DonorAppointmentConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton}onPress={() => navigatePage("DonorAppointmentConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton}onPress={() => navigatePage("DonorAppointmentConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton}onPress={() => navigatePage("DonorAppointmentConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton}onPress={() => navigatePage("DonorAppointmentConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton}onPress={() => navigatePage("DonorAppointmentConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton}onPress={() => navigatePage("DonorAppointmentConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton}onPress={() => navigatePage("DonorAppointmentConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton}onPress={() => navigatePage("DonorAppointmentConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-                
             </View>
-        </ScrollView>
-    );
-};
+            <View style={styles.lineContainer}>
+                <View style={styles.line} />
+            </View>
+
+            {appointments.map((appointment, index) => (
+                <View key={index} style={styles.DonorSecondContainer}>
+                    <View style={styles.donorInfoSecondContainer}>
+                        <Text>{appointment.fullName}</Text>
+                    </View>
+                    <View style={styles.donorInfoSecondContainer}>
+                        <Text>{appointment.phoneNumber}</Text>
+                    </View>
+                    <TouchableOpacity style={styles.logInButton} onPress={() => handleViewPress(appointment)}>
+                        <Text style={styles.logInButtonText}>View</Text>
+                    </TouchableOpacity>
+
+                </View>
+            ))}
+        </View>
+    </ScrollView>
+);
+}; 
+
 
 const SecondScreen = () => {
     const navigation = useNavigation();
 
-    const navigatePage = (Page) => {
-        navigation.navigate(Page); // Navigate to the Login screen
-    }
+    const [requests, setRequests] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const fetchMakeRequest = async () => {
+        try {
+            setIsLoading(true);
+            const response = await axios.get('http://192.168.254.103:7000/kalinga/getRequestByUserType/Requestor');
+            setRequests(response.data.request); // Assuming the data structure has an 'appointment' key containing the array
+        } catch (error) {
+            console.error('Error fetching:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchMakeRequest();
+    }, []);
+
+    const handleViewPress = (request) => {
+        console.log("id", request.RequestID);
+        navigation.navigate('RequestorRequestConfirmation', { formData: request.RequestID });
+    };
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
             <View style={styles.tabContent}>
                 <SearchBar />
-                <View style={styles.DonorContainer}>
-                    <View style={styles.donorInfoContainer}>
+                <View style={styles.RequestorContainer}>
+                    <View style={styles.RequestorInfoContainer}>
                         <Text>Name</Text>
                     </View>
-                    <View style={styles.donorInfoContainer}>
+                    <View style={styles.RequestorInfoContainer}>
                         <Text>Phone Number</Text>
+                    </View>
+                    <View style={styles.RequestorInfoContainer}>
+                        <Text>Category</Text>
                     </View>
                 </View>
                 <View style={styles.lineContainer}>
                     <View style={styles.line} />
                 </View>
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton} onPress={() => navigatePage("RequestorRequestConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
 
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton} onPress={() => navigatePage("RequestorRequestConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
 
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
+                {requests.map((request, index) => (
+                <View key={index} style={styles.RequestorSecondContainer}>
+                    <View style={styles.RequestorInfoSecondContainer}>
+                        <Text>{request.fullName}</Text>
                     </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
+                    <View style={styles.RequestorInfoSecondContainer}>
+                        <Text>{request.phoneNumber}</Text>
                     </View>
-                    <TouchableOpacity style={styles.logInButton} onPress={() => navigatePage("RequestorRequestConfirmation")}>
+                    <View style={styles.RequestorInfoSecondContainer}>
+                        <Text>{request.BabyCategory}</Text>
+                    </View>
+                    <TouchableOpacity style={styles.logInButton} onPress={() => handleViewPress(request)}>
                         <Text style={styles.logInButtonText}>View</Text>
                     </TouchableOpacity>
-                </View>
 
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton} onPress={() => navigatePage("RequestorRequestConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
                 </View>
+            ))}
 
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton} onPress={() => navigatePage("RequestorRequestConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
 
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton} onPress={() => navigatePage("RequestorRequestConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
 
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton} onPress={() => navigatePage("RequestorRequestConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton} onPress={() => navigatePage("RequestorRequestConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton} onPress={() => navigatePage("RequestorRequestConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton} onPress={() => navigatePage("RequestorRequestConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton} onPress={() => navigatePage("RequestorRequestConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton} onPress={() => navigatePage("RequestorRequestConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton} onPress={() => navigatePage("RequestorRequestConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton} onPress={() => navigatePage("RequestorRequestConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton} onPress={() => navigatePage("RequestorRequestConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.DonorSecondContainer}>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Name</Text>
-                    </View>
-                    <View style={styles.donorInfoSecondContainer}>
-                        <Text>Phone Number</Text>
-                    </View>
-                    <TouchableOpacity style={styles.logInButton} onPress={() => navigatePage("RequestorRequestConfirmation")}>
-                        <Text style={styles.logInButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
+                
             </View>
         </ScrollView>
     );
@@ -505,7 +208,7 @@ const styles = StyleSheet.create({
         paddingVertical: 20
     },
     headerTitle: {
-        fontFamily: 'Kurale',
+        fontFamily: 'Kurale-Regular',
         fontSize: 20,
         color: 'white',
         alignSelf: "center",
@@ -554,13 +257,13 @@ const styles = StyleSheet.create({
     DonorContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingHorizontal: 20,
         paddingVertical: 10,
-        marginRight: 100
+        marginRight: 60
+        
     },
     donorInfoContainer: {
-        flex: 1,
         alignItems: 'center',
+        flex: 1
     },
     lineContainer: {
         flexDirection: 'row',
@@ -573,19 +276,43 @@ const styles = StyleSheet.create({
     },
     DonorSecondContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        marginRight: 30
+        alignItems: 'center',
+        paddingVertical: 5,
+        marginRight: 5
     },
     donorInfoSecondContainer: {
-        flex: 1,
         alignItems: 'center',
+        flex: 1
+    },
+    RequestorContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingVertical: 10,
+        marginRight: 50
+    },
+    RequestorInfoContainer: {
+        alignItems: 'center',
+        flex: 1
+    },
+    RequestorSecondContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 5,
+        marginRight: 5
+     
+
+    },
+    RequestorInfoSecondContainer: {
+        alignItems: 'center',
+        flex:1
+
+
+        
     },
     logInButton: {
         backgroundColor: 'white',
         height: '90%',
-        width: "25%",
+        width: "15%",
         borderRadius: 50,
         borderColor: '#E60965',
         borderWidth: 1,

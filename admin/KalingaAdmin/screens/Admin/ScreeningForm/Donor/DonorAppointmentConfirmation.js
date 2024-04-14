@@ -1,138 +1,158 @@
-import React, { useState } from 'react';
-import { ScrollView, Text, View, StatusBar, StyleSheet, TouchableOpacity, TextInput, Button, Platform } from 'react-native';
-import { globalHeader } from '../../../../styles_kit/globalHeader.js';
-import { globalStyles } from '../../../../styles_kit/globalStyles.js';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect} from 'react';
+import { ScrollView, Text, View, StatusBar, StyleSheet, TouchableOpacity, TextInput, Button, Platform, ActivityIndicator  } from 'react-native';
+import { globalHeader } from '../../../../../../client/Kalinga/styles_kit/globalHeader.js';
+import { globalStyles } from '../../../../../../client/Kalinga/styles_kit/globalStyles.js';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Feather } from '@expo/vector-icons'; // Import Feather icon from Expo
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
+import randomatic from 'randomatic';
+import { format } from 'date-fns';
+import axios from 'axios'; // Import axios
+import { useNavigation, useRoute } from '@react-navigation/native'; // Correct import
+
 
 
 
 const DonorAppointmentConfirmation = () => {
+    const route = useRoute(); // Move this line before accessing route.params
+    const AppointmentDonorID = route.params;
+
     const navigation = useNavigation();
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedTime, setSelectedTime] = useState(new Date());
-    const [showDatePicker, setShowDatePicker] = useState(false);
-    const [showTimePicker, setShowTimePicker] = useState(false);
-
-    const navigatePage = (Page) => {
-        navigation.navigate(Page); // Navigate to the specified screen
+    
+    const [formData, setFormData] = useState({
+        fullName: '',
+        phoneNumber: '',
+        emailAddress: '',
+        homeAddress: '',
+        medicalCondition: '',
+        milkAmount: '',
+        location: '',
+        selectedDate: selectedDate.toISOString(),
+        selectedTime: selectedTime.toISOString(),
+    });
+  
+    const fetchData = async () => {
+        try {
+            const response = await axios.get(`http://192.168.254.103:7000/kalinga/getAppointmentsByDonorID/${AppointmentDonorID.formData}`);
+            
+            const data = response.data.Appointment;
+    
+            // Extract the time part from the selectedTime field
+            const dateTime = new Date(data.selectedTime);
+            const timePart = `${dateTime.getHours()}:${dateTime.getMinutes()}`;
+    
+            setFormData({
+                ...data,
+                selectedTime: timePart, // Only set the time part
+            });
+            console.log('FormData:', data);
+        } catch (error) {
+            console.error('Error fetching data:', error); // Log specific error
+        }
     };
 
-    const handleDateChange = (event, selectedDate) => {
-        setShowDatePicker(Platform.OS === 'ios'); // Close the date picker on iOS
-        setSelectedDate(selectedDate || new Date());
-    };
+    useEffect(() => {
+        fetchData(); // Fetch data when component mounts
+    }, []);
 
-    const handleTimeChange = (event, selectedTime) => {
-        setShowTimePicker(Platform.OS === 'ios'); // Close the time picker on iOS
-        setSelectedTime(selectedTime || new Date());
-    };
-
-    return (
+return (
         <View style={globalStyles.container}>
-            <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
-            <View style={globalHeader.SmallHeader}>
-                <Text style={globalHeader.SmallHeaderTitle}>Set Appointment</Text>
-            </View>
+        <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
+        <View style={globalHeader.SmallHeader}>
+            <Text style={globalHeader.SmallHeaderTitle}>Set Appointment</Text>
+        </View>
 
-            <ScrollView overScrollMode='never' nestedScrollEnabled={true}>
-                <Text style={styles.title}>Appointment Confirmation</Text>
-                <View style={styles.container}>
-                <TextInput
-                        style={styles.BiginputField}
-                        placeholder="Full Name"
-                        placeholderTextColor="#E60965"
-                    />
-                    <TextInput
-                        style={styles.BiginputField}
-                        placeholder="Phone Number"
-                        placeholderTextColor="#E60965"
-                    />
-                    <TextInput
-                        style={styles.BiginputField}
-                        placeholder="Email Address"
-                        placeholderTextColor="#E60965"
-                    />
-                    <TextInput
-                        style={styles.BiginputFieldHome}
-                        placeholder="Home Address"
-                        placeholderTextColor="#E60965"
-                    />
-                    <TextInput
-                        style={styles.BiginputField}
-                        placeholder="Medical Condition (If Applicable)"
-                        placeholderTextColor="#E60965"
-                    />
-                    <TextInput
-                        style={styles.BiginputField}
-                        placeholder="Amount of milk to be donated"
-                        placeholderTextColor="#E60965"
-                    />
-                    <View>
-                        <Text style={styles.AdminDate}>Date</Text>
-                    </View>
-                    <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-                    <View style={styles.BiginputField}>
+        <ScrollView overScrollMode='never' nestedScrollEnabled={true}>
+            <Text style={styles.title}>Appointment Confirmation</Text>
+           
+          {formData && (
+            <View style={styles.container}>
+              <TextInput
+                style={[styles.BiginputField, { color: '#E60965' }]}
+                placeholder="Full Name"
+                placeholderTextColor="#E60965"
+                value={`Full Name: ${formData.fullName || ''}`}
+                editable={false}
+              />
+              <TextInput
+                style={[styles.BiginputField, { color: '#E60965' }]}
+                placeholder="Phone Number"
+                placeholderTextColor="#E60965"
+                value={`Phone Number: ${formData.phoneNumber || ''}`}
+                editable={false}
+              />
+              <TextInput
+                style={[styles.BiginputField, { color: '#E60965' }]}
+                placeholder="Email Address"
+                placeholderTextColor="#E60965"
+                value={`Email Address: ${formData.emailAddress || ''}`}
+                editable={false}
+              />
+              <TextInput
+                style={[styles.BiginputField, { color: '#E60965' }]}
+                placeholder="Home Address"
+                placeholderTextColor="#E60965"
+                value={`Home Address: ${formData.homeAddress || ''}`}
+                editable={false}
+              />
+              <TextInput
+                style={[styles.BiginputField, { color: '#E60965' }]}
+                placeholder="Medical Condition (If Applicable)"
+                placeholderTextColor="#E60965"
+                value={`Medical Condition (If Applicable): ${formData.medicalCondition || ''}`}
+                editable={false}
+              />
+              <TextInput
+                style={[styles.BiginputField, { color: '#E60965' }]}
+                placeholder="Amount of Milk to be Donated"
+                placeholderTextColor="#E60965"
+                value={`Amount of Milk to be Donated: ${formData.milkAmount || ''}`}
+                editable={false}
+              />
+              <View>
+              <Text style={styles.AdminDate}>Date</Text>
+              </View>
+              <View style={styles.BiginputField}>
                         <TextInput
-                            color = "#E60965"
-                            placeholder="Select Date"
-                            value={selectedDate.toDateString()} // Display selected date
+                            style={{ flex: 1, color: '#E60965' }}
+                            placeholder="Date"
                             placeholderTextColor="#E60965"
-                            editable={false} // Disable editing
+                            value={format(formData.selectedDate, 'MM/dd/yyyy')}
+                            editable={false}
                         />
                         <FontAwesome5 name="calendar-alt" size={20} color="#E60965" style={styles.icon} />
                     </View>
 
-                    </TouchableOpacity>
                     <View>
                         <Text style={styles.AdminTime}>Time</Text>
                     </View>
-                    <TouchableOpacity onPress={() => setShowTimePicker(true)}>
                     <View style={styles.BiginputField}>
                         <TextInput
-                            color = "#E60965"
-                            placeholder="Select Time"
-                            value={selectedTime.toLocaleTimeString()} // Display selected time
+                            style={{ flex: 1, color: '#E60965' }}
+                            placeholder="Time"
                             placeholderTextColor="#E60965"
-                            editable={false} // Disable editing
+                            value={format(selectedTime, 'HH:mm')}
+
+                            editable={false}
                         />
                         <MaterialIcons name="access-time-filled" size={24} color="#E60965" style={styles.icon2} />
-                        </View>
-                    </TouchableOpacity>
-                  
-                    {showDatePicker && (
-                        <DateTimePicker
-                            value={selectedDate}
-                            mode="date"
-                            is24Hour={true}
-                            display="default"
-                            onChange={handleDateChange}
-                        />
-                    )}
-                    {showTimePicker && (
-                        <DateTimePicker
-                            value={selectedTime}
-                            mode="time"
-                            is24Hour={true}
-                            display="default"
-                            onChange={handleTimeChange}
-
-                        />
-                    )}
-                    <View>
-                        <Text style={styles.AdminMilkLocation}>Milk Bank Location</Text>
                     </View>
-                    <View style={styles.BiginputField}>
-                    <TextInput
-                        placeholder="Quezon City General Hospital - Human Milk Bank"
-                        placeholderTextColor="#E60965"
-                    />
-                    <FontAwesome6 name="hospital" size={24} color="#E60965" style={styles.icon3} />
-                    </View>
+              <View>
+                    <Text style={styles.AdminMilkLocation}>Milk Bank Location</Text>
+                </View>
+                <View style={styles.BiginputField}>
+                <TextInput
+                    style={{ flex: 1, color: '#E60965' }} // Set flex to 1 to allow TextInput to take up remaining space
+                    placeholder="location"
+                    placeholderTextColor="#E60965"
+                    value={formData.location || ''}
+                    editable={false}
+                />
+                <FontAwesome6 name="hospital" size={24} color="#E60965" style={styles.icon3} />
                 </View>
 
                 <View style={styles.AdminButton}>
@@ -146,11 +166,15 @@ const DonorAppointmentConfirmation = () => {
                             <Text style={styles.label}>Decline</Text>
                         </View>
                     </TouchableOpacity>
-                </View>
+                    </View>
+                    </View>
+                )}
             </ScrollView>
         </View>
     );
 };
+
+
 
 const styles = StyleSheet.create({
     container: {

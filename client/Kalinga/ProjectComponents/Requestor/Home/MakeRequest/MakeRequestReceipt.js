@@ -12,7 +12,7 @@ import {
     Alert
 } from 'react-native';
 //import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native'; // Correct import
 
 
 import { MaterialIcons } from '@expo/vector-icons';
@@ -24,56 +24,67 @@ import { Picker } from '@react-native-picker/picker';
 
 
 
-const PendingTabRequest = () => {
-    const [inputValue, setInputValue] = useState('');
-    const [selectedImage, setSelectedImage] = useState(null);
+const MakeRequestReceipt = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
+const { formData, BabyCategory } = route.params;
+console.log('BabyCategory value:', BabyCategory);
 
-    const [selectedCategory, setSelectedCategory] = useState('Healthy Baby'); // Default category
 
-   
-  
-		const navigation = useNavigation();
-    
-    const navigatePage = (Page) => {
-        navigation.navigate(Page); // Navigate to the Login screen
-    };
 
-    const handlePress = () => {
-        console.log('Button Pressed!');
-      };
-		
-		const handleBackPress = () => {
-			console.log("Back button pressed");
-		};
 
-		const handleInputChange = (text) => {
-			setInputValue(text); // Update the local inputValue
-		};
 
-        const handleImageUpload = async () => {
-            try {
-                const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-                if (status !== 'granted') {
-                    Alert.alert('Permission Denied', 'Sorry, we need camera roll permissions to make this work!');
-                    return;
-                }
-    
-                const result = await ImagePicker.launchImageLibraryAsync({
-                    mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                    allowsEditing: true,
-                    aspect: [4, 3],
-                    quality: 1,
-                });
-    
-                if (!result.cancelled) {
-                    setSelectedImage(result.uri);
-                }
-            } catch (error) {
-                Alert.alert('Error', 'Failed to pick an image.');
-            }
-        };
+  // State to track selected image and input value
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [inputValue, setInputValue] = useState('');
 
-    const[inputName, setInputName] = useState('')
+
+  const handleApprove = async () => {
+      try {
+          const response = await fetch('192.168.254.105:7000/kalinga/createRequest', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(formData), // Assuming formData has the required fields
+          });
+
+          if (response.ok) {
+              // Request successful, navigate or show success message
+              navigation.navigate('SuccessScreen');
+          } else {
+              // Handle error response from server
+              Alert.alert('Error', 'Failed to create request. Please try again.');
+          }
+      } catch (error) {
+          // Handle network or other errors
+          Alert.alert('Error', 'Failed to connect to the server. Please check your internet connection.');
+      }
+  };
+
+  const handleImageUpload = async () => {
+      // Code for handling image upload
+  };
+
+  const handleRequestCreation = async () => {
+    try {
+      const response = await fetch('http://192.168.254.103:7000/kalinga/createRequest', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok.');
+      }
+
+      navigation.navigate('MakeRequest2'); // Redirect to AppointmentConfirmationMessage
+    } catch (error) {
+      console.error('Error creating appointment:', error);
+    }
+  };
     return (
 			<SafeAreaView style = {styles.container}>
 				<StatusBar barStyle="dark-content" translucent backgroundColor="white" />
@@ -87,122 +98,110 @@ const PendingTabRequest = () => {
 					nestedScrollEnabled={true} 
 					showsVerticalScrollIndicator={false}
 				>
-			
 
 						<View style={styles.body}>
                         <View style={styles.Title}>
 									<Text style={styles.TitleText}>Request Confirmation</Text>
                         </View>
 							<View style={{marginTop: 15}}>
-								<View style={styles.boxContainer}>
-										<View style={styles.boxContentContainer}>
-											<Text style={styles.boxLabel}>Full Name</Text>
-											<Text style={[styles.boxContent, styles.limitText]}></Text>
-										</View>
-								</View>
-							</View>
+              <View style={styles.boxContainer}>
+            <View style={styles.boxContentContainer}>
+              <Text style={styles.boxLabel}>Full Name</Text>
+              <Text style={[styles.boxContent, styles.limitText]}>{formData.fullName}</Text>
+            </View>
+          </View>
 
-							<View style={styles.boxContainer}>
-								<View style={styles.boxContentContainer}>
-									<Text style={styles.boxLabel}>Phone Number</Text>
-									<Text style={[styles.boxContent, styles.limitText]}></Text>
-								</View>
-							</View>
+          <View style={styles.boxContainer}>
+            <View style={styles.boxContentContainer}>
+              <Text style={styles.boxLabel}>Phone Number</Text>
+              <Text style={[styles.boxContent, styles.limitText]}>{formData.phoneNumber}</Text>
+            </View>
+          </View>
 
-							<View style={styles.boxContainer}>
-								<View style={styles.boxContentContainer}>
-									<Text style={styles.boxLabel}>Email Address</Text>
-									<Text style={[styles.boxContent, styles.limitText]}></Text>
-								</View>
-							</View>
+          <View style={styles.boxContainer}>
+            <View style={styles.boxContentContainer}>
+              <Text style={styles.boxLabel}>Email Address</Text>
+              <Text style={[styles.boxContent, styles.limitText]}>{formData.emailAddress}</Text>
+            </View>
+          </View>
 
-							<View style={styles.boxContainer2}>
-								<View style={styles.boxContentContainer}>
-									<Text style={styles.boxLabel}>Home Address</Text>
-									<Text style={[styles.boxContent, styles.limitText]}></Text>
-								</View>
-							</View>
+          <View style={styles.boxContainer2}>
+            <View style={styles.boxContentContainer}>
+              <Text style={styles.boxLabel}>Home Address</Text>
+              <Text style={[styles.boxContent, styles.limitText]}>{formData.homeAddress}</Text>
+            </View>
+          </View>
 
-							<View style={styles.boxContainer}>
-								<View style={styles.boxContentContainer}>
-									<Text style={styles.boxLabel}>Medical Condition (if applicable)</Text>
-									<Text style={[styles.boxContent, styles.limitText]}></Text>
-								</View>
-							</View>
-			
-							<View style={styles.bodyForm1}>
-                <TextInput
-                    style={styles.form3}
-                    value={inputValue}
-                    placeholder="Amount of milk to be requested (mL) *"
-                    placeholderTextColor="#E60965"
-                    onChangeText={handleInputChange}
+          <View style={styles.boxContainer}>
+            <View style={styles.boxContentContainer}>
+              <Text style={styles.boxLabel}>Medical Condition (if applicable)</Text>
+              <Text style={[styles.boxContent, styles.limitText]}>{formData.medicalCondition}</Text>
+            </View>
+          </View>
+
+          <View style={styles.bodyForm1}>
+          <TextInput
+                style={[styles.form3, { color: '#E60965' }]}
+                value={ formData.milkAmount }               
+                 placeholder="Amount of milk to be requested (mL) *"
+                placeholderTextColor="#E60965"
+                editable={false}
                 />
 
-              
-                  <View style={styles.dropdownContainer}>
-                  <Picker
-                    selectedValue={selectedCategory}
-                    onValueChange={(itemValue, itemIndex) => setSelectedCategory(itemValue)}
-                    style={styles.dropdown}
-                  >
-                    <Picker.Item label="Baby Category" value="Baby Category" />
-                    <Picker.Item label="Healthy Baby" value="Healthy Baby" style={styles.dropdownItem} />
-                    <Picker.Item label="Sick Baby" value="Sick Baby" style={styles.dropdownItem} />
-                    <Picker.Item label="Medically Fragile Baby" value="Medically Fragile Baby" style={styles.dropdownItem} />
-                    <Picker.Item label="Preterm Baby" value="Preterm Baby" style={styles.dropdownItem} />
-                  </Picker>
-                </View>
+          <View style={styles.bodyForm2}>
+              <View style={styles.form4}>
+                  <Text style={styles.boxLabel}>Baby Category</Text>
+                  <Text style={[styles.boxContent, styles.limitText]}>{formData.BabyCategory}</Text>
               </View>
+          </View>
+          </View>
 
-							<View style={styles.boxContainer2}>
-								<View style={styles.boxContentContainer}>
-									<Text style={styles.boxLabel}>Reason for Requesting</Text>
-									<Text style={[styles.boxContent, styles.limitText]}></Text>
-								</View>
-							</View>
+          <View style={styles.boxContainer2}>
+            <View style={styles.boxContentContainer}>
+              <Text style={styles.boxLabel}>Reason for Requesting</Text>
+              <Text style={[styles.boxContent, styles.limitText]}>{formData.ReasonForRequesting}</Text>
+            </View>
+          </View>
 
-							<Text style={styles.bodyNote}>Note: Maximum of 3 images or files per field.</Text>
+          <Text style={styles.bodyNote}>Note: Maximum of 3 images or files per field.</Text>
 
-                            <View style = {styles. attachmentContainer}>
-                        <Text style={styles.labelPicture}>
-                            Prescription.jpg
-                        </Text>
-                        <View style={styles.rowAlignment}>
-                            <FontAwesome5 name="asterisk" size={12} color="#E60965" />
-                            <TouchableOpacity onPress={handleImageUpload}style={styles.iconContainer}>
-                            <AntDesign name="picture" size={27} color="#E60965" />
-                            <Text style={styles.verticalLine}>|</Text>
-                            <AntDesign name="file1" size={24} color="#E60965" />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    {selectedImage && (
-                        <Image source={{ uri: selectedImage }} style={styles.uploadedImage} />
-                    )}
+          <View style={styles.attachmentContainer}>
+            <Text style={styles.labelPicture}>Prescription.jpg</Text>
+            <View style={styles.rowAlignment}>
+              <FontAwesome5 name="asterisk" size={12} color="#E60965" />
+              <TouchableOpacity onPress={handleImageUpload} style={styles.iconContainer}>
+                <AntDesign name="picture" size={27} color="#E60965" />
+                <Text style={styles.verticalLine}>|</Text>
+                <AntDesign name="file1" size={24} color="#E60965" />
+              </TouchableOpacity>
+            </View>
+          </View>
 
-                            <View style={styles.DonorButton}>
-                                <TouchableOpacity onPress={() => navigatePage("MakeRequest2")}>
-                                    <View style={styles.ConfirmbuttonContainer}>
-                                        <Text style={styles.label}>Confirm</Text>
-                                    </View>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => navigatePage("DonorInitialScreeningFormPage2")}>
-                                    <View style={styles.CancelbuttonContainer}>
-                                        <Text style={styles.label}>Cancel</Text>
-                                    </View>
-                                </TouchableOpacity>
-                </View>
-						
-						</View>
-			
-				</ScrollView>
+          {selectedImage && (
+            <Image source={{ uri: selectedImage }} style={styles.uploadedImage} />
+          )}
 
-		</SafeAreaView>
+          <View style={styles.DonorButton}>
+            <TouchableOpacity onPress={handleRequestCreation}>
+              <View style={styles.ConfirmbuttonContainer}>
+                <Text style={styles.label}>Approve</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigatePage("Requestor Tabs")}>
+              <View style={styles.CancelbuttonContainer}>
+                <Text style={styles.label}>Decline</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+        </View>
         
-    );
 
-}
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
+
 
 const styles = StyleSheet.create ({
 
@@ -226,6 +225,8 @@ const styles = StyleSheet.create ({
     bodyForm1:{
         flexDirection: "row",
         alignSelf:"center",
+        paddingLeft: 45
+
       },
       form3:{
         height: 52,
@@ -241,34 +242,26 @@ const styles = StyleSheet.create ({
         justifyContent: "space-between"
       },
 
-      dropdownContainer: {
-        borderWidth: 1,
-        borderColor: '#E60965',
-        borderRadius: 10,
+    
+      bodyForm2:{
+        flexDirection: "row",
+        alignSelf:"center",
+        paddingLeft: 55
+      },
+      form4:{
+        height: 52,
+        fontFamily: "OpenSans-Regular",
+        borderColor: '#E60965', // Border color
+        borderWidth: 1, // Border width
+        borderRadius: 10, // Border radius
         paddingHorizontal: 10,
         marginBottom: 5,
-        width: '55%',
-        alignSelf: 'center',
+        width: '80%',
+        alignSelf: 'center', // Center the input horizontally
         backgroundColor: '#fff',
-        height:10,
-        marginLeft: 20,
-        paddingBottom: 50
+        justifyContent: "space-between"
+      },
 
-},
-
-dropdown: {
-  height: 10,
-  color: '#E60965',
-
-
-
-},
-
-dropdownItem: {
-  fontFamily: 'OpenSans-Regular',
-  color: '#E60965',
-  
-},
 	button: {
 		borderWidth: 1,
 		padding: 10,
@@ -333,6 +326,7 @@ dropdownItem: {
 		alignSelf: 'center', // Center the input horizontally
 		backgroundColor: '#fff', // Background color
 	},
+  
 
 	boxContainer2: {
 		height: 70,
@@ -362,7 +356,8 @@ dropdownItem: {
 		fontSize: 15,
 		color: '#E60965',
 		marginTop: 3,
-		marginLeft:-15
+		marginLeft:-15,
+    paddingLeft: 10
 	},
 
 	boxContent: {
@@ -474,4 +469,4 @@ rowAlignment: {
 
 });
 
-export default PendingTabRequest;
+export default MakeRequestReceipt;

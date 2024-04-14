@@ -2,36 +2,55 @@ import React, { useState } from 'react';
 import { ScrollView, Text, View, StatusBar, StyleSheet, TouchableOpacity, TextInput, Button, Platform } from 'react-native';
 import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Feather } from '@expo/vector-icons'; // Import Feather icon from Expo
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
+import randomatic from 'randomatic';
+import { format } from 'date-fns';
 
 
 
 const SetDateTimeLocation = () => {
     const navigation = useNavigation();
+    const route = useRoute();
+    const { formData } = route.params || {};
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedTime, setSelectedTime] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
-
-    const navigatePage = (Page) => {
-        navigation.navigate(Page); // Navigate to the specified screen
-    };
-
+    const [location, setLocation] = useState('');
+    const { AppointmentDonorID } = route.params || {};
+    const Appointment_DonorID = randomatic('Aa0', 20);
+  
     const handleDateChange = (event, selectedDate) => {
-        setShowDatePicker(Platform.OS === 'ios'); // Close the date picker on iOS
-        setSelectedDate(selectedDate || new Date());
+      setShowDatePicker(Platform.OS === 'ios');
+      setSelectedDate(selectedDate || new Date());
     };
-
+  
     const handleTimeChange = (event, selectedTime) => {
-        setShowTimePicker(Platform.OS === 'ios'); // Close the time picker on iOS
-        setSelectedTime(selectedTime || new Date());
+      setShowTimePicker(Platform.OS === 'ios');
+      setSelectedTime(selectedTime || new Date());
     };
-
+  
+    const handleAppointmentCreation = async () => {
+        const appointmentData = {
+          ...formData,
+          location: location,
+          selectedDate: selectedDate.toISOString(),
+          selectedTime: selectedTime.toISOString(),
+        };
+      
+        try {
+            // Simulate API call or any processing
+            console.log('Appointment data:', appointmentData);
+            navigation.navigate('AppointmentConfirmation', { formData: appointmentData });
+          } catch (error) {
+            console.error('Error creating appointment:', error);
+          }
+        };
     return (
         <View style={globalStyles.container}>
             <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
@@ -47,17 +66,27 @@ const SetDateTimeLocation = () => {
                     <TouchableOpacity onPress={() => setShowDatePicker(true)}>
                     
                     <View style={styles.BiginputField}>
-                        <TextInput
-                            color = "#E60965"
-                            placeholder="Select Date"
-                            value={selectedDate.toDateString()} // Display selected date
-                            placeholderTextColor="#E60965"
-                            editable={false} // Disable editing
-                        />
-                        <FontAwesome5 name="calendar-alt" size={20} color="#E60965" style={styles.icon} />
+                    <TextInput
+                    style={styles.inputText}
+                    placeholder="MM/DD/YYYY"
+                     placeholderTextColor="#E60965"
+                    value={format(selectedDate, 'MM/dd/yyyy')}
+                    editable={false}
+                     />
+                    <FontAwesome5 name="calendar-alt" size={20} color="#E60965" style={styles.icon} />
+                                
                     </View>
 
                     </TouchableOpacity>
+
+                    {showDatePicker && (
+                        <DateTimePicker
+                            value={selectedDate}
+                            mode="date"
+                            display="default"
+                            onChange={handleDateChange}
+                        />
+                    )}
 
                     <View>
                         <Text style={styles.AdminTime}>Choose Time</Text>
@@ -66,56 +95,49 @@ const SetDateTimeLocation = () => {
                     <TouchableOpacity onPress={() => setShowTimePicker(true)}>
                         <View style={styles.BiginputField}>
                         <TextInput
-                            color = "#E60965"
-                            placeholder="Select Time"
-                            value={selectedTime.toLocaleTimeString()} // Display selected time
-                            placeholderTextColor="#E60965"
-                            editable={false} // Disable editing
+                        style={styles.inputText}
+                        placeholder="HH:MM"
+                        placeholderTextColor="#E60965"
+                        value={format(selectedTime, 'HH:mm')}
+                        editable={false}
                         />
-                        <MaterialIcons name="access-time-filled" size={24} color="#E60965" style={styles.icon2} />
+                        <MaterialIcons name="access-time" size={24} color="#E60965" style={styles.icon2} />
                         </View>
                     </TouchableOpacity>
-                  
-                    {showDatePicker && (
-                        <DateTimePicker
-                            value={selectedDate}
-                            mode="date"
-                            is24Hour={true}
-                            display="default"
-                            onChange={handleDateChange}
-                        />
-                    )}
+
                     {showTimePicker && (
                         <DateTimePicker
                             value={selectedTime}
                             mode="time"
-                            is24Hour={true}
                             display="default"
                             onChange={handleTimeChange}
-
                         />
                     )}
+
                     <View>
                         <Text style={styles.AdminMilkLocation}>Milk Bank Location</Text>
                     </View>
                     <View style={styles.BiginputField}>
-                    <TextInput
-                        placeholder="Quezon City General Hospital - Human Milk Bank"
-                        placeholderTextColor="#E60965"
-                    />
-                    <FontAwesome6 name="hospital" size={24} color="#E60965" style={styles.icon3} />
+                        <TextInput
+                            placeholder="Quezon City General Hospital - Human Milk Bank"
+                            placeholderTextColor="#E60965"
+                            onChangeText={(text) => setLocation(text)}
+                            value={location}
+                        />
+                        <FontAwesome6 name="hospital" size={24} color="#E60965" style={styles.icon3} />
                     </View>
-                </View>
 
-                    <TouchableOpacity onPress={() => navigatePage("AppointmentConfirmation")}>
+                    <TouchableOpacity onPress={handleAppointmentCreation}>
                         <View style={styles.buttonContainer}>
                             <Text style={styles.label}>Next</Text>
                         </View>
                     </TouchableOpacity>
+                </View>
             </ScrollView>
         </View>
     );
 };
+
 
 const styles = StyleSheet.create({
     container: {
@@ -197,7 +219,7 @@ const styles = StyleSheet.create({
         marginLeft: 180 // Adjust the margin right for the icon
     },
     icon2: {
-        marginLeft: 200 // Adjust the margin right for the icon
+        marginLeft: 220 // Adjust the margin right for the icon
     },
     icon3: {
         marginLeft: 10 // Adjust the margin right for the icon

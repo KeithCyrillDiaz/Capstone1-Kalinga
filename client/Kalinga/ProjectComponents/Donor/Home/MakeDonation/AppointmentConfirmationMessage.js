@@ -57,7 +57,7 @@ const AppointmentConfirmationMessage = () => {
 
               <View style = {globalStyles.center}>
                 <Pressable>
-                <TouchableOpacity style={[styles.AgreebuttonContainer]}onPress={() => navigatePage("SetPasswordRequestor")}>
+                <TouchableOpacity style={[styles.AgreebuttonContainer]}onPress={() => navigatePage("Donor Tabs")}>
                   <Text style={styles.label}>Done</Text>
                 </TouchableOpacity>
                 </Pressable>
@@ -76,7 +76,7 @@ const AppointmentConfirmationMessage = () => {
   const styles = StyleSheet.create ({
     SafeArea: {
         flex: 1,
-        backgroundColor: '#FFF8EB',
+        backgroundColor: '#fff',
         
         width: '100%',
         height: "100%"
