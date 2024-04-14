@@ -55,13 +55,10 @@ const DonorUploadMedicalRequirements = ({route}) => {
 
             for (const key in selectedImage) {
               const imageData = selectedImage[key];
-              const parts = imageData.name.split(".");
-              const extension = parts[1]; // Extension part
-              console.log(imageData.name)
               const file = {
                 uri: imageData.uri,
                 type: 'image/jpeg', // Assuming all image types are JPEG
-                name: `${key}.${extension}`,
+                name: `${key}.png`,
               };
 
               uploadedImages.append('DonorImages', file); // Append the file directly

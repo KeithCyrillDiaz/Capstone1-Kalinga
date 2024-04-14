@@ -49,6 +49,7 @@ export const addMedicalRequirementsAsFile = async (req: express.Request, res: ex
             console.log(`ZIP file saved to: ${zipFilePath}`);
         });
         
+      
         // Pipe the archive to the response
         archive.pipe(res);
 
@@ -62,6 +63,11 @@ export const addMedicalRequirementsAsFile = async (req: express.Request, res: ex
        archive.on('end', async () => {
                 const subFolderID = (files[0].fieldname === "DonorFiles") ? process.env.DONOR_FILES : process.env.REQUESTOR_FILES;
                 const { id, name } = await UploadFiles(zipFile, subFolderID);
+                
+                for(const file of files as any []){
+                    fs.unlinkSync(file.path)
+                }
+
                 
                 // Save the metadata of the zipped file to your database
                 const fileData = {
@@ -78,8 +84,8 @@ export const addMedicalRequirementsAsFile = async (req: express.Request, res: ex
                 };
 
                 await createMedicalRequirementFiles(fileData);
-                //setting result for json
-    
+
+                fs.unlinkSync(zipFilePath)
         });
 
       
