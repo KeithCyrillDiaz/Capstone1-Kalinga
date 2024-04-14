@@ -58,8 +58,8 @@ const RequestorApprovalMessage = () => {
               
 
               <View style = {globalStyles.center}>
-                    <TouchableOpacity style = {styles.AgreebuttonContainer} onPress={() => navigatePage("SetPassword")}>
-                        <Text style = {styles.label}>Next</Text>
+                    <TouchableOpacity style = {styles.AgreebuttonContainer} onPress={() => navigatePage("GuestTabs")}>
+                        <Text style = {styles.label}>Done</Text>
                     </TouchableOpacity>
             </View>
 

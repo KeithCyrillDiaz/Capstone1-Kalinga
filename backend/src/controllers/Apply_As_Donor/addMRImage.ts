@@ -4,12 +4,7 @@ import { UploadFiles } from '../../helpers/GdriveUploader'
 import fs from 'fs'
 export const addMedicalRequirementsAsImage = async (req: express.Request, res: express.Response) => {
     try {
-
-        console.log("test")
-        const images = req.files as any[];
-        const body = req.body   
-
-        console.log(images)
+        const images = req.files as any[]; 
 
         if (!images) {
             return res.status(400).send('No images uploaded.');

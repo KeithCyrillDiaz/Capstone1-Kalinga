@@ -46,7 +46,7 @@ const DonorApproved = () => {
             </View>
               
               
-            <TouchableOpacity style = {globalStyles.center} onPress={() => navigatePage("SetPassword")}>
+            <TouchableOpacity style = {globalStyles.center} onPress={() => navigatePage("GuestTabs")}>
                   <View style = {styles.AgreebuttonContainer} >
                       <Text style = {styles.label}>Done</Text>
                   </View>
