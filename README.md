@@ -1,2 +1,30 @@
 # Capstone1-Kalinga
 Breastmilk Bank Management System  Kalinga: Empowering Breastmilk Donation Banks through mobile application Management Integration
+
+
+#ENV for Kalinga Admin
+
+// for log in admin
+USERNAMEE=admin 
+PASSWORD=1234
+
+// for pass encrytion and token
+SECRET_KEY=KriIsHeart0317
+
+// gmail for sending Email
+NM_EMAIL=no.reply.kalingabreastmilkapp@gmail.com
+NM_PASS=lzrs hvbs prty uxrg
+
+// folder ID's for gdrive
+REQUESTOR_IMAGES=1xUqUsxv0Yc-aSnPZX2O3nTf_mt1uI9kn
+REQUESTOR_FILES=1zbVIhE0gB4WZHxxMDOsj0DiCSo1CAVl8
+DONOR_IMAGES=1r81A4yYKdd9NYb-IHuV_Jljf_-srC2og
+DONOR_FILES=1qXTeV0-h4wE2KfCA4rkLc7Fw3DAflIBv
+
+//For Google API Authentication
+CLIENT_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCUjwklarEw53KP\nP+SMOyesa0d8G2X5nfDJ4/gcswnu0hfI/KPpc7tH3gaU7Qe7ZezqbNDka0zXzoal\nPsNkvVgK1nzbEYRCUhsU2pYTKRs66gW2XR3Hw98lprVwmhhyTNEmQ0VhU462K17X\nqaMYgF7BcFnLo/ySl2bQf9MIlavUzTCVbG3j5no4G8udg8KfVqhlMmG1zQYluPwT\nGmJO/v0j/+48Yk5VhjFOJF8wizOyJl+VOy1mWsUWT1gSf706+LXbsV5aWnVkAaKa\nOUiC8WVjhfmNZgRa7FaukyEquCPV3NVJOgF71jyiy5DSqWhZ1Z7JBUh+AqyYI0+6\nvbQrE3+jAgMBAAECggEANi24GzI+7uPpzr5xfobwYBw71NI1LYThVO/UA7tz6uoq\nDH2+1ZwEeCBL7DJJuJliftgykqtjOe0zA77RCcNYAZPZsxc/UeSZxdA2HUTHjoPc\nk3aALuOLVTLoRumb8st7F2Y/PlB34o4Mp8BRH9VpOUjdJrxml5upvm5vq1jScufX\nrHtZYBpROLI++qyYa9tAzDQ96KSp/iVYFFVxdGlpNN33XTBWbO4kuSKPjVVpLKr8\nacEEClc2jMrCwoudUx+6g2WehmCGh3RpUDPdxIJl+vSu+w0NWd2FjgQQ6H9x6Xih\nunIBiMUQX/wgargbvAzMlnPtbLFwQcWmqcX2z4rDwQKBgQDRixjOeEFbLEXxwBkX\nnIKGJXz0z8Ml6vWCri+SzL5426gEs4dVCW2HaNW9C9EQUNL/iJyj3G/m/h33xrQw\nzkHs+raKwVUvZEkOjIeOA+my7mfMV4f+zsrZ4/EanbF1+MgDdHtiP0kTEiohQPWD\nrvGSOlVfurW8OUI9Hgm0YuiFgwKBgQC1fq2o35JicFHM6pW5f3womHKZZIcOt3dk\ngvHhyzR+FrfbiKpvtqnHJ6AtrMFaFGNP47BEEzeUb5nND7xBPMAQbQtM+R4n3pfO\nPSxr7ZishRdi+JRWYg9ZeNwRiL+pbiHtdtWxgvrD0nRAzqcLyuZbE26QS5u3wDWs\nTCwX+OgjYQKBgB1HJycqLE+V5wv5QEhJSP9/W29FXEn/A2DH/8OuMernHhnSD9W0\n5IXoAv1QGl0CPgkQSHqowUXwObW2INU07Ic1HK5UhxeBFqgewI36Q/wJTZ2CmXDj\n6fn53GVQpUwLf77j1p2KpCYzAon07pkAp6Y72lPu3Ze4FGY/vTFkJIMLAoGBAJsv\nnwOHbx5WlcsWRkGfPSVk/JAmQckWnLLHuFTtsIujlz/SgpEU6eSNAEwtrAH+7s/v\nitcaa2qzZhnNu5U4ga1J3+DIHb3PeZPyAJqkROg2wMFydTvLiv5g9iLT/7W6oq3t\n71hh+1MXDyoeyPyvV/pGCkK9M3+RjRMu6oDw5mThAoGBAJSVUj1Xb6hWlJE1blLK\nteqchmXw8XoMwxqJJ4UmVkModQvbOlyruJPxdvXS8o0kL6Hz7sHMVJvwRwDwO0lS\nmfstopao7vSwr64uIc7nPe+pxAxHNhT90bW0X9XJk/sc5eaCeshStdlk7PtE7zk2\n7PgIstMyBA5bXeiuG0uBZtL9\n-----END PRIVATE KEY-----\n"
+SERVICE_KEY_PATH=turnkey-channel-420114-48c960ab2783.json
+CLIENT_EMAIL=kalinga@kalinga-420204.iam.gserviceaccount.com
+UNIQUE_ID=103535845406830151084
+
+
