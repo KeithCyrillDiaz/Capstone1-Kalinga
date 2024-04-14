@@ -11,7 +11,7 @@ import {
 import { globalStyles } from "../../../../styles_kit/globalStyles.js";
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { useNavigation } from '@react-navigation/native';
-import DataPrivacyPolicyText from './DataPrivacyText.js';
+import DonorDataPrivacyPolicyText from './DonorDataPrivacyText.js';
 
 const DonorDataPrivacy = () => {
 
@@ -37,7 +37,7 @@ const DonorDataPrivacy = () => {
           >
               <View style = {styles.container}>
                 <Text style = {globalStyles.titleParagraph}>Data Privacy Act</Text>
-                <Text style = {styles.paragraphText}>{DataPrivacyPolicyText}</Text>
+                <Text style = {styles.paragraphText}>{DonorDataPrivacyPolicyText}</Text>
               </View>
 
               <View style = {globalStyles.center}>
