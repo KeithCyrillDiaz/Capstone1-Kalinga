@@ -82,7 +82,6 @@ const ReasonForRequesting = ({route}) => {
             }
     
             // setUploadedFiles(uploadedImages)
-    
             const postImages = await axios.post(`${BASED_URL}/kalinga/addMRImageRequestor`, 
               uploadedImages,
               {
@@ -108,7 +107,6 @@ const ReasonForRequesting = ({route}) => {
                   type: imageData.type, 
                   name: imageData.name,
                 };
-                console.log(`ownerID`, imageData.ownerID)
                 uploadedFiles.append('RequestorFiles', file); // Append the file directly
                 uploadedFiles.append(`userType`, "Requestor"); 
                 uploadedFiles.append(`owner`, imageData.owner);// Append userType
@@ -178,7 +176,6 @@ const ReasonForRequesting = ({route}) => {
               }
             });
             
-            console.log("fileType: ", screeningFormData.Applicant_ID)
             setSelectedImage(prevState => ({
                 ...prevState,
               
@@ -372,7 +369,6 @@ const ReasonForRequesting = ({route}) => {
                                     key={attachmentType}
                                     onPress={() => {
                                         setSelectedImageUrl(value.uri);
-                                        console.log("selectedImageUrl: ", selectedImageUrl)
                                         setModalVisible(true);
                                     }}
                                 >

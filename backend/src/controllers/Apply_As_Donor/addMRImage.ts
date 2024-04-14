@@ -1,26 +1,36 @@
 import express from 'express';
 import { createMedicalRequirementImages } from '../../models/ApplyAsDonor';
-// import { google } from 'googleapis';
-import fs from 'fs'
 import { UploadFiles } from '../../helpers/GdriveUploader'
 
 export const addMedicalRequirementsAsImage = async (req: express.Request, res: express.Response) => {
     try {
-        const images = req.files;
+
+        console.log("test")
+        const images = req.files as any[];
         const body = req.body   
 
-        console.log("Body:", body)
-        console.log("Img:", images)
+        console.log(images)
 
         if (!images) {
             return res.status(400).send('No images uploaded.');
-        }
+        } 
 
+        
+            let fieldName = images[0].fieldname;
+            let subFolderID:any ; // Subfolder based on fieldname
+  
+            if (fieldName === "DonorImages") {
+                subFolderID = process.env.DONOR_IMAGES;
+            } else {
+               subFolderID = process.env.REQUESTOR_IMAGES;
+            }  
+            
+            
         if(images){
          
         for (const image of images as any[]) {
             
-          const {id, name} = await UploadFiles(image, process.env.FOLDER_ID)
+          const {id, name} = await UploadFiles(image, subFolderID)
           const imageData = {
               originalname: image.originalname,
               fieldname: image.fieldname,

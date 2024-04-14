@@ -89,6 +89,9 @@ const fileSchema = new mongoose.Schema({
     filename: { type: String }, 
     path: { type: String }, 
     size: { type: Number }, 
+    link: {type: String},
+    gdriveId: {type: String},
+    gdriveName: {type: String},
     uploadedAt: { type: String }, 
     userType: { type: String }, // Add userType field if needed
     owner: { type: String }, // Add owner field if needed
@@ -106,6 +109,7 @@ export const createMedicalRequirementFiles = (values: Record<string, any>) => ne
 export const createMedicalRequirementImages = (values: Record<string, any>) => new MedicalRequirementsImagesModel(values).save().then((MedicalRequirements) => MedicalRequirements.toObject())
 
 export const getMRImage = (ownerID: string) => MedicalRequirementsImagesModel.find({ownerID})
+export const getMRFileZip = (ownerID: string) => MedicalRequirementsFilesModel.findOne({ownerID})
 export const createScreeningForm = (values: Record<string, any>) => new screeningFormModel(values).save().then((ScreeningForm) => ScreeningForm.toObject())
 
 export const getScreeningFormByUserType = (userType: string) => screeningFormModel.find({userType: userType})
