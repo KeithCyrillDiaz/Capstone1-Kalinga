@@ -6,7 +6,6 @@ const screeningFormSchema = new mongoose.Schema({
     Applicant_ID: {type: String},
     Screening_ID: {type: String},
     userType: {type: String},
-
     fullName: {type: String},
     Age: {type: String},
     birthDate: {type: String},
