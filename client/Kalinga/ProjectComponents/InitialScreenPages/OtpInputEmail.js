@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 
-const OtpInputEmail = () => {
+const OtpInputEmail = ({onOtpChange}) => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const inputs = useRef([]);
 
@@ -14,6 +14,7 @@ const OtpInputEmail = () => {
     } else if (text === '' && index > 0) {
       inputs.current[index - 1].focus();
     }
+    onOtpChange(newOtp.join(''));
   };
 
   return (
@@ -38,7 +39,6 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      bottom: 100,
     },
     input: {
       width: 40,

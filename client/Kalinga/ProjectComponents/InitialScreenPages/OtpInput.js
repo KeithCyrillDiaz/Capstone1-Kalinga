@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 
-const OtpInput = () => {
+const OtpInput = ({onOtpChange}) => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const inputs = useRef([]);
 
@@ -14,7 +14,10 @@ const OtpInput = () => {
     } else if (text === '' && index > 0) {
       inputs.current[index - 1].focus();
     }
+    onOtpChange(newOtp.join(''));
   };
+
+
 
   return (
     <View style={styles.container}>
@@ -38,7 +41,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    bottom: 50,
   },
   input: {
     width: 40,
@@ -48,6 +50,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 5,
     borderRadius: 5,
+    shadowColor: '#000', // For iOS
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5, // For Android
   },
 });
 

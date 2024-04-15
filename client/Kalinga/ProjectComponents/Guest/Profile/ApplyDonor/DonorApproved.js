@@ -28,7 +28,7 @@ const DonorApproved = () => {
     );
   }
 
-    const FirstParagraph = 'Your request has been approved. Please pay the fee before proceeding to the next step'
+    const FirstParagraph = 'Thank you for submitting your screening form! Your information has been received. We will carefully review your details and notify you of the qualification status soon. Stay tuned for updates!'
 
   return (
 

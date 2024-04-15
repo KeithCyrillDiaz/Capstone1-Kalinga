@@ -1,37 +1,52 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, StyleSheet, ScrollView } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import 
+{ 
+    Image, 
+    View, 
+    Text, 
+    TextInput, 
+    TouchableOpacity, 
+    KeyboardAvoidingView, 
+    Platform, 
+    StyleSheet, 
+    ScrollView, 
+    Alert } from 'react-native';
+import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
+
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import axios from 'axios'
+import { BASED_URL } from '../../MyConstants';
 
+const ChangeEmail = ({route}) => {
 
-const SetPasswordDonor = () => {
-    const [Password, setPassword] = useState('');    
+    console.log("params: ",route.params)
+    screeningForm = route.params
     const navigation = useNavigation(); 
 
     const handleBackButton = () => {
         navigation.goBack(); 
     };
 
-    const handleCustomURLScheme = async () => {
-        const supported = await Linking.canOpenURL('Kalinga://verification-result?success=true');
-        if (supported) {
-          await Linking.openURL('Kalinga://verification-result?success=true');
-        } else {
-          console.error('Failed to open the URL scheme. Make sure your app is properly configured.');
+    const handleSendCode = async () => {
+        console.log("ID: ",screeningForm.Applicant_ID)
+        const result = await axios.post(`${BASED_URL}/kalinga/sendEmail/${screeningForm.Applicant_ID}`)
+        console.log("result: ",result.data.messages.code)
+        if(result.data.messages.code !== 0){
+            console.log("Failed Sending Email");
+            return result.data.messages.code
         }
-      };
-      
-      // Call the function when needed, e.g., when the app is opened
-      useEffect(() => {
-        handleCustomURLScheme();
-      }, []);
-
-    const handleSubmitButton = () => {
-        navigation.navigate('LogIn'); 
     };
 
+    const handleSubmitButton = () => {
+        const result = handleSendCode();
+        if(result === 0){
+            navigation.navigate('EmailVerificationCode'); 
+        } else {
+            console.log("Failed Sending Email");
+        }
+    };
 
     return (
         <LinearGradient
@@ -48,32 +63,18 @@ const SetPasswordDonor = () => {
                     behavior={Platform.OS === "ios" ? "padding" : null}
                     style={styles.SecondContainer}
                 >
-                    <Text style={styles.FirstText}>Set Your Password</Text>
+                    <Text style={styles.FirstText}>Email Verification</Text>
+                    <Text style={[styles.SecondText, {textAlign: "center"}]}>{`Hi! please click the button below to keep you updated in your ${screeningForm.userType} application. Put the code in the next page`}</Text>
 
-                    <View style={styles.inputContainer}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Input Password"
-                        placeholderTextColor="#F94892"
-                        onChangeText={setPassword}
-                        value={Password}
-                    />
-                    </View>
-
-                    <View style={styles.inputContainer}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Confirm Passwod"
-                        placeholderTextColor="#F94892"
-                        onChangeText={setPassword}
-                        value={Password}
-                    />
-                    </View>
-
+                    <Image
+                        source={require('../../assets/Email_verification.png')}style={styles.image}
+                     />
 
                     <TouchableOpacity style={styles.SubmitButton} onPress={handleSubmitButton}>
-                        <Text style={styles.SubmitButtonText}>Submit</Text>
+                        <Text style={styles.SubmitButtonText}>Send</Text>
                     </TouchableOpacity>
+
+                
                 </KeyboardAvoidingView>
             </ScrollView>
         </SafeAreaView>
@@ -81,7 +82,7 @@ const SetPasswordDonor = () => {
     );
 }
 
-export default SetPasswordDonor;
+export default ChangeEmail;
 
 const styles = StyleSheet.create({
     container: {
@@ -119,37 +120,28 @@ const styles = StyleSheet.create({
     FirstText: {
         marginHorizontal: 50,
         fontSize: 30,
-        color: '#F94892',
+        color: '#E60965',
         marginBottom: 80,
         textAlign: 'center'
+    },
+    SecondText: {
+        fontSize: 17,
+        color: '#E60965',
+        bottom: 70,
+        marginHorizontal: 42,
+        alignContent: 'center'
     },
     SubmitButton: {
         backgroundColor: "#F94892",
         paddingHorizontal: 50,
         paddingVertical: 10,
         borderRadius: 50,
-        marginBottom: 20,
+        marginBottom: 10,
+        top: 100
+
     },
     SubmitButtonText: {
         color: "white",
         fontSize: 20,
-    },
-    inputContainer: {
-        width: '80%',
-        marginTop: 10,
-        justifyContent: 'center',
-        alignSelf: 'center'
-    },
-    input: { 
-        height: 40,
-        borderRadius: 15,
-        backgroundColor: '#FFE5EC',
-        marginBottom: 10,
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.1,
-        shadowRadius: 10,
-        elevation: 10,
-        paddingLeft:10
     },
 });

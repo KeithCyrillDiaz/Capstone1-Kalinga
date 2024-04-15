@@ -45,7 +45,7 @@ const DonorUploadAdmin = ({ route }) => {
           },
           {
             text: 'Yes',
-            onPress: () =>  navigatePage(Page, owner), // Call a function when "Yes" is pressed
+            onPress: () =>  navigatePage(Page, owner, "Approved"), // Call a function when "Yes" is pressed
           },
         ],
         { cancelable: false }
@@ -66,16 +66,18 @@ const DonorUploadAdmin = ({ route }) => {
           },
           {
             text: 'Yes',
-            onPress: () => navigatePage(Page, owner), // Call a function when "Yes" is pressed
+            onPress: () => navigatePage(Page, owner, "Decline"), // Call a function when "Yes" is pressed
           },
         ],
         { cancelable: false }
       );
     };
 
-    const navigatePage = (Page, owner) => {
+    const navigatePage = (Page, owner, status) => {
       // Navigate to the next screen by route name
+      sendEmail(Applicant_ID, status)
       DeleteUser(Applicant_ID)
+      
       navigation.dispatch(
         CommonActions.reset({
           index: 0, //Reset the stack to 0 so the user cannot go back
@@ -84,10 +86,16 @@ const DonorUploadAdmin = ({ route }) => {
       );
     }
 
+    const sendEmail = async (userID, status) => {
+      if(status === "Approved"){
+        const result = await axios.post(`${BASED_URL}/kalinga/sendApprovedEmail/${userID}`)
+      } else {
+        const result = await axios.post(`${BASED_URL}/kalinga/sendDeclinedEmail/${userID}`)
+      }
+      
+    }
     const DeleteUser = async (userID) => {
-      console.log("ID: ", userID)
       const result = await axios.delete(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
-      console.log(result.data)
     }
 
     const fetchData = async () => {
