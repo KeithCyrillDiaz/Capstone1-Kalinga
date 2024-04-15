@@ -6,7 +6,7 @@ import { random, passEncryption } from '../../../helpers/passwordEncryption'
 
 export const registerRequestor = async (req: express.Request, res: express.Response) => {
     try{
-        console.log(req.body)
+        
         if(!req.body.Applicant_ID || !req.body.password){
             return res.status(400).json({
                 messages: {
