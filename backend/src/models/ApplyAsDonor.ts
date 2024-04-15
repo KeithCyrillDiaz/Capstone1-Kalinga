@@ -78,7 +78,9 @@ const imageSchema = new mongoose.Schema({
     uploadedAt: { type: String }, 
     userType: { type: String }, // Add userType field if needed
     owner: { type: String }, // Add owner field if needed
-    ownerID: { type: String }
+    ownerID: { type: String },
+    createdAt: {type: Date, default: Date.now},
+    updatedAt: {type: Date, default: Date.now},
 });
 
 const fileSchema = new mongoose.Schema({
@@ -96,7 +98,9 @@ const fileSchema = new mongoose.Schema({
     uploadedAt: { type: String }, 
     userType: { type: String }, // Add userType field if needed
     owner: { type: String }, // Add owner field if needed
-    ownerID: { type: String }
+    ownerID: { type: String },
+    createdAt: {type: Date, default: Date.now},
+    updatedAt: {type: Date, default: Date.now},
 });
 
 

@@ -68,7 +68,9 @@ export const addMedicalRequirementsAsFile = async (req: express.Request, res: ex
                     fs.unlinkSync(file.path)
                 }
 
-                
+                const moment = require('moment');
+                const currentTime = moment();
+                const formattedTime = currentTime.format('YYYY-MM-DD HH:mm:ss');
                 // Save the metadata of the zipped file to your database
                 const fileData = {
                     originalname: zipFile.originalname,
@@ -80,7 +82,9 @@ export const addMedicalRequirementsAsFile = async (req: express.Request, res: ex
                     userType: (req.body.userType && req.body.userType[0]) || "", 
                     owner: (req.body.owner && req.body.owner[0]) || "",
                     ownerID: (req.body.ownerID && req.body.ownerID[0]) || "",
-                    requirementType: (req.body.requirementType && req.body.requirementType[0]) || ""
+                    requirementType: (req.body.requirementType && req.body.requirementType[0]) || "",
+                    createdAt: formattedTime,
+                    updatedAt: formattedTime,
                 };
 
                 await createMedicalRequirementFiles(fileData);

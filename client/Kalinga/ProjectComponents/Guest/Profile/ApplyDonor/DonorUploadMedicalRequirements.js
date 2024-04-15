@@ -33,7 +33,7 @@ const DonorUploadMedicalRequirements = ({route}) => {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
  
-  const navigatePage = async (Page) => {
+  const navigatePage = async (Page, Data) => {
     try {
 
         setIsLoading(true);
@@ -120,7 +120,7 @@ const DonorUploadMedicalRequirements = ({route}) => {
           navigation.dispatch(
             CommonActions.reset({
               index: 0, //Reset the stack to 0 so the user cannot go back
-              routes: [{ name: Page }], // Replace 'Login' with the name of your login screen
+              routes: [{ name: Page, params: Data } ], // Replace 'Login' with the name of your login screen
             })
           );
 
@@ -539,7 +539,7 @@ const handleFileUpload = async (attachmentType) => {
               { opacity: (isChecked && Object.keys(selectedImage).length + Object.keys(selectedFile).length >= 5) ? 1 : 0.5 } // Apply opacity based on conditions
             ]}
             disabled={!isChecked || Object.keys(selectedImage).length + Object.keys(selectedFile).length < 5} // Disable the button based on conditions
-            onPress={() => navigatePage("DonorApproved")}
+            onPress={() => navigatePage("EmailVerification", screeningFormData)}
           > 
             <Text style={styles.buttonTitle}>Submit</Text>
           </TouchableOpacity>

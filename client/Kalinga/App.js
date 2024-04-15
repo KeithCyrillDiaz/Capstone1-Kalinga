@@ -14,6 +14,7 @@ import SendCode from './ProjectComponents/InitialScreenPages//SendCode';
 import MobileNumber from './ProjectComponents/InitialScreenPages/MobileNumber';
 import MobileNumberExpired from './ProjectComponents/InitialScreenPages/MobileNumberExpired';
 import EmailVerification from './ProjectComponents/InitialScreenPages/EmailVerification';
+import ChangeEmail from './ProjectComponents/InitialScreenPages/ChangeEmail.js';
 import EmailVerificationCode from './ProjectComponents/InitialScreenPages/EmailVerificationCode';
 import DoneEmailVerification from './ProjectComponents/InitialScreenPages/DoneEmailVerification';
 import Facebook from './ProjectComponents/InitialScreenPages/Facebook';
@@ -26,7 +27,7 @@ import FacebookContinue from './ProjectComponents/InitialScreenPages/FacebookCon
 //Guest
 //import ApplyAsDonor from './screens/Guest/Apply_As_Donor/Approved.js'
 //import Approved from './screens/Guest/Apply_As_Requestor/Approved.js' <Stack.Screen name="Approved" component={Approved} />
-//import DonorApproved from './screens/Guest/Apply_As_Donor/Approved.js'  <Stack.Screen name="Donor Approved" component={DonorApproved} />
+import DonorApproved from './ProjectComponents/Guest/Profile/ApplyDonor/DonorApproved.js'  
 // import ApprovalMessage from './ProjectComponents/Guest/Profile/ApplyRequestor/ApprovalMessage.js'
 // import MedicalAbstract from './ProjectComponents/Guest/Profile/ApplyRequestor/MedicalAbstract.js'
 // import ReasonForRequesting from './ProjectComponents/Guest/Profile/ApplyRequestor/ReasonForRequesting.js'
@@ -203,6 +204,7 @@ export default function App() {
             <Stack.Screen name="SendCode" component={SendCode} />
             <Stack.Screen name="MobileNumber" component={MobileNumber} />
             <Stack.Screen name="MobileNumberExpired" component={MobileNumberExpired} />
+            <Stack.Screen name="ChangeEmail" component={ChangeEmail} />
             <Stack.Screen name="EmailVerification" component={EmailVerification} />
             <Stack.Screen name="EmailVerificationCode" component={EmailVerificationCode} />
             <Stack.Screen name="DoneEmailVerification" component={DoneEmailVerification} />
@@ -220,7 +222,7 @@ export default function App() {
              <Stack.Screen name="Guest Educational Contents" component={GuestEducContents} />
              <Stack.Screen name="Guest Educational Library" component={GuestEducLibrary} />
              <Stack.Screen name="GuestTabs" component={GuestTabs} />
-             {/* <Stack.Screen name="Screening Form" component={ScreeningForm} /> */}
+             <Stack.Screen name="DonorApproved" component={DonorApproved} />
              <Stack.Screen name="ApplyAsDonorStack" component={ApplyAsDonorStack} />
              <Stack.Screen name="ApplyAsRequestorStack" component={ApplyAsRequestorStack}/>
              
