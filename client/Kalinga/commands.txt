@@ -1,4 +1,0 @@
-npm install @react-navigation/native
-npm install @react-navigation/bottom-tabs
-npm i expo@50.0.8
-npm install react-native-cli

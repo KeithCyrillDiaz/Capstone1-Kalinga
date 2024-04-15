@@ -1,1 +1,0 @@
-npm install parse-full-name -nvm
