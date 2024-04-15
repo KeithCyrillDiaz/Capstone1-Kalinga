@@ -1,16 +1,14 @@
 import React, { useState, useEffect} from 'react';
 import { ScrollView, Text, View, StatusBar, StyleSheet, TouchableOpacity, TextInput, Button, Platform, ActivityIndicator  } from 'react-native';
-import { globalHeader } from '../../../../../../client/Kalinga/styles_kit/globalHeader.js';
-import { globalStyles } from '../../../../../../client/Kalinga/styles_kit/globalStyles.js';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { Feather } from '@expo/vector-icons'; // Import Feather icon from Expo
+import { globalHeader } from '../../../../styles_kit/globalHeader.js';
+import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
-import randomatic from 'randomatic';
 import { format } from 'date-fns';
 import axios from 'axios'; // Import axios
 import { useNavigation, useRoute } from '@react-navigation/native'; // Correct import
+import { BASED_URL } from '../../../../MyConstants.js';
 
 
 
@@ -37,7 +35,7 @@ const DonorAppointmentConfirmation = () => {
   
     const fetchData = async () => {
         try {
-            const response = await axios.get(`http://192.168.254.103:7000/kalinga/getAppointmentsByDonorID/${AppointmentDonorID.formData}`);
+            const response = await axios.get(`${BASED_URL}/kalinga/getAppointmentsByDonorID/${AppointmentDonorID.formData}`);
             
             const data = response.data.Appointment;
     

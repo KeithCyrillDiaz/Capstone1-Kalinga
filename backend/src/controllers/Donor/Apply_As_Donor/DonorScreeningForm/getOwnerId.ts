@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import { MedicalRequirementsFilesModel, MedicalRequirementsImagesModel } from '../../../models/ApplyAsDonor';
+import { MedicalRequirementsFilesModel, MedicalRequirementsImagesModel } from '../../../../models/ApplyAsDonor';
 
 const router = Router();
 

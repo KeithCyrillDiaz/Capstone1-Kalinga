@@ -438,15 +438,15 @@ export const RequestorInitialScreeningFormPage1 = ({route}) => {
             </View>
 
             <Tab.Navigator
-                tabBarOptions={{
-                    labelStyle: {
+                screenOptions={{
+                    tabBarLabelStyle: {
                         fontSize: 16,
                         fontWeight: 'bold',
                     },
-                    style: {
+                    tabBarStyle: {
                         backgroundColor: '#FFF8EB',
                     },
-                    indicatorStyle: {
+                    tabBarIndicatorStyle: {
                         backgroundColor: '#E60965',
                     },
                 }}

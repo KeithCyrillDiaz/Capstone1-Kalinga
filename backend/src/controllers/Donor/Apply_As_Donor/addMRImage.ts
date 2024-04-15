@@ -1,6 +1,6 @@
 import express from 'express';
-import { createMedicalRequirementImages } from '../../models/ApplyAsDonor';
-import { UploadFiles } from '../../helpers/GdriveUploader'
+import { createMedicalRequirementImages } from '../../../models/ApplyAsDonor';
+import { UploadFiles } from '../../../helpers/GdriveUploader'
 import fs from 'fs'
 export const addMedicalRequirementsAsImage = async (req: express.Request, res: express.Response) => {
     try {
