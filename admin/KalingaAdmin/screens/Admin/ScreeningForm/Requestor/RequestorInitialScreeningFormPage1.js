@@ -1,7 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView, Modal, Image, Dimensions, TouchableHighlight, Alert } from 'react-native';
+import { 
+    View, 
+    Text, 
+    TouchableOpacity, 
+    StyleSheet, 
+    SafeAreaView, 
+    TextInput, 
+    ScrollView, 
+    Modal, 
+    Image, 
+    Dimensions, 
+    TouchableHighlight, 
+    Alert,
+    Linking
+} from 'react-native';
 import { useNavigation, CommonActions } from '@react-navigation/native';
-
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import axios from 'axios';
 import { AntDesign } from '@expo/vector-icons';
@@ -171,6 +184,7 @@ export const SecondScreen = ({route}) => {
     const [medicalAbstractForm, setMedicalAbstractForm] = useState({})
     const [modalVisible, setModalVisible] = useState(false);
     const [images, setImages] = useState({})
+    const [zip, setZip] = useState({})
     const [url, setUrl] = useState("")
     const [owner, setOwner] = useState("")
 
@@ -182,6 +196,10 @@ export const SecondScreen = ({route}) => {
             // console.log('result: ', result)
             setImages(result)
             setOwner(result[0].owner)
+            // console.log("owner: ",result[0].owner)
+
+            const zipFile = await axios.get(`${BASED_URL}/kalinga/getMedicalRequirementFile/${Applicant_ID}`)
+            setZip(zipFile.data.zipFile)
             
            
         } catch (error) {
@@ -192,11 +210,25 @@ export const SecondScreen = ({route}) => {
     const handleImage = (imageName) => {
         images.forEach(image => {
           if(image.originalname === imageName) {
-            setUrl(`${BASED_URL}/kalinga/getImage/${image.filename}`)
+            setUrl(`${image.link}`)
           }// Print the originalname property of each image object
           setModalVisible(true)
       });
       }
+
+      const handleDownload = async () => {
+        const downloadLink = `${zip.link}`; // Replace with your generated download link
+        try {
+            const supported = await Linking.canOpenURL(downloadLink);
+            if (supported) {
+                await Linking.openURL(downloadLink);
+            } else {
+                console.log("Don't know how to open URI: " + downloadLink);
+            }
+        } catch (error) {
+            console.error('Error opening link:', error);
+        }
+    };
 
 
     const fetchMedicalAbstract = async () => {
@@ -209,6 +241,22 @@ export const SecondScreen = ({route}) => {
         fetchMedicalAbstract();
         fetchData();
     },[])
+    const navigatePage = (Page, owner) => {
+        // Navigate to the next screen by route name
+        DeleteUser(Applicant_ID)
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0, //Reset the stack to 0 so the user cannot go back
+            routes: [{ name: Page, params: owner }], // Replace 'Login' with the name of your login screen
+          })
+        );
+      }
+    const DeleteUser = async (userID) => {
+        console.log("ID: ", userID)
+        const result = await axios.delete(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
+        console.log(result.data)
+        fetchScreeningFormIDs();
+    }
 
     const approvedUser = (Page) => {
 
@@ -250,15 +298,7 @@ export const SecondScreen = ({route}) => {
         );
       };
   
-      const navigatePage = (Page, owner) => {
-        // Navigate to the next screen by route name
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0, //Reset the stack to 0 so the user cannot go back
-            routes: [{ name: Page, params: owner }], // Replace 'Login' with the name of your login screen
-          })
-        );
-      }
+     
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
             <View style = {styles.Medicalcontainer}>
@@ -324,6 +364,12 @@ export const SecondScreen = ({route}) => {
                     >
                         <Text style={styles.UploadbuttonTitle}>View Prescription</Text>
                     </TouchableOpacity>
+                    <TouchableOpacity
+                    style={styles.Uploadbutton}
+                    onPress={() =>handleDownload()}
+                  >
+                    <Text style={styles.UploadbuttonTitle}>Download Documents as Zip</Text>
+                  </TouchableOpacity>
 
                 </View>
                
