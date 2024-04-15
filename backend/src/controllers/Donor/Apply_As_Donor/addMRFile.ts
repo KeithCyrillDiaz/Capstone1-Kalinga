@@ -1,6 +1,6 @@
 import express from 'express';
-import { createMedicalRequirementFiles, getMRFileZip } from '../../models/ApplyAsDonor';
-import { UploadFiles } from '../../helpers/GdriveUploader';
+import { createMedicalRequirementFiles, getMRFileZip } from '../../../models/ApplyAsDonor';
+import { UploadFiles } from '../../../helpers/GdriveUploader';
 import archiver from 'archiver'; // Import the archiver library
 import fs from 'fs'
 import path from 'path';

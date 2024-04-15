@@ -1,8 +1,8 @@
 import express from 'express'
 import moment from 'moment'
-import { getScreeningFormByApplicantID } from '../../models/ApplyAsDonor'
-import { createRequestor } from '../../models/users'
-import { random, passEncryption } from '../../helpers/passwordEncryption'
+import { getScreeningFormByApplicantID } from '../../../models/ApplyAsDonor'
+import { createRequestor } from '../../../models/users'
+import { random, passEncryption } from '../../../helpers/passwordEncryption'
 
 export const registerRequestor = async (req: express.Request, res: express.Response) => {
     try{

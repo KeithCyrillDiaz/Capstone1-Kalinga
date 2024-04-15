@@ -1,6 +1,6 @@
 import express from 'express'
 
-import {getScreeningFormByApplicantID} from '../../../models/ApplyAsDonor'
+import {getScreeningFormByApplicantID} from '../../../../models/ApplyAsDonor'
 
 export const getScreeningFormByID = async (req: express.Request, res: express.Response) => {
   try {

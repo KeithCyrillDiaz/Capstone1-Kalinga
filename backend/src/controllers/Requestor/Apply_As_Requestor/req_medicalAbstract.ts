@@ -1,5 +1,5 @@
 import express from 'express';
-import { createReqMedAbstract, getMedicalAbstractById } from '../../models/req_medicalAbstractDB';
+import { createReqMedAbstract, getMedicalAbstractById } from '../../../models/req_medicalAbstractDB';
 
 export const reqMedAbstractForm = async (req: express.Request, res: express.Response) => {
     try {

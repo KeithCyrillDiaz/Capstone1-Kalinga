@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { screeningFormModel } from '../../../models/ApplyAsDonor'; // Import your MongoDB model
+import { screeningFormModel } from '../../../../models/ApplyAsDonor'; // Import your MongoDB model
 import mongoose from 'mongoose';
 
 
