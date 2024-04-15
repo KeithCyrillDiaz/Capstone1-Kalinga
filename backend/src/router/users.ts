@@ -1,7 +1,7 @@
 import express from 'express';
 
-import { registerDonor } from '../controllers/Apply_As_Donor/registerDonor';
-import { registerRequestor } from '../controllers/Apply_As_Requestor/registerRequestor';
+import { registerDonor } from '../controllers/Donor/Apply_As_Donor/registerDonor';
+import { registerRequestor } from '../controllers/Requestor/Apply_As_Requestor/registerRequestor';
 import { AdminLogIn } from '../controllers/Admin/adminLogin';
 import { createAppointment } from '../controllers/Donor/appointmentController';
 import { getAppointmentByDonorID } from '../controllers/Admin/Appointment/getDonorAppointment';

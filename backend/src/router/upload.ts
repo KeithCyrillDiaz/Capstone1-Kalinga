@@ -1,8 +1,8 @@
 import express from 'express'
 // import multer from 'multer';
 import multer from '../helpers/multer';
-import { addMedicalRequirementsAsImage } from '../controllers/Apply_As_Donor/addMRImage'
-import { addMedicalRequirementsAsFile } from '../controllers/Apply_As_Donor/addMRFile'
+import { addMedicalRequirementsAsImage } from '../controllers/Donor/Apply_As_Donor/addMRImage'
+import { addMedicalRequirementsAsFile } from '../controllers/Donor/Apply_As_Donor/addMRFile'
 import { getImage } from '../controllers/Admin/getImageByID';
 import { getFile } from '../controllers/Admin//getFileByID';
 

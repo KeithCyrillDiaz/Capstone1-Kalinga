@@ -1,5 +1,5 @@
 import express from 'express';
-import { getMedicalRequirementFilesByOwnerIDAndFilename, getMedicalRequirementImagesByOwnerIDAndFilename } from '../../../models/getMedicalModel'; 
+import { getMedicalRequirementFilesByOwnerIDAndFilename, getMedicalRequirementImagesByOwnerIDAndFilename } from '../../../../models/getMedicalModel'; 
 
 export const getMedicalImagesController = async (req: express.Request, res: express.Response) => {
     try {

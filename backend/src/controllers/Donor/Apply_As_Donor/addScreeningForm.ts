@@ -1,5 +1,5 @@
 import express from 'express'
-import { createScreeningForm, getScreeningFormByName } from '../../models/ApplyAsDonor';
+import { createScreeningForm, getScreeningFormByName } from '../../../models/ApplyAsDonor';
 import randomatic from 'randomatic'
 
 export const addScreeningForm = async( req: express.Request, res: express.Response) => {
