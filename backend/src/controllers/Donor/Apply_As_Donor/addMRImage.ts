@@ -20,7 +20,9 @@ export const addMedicalRequirementsAsImage = async (req: express.Request, res: e
                subFolderID = process.env.REQUESTOR_IMAGES;
             }  
             
-            
+            const moment = require('moment');
+            const currentTime = moment();
+            const formattedTime = currentTime.format('YYYY-MM-DD HH:mm:ss');
         if(images){
          
         for (const image of images as any[]) {
@@ -38,9 +40,11 @@ export const addMedicalRequirementsAsImage = async (req: express.Request, res: e
               link: `https://drive.google.com/thumbnail?id=${id}&sz=w1000`,
               gdriveId: id,
               gdriveName: name,
-              userType: (req.body.userType && req.body.userType[0]) || "", 
-              owner: (req.body.owner && req.body.owner[0]) || "",
-              ownerID: (req.body.ownerID && req.body.ownerID[0]) || ""
+              userType: (images.length === 1 ? req.body.userType : req.body.userType[0]) || "", 
+              owner: (images.length === 1 ? req.body.owner : req.body.owner[0]) || "",
+              ownerID: (images.length === 1 ? req.body.ownerID : req.body.ownerID[0]) || "",
+              createdAt: formattedTime,
+              updatedAt: formattedTime,
             //   userType: req.body.userType[0], 
             //   owner: req.body.owner[0],
             //   ownerID: req.body.ownerID[0]
