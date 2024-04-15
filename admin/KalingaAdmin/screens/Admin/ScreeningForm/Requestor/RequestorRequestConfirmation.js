@@ -1,239 +1,457 @@
-import React, { useState } from 'react';
-import { ScrollView, Text, View, StatusBar, StyleSheet, TouchableOpacity, Image, Alert, TextInput } from 'react-native';
-import { globalHeader } from '../../../../styles_kit/globalHeader.js';
-import { globalStyles } from '../../../../styles_kit/globalStyles.js';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect} from 'react';
+import { ScrollView, Text, View, StatusBar, StyleSheet, TouchableOpacity, Image, Alert, TextInput, SafeAreaView } from 'react-native';
+import { globalHeader } from '../../../../../../client/Kalinga/styles_kit/globalHeader.js';
+import { globalStyles } from '../../../../../../client/Kalinga/styles_kit/globalStyles.js';
+import axios from 'axios'; // Import axios
+import { useNavigation, useRoute } from '@react-navigation/native'; // Correct import
 import * as ImagePicker from 'expo-image-picker';
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 
-
 const RequestorRequestConfirmation = () => {
-    const navigation = useNavigation();
-    const [selectedImage, setSelectedImage] = useState(null);
+    const route = useRoute();
+    const RequestID = route.params;
 
-    const navigatePage = (Page) => {
-        navigation.navigate(Page); // Navigate to the specified screen
-    };
+    const [formData, setFormData] = useState({
+        fullName: '',
+        phoneNumber: '',
+        emailAddress: '',
+        homeAddress: '',
+        medicalCondition: '',
+        milkAmount: '',
+        BabyCategory: '',
+        ReasonForRequesting: '',
+    });
 
-    const handleImageUpload = async () => {
+    const fetchData = async () => {
         try {
-            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-            if (status !== 'granted') {
-                Alert.alert('Permission Denied', 'Sorry, we need camera roll permissions to make this work!');
-                return;
-            }
-
-            const result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                allowsEditing: true,
-                aspect: [4, 3],
-                quality: 1,
-            });
-
-            if (!result.cancelled) {
-                setSelectedImage(result.uri);
-            }
+            const response = await axios.get(`http://192.168.254.103:7000/kalinga/getRequestByID/${RequestID.formData}`);
+            const data = response.data.Request;
+            
+            // Log fetched data and update formData state
+            console.log('Fetched Data:', data);
+            setFormData(data);
         } catch (error) {
-            Alert.alert('Error', 'Failed to pick an image.');
+            console.error('Error fetching data:', error);
         }
     };
 
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    console.log('FormData:', formData); // Log formData state
+
+   
     return (
-        <View style={globalStyles.container}>
+        <SafeAreaView style = {styles.container}>
             <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
-            <View style={globalHeader.SmallHeader}>
-                <Text style={globalHeader.SmallHeaderTitle}>Set Appointment</Text>
+            <View style = {globalHeader.SmallHeader}>
+                    
+                    <Text style = {globalHeader.SmallHeaderTitle}>My Requests</Text>
             </View>
 
-            <ScrollView overScrollMode='never' nestedScrollEnabled={true}>
-                <Text style={styles.title}>Appointment Confirmation</Text>
-                <View style={styles.container}>
-                    <TextInput
-                        style={styles.BiginputField}
-                        placeholder="Full Name"
-                        placeholderTextColor="#E60965"
-                    />
-                    <TextInput
-                        style={styles.BiginputField}
-                        placeholder="Phone Number"
-                        placeholderTextColor="#E60965"
-                    />
-                    <TextInput
-                        style={styles.BiginputField}
-                        placeholder="Email Address"
-                        placeholderTextColor="#E60965"
-                    />
-                    <TextInput
-                        style={styles.BiginputField2}
-                        placeholder="Home Address"
-                        placeholderTextColor="#E60965"
-                    />
-                    <TextInput
-                        style={styles.BiginputField}
-                        placeholder="Medical Condition (If Applicable)"
-                        placeholderTextColor="#E60965"
-                    />
-                    <TextInput
-                        style={styles.BiginputField}
-                        placeholder="Reason for Requesting"
-                        placeholderTextColor="#E60965"
-                    />
+            <ScrollView
+                overScrollMode='never'
+                nestedScrollEnabled={true} 
+                showsVerticalScrollIndicator={false}
+            >
 
-                <View style = {styles. attachmentContainer}>
-                        <Text style={styles.label}>
-                            Prescription.jpg
-                        </Text>
-                        <View style={styles.rowAlignment}>
-                            <FontAwesome5 name="asterisk" size={12} color="#E60965" />
-                            <TouchableOpacity onPress={handleImageUpload}style={styles.iconContainer}>
-                            <AntDesign name="picture" size={27} color="#E60965" />
-                            <Text style={styles.verticalLine}>|</Text>
-                            <AntDesign name="file1" size={24} color="#E60965" />
-                            </TouchableOpacity>
+                    <View style={styles.body}>
+                    <View style={styles.Title}>
+                                <Text style={styles.TitleText}>Request Confirmation</Text>
+                    </View>
+                        <View style={{marginTop: 15}}>
+          <View style={styles.boxContainer}>
+                            <View style={styles.boxContentContainer}>
+                                <Text style={styles.boxLabel}>Full Name</Text>
+                                <Text style={[styles.boxContent, styles.limitText]}>{formData.fullName}</Text>
+                            </View>
                         </View>
-                    </View>
-                    {selectedImage && (
-                        <Image source={{ uri: selectedImage }} style={styles.uploadedImage} />
-                    )}
 
-                
-                    <View style={styles.adminButton}>
-                        <TouchableOpacity onPress={() => navigatePage("DonorInitialScreeningFormPage2")}>
-                            <View style={styles.approvedButtonContainer}>
-                                <Text style={styles.Adminlabel}>Approved</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => navigatePage("DonorInitialScreeningFormPage2")}>
-                            <View style={styles.declinedButtonContainer}>
-                                <Text style={styles.Adminlabel}>Decline</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </ScrollView>
+
+      <View style={styles.boxContainer}>
+        <View style={styles.boxContentContainer}>
+          <Text style={styles.boxLabel}>Phone Number</Text>
+          <Text style={[styles.boxContent, styles.limitText]}>{formData.phoneNumber}</Text>
         </View>
-    );
+      </View>
+
+      <View style={styles.boxContainer}>
+        <View style={styles.boxContentContainer}>
+          <Text style={styles.boxLabel}>Email Address</Text>
+          <Text style={[styles.boxContent, styles.limitText]}>{formData.emailAddress}</Text>
+        </View>
+      </View>
+
+      <View style={styles.boxContainer2}>
+        <View style={styles.boxContentContainer}>
+          <Text style={styles.boxLabel}>Home Address</Text>
+          <Text style={[styles.boxContent, styles.limitText]}>{formData.homeAddress}</Text>
+        </View>
+      </View>
+
+      <View style={styles.boxContainer}>
+        <View style={styles.boxContentContainer}>
+          <Text style={styles.boxLabel}>Medical Condition (if applicable)</Text>
+          <Text style={[styles.boxContent, styles.limitText]}>{formData.medicalCondition}</Text>
+        </View>
+      </View>
+
+      <View style={styles.bodyForm1}>
+      <TextInput
+            style={[styles.form3, { color: '#E60965' }]}
+            value={ formData.milkAmount }               
+             placeholder="Amount of milk to be requested (mL) *"
+            placeholderTextColor="#E60965"
+            editable={false}
+            />
+
+      <View style={styles.bodyForm2}>
+          <View style={styles.form4}>
+              <Text style={styles.boxLabel}>Baby Category</Text>
+              <Text style={[styles.boxContent, styles.limitText]}>{formData.BabyCategory}</Text>
+          </View>
+      </View>
+      </View>
+
+      <View style={styles.boxContainer2}>
+        <View style={styles.boxContentContainer}>
+          <Text style={styles.boxLabel}>Reason for Requesting</Text>
+          <Text style={[styles.boxContent, styles.limitText]}>{formData.ReasonForRequesting}</Text>
+        </View>
+      </View>
+
+      {/* <Text style={styles.bodyNote}>Note: Maximum of 3 images or files per field.</Text>
+
+      <View style={styles.attachmentContainer}>
+        <Text style={styles.labelPicture}>Prescription.jpg</Text>
+        <View style={styles.rowAlignment}>
+          <FontAwesome5 name="asterisk" size={12} color="#E60965" />
+          <TouchableOpacity onPress={handleImageUpload} style={styles.iconContainer}>
+            <AntDesign name="picture" size={27} color="#E60965" />
+            <Text style={styles.verticalLine}>|</Text>
+            <AntDesign name="file1" size={24} color="#E60965" />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {selectedImage && (
+        <Image source={{ uri: selectedImage }} style={styles.uploadedImage} />
+      )} */}
+                <View style={styles.AdminButton}>
+                    <TouchableOpacity onPress={() => navigatePage("DonorInitialScreeningFormPage2")}>
+                        <View style={styles.ApprovebuttonContainer}>
+                            <Text style={styles.label}>Approve</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigatePage("DonorInitialScreeningFormPage2")}>
+                        <View style={styles.DeclinebuttonContainer}>
+                            <Text style={styles.label}>Decline</Text>
+                        </View>
+                    </TouchableOpacity>
+                    </View>
+                    </View>
+    </View>
+    
+
+  </ScrollView>
+</SafeAreaView>
+);
 };
 
-const styles = StyleSheet.create({
-    container: {
+
+const styles = StyleSheet.create ({
+
+container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    title: {
-        textAlign: 'center',
-        marginTop: 20,
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#E60965',
-        marginBottom: 20,
-    },
-    BiginputField: {
-        backgroundColor: 'white',
-        borderWidth: 1,
-        borderRadius: 10,
-        borderColor: '#E60965',
-        paddingVertical: 5,
-        paddingHorizontal: 20,
-        width: "90%",
-        marginVertical: '1.5%',
-        color: '#E60965',
-    },
-    BiginputField2: {
-        backgroundColor: 'white',
-        borderWidth: 1,
-        borderRadius: 10,
-        borderColor: '#E60965',
-        paddingVertical: 5,
-        paddingHorizontal: 20,
-        width: "90%",
-        height: 80,
-        marginVertical: '1.5%',
-        color: '#E60965',
-    },
-    uploadButton: {
-        marginVertical: 10,
-        flexDirection:"row",
-        backgroundColor: 'white',
-        borderColor: '#E60965',
-        borderWidth: 1,
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        borderRadius: 8,
-        marginBottom: 20,
-        
-    },
-    uploadText: {
-        color: '#E60965',
-        fontSize: 15,
-        paddingRight: 50
-    },
-    uploadedImage: {
-        width: 200,
-        height: 200,
-        resizeMode: 'contain',
-    },
-    adminButton: {
-        flexDirection: "row",
-        justifyContent: "center",
-        marginTop: 20,
-    },
-    approvedButtonContainer: {
-        backgroundColor: '#E60965',
-        paddingHorizontal: 37,
-        borderRadius: 20,
-        paddingVertical: 5,
-        marginHorizontal: 10,
-    },
-    declinedButtonContainer: {
-        backgroundColor: '#E60965',
-        paddingHorizontal: 37,
-        borderRadius: 20,
-        paddingVertical: 5,
-        marginHorizontal: 10,
-    },
-    Adminlabel: {
-        color: 'white',
-        fontFamily: 'Open-Sans-Bold',
-        fontSize: 15,
-    },
-    rowAlignment: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between"
-      },
-  
-      iconContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        backgroundColor: "#FFEECC",
-        paddingHorizontal: 5,
-        marginLeft: 10,
-      },
-  
-  
-      attachmentContainer: {
-        backgroundColor:"white",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: 'space-between',
-          borderWidth: 1,
-          borderColor: "#E60965",
-          borderRadius: 10,
-          paddingVertical: 5,
-          paddingHorizontal: 20,
-          marginBottom: 17,
-          width: "90%"
-      },
-  
-      label: {
-          color: "#E60965",
-          fontSize: 15,
-          fontFamily: "Open-Sans-SemiBold",
-      },
+        backgroundColor: "#FFF8EB",
+
+},
+
+headerButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
+    paddingBottom: 18,
+    justifyContent: "space-evenly",
+    marginVertical: 10,
+    marginHorizontal: "3%",
+    borderBottomWidth: 1,
+    borderBlockColor: "#FFACC7"
+},
+bodyForm1:{
+    flexDirection: "row",
+    alignSelf:"center",
+    paddingLeft: 45
+
+  },
+  form3:{
+    height: 52,
+    fontFamily: "OpenSans-Regular",
+    borderColor: '#E60965', // Border color
+    borderWidth: 1, // Border width
+    borderRadius: 10, // Border radius
+    paddingHorizontal: 10,
+    marginBottom: 5,
+    width: '30%',
+    alignSelf: 'center', // Center the input horizontally
+    backgroundColor: '#fff',
+    justifyContent: "space-between"
+  },
+
+
+  bodyForm2:{
+    flexDirection: "row",
+    alignSelf:"center",
+    paddingLeft: 55
+  },
+  form4:{
+    height: 52,
+    fontFamily: "OpenSans-Regular",
+    borderColor: '#E60965', // Border color
+    borderWidth: 1, // Border width
+    borderRadius: 10, // Border radius
+    paddingHorizontal: 10,
+    marginBottom: 5,
+    width: '80%',
+    alignSelf: 'center', // Center the input horizontally
+    backgroundColor: '#fff',
+    justifyContent: "space-between"
+  },
+
+button: {
+    borderWidth: 1,
+    padding: 10,
+    paddingHorizontal: 18,
+    color: "#E60965",
+    borderColor: "#E60965",
+    fontFamily: "Open-Sans-Bold",
+    backgroundColor: "#FFE5EC",
+    borderRadius: 7,
+    fontSize: 18,
+
+},
+
+indicatedButton: {
+    borderWidth: 1,
+    padding: 10,
+    paddingHorizontal: 18,
+    color: "white",
+    borderRadius: 7,
+    borderColor: "#E60965",
+    fontFamily: "Open-Sans-Bold",
+    backgroundColor: "#E60965",
+    fontSize: 18,
+
+},
+
+bodyNote: {
+fontSize: 10,
+fontFamily: 'OpenSans-Regular',
+color: '#E60965',
+marginLeft: 50,
+marginBottom: 5,
+    marginTop: 5,
+},
+
+bodyNote2: {
+fontSize: 18,
+fontFamily: 'OpenSans-Regular',
+color: '#E60965',
+marginLeft: 15,
+    marginRight: 15,
+marginBottom: 5,
+    marginTop: 20,
+    textAlign: 'center'
+},
+
+bodyForm: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+},
+
+boxContainer: {
+    height: 45,
+    fontFamily: "OpenSans-Regular",
+    borderColor: '#E60965', // Border color
+    borderWidth: 1, // Border width
+    borderRadius: 10, // Border radius
+    paddingHorizontal: 12,
+    marginBottom: 15,
+    width: '88%',
+    alignSelf: 'center', // Center the input horizontally
+    backgroundColor: '#fff', // Background color
+},
+
+
+boxContainer2: {
+    height: 70,
+    fontFamily: "OpenSans-Regular",
+    borderColor: '#E60965', // Border color
+    borderWidth: 1, // Border width
+    borderRadius: 10, // Border radius
+    paddingHorizontal: 12,
+    marginBottom: 15,
+    width: '88%',
+    alignSelf: 'center', // Center the input horizontally
+    backgroundColor: '#fff', // Background color
+},
+Title:{
+    marginLeft: 25,
+    marginTop: 25
+
+},
+TitleText:{
+    color: '#E60965',
+    fontSize: 20,
+    fontWeight:"bold"
+},
+boxLabel: {
+    textAlign: 'left', // Align text to the left
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 15,
+    color: '#E60965',
+    marginTop: 3,
+    marginLeft:-15,
+paddingLeft: 10
+},
+
+boxContent: {
+    fontFamily: "OpenSans-Regular",
+    fontSize: 15,
+    color: '#E60965',
+    fontWeight: 'bold',
+    marginTop: 3,
+    marginLeft: 10,
+    alignItems: 'center'
+},
+
+boxContentContainer: {
+    flexDirection: 'row', // Arrange children horizontally
+    padding: 5,
+    marginLeft: 10,
+    marginTop: 3,
+    marginRight:5,
+},
+
+uploadContainer: {
+    height: 45,
+    fontFamily: "OpenSans-Regular",
+    borderColor: '#E60965', // Border color
+    borderWidth: 1, // Border width
+    borderRadius: 10, // Border radius
+    paddingHorizontal: 10,
+    marginBottom: 5,
+    width: '70%',
+    alignSelf: 'center', // Center the input horizontally
+    backgroundColor: '#fff', // Background color
+    
+},
+
+uploadContainerTitle: {
+    color: '#E60965',
+    margin: 15,
+    marginLeft: 2,
+},
+
+limitText: {
+flexShrink: 1,
+overflow: 'hidden',
+},
+ConfirmbuttonContainer: {
+backgroundColor: '#E60965',
+paddingHorizontal: 37,
+borderRadius: 20,
+paddingVertical: 5,
+marginHorizontal: 10
+
+
+},
+CancelbuttonContainer: {
+backgroundColor: '#E60965',
+paddingHorizontal: 37,
+borderRadius: 20,
+paddingVertical: 5,
+marginHorizontal: 10
+
+
+},
+DonorButton:{
+flexDirection: "row",
+justifyContent:"center",
+marginTop: 20
+},
+label: {
+color: 'white',
+fontFamily: 'Open-Sans-Bold',
+fontSize: 15,
+},
+rowAlignment: {
+flexDirection: "row",
+alignItems: "center",
+justifyContent: "space-between",
+},
+
+iconContainer: {
+flexDirection: "row",
+alignItems: "center",
+backgroundColor: "#FFEECC",
+paddingHorizontal: 5,
+marginLeft: 10,
+},
+
+
+attachmentContainer: {
+backgroundColor:"white",
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: 'space-between',
+  borderWidth: 1,
+  borderColor: "#E60965",
+  borderRadius: 10,
+  paddingVertical: 5,
+  paddingHorizontal: 20,
+  marginBottom: 17,
+  width: "90%",
+ alignSelf:"center"
+
+},
+
+labelPicture: {
+  color: "#E60965",
+  fontSize: 15,
+  fontFamily: "Open-Sans-SemiBold",
+},
+
+    
+ApprovebuttonContainer: {
+    backgroundColor: '#E60965',
+    paddingHorizontal: 37,
+    borderRadius: 20,
+    paddingVertical: 5,
+    marginHorizontal: 10
+
+    
+},
+DeclinebuttonContainer: {
+    backgroundColor: '#E60965',
+    paddingHorizontal: 37,
+    borderRadius: 20,
+    paddingVertical: 5,
+    marginHorizontal: 10
+
+ 
+},
+AdminButton:{
+    flexDirection: "row",
+    justifyContent:"center",
+    marginTop: 20
+},
+
 });
+
 
 export default RequestorRequestConfirmation;

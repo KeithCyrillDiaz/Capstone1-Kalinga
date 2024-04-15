@@ -56,7 +56,7 @@ const MakeRequest2 = () => {
 
               <View style = {globalStyles.center}>
                 <Pressable>
-                <TouchableOpacity style={[styles.AgreebuttonContainer]}onPress={() => navigatePage("SetPasswordRequestor")}>
+                <TouchableOpacity style={[styles.AgreebuttonContainer]}onPress={() => navigatePage("Requestor Tabs")}>
                   <Text style={styles.label}>Done</Text>
                 </TouchableOpacity>
                 </Pressable>
@@ -75,7 +75,7 @@ const MakeRequest2 = () => {
   const styles = StyleSheet.create ({
     SafeArea: {
         flex: 1,
-        backgroundColor: '#FFF8EB',
+        backgroundColor: '#fff',
         
         width: '100%',
         height: "100%"

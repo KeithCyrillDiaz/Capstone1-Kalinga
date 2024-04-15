@@ -1,131 +1,155 @@
 //Guest EducLibrary
-import React, {useState} from "react";
-import { 
-  ScrollView, 
-  Text, View, 
-  SafeAreaView, 
+import React, { useState } from "react";
+import {
+  ScrollView,
+  Text,
+  View,
+  SafeAreaView,
   StatusBar,
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  Image
-} from 'react-native';
+  Image,
+  Alert, // Add Alert for displaying messages
+} from "react-native";
 import { globalStyles } from "../../../../styles_kit/globalStyles.js";
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
-import { useNavigation } from '@react-navigation/native';
-
+import { useNavigation, useRoute } from '@react-navigation/native';
+import SetDateTimeLocation from "./SetDateTimeLocation.js";
+import randomatic from 'randomatic';
 
 
 const SetAppointment = () => {
-
   const navigation = useNavigation();
-    
+  const route = useRoute();
+  const { AppointmentDonorID } = route.params || {};
 
+  const Appointment_DonorID = randomatic('Aa0', 20);
 
-  
-  const navigatePage = (Page) => {
-    navigation.navigate(Page); // Navigate to the specified screen
-};
+  const [formData, setFormData] = useState({
+    AppointmentDonorID: Appointment_DonorID,
+    userType: "Donor",
+    fullName: '',
+    phoneNumber: '',
+    emailAddress: '',
+    homeAddress: '',
+    medicalCondition: '',
+    milkAmount: '',
+  });
+
+  const handleChange = (name, value) => {
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+  const navigatePage = () => {
+    navigation.navigate('SetDateTimeLocation', { formData: formData });
+  };
+
   return (
-      <SafeAreaView style = {globalStyles.SafeArea}>
-          <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
-            <View style = {globalHeader.SmallHeader}>
-              <Text style = {globalHeader.SmallHeaderTitle}>Set Appointment</Text>
+    <SafeAreaView style={globalStyles.SafeArea}>
+      <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
+      <View style={globalHeader.SmallHeader}>
+        <Text style={globalHeader.SmallHeaderTitle}>Set Appointment</Text>
+      </View>
+      <ScrollView
+        style={globalStyles.ScrollView}
+        overScrollMode="never" // Disable the over-scroll effect or the Jelly effect when reaching the end of the scroll
+        nestedScrollEnabled={true} // Enable nested scrolling
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={globalStyles.container}>
+          <View style={styles.center}>
+            <Text style={styles.text}>
+              Make a difference today! Set your donation appointment now and contribute to a meaningful cause. Your generosity can brighten lives and nurture hope.
+            </Text>
+          </View>
+
+          <View>
+            <Image source={require("../../../../assets/makereq.png")} style={styles.img} />
+          </View>
+          <View style={styles.left}>
+            <Text style={styles.note}>Note: All fields marked with (*) are required</Text>
+          </View>
+
+          <View style={styles.inputField}>
+            <View style={styles.spaceBetween}>
+              <TextInput
+                style={styles.placeholderDesign}
+                placeholder="Full Name"
+                placeholderTextColor="#E60965"
+                onChangeText={(text) => handleChange("fullName", text)}
+              />
             </View>
-          <ScrollView
-           style = {globalStyles.ScrollView}
-           overScrollMode='never' // Disable the over-scroll effect or the Jelly effect when reaching the end of the scroll
-           nestedScrollEnabled={true} // Enable nested scrolling
-           showsVerticalScrollIndicator={false}
-           >
-            <View style = {globalStyles.container}>
-                <View style = {styles.center}>
-                    <Text style = {styles.text}>Make a difference today! Set your donation appointment now and contribute to a meaningful cause. Your generosity can brighten lives and nurture hope.</Text>
+                    <Text style = {styles.asterix}>
+                      *
+                    </Text>
                 </View>
-
-                <View>
-                <Image
-                source={require('../../../../assets/makereq.png')} 
-                style={styles.img}
-                 />
-                  </View>
-                <View style = {styles.left}>
-                    <Text style = {styles.note}>Note: All fields marked with (*) are required</Text>
-                </View>
-
-                <View style = {styles.inputField}>
-                  <View style = {styles.spaceBetween}>
+                <View style={styles.inputField}>
+                  <View style={styles.spaceBetween}>
                     <TextInput
-                              style = {styles.placeholderDesign}
-                              placeholder="Full Name"
-                              placeholderTextColor="#E60965"
-                          />
+                      style={styles.placeholderDesign}
+                      placeholder="Phone Number"
+                      placeholderTextColor="#E60965"
+                      onChangeText={(text) => handleChange("phoneNumber", text)}
+                    />
+                  </View>
+                      
+                    <Text style = {styles.asterix}>
+                      *
+                    </Text>
+                </View>
+                <View style={styles.inputField}>
+                  <View style={styles.spaceBetween}>
+                    <TextInput
+                      style={styles.placeholderDesign}
+                      placeholder="Email Address"
+                      placeholderTextColor="#E60965"
+                      onChangeText={(text) => handleChange("emailAddress", text)}
+                    />
                   </View>
                  
                     <Text style = {styles.asterix}>
                       *
                     </Text>
                 </View>
-                <View style = {styles.inputField}>
-                  <View style = {styles.spaceBetween}>
+                <View style={styles.inputField}>
+                  <View style={styles.spaceBetween}>
                     <TextInput
-                              style = {styles.placeholderDesign}
-                              placeholder="Phone Number"
-                              placeholderTextColor="#E60965"
-                          />
+                      style={styles.placeholderDesign}
+                      placeholder="Home Address"
+                      placeholderTextColor="#E60965"
+                      onChangeText={(text) => handleChange("homeAddress", text)}
+                    />
                   </View>
                  
                     <Text style = {styles.asterix}>
                       *
                     </Text>
                 </View>
-                <View style = {styles.inputField}>
-                  <View style = {styles.spaceBetween}>
+                <View style={styles.inputField}>
+                  <View style={styles.spaceBetween}>
                     <TextInput
-                              style = {styles.placeholderDesign}
-                              placeholder="Email Address"
-                              placeholderTextColor="#E60965"
-                          />
+                      style={styles.placeholderDesign}
+                      placeholder="Medical Condition (If Applicable)"
+                      placeholderTextColor="#E60965"
+                      onChangeText={(text) => handleChange("medicalCondition", text)}
+                    />
                   </View>
                  
                     <Text style = {styles.asterix}>
                       *
                     </Text>
                 </View>
-                <View style = {styles.bigInputField}>
-                  <View style = {styles.spaceBetween}>
+                <View style={styles.inputField}>
+                  <View style={styles.spaceBetween}>
                     <TextInput
-                              style = {styles.placeholderDesign}
-                              placeholder="Home Address"
-                              placeholderTextColor="#E60965"
-                              multiline={true}
-                          />
-                  </View>
-                 
-                    <Text style = {styles.asterix}>
-                      *
-                    </Text>
-                </View>
-                <View style = {styles.inputField}>
-                  <View style = {styles.spaceBetween}>
-                    <TextInput
-                              style = {styles.placeholderDesign}
-                              placeholder="Medical Condition (if applicable)"
-                              placeholderTextColor="#E60965"
-                          />
-                  </View>
-                 
-                    <Text style = {styles.asterix}>
-                      *
-                    </Text>
-                </View>
-                <View style = {styles.inputField}>
-                  <View style = {styles.spaceBetween}>
-                    <TextInput 
-                              style = {styles.placeholderDesign}
-                              placeholder="Amount of milk to be donated (mL)"
-                              placeholderTextColor="#E60965"
-                          />
+                      style={styles.placeholderDesign}
+                      placeholder="Amount of milk to be donated (ml)"
+                      placeholderTextColor="#E60965"
+                      onChangeText={(text) => handleChange("milkAmount", text)}
+                    />
                   </View>
                  
                     <Text style = {styles.asterix}>
@@ -133,7 +157,7 @@ const SetAppointment = () => {
                     </Text>
                 </View>
                 <TouchableOpacity onPress={() => navigatePage("SetDateTimeLocation")}>
-                  <Text style = {styles.button}> Next </Text>
+                  <Text style = {styles.button}> Set Appointment </Text>
                 </TouchableOpacity>
                 
             </View>
