@@ -1,10 +1,7 @@
 import React from 'react';
 import { ScrollView,Text, View, StatusBar, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import { useNavigation, CommonActions } from '@react-navigation/native';
-import { Entypo } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
-import { globalHeader } from '../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../styles_kit/globalStyles.js';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
@@ -49,24 +46,8 @@ const AdminMenu = () => {
                   </View>
               </View>
             
-          {/* <StatusBar barStyle="dark-content"  backgroundColor="white" />
-          <View style = {globalHeader.BigHeader}>
-              <View style ={styles.HeaderContainer1}>
-                <View>
-                <Image
-                  source={require('../../assets/Kalinga_Logo.png')}
-                  style={styles.img}
-              />
-                </View>
-                <View style ={styles.HeaderContainer2}>
-                        <Text style = {globalHeader.BigHeaderTitle}>Kalinga</Text>
-                        <Text style = {globalHeader.SubTitle}>Admin</Text>
-                </View>
-              </View>   
-          </View> */}
                 
-            
-  
+
           <ScrollView style ={styles.AdminContainer}
           overScrollMode='never' // Disable the over-scroll effect or the Jelly effect when reaching the end of the scroll
           nestedScrollEnabled={true} // Enable nested scrolling
