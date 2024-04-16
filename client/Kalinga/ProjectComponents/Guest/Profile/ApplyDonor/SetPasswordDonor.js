@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, StyleSheet, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Linking, StyleSheet, ScrollView, Alert } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, CommonActions } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import axios from 'axios'
+import { BASED_URL } from '../../../../MyConstants';
 
 
 const SetPasswordDonor = () => {
     const [Password, setPassword] = useState('');    
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [hidePassword, setHidePassword] = useState(true); // State to toggle password visibility
+    const [Applicant_ID, setApplicant_ID] = useState('');  
     const navigation = useNavigation(); 
 
     const handleBackButton = () => {
@@ -28,10 +33,24 @@ const SetPasswordDonor = () => {
         handleCustomURLScheme();
       }, []);
 
-    const handleSubmitButton = () => {
-        navigation.navigate('LogIn'); 
-    };
-
+      const handleSubmitButton = async () => {
+        if (Password !== confirmPassword) {
+            Alert.alert('Passwords do not match', 'Please make sure your passwords match.');
+            return;
+        }
+        const result = await axios.post(`${BASED_URL}/kalinga/registerUser`, {
+            Applicant_ID: Applicant_ID,
+            password: Password,
+        });
+        if (result.data.messages.code === 0) {
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'LogIn' }],
+                })
+            );
+        }
+      }
 
     return (
         <LinearGradient
@@ -44,38 +63,57 @@ const SetPasswordDonor = () => {
                 <Text style={styles.goBackText}>Go back</Text>
             </TouchableOpacity>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <KeyboardAvoidingView
-                    behavior={Platform.OS === "ios" ? "padding" : null}
+                <View
                     style={styles.SecondContainer}
                 >
                     <Text style={styles.FirstText}>Set Your Password</Text>
 
                     <View style={styles.inputContainer}>
+
                     <TextInput
                         style={styles.input}
-                        placeholder="Input Password"
+                        placeholder="Input Applicant ID "
                         placeholderTextColor="#F94892"
-                        onChangeText={setPassword}
-                        value={Password}
+                        onChangeText={setApplicant_ID}
+                        value={Applicant_ID}
                     />
+                     
+                     <View style={styles.passwordInput1}>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Input Password"
+                            placeholderTextColor="#F94892"
+                            onChangeText={setPassword}
+                            value={Password}
+                            secureTextEntry={hidePassword} // Toggle password visibility
+                        />
+                        <TouchableOpacity onPress={() => setHidePassword(!hidePassword)} style={styles.passwordToggle}>
+                            <MaterialIcons name={hidePassword ? 'visibility-off' : 'visibility'} size={24} color="#F94892" />
+                        </TouchableOpacity>
                     </View>
-
-                    <View style={styles.inputContainer}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Confirm Passwod"
-                        placeholderTextColor="#F94892"
-                        onChangeText={setPassword}
-                        value={Password}
-                    />
+                   <View style={styles.passwordInput}>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Confirm Password"
+                            placeholderTextColor="#F94892"
+                            onChangeText={setConfirmPassword}
+                            value={confirmPassword}
+                            secureTextEntry={hidePassword} // Toggle password visibility
+                        />
+                        <TouchableOpacity onPress={() => setHidePassword(!hidePassword)} style={styles.passwordToggle}>
+                            <MaterialIcons name={hidePassword ? 'visibility-off' : 'visibility'} size={24} color="#F94892" />
+                        </TouchableOpacity>
                     </View>
+                   
 
-
+                    </View>
                     <TouchableOpacity style={styles.SubmitButton} onPress={handleSubmitButton}>
                         <Text style={styles.SubmitButtonText}>Submit</Text>
                     </TouchableOpacity>
-                </KeyboardAvoidingView>
+                </View>
             </ScrollView>
+            
+  
         </SafeAreaView>
         </LinearGradient>
     );
@@ -84,6 +122,20 @@ const SetPasswordDonor = () => {
 export default SetPasswordDonor;
 
 const styles = StyleSheet.create({
+
+    passwordInput: {
+        position: 'relative',
+        marginBottom: '10%',
+    },
+    passwordInput1: {
+        position: 'relative',
+    },
+    passwordToggle: {
+        position: 'absolute',
+        right: 10,
+        top: '40%',
+        transform: [{ translateY: -12 }],
+    },
     container: {
         flex: 1,
     },
@@ -150,6 +202,21 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 10,
         elevation: 10,
-        paddingLeft:10
+        paddingLeft:10,
+        color: "#E60965"
+    },
+
+    input1: { 
+        height: 40,
+        borderRadius: 15,
+        backgroundColor: '#FFE5EC',
+        marginBottom: 10,
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.1,
+        shadowRadius: 10,
+        elevation: 10,
+        paddingLeft:10,
+        color: "#E60965"
     },
 });

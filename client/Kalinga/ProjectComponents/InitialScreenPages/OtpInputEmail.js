@@ -14,7 +14,7 @@ const OtpInputEmail = ({onOtpChange}) => {
     } else if (text === '' && index > 0) {
       inputs.current[index - 1].focus();
     }
-    onOtpChange(newOtp.join(''));
+    onOtpChange(newOtp.join('')); 
   };
 
   return (

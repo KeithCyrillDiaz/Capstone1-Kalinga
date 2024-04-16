@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { registerDonor } from '../controllers/Donor/Apply_As_Donor/registerDonor';
+import { registerUser} from '../controllers/registerUser';
 import { registerRequestor } from '../controllers/Requestor/Apply_As_Requestor/registerRequestor';
 import { AdminLogIn } from '../controllers/Admin/adminLogin';
 import { createAppointment } from '../controllers/Donor/appointmentController';
@@ -9,11 +9,13 @@ import {createRequest} from "../controllers/Requestor/RequestController";
 import {getAppointmentByUsertype} from '../controllers/Admin/Appointment/getAppointmentByUsertype';
 import { getRequestByID } from '../controllers/Admin/Appointment/getMakeRequest';
 import { getRequestByUserType } from '../controllers/Admin/Appointment/getRequestByUserType';
+import { logInUser } from '../controllers/LogInUser';
 
 export default (router: express.Router) => {
   
-    router.post('/kalinga/registerDonor', registerDonor);
+    router.post('/kalinga/registerUser', registerUser);
     router.post('/kalinga/registerRequestor', registerRequestor);
+    router.post('/kalinga/userLogin', logInUser)
     router.post('/kalinga/adminLoginIn', AdminLogIn)
 
     //donor
