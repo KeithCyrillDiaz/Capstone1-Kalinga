@@ -120,7 +120,7 @@ import PendingTabRequest from './ProjectComponents/Requestor/Home/MakeRequest/Ma
 import DonorTabs from './routes/MainTabs.js'
 import GuestTabs from './routes/MainTabsGuest.js'
 import RequestorTabs from './routes/MainTabsRequestor.js'
-import SetPassword from './ProjectComponents/Requestor/SetPasswordRequestor.js';
+import SetPassword from './ProjectComponents/Guest/Profile/ApplyDonor/SetPasswordDonor.js';
 import GuestTabsExploreAndMilkBank from './routes/GuestTabsExploreAndMilkBank.js'
 import RequestorTabsExploreAndMilkBank from './routes/RequestorTabsExploreAndMilkBank.js'
 import DonorTabsExploreAndMilkBank from './routes/DonorTabsExploreAndMilkBank.js'
@@ -184,7 +184,7 @@ export default function App() {
     return (
 
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
+          <Stack.Navigator initialRouteName="SetPassword" screenOptions={{ headerShown: false }}>
           {/* <Stack.Navigator initialRouteName="Data Privacy Requestor" screenOptions={{ headerShown: false }}> */}
           
             {/*InitialScreen*/}
@@ -198,7 +198,7 @@ export default function App() {
             <Stack.Screen name="GuestTabsExploreAndMilkBank" component={GuestTabsExploreAndMilkBank} />
             <Stack.Screen name="RequestorTabsExploreAndMilkBank" component={RequestorTabsExploreAndMilkBank} />
             <Stack.Screen name="DonorTabsExploreAndMilkBank" component={RequestorTabsExploreAndMilkBank} />
-            <Stack.Screen name="RequestorTabs" component = {RequestorTabs}/>
+            <Stack.Screen name="MainTabs" component = {RequestorTabs}/>
 
             <Stack.Screen name="SetPassword" component={SetPassword} />
             <Stack.Screen name="SendCode" component={SendCode} />

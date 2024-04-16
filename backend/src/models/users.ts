@@ -30,6 +30,7 @@ const DonorSchema = new mongoose.Schema({
             type: String,
             required: true,
         },
+    salt: {type: String},
     age: {type: String},
     address: {type: String},
     birthday: {type: String},
@@ -57,6 +58,7 @@ const RequestorSchema = new mongoose.Schema({
             type: String,
             required: true,
         },
+    salt: {type: String},
     age: {type: String},
     address: {type: String},
     birthday: {type: String},
@@ -80,9 +82,10 @@ export const getDonor = () => DonorModel.find()
 export const getDonorByEmail = (email: string) => DonorModel.findOne({email})
 export const getDonorById = (Donor_ID: string) => DonorModel.findOne({Donor_ID})
 export const createDonor = (values: Record<string, any>) => new DonorModel(values).save().then((donor) => donor.toObject())
-
+export const updateDonorPassword=(Donor_ID: string, Password: string, salt: string) => DonorModel.findOneAndUpdate({Donor_ID}, { $set: { password: Password, salt: salt } })
 
 export const getRequestor = () => RequestorModel.find()
+export const updateRequestorPassword=(Requestor_ID: string, Password: string, salt: string) => RequestorModel.findOneAndUpdate({Requestor_ID}, { $set: { password: Password, salt: salt } })
 export const getRequestorByEmail = (email: string) => RequestorModel.findOne({email})
 export const getRequestorById = (Requestor_ID: string) => RequestorModel.findOne({Requestor_ID})
 export const createRequestor = (values: Record<string, any>) => new RequestorModel(values).save().then((donor) => donor.toObject())

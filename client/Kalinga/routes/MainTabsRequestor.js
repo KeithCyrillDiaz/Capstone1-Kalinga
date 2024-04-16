@@ -21,8 +21,10 @@ import RequestorNotification from '../ProjectComponents/Requestor/Dashboard/Noti
 const Tab = createBottomTabNavigator()
 
 
-const Tabs = () => {
-const userType = "Requestor";
+const MainTabs = ({route}) => {
+   
+    const userType = route.params.userType;
+    console.log("userType: ", userType)
     return (
         
             <Tab.Navigator
@@ -108,4 +110,4 @@ const userType = "Requestor";
 
 }
 
-export default Tabs;
+export default MainTabs;

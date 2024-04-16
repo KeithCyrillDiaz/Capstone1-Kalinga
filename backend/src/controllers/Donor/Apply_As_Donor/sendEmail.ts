@@ -208,26 +208,28 @@ export const sendApprovedEmail = async (req: express.Request, res: express.Respo
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Donor Approval Notification</title>
+                    <title>Email Verification</title>
                     <style>
                         body {
                             font-family: Arial, sans-serif;
-                            line-height: 1.6;
                             margin: 0;
                             padding: 0;
+                            background-color: #f4f4f4;
                         }
                         .container {
                             max-width: 600px;
-                            margin: 20px auto;
+                            margin: 0 auto;
                             padding: 20px;
-                            border: 1px solid #ccc;
+                            background-color: #fff;
                             border-radius: 10px;
+                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                         }
                         h2 {
                             color: #333;
                         }
                         p {
                             margin-bottom: 20px;
+                            line-height: 1.6;
                         }
                         .button {
                             display: inline-block;
@@ -241,22 +243,27 @@ export const sendApprovedEmail = async (req: express.Request, res: express.Respo
                             margin-top: 20px;
                             text-align: left;
                         }
+                        .highlight {
+                            font-size: 18px;
+                            font-weight: bold;
+                            color: #E60965; /* Highlight color */
+                        }
                     </style>
                 </head>
                 <body>
                     <div class="container">
                         <h2>${existingUser.userType} Approval Notification</h2>
                         <p>Congratulations! You have been approved as a ${userType}.</p>
+                        <p style="font-size: 18px; font-weight: bold;">ApplicantID: ${existingUser.Applicant_ID}</p>
                         <p>With your approval, you can now start ${duty} breast milk through MilkBanks.</p>
                         <p>Thank you for joining us in our mission.</p>
-                        <p>To complete your registration, please set your password by clicking the button below:</p>
+                        <p>To complete your registration, please input your Applicant ID and set your password by clicking the button below:</p>
                         <a href="Kalinga://verification-result?success=true" class="button">Set Password</a>
                         <div class="footer">
                             <p>Best Regards,</p>
                             <p>Kalinga Team</p>
                         </div>
                     </div>
-                    
                 </body>
                 </html>`
             })
