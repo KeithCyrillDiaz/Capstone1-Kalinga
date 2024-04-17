@@ -21,7 +21,7 @@ app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());
 
-app.get("/", (req, res) => { res.json("Kalinga Backend: Miss na kita Beverly Somodio") } )
+app.get("/", (req, res) => { res.json("Kalinga Backend: Miss you Parrr") } )
 
 const server = http.createServer(app);
 
