@@ -21,7 +21,7 @@ app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());
 
-app.get("/", (req, res) => { res.json("Kalinga Backend") } )
+app.get("/", (req, res) => { res.json("Kalinga Backend: Miss na kita Beverly Somodio") } )
 
 const server = http.createServer(app);
 
@@ -30,7 +30,7 @@ server.listen(7000, () => {
 });
 
 
-const MongoDb_URL = process.env.MONGO_DB_URL;
+const MongoDb_URL = process.env.MONGO_DB_ATLAS_URL;
 // console.log(process.env.MONGO_DB_URL);
 
 if (!MongoDb_URL) {
