@@ -21,6 +21,7 @@ app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());
 
+app.get("/", (req, res) => { res.json("Kalinga Backend") } )
 
 const server = http.createServer(app);
 
@@ -43,4 +44,4 @@ mongoose.connection.on('error', (error:Error) => console.log(error));
 // Use your router for all routes starting from /
 app.use('/', router());
 
-//export default app;
+export default app;
