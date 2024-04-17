@@ -2,8 +2,8 @@ import express from "express"
 import nodemailer from 'nodemailer';
 import randomatic from "randomatic";
 import moment from 'moment';
-import { getScreeningFormByApplicantID } from "../../../models/ApplyAsDonor";
-import { createCode, getCodeByCode } from "../../../models/Authentication";
+import { getScreeningFormByApplicantID } from "../../models/ApplyAsDonor";
+import { createCode, getCodeByCode } from "../../models/Authentication";
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
