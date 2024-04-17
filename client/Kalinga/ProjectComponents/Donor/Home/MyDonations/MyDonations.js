@@ -1,22 +1,10 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
 import { SafeAreaView, Text, View,ScrollView, StatusBar, StyleSheet, TouchableOpacity} from 'react-native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import { useNavigation } from '@react-navigation/native';
 
 
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
-
-import { globalHeader } from '../../../../styles_kit/globalHeader.js';
-import { globalStyles } from '../../../../styles_kit/globalStyles.js';
-
-import Tabs from './MyDonationsTabs.js';
-
-
-
-const Tab = createBottomTabNavigator()
-
 
 
 const MyDonations = () => {
@@ -29,25 +17,18 @@ const navigatePage = (Page) => {
 };
     return (
              <SafeAreaView style = {styles.container}>
-                <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
-                <View style = {globalHeader.SmallHeader}>
-                    <Text style = {globalHeader.SmallHeaderTitle}>My Donations</Text>
-                </View>
-
+ 
+                 {/* <View style={styles.headerButton}>
+                      <Text style = {styles.indicatedButton}>Overall</Text>
+                      <Text style = {styles.Tabbutton}>Ongoing</Text>
+                      <Text style = {styles.Tabbutton}>Completed</Text>
+                  </View> */}
                 <ScrollView
                  overScrollMode='never'
                  nestedScrollEnabled={true}
                 
                 >
-                    <View style={styles.headerButton}>
-							<TouchableOpacity onPress={() => navigatePage("OngoingDonations")}>
-									<Text style = {styles.Tabbutton}>Ongoing</Text>
-							</TouchableOpacity>
-							<TouchableOpacity onPress={() => navigatePage("CompleteDonations")}>
-									<Text style = {styles.Tabbutton}>Copleted</Text>
-							</TouchableOpacity>
-							
-						</View>
+
                     <View style = {styles.RowMilk}>
                         <View>
                             {/* Temporary */}
@@ -76,8 +57,7 @@ const navigatePage = (Page) => {
                     </TouchableOpacity>
 
                     <View>
-                            <Text style = {styles.bottomText}>Your generosity is changing lives. Thank you for making a difference with your valuable contribution.
-</Text>
+                            <Text style = {styles.bottomText}>Your generosity is changing lives. Thank you for making a difference with your valuable contribution.</Text>
                         
                         </View>
 
@@ -93,7 +73,7 @@ const styles = StyleSheet.create ({
 
     container: {
         flex: 1,
-       //backgroundColor: "gray",
+        backgroundColor: "#FFF8EB",
 
     },
 
@@ -169,39 +149,36 @@ const styles = StyleSheet.create ({
 	headerButton: {
 		flexDirection: "row",
 		alignItems: "center",
-		padding: 10,
-		paddingBottom: 18,
+		paddingVertical: 20,
 		justifyContent: "space-evenly",
-		marginVertical: 10,
-		marginHorizontal: "3%",
 		borderBottomWidth: 1,
 		borderBlockColor: "#FFACC7"
 	},
 
 	Tabbutton: {
 		borderWidth: 1,
-		padding: 10,
-		paddingHorizontal: 18,
+		paddingVertical: 10,
+		width: "25%",
 		color: "#E60965",
 		borderColor: "#E60965",
 		fontFamily: "Open-Sans-Bold",
 		backgroundColor: "#FFE5EC",
 		borderRadius: 7,
 		fontSize: 18,
-
+    textAlign: "center"
 	},
 	
 	indicatedButton: {
 		borderWidth: 1,
-		padding: 10,
-		paddingHorizontal: 18,
+		paddingVertical: 10,
+		width: "25%",
 		color: "white",
 		borderRadius: 7,
 		borderColor: "#E60965",
 		fontFamily: "Open-Sans-Bold",
 		backgroundColor: "#E60965",
 		fontSize: 18,
-
+    textAlign: "center"
 	},
 });
 

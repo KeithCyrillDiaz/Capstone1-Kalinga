@@ -52,7 +52,6 @@ import CompleteDonations from './ProjectComponents/Donor/Home/MyDonations/Comple
 import MyDonationTabs from './ProjectComponents/Donor/Home/MyDonations/MyDonationsTabs.js'
 import MyDonations from './ProjectComponents/Donor/Home/MyDonations/MyDonations.js'
 import OngoingDonations from './ProjectComponents/Donor/Home/MyDonations/OngoingDonations.js'
-import DonationsHome from './ProjectComponents/Donor/Home/MyDonations/Donation_Home.js'
 import DonorSavedArticles from './ProjectComponents/Donor/Profile/SaveArticles/DonorSavedArticles.js'
 import DonorFavoriteArticles from './ProjectComponents/Donor/Profile/SaveArticles/DonorFavoriteArticles.js'
 import SetAnAppointment from './ProjectComponents/Donor/Home/MakeDonation/SetAppointForm.js'
@@ -184,7 +183,7 @@ export default function App() {
     return (
 
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="SetPassword" screenOptions={{ headerShown: false }}>
+          <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
           {/* <Stack.Navigator initialRouteName="Data Privacy Requestor" screenOptions={{ headerShown: false }}> */}
           
             {/*InitialScreen*/}
@@ -238,7 +237,6 @@ export default function App() {
              <Stack.Screen name="My Donation Tabs" component={MyDonationTabs} />
              <Stack.Screen name="My Donations" component={MyDonations} />
              <Stack.Screen name="OngoingDonations" component={OngoingDonations} />
-             <Stack.Screen name="Donations Home" component={DonationsHome} />
              <Stack.Screen name="DonorSavedArticles" component={DonorSavedArticles} />
              <Stack.Screen name="DonorFavoriteArticles" component={DonorFavoriteArticles} />
              <Stack.Screen name="SetAnAppointment" component={SetAnAppointment} />
