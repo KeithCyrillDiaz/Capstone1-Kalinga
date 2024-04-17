@@ -35,7 +35,6 @@ node_modules/
 npm-debug.log
 
 #ignored unnecessary files
-uploads/
 
 
 package-lock.json
