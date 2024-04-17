@@ -1,17 +1,8 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
 import { SafeAreaView, Text, View,ScrollView, StatusBar, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import { useNavigation } from '@react-navigation/native';
 
-
-import { MaterialIcons } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
-
-import { globalHeader } from '../../../../styles_kit/globalHeader.js';
-import { globalStyles } from '../../../../styles_kit/globalStyles.js';
-
-import Tabs from './MyDonationsTabs.js';
 
 
 
@@ -19,7 +10,7 @@ const Tab = createBottomTabNavigator()
 
 
 
-const OngoingDonations = () => {
+const CompletedDonations = () => {
  
 
   const navigation = useNavigation();
@@ -30,25 +21,16 @@ const navigatePage = (Page) => {
 };
     return (
              <SafeAreaView style = {styles.container}>
-                <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
-                <View style = {globalHeader.SmallHeader}>
-                    <Text style = {globalHeader.SmallHeaderTitle}>My Donations</Text>
-                </View>
-
+                  {/* <View style={styles.headerButton}>
+                      <Text style = {styles.Tabbutton}>Overall</Text>
+                      <Text style = {styles.Tabbutton}>Ongoing</Text>
+                      <Text style = {styles.indicatedButton}>Completed</Text>
+                  </View> */}
                 <ScrollView
                  overScrollMode='never'
                  nestedScrollEnabled={true}
                 
                 >
-                    <View style={styles.headerButton}>
-							<TouchableOpacity onPress={() => navigatePage("OngoingDonations")}>
-									<Text style = {styles.Tabbutton}>Ongoing</Text>
-							</TouchableOpacity>
-							<TouchableOpacity onPress={() => navigatePage("CompleteDonations")}>
-									<Text style = {styles.indicatedButton}>Completed</Text>
-							</TouchableOpacity>
-							
-						</View>
                     
             <View>
                 <Image
@@ -69,13 +51,20 @@ const navigatePage = (Page) => {
 }
 
 const styles = StyleSheet.create ({
-
-    container: {
-        flex: 1,
-       //backgroundColor: "gray",
-
-    },
-
+  container: {
+    flex: 1,
+    backgroundColor: "#FFF8EB",
+  },
+  SmallHeader: {
+    backgroundColor: '#E60965', // Set the background color of the header
+    borderRadius: 34,
+    paddingTop: "12%",
+    paddingBottom: "5%",
+    marginTop: "-10%",
+    width: '100%', // the size will depend on the screen, this is better so it will look the same on all phones
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+},
     
     img: {
     
@@ -165,40 +154,37 @@ const styles = StyleSheet.create ({
 	headerButton: {
 		flexDirection: "row",
 		alignItems: "center",
-		padding: 10,
-		paddingBottom: 18,
+		paddingVertical: 20,
 		justifyContent: "space-evenly",
-		marginVertical: 10,
-		marginHorizontal: "3%",
 		borderBottomWidth: 1,
 		borderBlockColor: "#FFACC7"
 	},
 
 	Tabbutton: {
 		borderWidth: 1,
-		padding: 10,
-		paddingHorizontal: 18,
+		paddingVertical: 10,
+		width: "25%",
 		color: "#E60965",
 		borderColor: "#E60965",
 		fontFamily: "Open-Sans-Bold",
 		backgroundColor: "#FFE5EC",
 		borderRadius: 7,
 		fontSize: 18,
-
+    textAlign: "center"
 	},
 	
 	indicatedButton: {
 		borderWidth: 1,
-		padding: 10,
-		paddingHorizontal: 18,
+		paddingVertical: 10,
+		width: "25%",
 		color: "white",
 		borderRadius: 7,
 		borderColor: "#E60965",
 		fontFamily: "Open-Sans-Bold",
 		backgroundColor: "#E60965",
 		fontSize: 18,
-
+    textAlign: "center"
 	},
 });
 
-export default OngoingDonations;
+export default CompletedDonations;
