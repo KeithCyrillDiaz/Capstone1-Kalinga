@@ -1,10 +1,11 @@
 import express from 'express'
-// import multer from 'multer';
-import multer from '../helpers/multer';
+import multer from 'multer';
+// import multer from '../helpers/multer';
 import { addMedicalRequirementsAsImage } from '../controllers/Donor/Apply_As_Donor/addMRImage'
 import { addMedicalRequirementsAsFile } from '../controllers/Donor/Apply_As_Donor/addMRFile'
 import { getImage } from '../controllers/Admin/getImageByID';
 import { getFile } from '../controllers/Admin//getFileByID';
+// import { addMedicalRequirementsAsImage } from '../../test/testImage'
 
 const upload = multer()
 
@@ -17,5 +18,7 @@ export default (router: express.Router) => {
     
     router.get('/kalinga/getMedicalRequirementImage/:ownerID', getImage)
     router.get('/kalinga/getMedicalRequirementFile/:ownerID', getFile)
+
+    // router.post('/kalinga/testImage', addMedicalRequirementsAsImage);
   
 }
