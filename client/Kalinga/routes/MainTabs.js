@@ -6,9 +6,6 @@ import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 
 
-import GuestProfile from '../ProjectComponents/Guest/GuestDashboard/GuestProfile.js';
-import GuestHome from '../ProjectComponents/Guest/GuestDashboard/Home.js';
-
 import DonorHome from '../ProjectComponents/Donor/Dashboard/Home.js';
 import DonorProfile from '../ProjectComponents/Donor/Dashboard/DonorProfile.js';
 

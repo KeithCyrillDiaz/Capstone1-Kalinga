@@ -1,11 +1,9 @@
 // Requestor Profile
 import  React, { useState, useEffect } from 'react';
-import { globalStyles } from "../../../styles_kit/globalStyles.js";
 import { globalHeader } from "../../../styles_kit/globalHeader.js";
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation, CommonActions } from '@react-navigation/native';
-
-
+import { Entypo } from '@expo/vector-icons';
 import { 
   Text, 
   View, 
@@ -18,9 +16,12 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function GuestProfile() {
+
+  const [userType, setUserType] = useState('')
 
   const navigation = useNavigation();
 
@@ -32,13 +33,26 @@ export default function GuestProfile() {
   };
 
   const navigatePage = (Page) => {
+    if(Page === "LogIn"){
+      navigation.replace(Page)
+    }
     navigation.navigate(Page); // Navigate to the Login screen
 };
+const getData = async() => {
+  const user = await AsyncStorage.getItem('userType')
+  if(user !== null || user !== undefined){
+    console.log("userType: ", user)
+    setUserType(user)
+  }
+}
 
+  useEffect(() => {
+    getData()
+  },[])
 
 
     return (
-      <SafeAreaView style={globalStyles.container}>
+      <SafeAreaView style={styles.container}>
           <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style={globalHeader.SmallHeader}>
                 <Text style={globalHeader.SmallHeaderTitle}>Profile</Text>
@@ -53,35 +67,37 @@ export default function GuestProfile() {
               <Text style={styles.statusText}>Requestor</Text>
             </View>
 
-            <View style={styles.menuContainer}>
+            <TouchableOpacity  disabled = {userType === 'Requestor' ? true : false} style={styles.menuContainer} onPress={() => navigatePage("ApplyAsRequestorStack")} >
+                <FontAwesome style={{flexShrink: 0, marginRight: "4%"}} name="handshake-o" size={24} color="#E60965" />   
+                <View style = {styles.labelAndArrowCont}>
+                  <Text style={[styles.menuText, {marginRight: -10}]}>{userType !== "Requestor" ? "Apply as Requestor" : "You're already a Requestor"}</Text>
+                  <FontAwesome style={{flexShrink: 0}} name="chevron-right" size={24} color="#E60965" />
+                </View>           
               
-                <TouchableOpacity onPress={() => navigatePage("ApplyAsDonorStack")} >
-                    <View style={styles.iconContainer}>
-                      
-                      <FontAwesome5 name="hand-holding-water" size={24} color="#E60965" />                
-                      <Text style={styles.menuText}>Apply as Donor</Text>
-           
-                      <FontAwesome name="chevron-right" size={24} color="#E60965" />
-                    </View>
               </TouchableOpacity>
-
-            </View>
             <View style={styles.line}></View>
-
-            <View style={styles.menuContainer}>
-            <TouchableOpacity onPress={() => navigatePage("ApplyAsRequestorStack")} >
-              <View style={styles.iconContainer}>
-                <FontAwesome name="handshake-o" size={24} color="#E60965" />              
-                <Text style={styles.menuText2}>Request Milk</Text>
   
-                <FontAwesome name="chevron-right" size={24} color="#E60965" />
-                </View>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.line}></View>
 
+                <TouchableOpacity disabled = {userType === 'Donor' ? true : false}style={styles.menuContainer} onPress={() => navigatePage("ApplyAsDonorStack")} >
+                  <FontAwesome5 style={{flexShrink: 0, marginRight: "5%"}} name="hand-holding-water" size={24} color="#E60965" />                
+                  <View style = {styles.labelAndArrowCont}>
+                    <Text style={styles.menuText}> {userType !== "Donor" ? "Apply as Donor" : "You're already a Donor"}</Text>
+                    <FontAwesome style={{flexShrink: 0}} name="chevron-right" size={24} color="#E60965" />
+                  </View>
+               
+                </TouchableOpacity>
+              <View style={styles.line}></View>
             
-  
+         
+            <TouchableOpacity style={styles.menuContainer} onPress={() => navigatePage("LogIn")} >
+                <Entypo style={{flexShrink: 0, marginRight: "4%"}}  name="log-out" size={30} color="#E60965" />            
+                <View style = {styles.labelAndArrowCont}>
+                  <Text style={styles.menuText}>Sign In</Text>
+                  <FontAwesome name="chevron-right" size={24} color="#E60965" />
+                </View> 
+            </TouchableOpacity>
+            <View style={styles.line}></View>
+
             </View>
         </SafeAreaView>
   );
@@ -91,6 +107,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF8EB',
+  },
+  labelAndArrowCont:{
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "85%",
   },
 
   profileIcon: {
@@ -116,16 +137,25 @@ const styles = StyleSheet.create({
 
   menuContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    marginTop: 20,
     alignItems: 'center',
+    alignSelf: "center",
+    justifyContent: "flex-start",
+    marginTop: 20,
+    width: "75%",
+
   },
 
   iconContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 10,
+  },
+
+  iconContainer1: {
+    flexDirection: 'row',
+    marginTop: 20,
+    alignItems: 'center',
+
   },
   
   backButton: {
@@ -138,24 +168,14 @@ const styles = StyleSheet.create({
     marginTop: 10,
     borderBottomColor: '#E60965',
     borderBottomWidth: 0.5,
+    width: "80%",
+    alignSelf: "center"
   },
 
   menuText: {
-    paddingTop: 5,
-    paddingLeft: 25,
     fontSize: 20,
     color: '#E60965',
     fontWeight: 'bold',
-    marginRight: 40
-  },
-
-  menuText2: {
-    paddingTop: 5,
-    paddingLeft: 25,
-    fontSize: 20,
-    color: '#E60965',
-    fontWeight: 'bold',
-    marginRight: 50
   },
 
   backButtonNew: {

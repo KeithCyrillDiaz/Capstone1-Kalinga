@@ -8,7 +8,11 @@ import axios from 'axios'
 import { BASED_URL } from '../../../../MyConstants';
 
 
-const SetPasswordDonor = () => {
+const SetPasswordDonor = ({route}) => {
+
+    console.log(route.params)
+    let forgotPassEmail = route.params
+
     const [Password, setPassword] = useState('');    
     const [confirmPassword, setConfirmPassword] = useState('');
     const [hidePassword, setHidePassword] = useState(true); // State to toggle password visibility
@@ -19,19 +23,6 @@ const SetPasswordDonor = () => {
         navigation.goBack(); 
     };
 
-    const handleCustomURLScheme = async () => {
-        const supported = await Linking.canOpenURL('Kalinga://verification-result?success=true');
-        if (supported) {
-          await Linking.openURL('Kalinga://verification-result?success=true');
-        } else {
-          console.error('Failed to open the URL scheme. Make sure your app is properly configured.');
-        }
-      };
-      
-      // Call the function when needed, e.g., when the app is opened
-      useEffect(() => {
-        handleCustomURLScheme();
-      }, []);
 
       const handleSubmitButton = async () => {
         if (Password !== confirmPassword) {
@@ -41,6 +32,7 @@ const SetPasswordDonor = () => {
         const result = await axios.post(`${BASED_URL}/kalinga/registerUser`, {
             Applicant_ID: Applicant_ID,
             password: Password,
+            email: forgotPassEmail,
         });
         if (result.data.messages.code === 0) {
             navigation.dispatch(
@@ -69,15 +61,15 @@ const SetPasswordDonor = () => {
                     <Text style={styles.FirstText}>Set Your Password</Text>
 
                     <View style={styles.inputContainer}>
-
+                {forgotPassEmail === null || forgotPassEmail === undefined && (
                     <TextInput
-                        style={styles.input}
-                        placeholder="Input Applicant ID "
-                        placeholderTextColor="#F94892"
-                        onChangeText={setApplicant_ID}
-                        value={Applicant_ID}
+                    style={styles.input}
+                    placeholder="Input Applicant ID "
+                    placeholderTextColor="#F94892"
+                    onChangeText={setApplicant_ID}
+                    value={Applicant_ID}
                     />
-                     
+                )}
                      <View style={styles.passwordInput1}>
                         <TextInput
                             style={styles.input}
