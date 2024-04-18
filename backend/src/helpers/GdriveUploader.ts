@@ -1,14 +1,17 @@
 import { google } from "googleapis";
 import fs from "fs";
 import authorize from "../config/Gdrive";
+import { Readable } from 'stream';
 
 // UPLOAD FILES
 export const UploadFiles = async (fileObject:any, folder_id:any) => {
   try {
+    console.log("fileObject: ",fileObject )
     const { data } = await google.drive({ version: "v3", auth: authorize }).files.create({
         media: {
           mimeType: fileObject.mimeType,
-          body: fs.createReadStream(fileObject.path),
+          // body: fs.createReadStream(fileObject.path),
+          body: Readable.from(fileObject.buffer), // Read from buffer using Readable.from()
         }, 
         requestBody: {
           name: fileObject.originalname,

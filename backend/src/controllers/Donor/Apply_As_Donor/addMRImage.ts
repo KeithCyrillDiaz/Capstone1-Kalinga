@@ -2,24 +2,26 @@ import express from 'express';
 import { createMedicalRequirementImages } from '../../../models/ApplyAsDonor';
 import { UploadFiles } from '../../../helpers/GdriveUploader'
 import fs from 'fs'
+import path from 'path'
 export const addMedicalRequirementsAsImage = async (req: express.Request, res: express.Response) => {
     try {
         const images = req.files as any[]; 
-
+        console.log("images: ", images)
+        console.log ("body: ", req.body)
         if (!images) {
             return res.status(400).send('No images uploaded.');
         } 
-
         
             let fieldName = images[0].fieldname;
             let subFolderID:any ; // Subfolder based on fieldname
-  
+
             if (fieldName === "DonorImages") {
                 subFolderID = process.env.DONOR_IMAGES;
             } else {
                subFolderID = process.env.REQUESTOR_IMAGES;
             }  
-            
+
+    
             const moment = require('moment');
             const currentTime = moment();
             const formattedTime = currentTime.format('YYYY-MM-DD HH:mm:ss');
@@ -50,10 +52,6 @@ export const addMedicalRequirementsAsImage = async (req: express.Request, res: e
             //   ownerID: req.body.ownerID[0]
           };
           await createMedicalRequirementImages(imageData);
-        }
-        //delete the files in backend Server files
-        for (const image of images as any[]) {
-            fs.unlinkSync(image.path);
         }
      }
         
