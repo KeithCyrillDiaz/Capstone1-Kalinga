@@ -16,10 +16,12 @@ import { useNavigation, CommonActions } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios'
 import { BASED_URL } from '../../MyConstants';
+import Spinner from 'react-native-loading-spinner-overlay';
 const LogIn = () => {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isloading, setIsLoading] = useState(false)
 
     const handleForgotPassword = () => {
         navigation.navigate('ResetPassword');
@@ -45,6 +47,7 @@ const LogIn = () => {
     
         // Proceed with login if inputs are valid
         try {
+            setIsLoading(truw=e)
             const result = await axios.post(`${BASED_URL}/kalinga/userLogin`, {
                 email: email,
                 password: password
@@ -66,6 +69,8 @@ const LogIn = () => {
             // Handle error response from server
             console.error('Login Error:', error);
             Alert.alert('Login Failed', 'An error occurred while logging in. Please try again later.');
+        } finally {
+            setIsLoading(false)
         }
     };
 
@@ -77,11 +82,21 @@ const LogIn = () => {
         navigation.navigate('Facebook');
     };
 
+    const navigatePage = (Page) =>{
+        navigation.replace(Page)
+    }
+
     return (
         <LinearGradient
             colors={['#EF5487', '#EB90AC', '#E690AA', '#E36A91', '#EB7AA9']}
             style={styles.gradient}
+            
         >
+            <Spinner 
+                visible = {isloading}
+                textContent={'Processing...'}
+                textStyle={{ color: '#FFF' }}
+            />
             <SafeAreaView style={styles.container}>
                 <ScrollView contentContainerStyle={styles.scrollContainer}
                 showsVerticalScrollIndicator={false}
@@ -126,6 +141,9 @@ const LogIn = () => {
                         <Text style={styles.logInButtonText}>Log In</Text>
                     </TouchableOpacity>
                 </View>
+                <TouchableOpacity onPress = {() => {navigatePage('GuestTabs')}}>
+                    <Text style = {styles.guest}>Log In as Guest?</Text>
+                </TouchableOpacity>
 
                 <View style={styles.lineContainer}>
                     <View style={styles.line} />
@@ -158,6 +176,15 @@ const LogIn = () => {
 export default LogIn;
 
 const styles = StyleSheet.create({
+    guest: {
+        textAlign: "center",
+        marginTop: "2%",
+        color: '#E60965',
+        fontSize: 13,
+        textDecorationLine: "underline"
+
+    },
+
     container: {
         flex: 1,
         justifyContent: 'center',
@@ -214,7 +241,7 @@ const styles = StyleSheet.create({
         color: '#E60965',
         fontSize: 12,
         marginTop: -10,
-
+        textDecorationLine: "underline"
     },
     logInButton: {
         backgroundColor: '#E60965',
@@ -232,7 +259,7 @@ const styles = StyleSheet.create({
     lineContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 40,
+        marginTop: 30,
         
     },
     line: {

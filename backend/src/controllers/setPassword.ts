@@ -6,7 +6,7 @@ import { random, passEncryption } from '../helpers/passwordEncryption'
 export const setPassword = async (req: express.Request, res: express.Response) => {
     try{
         
-        if(!req.body.Applicant_ID || !req.body.password){
+        if((!req.body.Applicant_ID && !req.body.email) || !req.body.password){
             return res.status(400).json({
                 messages: {
                     code: 1,
@@ -14,6 +14,7 @@ export const setPassword = async (req: express.Request, res: express.Response) =
                 }
             })
         }
+
         const existingUser = await getScreeningFormByApplicantID(req.body.Applicant_ID)
 
         if(!existingUser){

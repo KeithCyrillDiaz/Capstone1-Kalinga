@@ -1,17 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import 
 { 
     Image, 
-    View, 
     Text, 
-    TextInput, 
     TouchableOpacity, 
     KeyboardAvoidingView, 
     Platform, 
     StyleSheet, 
-    ScrollView, 
-    Alert } from 'react-native';
-import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
+    ScrollView, } from 'react-native';
+import { MaterialIcons} from '@expo/vector-icons'
 
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';

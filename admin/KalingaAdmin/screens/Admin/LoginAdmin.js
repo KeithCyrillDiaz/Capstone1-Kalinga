@@ -4,15 +4,20 @@ import { useNavigation, CommonActions } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios'
 import { BASED_URL } from '../../MyConstants';
-
+import Spinner from 'react-native-loading-spinner-overlay';
+import { MaterialCommunityIcons } from '@expo/vector-icons'; // Import the icon
 const LogIn = () => {
 
     const navigation = useNavigation();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false); 
     let result;
 
     const handleLogIn = async () => {
+
+  
         // Regular expression to check for special characters
         const specialCharsRegex = /[!@#$%^&*(),.?":{}|<>]/;
         
@@ -34,7 +39,7 @@ const LogIn = () => {
     
         // Proceed with login request
         try {
-         
+            setIsLoading(true);
             const LogIn = await axios.post(`${BASED_URL}/kalinga/adminLoginIn`, {username, password});
 
             if (LogIn.status === 200) {
@@ -47,8 +52,8 @@ const LogIn = () => {
             } 
         } catch (error) {
                 Alert.alert('Login Failed', 'Invalid email or password');
-
-
+        } finally {
+            setIsLoading(false)
         }
     };
 
@@ -58,6 +63,11 @@ const LogIn = () => {
             style={styles.gradient}
         >
             <SafeAreaView style={styles.container}>
+                <Spinner
+                    visible={isLoading} // Show spinner when isLoading is true
+                    textContent={'Processing...'}
+                    textStyle={{ color: '#FFF' }}
+                />
                 <ScrollView contentContainerStyle={styles.scrollContainer}
                 showsVerticalScrollIndicator = {false}
                 >
@@ -82,14 +92,19 @@ const LogIn = () => {
                         onChangeText={setUsername}
                         value={username}
                     />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Password"
-                        placeholderTextColor="#F94892"
-                        onChangeText={setPassword}
-                        value={password}
-                        secureTextEntry={true}
-                    />
+                     <View style={styles.passwordContainer}>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Password"
+                            placeholderTextColor="#F94892"
+                            onChangeText={setPassword}
+                            value={password}
+                            secureTextEntry={!showPassword} // Show password if showPassword is true
+                        />
+                        <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.togglePassword}>
+                            <MaterialCommunityIcons name={showPassword ? 'eye-off' : 'eye'} size={24} color="#E60965" />
+                        </TouchableOpacity>
+                     </View>
                 </View>
 
                 <View style={styles.buttonContainer}>
@@ -107,6 +122,17 @@ const LogIn = () => {
 export default LogIn;
 
 const styles = StyleSheet.create({
+    passwordContainer: {
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center', 
+        marginBottom: 10, 
+    },
+    togglePassword: {
+        position: 'absolute', 
+        bottom: 18,
+        right: 10, 
+    },
     container: {
         flex: 1,
         justifyContent: 'center',
@@ -119,7 +145,7 @@ const styles = StyleSheet.create({
         marginTop: 70,
     },
     image: {
-      
+      alignSelf: "center"
     },
     Title: {
         fontSize: 40,
@@ -138,8 +164,8 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     inputContainer: {
-        width: '100%',
         marginTop: 10,
+        marginHorizontal: "17%",
     },
     input: {
         width: '100%', 
@@ -153,6 +179,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 10,
         elevation: 10,
+        color: "#E60965"
     },
     buttonContainer: {
         marginTop: 10,

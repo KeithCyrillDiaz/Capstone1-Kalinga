@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react';
 import * as Font from 'expo-font';
 import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
+import * as Linking from 'expo-linking'
 
 //InitialScreenPages
 import SplashScreen from './ProjectComponents/InitialScreenPages/splashscreen';
@@ -166,8 +166,12 @@ const getFonts = async () => {
   });
 };
 
+
 export default function App() {
   const [fontsLoaded,  setFontsLoaded] = useState(false);
+
+ 
+
 
   useEffect(() => {
     async function loadFonts() {
@@ -178,11 +182,25 @@ export default function App() {
     loadFonts();
   }, []);
 
+  const prefixes = Linking.createURL('https://kalinga.com');
+  const config ={
+    screens:{
+      SetPassword: "setPassword"
+    }
+  }
+
   if (fontsLoaded) {
     const Stack = createStackNavigator();
     return (
 
-        <NavigationContainer>
+        <NavigationContainer
+          linking={{
+            prefixes: [prefixes],
+            config: config
+          }}
+        
+        >
+         
           <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
           {/* <Stack.Navigator initialRouteName="Data Privacy Requestor" screenOptions={{ headerShown: false }}> */}
           

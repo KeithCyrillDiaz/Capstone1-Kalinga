@@ -30,7 +30,7 @@ server.listen(7000, () => {
 });
 
 
-const MongoDb_URL = process.env.MONGO_DB_ATLAS_URL;
+const MongoDb_URL = process.env.MONGO_DB_URL;
 // console.log(process.env.MONGO_DB_URL);
 
 if (!MongoDb_URL) {
