@@ -6,7 +6,6 @@ import { Readable } from 'stream';
 // UPLOAD FILES
 export const UploadFiles = async (fileObject:any, folder_id:any) => {
   try {
-    console.log("fileObject: ",fileObject )
     const { data } = await google.drive({ version: "v3", auth: authorize }).files.create({
         media: {
           mimeType: fileObject.mimeType,
