@@ -254,11 +254,12 @@ export const sendApprovedEmail = async (req: express.Request, res: express.Respo
                     <div class="container">
                         <h2>${existingUser.userType} Approval Notification</h2>
                         <p>Congratulations! You have been approved as a ${userType}.</p>
-                        <p style="font-size: 18px; font-weight: bold;">ApplicantID: ${existingUser.Applicant_ID}</p>
+                        <p style="font-size: 18px; font-weight: bold;">ApplicantID: <a href="https://kalinga.example.com> ${existingUser.Applicant_ID}</a> </p>
                         <p>With your approval, you can now start ${duty} breast milk through MilkBanks.</p>
                         <p>Thank you for joining us in our mission.</p>
                         <p>To complete your registration, please input your Applicant ID and set your password by clicking the button below:</p>
-                        <a href="Kalinga://verification-result?success=true" class="button">Set Password</a>
+                        <a href="kalinga://setPassword" class="button">Set Password</a>
+                      
                         <div class="footer">
                             <p>Best Regards,</p>
                             <p>Kalinga Team</p>
