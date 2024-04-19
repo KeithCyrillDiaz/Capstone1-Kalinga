@@ -141,21 +141,20 @@ const DonorInitialScreeningFormPage4 = ({route}) => {
             <View style={styles.header}>
                 <Text style={styles.headerTitle}>Donor Verification</Text>
             </View>
-
             <Tab.Navigator
-                 screenOptions={{
+                screenOptions={{
                   tabBarLabelStyle: {
-                      fontSize: 16,
-                      fontWeight: 'bold',
+                    fontSize: 16,
+                    fontWeight: 'bold',
                   },
                   tabBarStyle: {
-                      backgroundColor: '#FFF8EB',
+                    backgroundColor: '#FFF8EB',
                   },
                   tabBarIndicatorStyle: {
-                      backgroundColor: '#E60965',
+                    backgroundColor: '#E60965',
                   },
-              }}
-            >
+                }}
+              >
                 <Tab.Screen name="Screening Form" component={FirstScreen}  initialParams = {{screeningFormId}}   />
                 <Tab.Screen name="Medical Requirements" component={SecondScreen}  initialParams = {{screeningFormId}}  />
             </Tab.Navigator>
