@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   headerTitle: {
-    fontFamily: "Kurale-Regular",
+    fontFamily: "Kurale",
     fontSize: 18,
     color: "white",
     fontWeight: "bold",

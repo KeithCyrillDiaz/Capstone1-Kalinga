@@ -20,6 +20,7 @@ import DoneEmailVerification from './ProjectComponents/InitialScreenPages/DoneEm
 import Facebook from './ProjectComponents/InitialScreenPages/Facebook';
 import ResetPassword from './ProjectComponents/InitialScreenPages/ResetPassword';
 import ResetPasswordEmail from './ProjectComponents/InitialScreenPages/ResetPasswordEmail';
+import ResetPasswordCode from './ProjectComponents/InitialScreenPages/ResetPasswordCode.js';
 import ResetPasswordSuccessful from './ProjectComponents/InitialScreenPages/ResetPasswordSuccessful';
 import FacebookContinue from './ProjectComponents/InitialScreenPages/FacebookContinue';
 
@@ -228,6 +229,7 @@ export default function App() {
             <Stack.Screen name="Facebook" component={Facebook} />
             <Stack.Screen name="ResetPassword" component={ResetPassword} />
             <Stack.Screen name="ResetPasswordEmail" component={ResetPasswordEmail} />
+            <Stack.Screen name="ResetPasswordCode" component={ResetPasswordCode} />
             <Stack.Screen name="ResetPasswordSuccessful" component={ResetPasswordSuccessful} />
             <Stack.Screen name="FacebookContinue" component={FacebookContinue} />
             
@@ -378,6 +380,3 @@ export default function App() {
   }
 
 }
-
-
-

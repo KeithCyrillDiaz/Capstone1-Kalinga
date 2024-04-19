@@ -17,15 +17,22 @@ import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios'
 import { BASED_URL } from '../../MyConstants';
 import Spinner from 'react-native-loading-spinner-overlay';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 const LogIn = () => {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isloading, setIsLoading] = useState(false)
+    const [showPassword, setShowPassword] = useState(false); 
 
     const handleForgotPassword = () => {
         navigation.navigate('ResetPassword');
     };
+    const clearAsyncStorage = async () => {
+        const keysToRemove = ['Applicant_ID', 'userType', 'isRegistered'];
+        await AsyncStorage.multiRemove(keysToRemove);
+      };
 
     const handleLogIn = async () => {
         // Check if email or password is empty
@@ -47,21 +54,33 @@ const LogIn = () => {
     
         // Proceed with login if inputs are valid
         try {
-            setIsLoading(truw=e)
+            setIsLoading(true)
             const result = await axios.post(`${BASED_URL}/kalinga/userLogin`, {
                 email: email,
                 password: password
             });
     
-            if (result.data.messages.code === 0) {
-                const userType = result.data.userType;
-                console.log("User is a " + userType);
+            if (result.data.messages.code !== 0) {
+                Alert.alert('Login Failed', 'Invalid Password or Email');
+                
+            } else{
+                const registeredUserType = result.data.userType;
+                console.log("User is a " + registeredUserType);
+                await AsyncStorage.setItem('userType', registeredUserType)
+                let Applicant_ID = ""
+                if(registeredUserType === "Donor"){
+                    Applicant_ID = await AsyncStorage.getItem('DonorApplicant_ID')
+                } else Applicant_ID = await AsyncStorage.getItem('RequestorApplicant_ID')
+                
+                if(Applicant_ID !== null || Applicant_ID !== undefined){
+                await clearAsyncStorage();
+                }
     
                 // Reset navigation to MainTabs screen with user type parameter
                 navigation.dispatch(
                     CommonActions.reset({
                         index: 0,
-                        routes: [{ name: 'MainTabs', params: { userType: userType } }],
+                        routes: [{ name: 'MainTabs', params: { userType: registeredUserType } }],
                     })
                 );
             }
@@ -123,14 +142,19 @@ const LogIn = () => {
                         onChangeText={setEmail}
                         value={email}
                     />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Password"
-                        placeholderTextColor="#F94892"
-                        onChangeText={setPassword}
-                        value={password}
-                        secureTextEntry={true}
-                    />
+                    <View style={styles.passwordContainer}>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Password"
+                            placeholderTextColor="#F94892"
+                            onChangeText={setPassword}
+                            value={password}
+                            secureTextEntry={!showPassword} // Show password if showPassword is true
+                        />
+                        <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.togglePassword}>
+                            <MaterialCommunityIcons name={showPassword ? 'eye-off' : 'eye'} size={24} color="#E60965" />
+                        </TouchableOpacity>
+                     </View>
                 </View>
 
                 <View style={styles.buttonContainer}>
@@ -176,6 +200,19 @@ const LogIn = () => {
 export default LogIn;
 
 const styles = StyleSheet.create({
+
+    passwordContainer: {
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center', 
+        marginBottom: 10, 
+    },
+    togglePassword: {
+        position: 'absolute', 
+        bottom: 18,
+        right: 10, 
+    },
+
     guest: {
         textAlign: "center",
         marginTop: "2%",
@@ -195,9 +232,7 @@ const styles = StyleSheet.create({
     },
     ImageContainer: {
         marginTop: 70,
-    },
-    image: {
-      
+        alignSelf: "center"
     },
     Title: {
         fontSize: 40,
@@ -216,7 +251,7 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     inputContainer: {
-        width: '100%',
+        marginHorizontal: "17%",
         marginTop: 10,
     },
     input: {
@@ -231,6 +266,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 10,
         elevation: 10,
+        color: '#E60965',
     },
     buttonContainer: {
         marginTop: 10,

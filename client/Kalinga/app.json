@@ -2,7 +2,7 @@
   "expo": {
     "name": "Kalinga",
     "slug": "Kalinga",
-    "scheme": "https",
+    "scheme": "Kalinga",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/KALINGA_Icon_1.png",

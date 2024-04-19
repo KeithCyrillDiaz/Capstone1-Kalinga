@@ -7,7 +7,8 @@ const screeningFormSchema = new mongoose.Schema({
     Screening_ID: {type: String},
     userType: {type: String},
     isDeleted: {type: String, default: "notDeleted"},
-
+    isApproved: {type: String},
+    
     fullName: {type: String},
     Age: {type: String},
     birthDate: {type: String},
@@ -120,6 +121,7 @@ export const createScreeningForm = (values: Record<string, any>) => new screenin
 export const getScreeningFormByUserType = (userType: string) => screeningFormModel.find({userType: userType, isDeleted: {$ne: "Deleted"}})
 export const getScreeningFormByName = (fullName: string) => screeningFormModel.findOne({fullName})
 export const getScreeningFormByApplicantID = (Applicant_ID: string) => screeningFormModel.findOne({Applicant_ID})
+export const getScreeningFormByEmail = (email: string) => screeningFormModel.findOne({email})
 export const isDeleteScreeningForm = (Applicant_ID: string, Status: string) => screeningFormModel.findOneAndUpdate({Applicant_ID}, {$set: {isDeleted: Status}}, { new: true } ).then((ScreeningForm) => ScreeningForm.toObject())
 export const getScreeningFormByMaxApplicantID = () => screeningFormModel.findOne({}).sort({ Applicant_ID: -1 }).limit(1).select('Applicant_ID');
 export const getScreeningFormByMaxScreeningID = () => screeningFormModel.findOne({}).sort({ Screening_ID: -1 }).limit(1).select('Screening_ID');

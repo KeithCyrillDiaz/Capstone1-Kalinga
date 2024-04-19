@@ -51,7 +51,7 @@ export const logInUser = async (req: express.Request, res: express.Response) => 
         
 
         if(pass !== passEncryption(salt, req.body.password)){
-            return res.status(400).json({
+            return res.status(200).json({
                 messages: {
                     code: 1,
                     message: "Invalid Password"

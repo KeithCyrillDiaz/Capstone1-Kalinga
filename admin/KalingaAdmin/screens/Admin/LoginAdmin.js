@@ -5,7 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios'
 import { BASED_URL } from '../../MyConstants';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { MaterialCommunityIcons } from '@expo/vector-icons'; // Import the icon
+import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 const LogIn = () => {
 
     const navigation = useNavigation();
