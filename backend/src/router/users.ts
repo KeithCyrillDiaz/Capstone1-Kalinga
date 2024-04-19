@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { registerUser} from '../controllers/registerUser';
+import { registerUserOrSetNewPassword } from '../controllers/setPassAndRegisterUser';
 import { registerRequestor } from '../controllers/Requestor/Apply_As_Requestor/registerRequestor';
 import { AdminLogIn } from '../controllers/Admin/adminLogin';
 import { createAppointment } from '../controllers/Donor/appointmentController';
@@ -10,14 +10,17 @@ import {getAppointmentByUsertype} from '../controllers/Admin/Appointment/getAppo
 import { getRequestByID } from '../controllers/Admin/Appointment/getMakeRequest';
 import { getRequestByUserType } from '../controllers/Admin/Appointment/getRequestByUserType';
 import { logInUser } from '../controllers/LogInUser';
+import { isApproved } from '../controllers/isApproved';
 
 export default (router: express.Router) => {
   
-    router.post('/kalinga/registerUser', registerUser);
+    router.post('/kalinga/registerUser', registerUserOrSetNewPassword);
+    router.post('/kalinga/setPassword', registerUserOrSetNewPassword); // Do not delete, capable of Setting new password
+    
     router.post('/kalinga/registerRequestor', registerRequestor);
     router.post('/kalinga/userLogin', logInUser)
     router.post('/kalinga/adminLoginIn', AdminLogIn)
-
+    router.get('/kalinga/isApproved/:Applicant_ID', isApproved)
     //donor
     router.post('/kalinga/createAppointment', createAppointment);
     router.get('/kalinga/getAppointmentsByDonorID/:AppointmentDonorID', getAppointmentByDonorID);

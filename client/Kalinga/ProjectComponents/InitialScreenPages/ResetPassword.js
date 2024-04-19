@@ -14,6 +14,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import axios from 'axios'
+import { BASED_URL } from '../../MyConstants';
 const ResetPassword = () => {
     const navigation = useNavigation(); 
 
@@ -25,20 +27,35 @@ const ResetPassword = () => {
         navigation.navigate('LogIn');
     };
 
-    const handleSubmitButton = () => {
+    const handleSubmitButton = async () => {
         // Check if email is empty or not in the correct format
+        if(Email === ''){
+            Alert.alert('Invalid Input', 'Pleaser enter your email address')
+            return
+        }
         if (!validateEmail(Email)) {
+            if(Email.includes(' ')){
+                Alert.alert('Invalid Input', 'Email must not include spaces')
+                return
+            }
             Alert.alert('Invalid Email', 'Please enter a valid email address.');
             return;
         }
-        if(Email.includes('')){
-            Alert.alert('Invalid Input', 'Email must not include spaces')
-        }
-        if(Email === ''){
-            Alert.alert('Invalid Input', 'Pleaser enter your email address')
-        }
+        try{
+            navigation.navigate('ResetPasswordCode', {email: Email}); 
+            const result = await axios.get(`${BASED_URL}/kalinga/sendCode/${Email}`)
+            console.log(result.data.messages.message)
+            if(result.data.messages.code !== 0){
+                Alert.alert("Email Send Failed ", `${result.data.messages.message}`)
+                return
+            }
 
-        navigation.navigate('SetPassword'); 
+                
+        } catch(error) {
+            if(error)Alert.alert('Network error', `Please check your internet connection`)
+            else
+            Alert.alert('Something went wrong', "Please try again later")
+        }
     };
 
     // Regular expression to validate email format

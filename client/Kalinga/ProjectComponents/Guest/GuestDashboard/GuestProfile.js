@@ -22,7 +22,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function GuestProfile() {
 
   const [userType, setUserType] = useState('')
-
+  const [donor_ID,  setDonor_ID] = useState('')
+  const [requestor_ID, setRequestor_ID] = useState('')
   const navigation = useNavigation();
 
   const handleHomePress = () => {
@@ -40,8 +41,13 @@ export default function GuestProfile() {
 };
 const getData = async() => {
   const user = await AsyncStorage.getItem('userType')
-  if(user !== null || user !== undefined){
-    console.log("userType: ", user)
+  setDonor_ID(await AsyncStorage.getItem('DonorApplicant_ID'))
+  setRequestor_ID(await AsyncStorage.getItem('RequestorApplicant_ID'))
+  // const Pending = await AsyncStorage.getItem("Pending")
+  const Pending ="True"
+  if(Pending === "True"){
+    console.log("RequestorApplicant_ID: ",Requestor_ID)
+    console.log("DonorApplicant_ID: ", Donor_ID)
     setUserType(user)
   }
 }
@@ -78,7 +84,7 @@ const getData = async() => {
             <View style={styles.line}></View>
   
 
-                <TouchableOpacity disabled = {userType === 'Donor' ? true : false}style={styles.menuContainer} onPress={() => navigatePage("ApplyAsDonorStack")} >
+                <TouchableOpacity disabled = {donor_ID !== null ? true : false}style={styles.menuContainer} onPress={() => navigatePage("ApplyAsDonorStack")} >
                   <FontAwesome5 style={{flexShrink: 0, marginRight: "5%"}} name="hand-holding-water" size={24} color="#E60965" />                
                   <View style = {styles.labelAndArrowCont}>
                     <Text style={styles.menuText}> {userType !== "Donor" ? "Apply as Donor" : "You're already a Donor"}</Text>

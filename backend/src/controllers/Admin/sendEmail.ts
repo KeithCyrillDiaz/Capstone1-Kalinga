@@ -3,7 +3,9 @@ import nodemailer from 'nodemailer';
 import randomatic from "randomatic";
 import moment from 'moment';
 import { getScreeningFormByApplicantID } from "../../models/ApplyAsDonor";
-import { createCode, getCodeByCode } from "../../models/Authentication";
+import { createCode, createPassCode} from "../../models/Authentication";
+import { getDonorByEmail, getRequestorByEmail } from "../../models/users";
+import { random } from "helpers/passwordEncryption";
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -135,36 +137,6 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
 }
 
 
-export const checkCode = async (req: express.Request, res: express.Response) => {
-    try{
-        console.log(req.params.Code)
-
-        const verificationCode = await getCodeByCode(req.params.Code)
-        if(!verificationCode) {
-            return res.status(401).json({
-                messages: {
-                    code: 1,
-                    message: "Ïnvalid Code"
-                }
-            })
-        }
-
-        return res.status(202).json({
-            messages: {
-                code: 0,
-                message: "Valid Code"
-            }
-        })
-       
-    } catch(error){
-        return res.status(500).json({
-            messages: {
-                code: 1,
-                message: "Internal Server Error"
-            }
-        })
-    }
-}
 
 export const sendApprovedEmail = async (req: express.Request, res: express.Response) => {
     try{
@@ -254,11 +226,12 @@ export const sendApprovedEmail = async (req: express.Request, res: express.Respo
                     <div class="container">
                         <h2>${existingUser.userType} Approval Notification</h2>
                         <p>Congratulations! You have been approved as a ${userType}.</p>
-                        <p style="font-size: 18px; font-weight: bold;">ApplicantID: <a href="https://kalinga.example.com> ${existingUser.Applicant_ID}</a> </p>
+                        <p style="font-size: 18px; font-weight: bold;">ApplicantID: <a href="https://kalinga.example.com"> ${existingUser.Applicant_ID}</a> </p>
                         <p>With your approval, you can now start ${duty} breast milk through MilkBanks.</p>
                         <p>Thank you for joining us in our mission.</p>
                         <p>To complete your registration, please input your Applicant ID and set your password by clicking the button below:</p>
                         <a href="kalinga://setPassword" class="button">Set Password</a>
+                        <p><span style="font-size: 18px; font-weight: bold;" >NOTE:</span> If button did not work, kindly restart the Kalinga app instead. Thank you </p>
                       
                         <div class="footer">
                             <p>Best Regards,</p>
@@ -405,3 +378,121 @@ export const sendDeclinedEmail = async (req: express.Request, res: express.Respo
 
 }
 
+export const sendCode = async(req: express.Request, res: express.Response) => {
+    try {
+        const  receivedEmail = req.params.email
+        console.log("req.params.email: ", req.params.email)
+        if(!receivedEmail){
+            return res.status(400).json({
+                messages: {
+                    code: 1,
+                    message: "Invalid Email"
+                }
+            })
+        }
+        const requestor = await getRequestorByEmail(receivedEmail)
+        const donor = await getDonorByEmail(receivedEmail)
+        console.log("donor", donor)
+        if(!requestor && !donor){
+            return res.json({
+                messages: {
+                    code: 1,
+                    message: "Email Not Found"
+                }
+            }).status(400)
+        }
+
+        let email: string;
+        if(!requestor){
+            email = donor.email
+        } else{
+            email = requestor.email
+        }
+     
+        console.log("email: ", email)
+        const passCode = {
+            passCode: randomatic('0', 6),
+            expiresAt: moment().add(7, 'minutes').toDate()
+        }
+        console.log(passCode)
+        await createPassCode(passCode)
+        const result = await transporter.sendMail({
+            from: process.env.NM_EMAIL,
+            to: email,
+            subject: `Reset Password Verification Code`,
+            html:
+            `<!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Reset Password Verification Code</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        line-height: 1.6;
+                        margin: 0;
+                        padding: 0;
+                    }
+                    .container {
+                        max-width: 600px;
+                        margin: 20px auto;
+                        padding: 20px;
+                        border: 1px solid #ccc;
+                        border-radius: 10px;
+                    }
+                    h2 {
+                        color: #333;
+                    }
+                    p {
+                        margin-bottom: 20px;
+                    }
+                    .button {
+                        display: inline-block;
+                        background-color: #E60965;
+                        color: #fff;
+                        text-decoration: none;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                    }
+                    .footer {
+                        margin-top: 20px;
+                        text-align: left;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h2>Reset Password Verification Code</h2>
+                    <p>You have requested to reset your password. Please use the following verification code:</p>
+                    <p style="font-size: 24px; font-weight: bold;">${passCode.passCode}</p>
+                    <p>This code will expire in 7 minutes. If you did not request this change, please ignore this email.</p>
+                    <p>If you have any questions or concerns, please feel free to contact us.</p>
+                    <a href="mailto: ${process.env.NM_EMAIL}" class="button">Contact Us</a>
+                    <div class="footer">
+                        <p>Best Regards,</p>
+                        <p>Kalinga's Team</p>
+                    </div>
+                </div>
+            </body>
+            </html>`
+        })
+//
+//Kalinga://SetPassword
+        return res.json({
+            messages: {
+                code: 0,
+                message: "Verification Email Sent Successfully"
+            }
+        }).status(200)
+        
+
+    } catch (error) {
+        return res.status(500).json({
+            messages: {
+                code: 1,
+                message: error
+            },
+        })
+    }
+}
