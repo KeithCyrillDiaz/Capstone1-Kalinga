@@ -122,11 +122,12 @@ export const FirstScreen = ({route}) => {
                 </Text>
                     <View style = {styles.flex_Row}>
 
+                  
                     <TextInput
-                        style={styles.birthDateInputField}
-                        placeholder="Birthdate"
+                        style={styles.birthDateWeight }
+                        placeholder="Birth Weight"
                         placeholderTextColor="#E60965"
-                        value={"Birthday: " + screeningFormID.childBirthDate}
+                        value={"Birth Weight: " + screeningFormID.birthWeight}
                         editable={false}
                     />
                     
@@ -148,14 +149,14 @@ export const FirstScreen = ({route}) => {
                         value={"Age: " + screeningFormID.childAge}
                         editable={false}
                     />
-
                     <TextInput
-                        style={styles.birthDateInputField }
-                        placeholder="Birth Weight"
+                        style={styles.birthDateInputField}
+                        placeholder="Birthdate"
                         placeholderTextColor="#E60965"
-                        value={"Birth Weight: " + screeningFormID.birthWeight}
+                        value={"Birthday: " + screeningFormID.childBirthDate}
                         editable={false}
                     />
+       
                    
                    
                     </View>
@@ -605,7 +606,9 @@ const styles = StyleSheet.create({
         borderColor: "#E60965",
         paddingVertical: 5,
         paddingLeft: 15,
-        width: 90,
+        width: 80,
+        marginLeft: 1,
+        marginRight: 10,
         marginVertical: 10,
         justifyContent: "center",
         color: "#E60965",
@@ -618,11 +621,25 @@ const styles = StyleSheet.create({
         borderColor: "#E60965",
         paddingVertical: 5,
         paddingLeft: 15,
+        width: 210,
+        marginVertical: 10,
+        justifyContent: "center",
+        color: "#E60965",
+        backgroundColor: "white",  
+    },
+
+    birthDateWeight: {
+        borderWidth: 1,
+        borderRadius: 10,
+        borderColor: "#E60965",
+        paddingVertical: 5,
+        paddingLeft: 15,
         width: 190,
         marginVertical: 10,
         justifyContent: "center",
         color: "#E60965",
         backgroundColor: "white",  
+        marginRight: 10,
     },
 
     childSexInputField: {
