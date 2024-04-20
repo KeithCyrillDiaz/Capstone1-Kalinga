@@ -65,7 +65,7 @@ try {
     const existingUser = await getScreeningFormByName(fullName)
 
     if(existingUser){
-
+        if(existingUser.isDeleted === "Deleted") return
         if(existingUser.userType === userType){
             const message = {
                 code: 1, 

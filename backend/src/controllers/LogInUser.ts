@@ -31,12 +31,12 @@ export const logInUser = async (req: express.Request, res: express.Response) => 
         if(!existingUser){
             const existingUser = await getRequestorByEmail(req.body.email)
             if(!existingUser){
-                return res.status(400).json({
+                return res.json({
                     messages: {
                         code: 1,
-                        message: "Invalid Email"
+                        message: "Email Not Found"
                     }
-                })
+                }).status(400)
             }
             email = existingUser.email
             pass = existingUser.password
@@ -51,12 +51,12 @@ export const logInUser = async (req: express.Request, res: express.Response) => 
         
 
         if(pass !== passEncryption(salt, req.body.password)){
-            return res.status(200).json({
+            return res.json({
                 messages: {
                     code: 1,
                     message: "Invalid Password"
                 }
-            })
+            }).status(400)
         }
 
         return res.status(200).json({

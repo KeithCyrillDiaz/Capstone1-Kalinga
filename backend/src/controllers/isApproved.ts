@@ -8,37 +8,52 @@ export const isApproved = async (req: express.Request, res: express.Response) =>
         const exisitingUser = await getScreeningFormByApplicantID(req.params.Applicant_ID)
         console.log(exisitingUser)
         if(!exisitingUser){
-            return res.status(400).json({
+            return res.json({
                 messages: {
                     code: 1,
                     message: "Non existing Applicant"
                 }
-            })
+            }).status(400)
         }
         const userType = exisitingUser.userType
+        if(exisitingUser.isDeleted === "Deleted" && exisitingUser.isApproved !== "Yes"){
+            return res.json({
+                messages: {
+                    code: 1,
+                    message: "Applicant is Deleted"
+                },
+          
+            })
+        }
+        
         if(exisitingUser.isApproved === "Yes"){
             console.log(`${exisitingUser.userType} is Approved`)
-            return res.status(200).json({
+            return res.json({
                 messages: {
                     code: 0,
                     message: `${exisitingUser.userType} is Approved`
                 },
                 userType
-            })
+            }).status(200)
         } else {
             console.log(`Application is still pending`)
-            return res.status(200).json({
+            return res.json({
                 messages: {
                     code: 1,
-                    message: `Application is still pending`
+                    message: `${exisitingUser.userType} Application is still pending`
                 },
              
-            })
+            }).status(200)
         }
 
 
 
     } catch(error){
-
+        return res.json({
+            messages:{
+                code: 1,
+                message: "Internal Server Error"
+            }
+        })
     }
 }
