@@ -41,6 +41,22 @@ const SetPasswordDonor = ({route}) => {
       }
 
       const handleSubmitButton = async () => {
+        const invalidCharacters = /[^a-zA-Z0-9]/;
+        if(!Applicant_ID  && forgotPassEmail === null){
+            Alert.alert('Invalid Applicant ID', 'Please enter your Applicant ID.');
+            return;
+        }
+        if(Applicant_ID.includes(' ') && forgotPassEmail === null){
+            Alert.alert('Invalid Applicant ID', 'Applicant_ID cannot contain spaces.');
+            return;
+        }
+        if(invalidCharacters.test(Applicant_ID) && forgotPassEmail === null){
+            Alert.alert('Invalid Applicant ID', 'Applicant ID must not contain special characters.');
+            return;
+        }
+ 
+
+
         if(!Password){
             Alert.alert('Invalid Password', 'Please enter your password. Password cannot be empty.');
             return;

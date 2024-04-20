@@ -30,6 +30,7 @@ const EmailVerificationCode = ({route}) => {
     };
 
     const handleResendCode = async () => {
+
         await axios.post(`${BASED_URL}/kalinga/sendEmail/${screeningForm.Applicant_ID}`)
     };
 

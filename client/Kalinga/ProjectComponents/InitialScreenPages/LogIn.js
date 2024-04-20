@@ -61,7 +61,7 @@ const LogIn = () => {
             });
     
             if (result.data.messages.code !== 0) {
-                Alert.alert('Login Failed', 'Invalid Password or Email');
+                Alert.alert('Login Failed', `${result.data.messages.message}`);
                 
             } else{
                 const registeredUserType = result.data.userType;

@@ -11,7 +11,7 @@ import {
   StatusBar, 
   StyleSheet, 
   TouchableOpacity,
-  BackHandler
+  Alert
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -37,23 +37,38 @@ export default function GuestProfile() {
     if(Page === "LogIn"){
       navigation.replace(Page)
     }
+    if(Page === "ApplyAsRequestorStack" && requestor_ID !== null){
+      Alert.alert('Pending Requestor Applicant', 
+      'Please wait while we process your application.')
+      return
+    }
+    if((Page === "ApplyAsDonorStack" && donor_ID !== null)){
+      Alert.alert('Pending Donor Applicant', 
+      'Please wait while we process your application.')
+      return
+    }
     navigation.navigate(Page); // Navigate to the Login screen
 };
-const getData = async() => {
-  const user = await AsyncStorage.getItem('userType')
-  setDonor_ID(await AsyncStorage.getItem('DonorApplicant_ID'))
-  setRequestor_ID(await AsyncStorage.getItem('RequestorApplicant_ID'))
-  // const Pending = await AsyncStorage.getItem("Pending")
-  const Pending ="True"
-  if(Pending === "True"){
-    console.log("RequestorApplicant_ID: ",Requestor_ID)
-    console.log("DonorApplicant_ID: ", Donor_ID)
-    setUserType(user)
+const getData = async () => {
+  try {
+    const user = await AsyncStorage.getItem('userType');
+    const donorId = await AsyncStorage.getItem('DonorApplicant_ID');
+    const requestorId = await AsyncStorage.getItem('RequestorApplicant_ID');
+    const pending = await AsyncStorage.getItem('Pending');
+    console.log('RequestorApplicant_ID: ', requestorId);
+    console.log('DonorApplicant_ID: ', donorId);
+    console.log('pending: ', pending);
+    setUserType(user);
+    setDonor_ID(donorId);
+    setRequestor_ID(requestorId);
+  } catch (error) {
+    console.error('Error retrieving data from AsyncStorage:', error);
   }
-}
+};
 
   useEffect(() => {
     getData()
+    console.log("fetchData")
   },[])
 
 
@@ -73,7 +88,7 @@ const getData = async() => {
               <Text style={styles.statusText}>Requestor</Text>
             </View>
 
-            <TouchableOpacity  disabled = {userType === 'Requestor' ? true : false} style={styles.menuContainer} onPress={() => navigatePage("ApplyAsRequestorStack")} >
+            <TouchableOpacity style={styles.menuContainer} onPress={() => navigatePage("ApplyAsRequestorStack")} >
                 <FontAwesome style={{flexShrink: 0, marginRight: "4%"}} name="handshake-o" size={24} color="#E60965" />   
                 <View style = {styles.labelAndArrowCont}>
                   <Text style={[styles.menuText, {marginRight: -10}]}>{userType !== "Requestor" ? "Apply as Requestor" : "You're already a Requestor"}</Text>
@@ -84,7 +99,7 @@ const getData = async() => {
             <View style={styles.line}></View>
   
 
-                <TouchableOpacity disabled = {donor_ID !== null ? true : false}style={styles.menuContainer} onPress={() => navigatePage("ApplyAsDonorStack")} >
+                <TouchableOpacity style={styles.menuContainer} onPress={() => navigatePage("ApplyAsDonorStack")} >
                   <FontAwesome5 style={{flexShrink: 0, marginRight: "5%"}} name="hand-holding-water" size={24} color="#E60965" />                
                   <View style = {styles.labelAndArrowCont}>
                     <Text style={styles.menuText}> {userType !== "Donor" ? "Apply as Donor" : "You're already a Donor"}</Text>
