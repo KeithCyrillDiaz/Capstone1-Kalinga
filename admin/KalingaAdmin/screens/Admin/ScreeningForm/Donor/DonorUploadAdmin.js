@@ -88,9 +88,9 @@ const DonorUploadAdmin = ({ route }) => {
 
     const sendEmail = async (userID, status) => {
       if(status === "Approved"){
-        const result = await axios.post(`${BASED_URL}/kalinga/sendApprovedEmail/${userID}`)
+        await axios.post(`${BASED_URL}/kalinga/sendApprovedEmail/${userID}`)
       } else {
-        const result = await axios.post(`${BASED_URL}/kalinga/sendDeclinedEmail/${userID}`)
+        await axios.post(`${BASED_URL}/kalinga/sendDeclinedEmail/${userID}`)
       }
       
     }
