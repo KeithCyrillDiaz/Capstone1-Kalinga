@@ -242,9 +242,10 @@ export const SecondScreen = ({route}) => {
         fetchMedicalAbstract();
         fetchData();
     },[])
-    const navigatePage = (Page, owner) => {
+    const navigatePage = (Page, owner, status) => {
         // Navigate to the next screen by route name
         DeleteUser(Applicant_ID)
+        sendEmail(Applicant_ID, status)
         navigation.dispatch(
           CommonActions.reset({
             index: 0, //Reset the stack to 0 so the user cannot go back
@@ -252,11 +253,19 @@ export const SecondScreen = ({route}) => {
           })
         );
       }
+
+      const sendEmail = async (userID, status) => {
+        if(status === "Approved"){
+          await axios.post(`${BASED_URL}/kalinga/sendApprovedEmail/${userID}`)
+        } else {
+          await axios.post(`${BASED_URL}/kalinga/sendDeclinedEmail/${userID}`)
+        }
+        
+      }
     const DeleteUser = async (userID) => {
         console.log("ID: ", userID)
         const result = await axios.delete(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
         console.log(result.data)
-        fetchScreeningFormIDs();
     }
 
     const approvedUser = (Page) => {
@@ -271,7 +280,7 @@ export const SecondScreen = ({route}) => {
             },
             {
               text: 'Yes',
-              onPress: () =>  navigatePage(Page, owner), // Call a function when "Yes" is pressed
+              onPress: () =>  navigatePage(Page, owner, "Approved"), // Call a function when "Yes" is pressed
             },
           ],
           { cancelable: false }
@@ -292,16 +301,17 @@ export const SecondScreen = ({route}) => {
             },
             {
               text: 'Yes',
-              onPress: () => navigatePage(Page, owner), // Call a function when "Yes" is pressed
+              onPress: () => navigatePage(Page, owner, "Declined"), // Call a function when "Yes" is pressed
             },
           ],
           { cancelable: false }
         );
       };
   
+ 
      
     return (
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <ScrollView style={styles.scrollContainer}>
             <View style = {styles.Medicalcontainer}>
                 <View style={styles.tabContent}>
                     <Text style = {styles.title}>Medical Abstract of Infant</Text>
@@ -523,7 +533,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent:"center",
-        // backgroundColor: "pink"
+
     },
 
     screeningFormcontainer: {
@@ -563,9 +573,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         backgroundColor: '#FFF8EB',
-    },
-    container: {
-        flex: 1,
     },
 
     text: {
