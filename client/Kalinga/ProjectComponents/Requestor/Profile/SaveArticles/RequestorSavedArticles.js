@@ -93,7 +93,7 @@ const SavedArticles = () => {
                             <Text>Img</Text>
                         </View> 
                         <Text style = {styles.text}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            A Breastfeeding Journey with Kalinga: From the Stools to Satisfaction 
                         </Text>
                     </View>
 
@@ -105,7 +105,7 @@ const SavedArticles = () => {
                             <Text>Img</Text>
                         </View> 
                         <Text style = {styles.text}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            The Nurturing Environment of Kalinga's Breastfeeding Connect with others: A Journey into Communities, interaction, and Compassion 
                         </Text>
                     </View>
 
@@ -117,7 +117,7 @@ const SavedArticles = () => {
                             <Text>Img</Text>
                         </View> 
                         <Text style = {styles.text}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            Empowering Mothers: The Definitive Resource for Kalinga Breastfeeding Accomplishment 
                         </Text>
                     </View>
 
@@ -129,7 +129,7 @@ const SavedArticles = () => {
                             <Text>Img</Text>
                         </View> 
                         <Text style = {styles.text}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            Advancements in Infant Health: Kalinga's Transformation in Breastfeeding Advocacy and Learning  
                         </Text>
                     </View>
 
@@ -141,7 +141,7 @@ const SavedArticles = () => {
                             <Text>Img</Text>
                         </View> 
                         <Text style = {styles.text}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            Motherhood: Kalinga's Game-Changing Approach to Breast Milk Donation and Sharing 
                         </Text>
                     </View>
 

@@ -75,15 +75,15 @@ const ApprovedTabRequest = () => {
 							</View>
 							<View style={styles.boxContentContainer}>
 								<Text style={styles.boxContentBold}>Phone Number: </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>09XXXXXXXXX</Text>
+								<Text style={[styles.boxContent, styles.limitText]}>09326136778</Text>
 							</View>
 							<View style={styles.boxContentContainer}>
 								<Text style={styles.boxContentBold}>Medical Condition: </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do</Text>
+								<Text style={[styles.boxContent, styles.limitText]}>Allergy</Text>
 							</View>
 							<View style={styles.boxContentContainer}>
 								<Text style={styles.boxContentBold}>Amount of milk requested (mL): </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>XX mL</Text>
+								<Text style={[styles.boxContent, styles.limitText]}>15 mL</Text>
 							</View>
 							<View style={styles.boxContentContainer}>
 								<Text style={styles.boxContentBold}>Baby Category: </Text>
@@ -91,15 +91,15 @@ const ApprovedTabRequest = () => {
 							</View>
 							<View style={styles.boxContentContainer}>
 								<Text style={styles.boxContentBold}>Milk Bank: </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do</Text>
+								<Text style={[styles.boxContent, styles.limitText]}>Quezon City Human Milk Bank</Text>
 							</View>
 							<View style={styles.boxContentContainer}>
 								<Text style={styles.boxContentBold}>Address: </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do</Text>
+								<Text style={[styles.boxContent, styles.limitText]}>Project 8, Quezon City, Metro Manila</Text>
 							</View>
 							<View style={styles.boxContentContainer}>
 								<Text style={styles.boxContentBold}>Time and Date: </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>XX - XX - XXXX</Text>
+								<Text style={[styles.boxContent, styles.limitText]}>11:00 AM - 04/10/2024</Text>
 							</View>
 
 						</View>

@@ -72,75 +72,75 @@ const CompletedTabRequest = () => {
 						<View style={styles.boxColContainer}>
 								<View style={styles.boxContentContainer}>
 										<Text style={styles.boxContentBold}>Amount of milk requested: </Text>
-										<Text style={[styles.boxContent, styles.limitText]}>XX mL</Text>
+										<Text style={[styles.boxContent, styles.limitText]}>15 mL</Text>
 								</View>
 								<View style={styles.boxContentContainer}>
 										<Text style={styles.boxContentBold}>MilkBank: </Text>
-										<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet</Text>
+										<Text style={[styles.boxContent, styles.limitText]}>Quezon City Human Milk Bank</Text>
 								</View>
 								<View style={styles.boxContentContainer}>
 										<Text style={styles.boxContentBold}>Date and Time: </Text>
-										<Text style={[styles.boxContent, styles.limitText]}>XX:XX AM/PM  XX - XX - XXXX </Text>
+										<Text style={[styles.boxContent, styles.limitText]}>11:00 AM  04 - 10 - 2024 </Text>
 								</View>
 							</View>
 
 						<View style={styles.boxColContainer}>
 							<View style={styles.boxContentContainer}>
 									<Text style={styles.boxContentBold}>Amount of milk requested: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>XX mL</Text>
+									<Text style={[styles.boxContent, styles.limitText]}>15 mL</Text>
 							</View>
 							<View style={styles.boxContentContainer}>
 									<Text style={styles.boxContentBold}>MilkBank: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet</Text>
+									<Text style={[styles.boxContent, styles.limitText]}>Quezon City Human Milk Bank</Text>
 							</View>
 							<View style={styles.boxContentContainer}>
 									<Text style={styles.boxContentBold}>Date and Time: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>XX:XX AM/PM  XX - XX - XXXX </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>11:00 AM  04 - 01 - 2024 </Text>
 							</View>
 						</View>
 
 						<View style={styles.boxColContainer}>
 							<View style={styles.boxContentContainer}>
 									<Text style={styles.boxContentBold}>Amount of milk requested: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>XX mL</Text>
+									<Text style={[styles.boxContent, styles.limitText]}>15 mL</Text>
 							</View>
 							<View style={styles.boxContentContainer}>
 									<Text style={styles.boxContentBold}>MilkBank: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet</Text>
+									<Text style={[styles.boxContent, styles.limitText]}>Quezon City Human Milk Bank</Text>
 							</View>
 							<View style={styles.boxContentContainer}>
 									<Text style={styles.boxContentBold}>Date and Time: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>XX:XX AM/PM  XX - XX - XXXX </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>11:00 AM  03 - 15 - 2024 </Text>
 							</View>
 						</View>
 
 						<View style={styles.boxColContainer}>
 							<View style={styles.boxContentContainer}>
 									<Text style={styles.boxContentBold}>Amount of milk requested: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>XX mL</Text>
+									<Text style={[styles.boxContent, styles.limitText]}>15 mL</Text>
 							</View>
 							<View style={styles.boxContentContainer}>
 									<Text style={styles.boxContentBold}>MilkBank: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet</Text>
+									<Text style={[styles.boxContent, styles.limitText]}>Quezon City Human Milk Bank</Text>
 							</View>
 							<View style={styles.boxContentContainer}>
 									<Text style={styles.boxContentBold}>Date and Time: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>XX:XX AM/PM  XX - XX - XXXX </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>11:00 AM  03 - 02 - 2024 </Text>
 							</View>
 						</View>
 						
 						<View style={styles.boxColContainer}>
 							<View style={styles.boxContentContainer}>
 									<Text style={styles.boxContentBold}>Amount of milk requested: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>XX mL</Text>
+									<Text style={[styles.boxContent, styles.limitText]}>15 mL</Text>
 							</View>
 							<View style={styles.boxContentContainer}>
 									<Text style={styles.boxContentBold}>MilkBank: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet</Text>
+									<Text style={[styles.boxContent, styles.limitText]}>Quezon City Human Milk Bank</Text>
 							</View>
 							<View style={styles.boxContentContainer}>
 									<Text style={styles.boxContentBold}>Date and Time: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>XX:XX AM/PM  XX - XX - XXXX </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>11:00 AM  02 - 10 - 2024 </Text>
 							</View>
 						</View>
 
