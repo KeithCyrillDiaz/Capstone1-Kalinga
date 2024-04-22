@@ -10,20 +10,130 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
-  Alert
+  Alert,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import Header from "./Header";
 import { BASED_URL } from "../../../../MyConstants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import * as ImagePicker from 'expo-image-picker';
+import Spinner from 'react-native-loading-spinner-overlay';
+import ImageZoom from 'react-native-image-pan-zoom';
 
 export default function EditPersonalScreen({route}) {
 
   const userInformation = route.params.userInformation
  const userName = route.params.userName
-
+ 
  const [userData, setUserData] = useState(userInformation)
+ const [selectedImage, setSelectedImage] = useState({});
+ const [url, setUrl] = useState("")
+ const [isLoading, setIsloading] = useState(false)
+ let imageURI
+ console.log("link: ", userData.gdriveLink)
+ if(selectedImage.ProfilePicture){
+  imageURI = selectedImage.ProfilePicture.uri
+ } else imageURI = url
+ 
+
+ const uploadImage = async () => {
+  try{
+    setIsloading(true)
+    console.log("Number of properties in selectedImage: ", Object.keys(selectedImage).length);
+
+            if(Object.keys(selectedImage).length === 1){
+              const uploadedImages = new FormData();
+              const image = {
+                uri: selectedImage.ProfilePicture.uri,
+                type: 'image/jpeg', 
+                name: `${userData.fullName}.png`,
+              }
+
+              uploadedImages.append('ProfilePicture', image); 
+              uploadedImages.append(`userType`, "Donor"); 
+              uploadedImages.append(`owner`, userData.fullName);// Append userType
+              uploadedImages.append(`ownerID`, userData.Donor_ID);// Append userType
+  
+              console.log("imageData: ", uploadedImages)
+              console.log("selectedImage: ",selectedImage )
+          
+              const result = await axios.post(`${BASED_URL}/kalinga/uploadDP`, uploadedImages, {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }
+              });
+              await AsyncStorage.setItem('DPLink', result.data.link)
+               console.log(result.data.messages.message)
+               if(result.data.messages.code === 0){
+                console.log(result.data.messages.message)
+                console.log("link: ", result.data.link)
+                imageURI = result.data.link
+                setSelectedImage({})
+                
+               }
+            }
+  }catch (error){
+    console.log("error: ", error)
+  } finally {
+    fetchNewDP()
+    setIsloading(false)
+  }
+ }
+ const handleImageUpload = async () => {
+  try {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+          Alert.alert('Permission Denied', 'Sorry, we need camera roll permissions to make this work!');
+          return;
+      }
+      const result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [Dimensions.get('window').width, Dimensions.get('window').height],
+          quality: 1,
+      });
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+          let fileType = ''
+        result.assets.forEach(image => {
+          if (image.type === 'image' || !image.type.includes('/')) {
+                    fileType = image.type + "/jpeg"
+          } else {
+            fileType = image.type
+          }
+        });
+
+        setSelectedImage({
+            [`ProfilePicture`]: ({
+              uri: result.assets[0].uri,
+              name: userName, 
+              type: result.assets[0].type,
+              userType: "Requestor",
+          
+            })
+        });
+     
+    }
+  } catch (error) {
+      Alert.alert('Error', 'Failed to pick an image.');
+  }
+};
+
+const fetchNewDP = async () => {
+  const result = await AsyncStorage.getItem('DPLink')
+  if(!result && selectedImage.ProfilePicture){
+    imageURI = selectedImage.ProfilePicture.uri
+  } else {
+    setUrl(result)
+  }
+}
+
+useEffect(()=>{
+  // console.log("selectedImage:", JSON.stringify(selectedImage, null, 2));
+  fetchNewDP()
+},[selectedImage])
+
 
  const saveDetails = async () => {
       try{
@@ -36,7 +146,7 @@ export default function EditPersonalScreen({route}) {
           const updatedData = result.data.result
           await AsyncStorage.setItem('userInformation', JSON.stringify(updatedData))
         }
-
+        uploadImage();
       } catch(error) {
         if(error)Alert.alert('Network error', `Please check your internet connection`)
             else
@@ -64,6 +174,7 @@ export default function EditPersonalScreen({route}) {
     [
       {
         text: 'No',
+        onPress: () => setSelectedImage({}),
       },
       {
         text: 'Yes',
@@ -80,7 +191,13 @@ export default function EditPersonalScreen({route}) {
         <StatusBar />
         <Header title="Personal Information" />
 
-        <View
+
+        <Spinner 
+                visible = {isLoading}
+                textContent={'Processing...'}
+                textStyle={{ color: '#FFF' }}
+            />
+        <TouchableOpacity
           style={{
             width: "100%",
             paddingHorizontal: 24,
@@ -88,7 +205,7 @@ export default function EditPersonalScreen({route}) {
           }}>
           <View style={{ position: "relative" }}>
             <Image
-              source={require("../../../../assets/Profile_icon.png")}
+              source={!selectedImage.ProfilePicture && !imageURI? require("../../../../assets/Profile_icon.png") : { uri: imageURI }}
               style={{
                 width: 127,
                 height: 127,
@@ -98,13 +215,18 @@ export default function EditPersonalScreen({route}) {
                 borderColor: "#E60965",
               }}
             />
-
-            <MaterialIcons
-              name="camera-alt"
-              size={48}
-              color="#E60965"
-              style={{ position: "absolute", bottom: 16, right: -5 }}
-            />
+            {!selectedImage.ProfilePicture && (
+              <TouchableOpacity onPress={()=> handleImageUpload()} >
+                <MaterialIcons
+                name="camera-alt"
+                size={48}
+                color="#E60965"
+                style={{ position: "absolute", bottom: 16, right: -5 }}
+                />
+              </TouchableOpacity>
+            
+            )}
+           
           </View>
 
           <View
@@ -116,7 +238,7 @@ export default function EditPersonalScreen({route}) {
             <Text style={fontStyle.header}>{userName}</Text>
             <Text style={fontStyle.subHeader}>Requestor</Text>
           </View>
-        </View>
+        </TouchableOpacity>
 
         <View style={{ flexDirection: "row", paddingHorizontal: 16, gap: 16 }}>
           <View
