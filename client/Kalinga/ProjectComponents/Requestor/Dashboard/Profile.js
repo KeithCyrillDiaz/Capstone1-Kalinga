@@ -15,7 +15,7 @@ import { Entypo } from "@expo/vector-icons";
 const RequestorProfile = ({route}) => {
 
   const userInformation = route.params.userInformation
-  const nameArray =  userInformation.fullName.split(' ')
+  let nameArray =  userInformation.fullName.split(' ').filter(name => name.trim() !== '')
   let UserName;
 
   if(!userInformation.fullName.includes(',') && !userInformation.fullName.includes('.')){

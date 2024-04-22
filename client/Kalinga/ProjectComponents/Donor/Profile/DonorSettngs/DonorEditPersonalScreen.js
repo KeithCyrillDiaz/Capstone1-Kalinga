@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import {
   View,
   Text,
@@ -10,11 +10,70 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  Alert
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import Header from "./Header";
+import { BASED_URL } from "../../../../MyConstants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
-export default function EditPersonalScreen() {
+export default function EditPersonalScreen({route}) {
+
+  const userInformation = route.params.userInformation
+ const userName = route.params.userName
+
+ const [userData, setUserData] = useState(userInformation)
+
+ const saveDetails = async () => {
+      try{
+        const result = await axios.post(`${BASED_URL}/kalinga/updateUserInformation`,{
+          userData: userData
+        })
+        console.log(result.data.messages.message)
+        if("result: ", result.data.messages.code === 0){
+          setUserData(result.data.result)
+          const updatedData = result.data.result
+          await AsyncStorage.setItem('userInformation', JSON.stringify(updatedData))
+        }
+
+      } catch(error) {
+        if(error)Alert.alert('Network error', `Please check your internet connection`)
+            else
+            Alert.alert('Something went wrong', "Please try again later")
+      }
+
+ }
+
+ const fetchData = async () => {
+  const userInformationToString = await AsyncStorage.getItem('userInformation')
+  if(userInformationToString !== null ) {
+    const userInformation = JSON.parse(userInformationToString);
+    setUserData(userInformation)
+  }
+ }
+
+ useEffect(()=>{
+
+  fetchData();
+
+ },[])
+
+ const confirmation = () => {
+    Alert.alert('Confirmation','Are you sure you want to save these Details?',
+    [
+      {
+        text: 'No',
+      },
+      {
+        text: 'Yes',
+        onPress: () => saveDetails(),
+      },
+    ]
+  )
+    
+ }
+
   return (
     <SafeAreaView style={bodyStyle.main}>
       <ScrollView contentContainerStyle={bodyStyle.container}>
@@ -54,7 +113,7 @@ export default function EditPersonalScreen() {
               alignItems: "center",
               marginBottom: 12,
             }}>
-            <Text style={fontStyle.header}>Rogine Cubelo</Text>
+            <Text style={fontStyle.header}>{userName}</Text>
             <Text style={fontStyle.subHeader}>Requestor</Text>
           </View>
         </View>
@@ -65,8 +124,15 @@ export default function EditPersonalScreen() {
               width: Dimensions.get("screen").width / 2.3,
             }}>
             <View style={inputStyle.container}>
-              <Text style={inputStyle.label}>Age</Text>
-              <TextInput style={inputStyle.primary} />
+              <Text style={inputStyle.label}>Age:</Text>
+              <TextInput style={inputStyle.primary} 
+               value={userData.age}
+               onChangeText={(text) =>
+                 setUserData((prevUserData) => ({
+                   ...prevUserData,
+                   age: text,
+                 }))
+               }/>
             </View>
           </View>
 
@@ -75,34 +141,73 @@ export default function EditPersonalScreen() {
               width: Dimensions.get("screen").width / 2.3,
             }}>
             <View style={inputStyle.container}>
-              <Text style={inputStyle.label}>Gender</Text>
-              <TextInput style={inputStyle.primary} />
+              <Text style={inputStyle.label}>Gender: </Text>
+              <TextInput style={inputStyle.primary} 
+               value={"Female"} 
+               onChangeText={(text) =>
+                 setUserData((prevUserData) => ({
+                   ...prevUserData,
+                   age: text,
+                 }))
+               }
+               editable={false}
+               />
             </View>
           </View>
         </View>
 
         <View style={{ paddingHorizontal: 16 }}>
           <View style={inputStyle.container}>
-            <Text style={inputStyle.label}>Birthdate</Text>
-            <TextInput style={inputStyle.primary} />
+            <Text style={inputStyle.label}>Birthday: </Text>
+            <TextInput style={inputStyle.primary}
+             value={userData.birthDate}
+             onChangeText={(text) =>
+               setUserData((prevUserData) => ({
+                 ...prevUserData,
+                 birthDate: text,
+               }))
+             } />
           </View>
         </View>
         <View style={{ paddingHorizontal: 16 }}>
           <View style={inputStyle.container}>
-            <Text style={inputStyle.label}>Phone Number</Text>
-            <TextInput style={inputStyle.primary} />
+            <Text style={inputStyle.label}>Phone Number: </Text>
+            <TextInput style={inputStyle.primary}
+             value={userData.mobileNumber}
+             onChangeText={(text) =>
+               setUserData((prevUserData) => ({
+                 ...prevUserData,
+                 mobileNumber: text,
+               }))
+             } />
           </View>
         </View>
         <View style={{ paddingHorizontal: 16 }}>
           <View style={inputStyle.container}>
-            <Text style={inputStyle.label}>Email</Text>
-            <TextInput style={inputStyle.primary} />
+            <Text style={inputStyle.label}>Email: </Text>
+            <TextInput style={inputStyle.primary} 
+             value={userData.email}
+             onChangeText={(text) =>
+               setUserData((prevUserData) => ({
+                 ...prevUserData,
+                 email: text,
+               }))
+             }
+             editable={false}
+             />
           </View>
         </View>
         <View style={{ paddingHorizontal: 16 }}>
           <View style={inputStyle.container}>
-            <Text style={inputStyle.label}>Address</Text>
-            <TextInput style={inputStyle.primary} />
+            <Text style={inputStyle.label}>Address: </Text>
+            <TextInput style={inputStyle.primary} 
+             value={userData.homeAddress}
+             onChangeText={(text) =>
+               setUserData((prevUserData) => ({
+                 ...prevUserData,
+                 homeAddress: text,
+               }))
+             }/>
           </View>
         </View>
 
@@ -112,7 +217,7 @@ export default function EditPersonalScreen() {
             justifyContent: "center",
             alignItems: "center",
           }}>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => confirmation()}>
             <View style={buttonStyle.primary}>
               <Text
                 style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
@@ -145,7 +250,7 @@ const inputStyle = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: "#E60965",
     flexDirection: "row",
-    gap: 16,
+    gap: 7,
     alignItems: "center",
     paddingHorizontal: 16,
     borderRadius: 13,
