@@ -4,24 +4,24 @@ import { getCode, getPassCode, deleteCode, deletePassCode } from '../../models/A
 export const checkCode = async (req: express.Request, res: express.Response) => {
     try{
 
-        console.log(req.params.code)
+        console.log(req.params.Code)
 
-        let verificationCode = await getCode(req.params.code)
+        let verificationCode = await getCode(req.params.Code)
         if(!verificationCode) {
-            return res.status(401).json({
+            return res.json({
                 messages: {
                     code: 1,
                     message: "Ïnvalid Code"
                 }
-            })
+            }).status(401)
         }
-        await deleteCode(req.params.code)
-        return res.status(202).json({
+        await deleteCode(req.params.Code)
+        return res.json({
             messages: {
                 code: 0,
                 message: "Valid Code"
             }
-        })
+        }).status(202)
        
     } catch(error){
         return res.status(500).json({

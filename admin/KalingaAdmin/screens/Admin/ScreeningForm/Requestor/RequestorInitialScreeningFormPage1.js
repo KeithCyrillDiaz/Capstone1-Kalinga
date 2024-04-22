@@ -194,10 +194,10 @@ export const SecondScreen = ({route}) => {
   
             const response = await axios.get(`${BASED_URL}/kalinga/getMedicalRequirementImage/${Applicant_ID}`);
             const result = response.data.image
-            // console.log('result: ', result)
+            console.log('result: ', result)
             setImages(result)
             setOwner(result[0].owner)
-            // console.log("owner: ",result[0].owner)
+            console.log("owner: ",result[0].owner)
 
             const zipFile = await axios.get(`${BASED_URL}/kalinga/getMedicalRequirementFile/${Applicant_ID}`)
             setZip(zipFile.data.zipFile)
@@ -239,12 +239,14 @@ export const SecondScreen = ({route}) => {
     }
 
     useEffect(() => {
-        fetchMedicalAbstract();
         fetchData();
+        fetchMedicalAbstract();
+       
     },[])
+
     const navigatePage = (Page, owner, status) => {
         // Navigate to the next screen by route name
-        DeleteUser(Applicant_ID)
+        DeleteUser(Applicant_ID, status)
         sendEmail(Applicant_ID, status)
         navigation.dispatch(
           CommonActions.reset({
@@ -262,10 +264,17 @@ export const SecondScreen = ({route}) => {
         }
         
       }
-    const DeleteUser = async (userID) => {
+    const DeleteUser = async (userID, status) => {
         console.log("ID: ", userID)
-        const result = await axios.delete(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
-        console.log(result.data)
+        if(status !== "Approved"){
+            console.log("status: ", status)
+            const result = await axios.post(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`,{
+                status: "Declined"
+            })
+            return
+        }
+        console.log("status: ", status)
+        const result = await axios.post(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
     }
 
     const approvedUser = (Page) => {

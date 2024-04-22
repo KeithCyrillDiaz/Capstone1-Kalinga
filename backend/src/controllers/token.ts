@@ -20,7 +20,7 @@ export const getToken = async (req: IBasicAuthedRequest, res: express.Response) 
         }
 
         const newToken: any = await createToken({
-            token: jwt.sign({ user, pass }, process.env.SECRET_KEY, { expiresIn: '1m' }),
+            logInToken: jwt.sign({ user, pass }, process.env.SECRET_KEY, { expiresIn: '1m' }),
             expiresAt: moment().add('1m').toDate()
         });
 

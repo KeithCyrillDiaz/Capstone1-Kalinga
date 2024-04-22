@@ -9,7 +9,7 @@ import {createRequest} from "../controllers/Requestor/RequestController";
 import {getAppointmentByUsertype} from '../controllers/Admin/Appointment/getAppointmentByUsertype';
 import { getRequestByID } from '../controllers/Admin/Appointment/getMakeRequest';
 import { getRequestByUserType } from '../controllers/Admin/Appointment/getRequestByUserType';
-import { logInUser } from '../controllers/LogInUser';
+import { logInUser, logOutUser } from '../controllers/LogInUser';
 import { isApproved } from '../controllers/isApproved';
 
 export default (router: express.Router) => {
@@ -19,6 +19,7 @@ export default (router: express.Router) => {
     
     router.post('/kalinga/registerRequestor', registerRequestor);
     router.post('/kalinga/userLogin', logInUser)
+    router.get('/kalinga/userLogout/:token', logOutUser)
     router.post('/kalinga/adminLoginIn', AdminLogIn)
     router.get('/kalinga/isApproved/:Applicant_ID', isApproved)
     //donor

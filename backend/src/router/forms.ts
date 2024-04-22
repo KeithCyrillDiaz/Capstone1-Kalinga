@@ -19,7 +19,7 @@ export default (router: express.Router) => {
     router.get('/kalinga/getMedicalAbstractByID/:Applicant_ID', getMedicalAbstract)
 
 
-    router.delete('/kalinga/deleteScreeningFormByID/:Applicant_ID', deleteScreeningForm)
+    router.post('/kalinga/deleteScreeningFormByID/:Applicant_ID', deleteScreeningForm)
     router.get('/kalinga/retrieveApplicantForm/:Applicant_ID', retrieveSoftDeletedForm)
     
 

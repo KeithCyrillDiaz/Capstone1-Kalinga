@@ -91,7 +91,7 @@ const DeleteAlert = (name, userID) => {
 }
 
 const DeleteUser = async (userID) => {
-  const result = await axios.delete(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
+  const result = await axios.post(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
   fetchScreeningFormIDs();
 }
 
