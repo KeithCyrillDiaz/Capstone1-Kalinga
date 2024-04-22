@@ -22,6 +22,7 @@ import { BASED_URL } from '../../MyConstants';
 const EmailVerificationCode = ({route}) => {
 
     const screeningForm = route.params.data
+    console.log("screeningform: ", route.params.data)
     const navigation = useNavigation(); 
     const [otp, setOtp] = useState('');
 

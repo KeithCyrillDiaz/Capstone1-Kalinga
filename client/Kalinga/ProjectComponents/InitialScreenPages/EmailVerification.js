@@ -9,8 +9,9 @@ import axios from 'axios'
 import { BASED_URL } from '../../MyConstants';
 
 const EmailVerification = ({route}) => {
-
-    screeningForm = route.params
+    
+    const screeningForm = route.params
+    console.log("form: ", screeningForm)
     const navigation = useNavigation(); 
 
     const handleBackButton = () => {

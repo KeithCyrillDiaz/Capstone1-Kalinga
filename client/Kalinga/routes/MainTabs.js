@@ -3,22 +3,26 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
-
-
+import { Ionicons } from '@expo/vector-icons';;
+ 
 import DonorHome from '../ProjectComponents/Donor/Dashboard/Home.js';
 import DonorProfile from '../ProjectComponents/Donor/Dashboard/DonorProfile.js';
+import DonorNotification from '../ProjectComponents/Donor/Dashboard/Notifications.js';
 
 import RequestorHome from '../ProjectComponents/Requestor/Dashboard/Home.js';
 import RequestorProfile from '../ProjectComponents/Requestor/Dashboard/Profile.js';
-
+import RequestorNotification from '../ProjectComponents/Requestor/Dashboard/Notifications.js'
 
 
 const Tab = createBottomTabNavigator()
 
 
-const Tabs = () => {
-const userType = "Donor";
+const MainTabs = ({route}) => {
+   
+    const userInformation = route.params.userInformation;
+    const token = route.params.token
+    const userType = userInformation.userType
+    console.log("userType: ", userInformation)
     return (
         
             <Tab.Navigator
@@ -51,10 +55,11 @@ const userType = "Donor";
                 <Tab.Screen 
                     name = {"Home"}
                     component={
-                        userType === "Guest" ? GuestHome  // If statement. It heavy relies on the value of usertype
-                        : userType === "Donor" ? DonorHome
-                        : RequestorHome // Else condition
+                        userType === "Requestor" ? RequestorHome // If statement. It heavy relies on the value of usertype
+                        : DonorHome
+                         // Else condition
                     }
+                    initialParams={{ userInformation: userInformation, token: token }}
                     //component = {GuestHome} // palitan niyo to bai
                     options={{
                         tabBarIcon: ({focused}) => (
@@ -69,10 +74,10 @@ const userType = "Donor";
                 <Tab.Screen 
                     name = {"Notification"}
                     component={
-                        userType === "Guest" ? GuestHome  // If statement. It heavy relies on the value of usertype
-                        : userType === "Donor" ? DonorHome
-                        : RequestorHome // Else condition
+                        userType === "Requestor" ? RequestorNotification // If statement. It heavy relies on the value of usertype
+                        : DonorNotification// Else condition
                     }
+                    initialParams={{ userInformation: userInformation }}
                     //component = {GuestHome} // palitan niyo to bai
                     options={{
                         tabBarIcon: ({focused}) => (
@@ -87,10 +92,10 @@ const userType = "Donor";
                 <Tab.Screen
                     name = {'Profile'} 
                     component={
-                        userType === "Guest" ? GuestProfile  // If statement. It heavy relies on the value of usertype
-                        : userType === "Donor" ? DonorProfile
-                        : RequestorProfile // Else condition
+                        userType === "Requestor" ? RequestorProfile  // If statement. It heavy relies on the value of usertype
+                        : DonorProfile 
                     }
+                    initialParams={{ userInformation: userInformation }}
                     options={{
                         tabBarIcon: ({focused}) => (
                             <AntDesign 
@@ -106,4 +111,4 @@ const userType = "Donor";
 
 }
 
-export default Tabs;
+export default MainTabs;

@@ -46,10 +46,14 @@ const SetPasswordDonor = ({route}) => {
             Alert.alert('Invalid Applicant ID', 'Please enter your Applicant ID.');
             return;
         }
-        if(Applicant_ID.includes(' ') && forgotPassEmail === null){
-            Alert.alert('Invalid Applicant ID', 'Applicant_ID cannot contain spaces.');
-            return;
+        if(!Applicant_ID && forgotPassEmail === null){
+            if(Applicant_ID.includes(' ') && forgotPassEmail === null){
+                console.log("test")
+                Alert.alert('Invalid Applicant ID', 'Applicant_ID cannot contain spaces.');
+                return;
+            }
         }
+       
         if(invalidCharacters.test(Applicant_ID) && forgotPassEmail === null){
             Alert.alert('Invalid Applicant ID', 'Applicant ID must not contain special characters.');
             return;
@@ -61,7 +65,7 @@ const SetPasswordDonor = ({route}) => {
             Alert.alert('Invalid Password', 'Please enter your password. Password cannot be empty.');
             return;
         }
-        if(Password.length < 9){
+        if(Password.length < 8){
             Alert.alert('Password Too Short', 'Your password must be at least 8 characters long. Please enter a longer password.');
             return;
         }

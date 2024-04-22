@@ -122,11 +122,11 @@ const DonorUploadMedicalRequirements = ({route}) => {
           await AsyncStorage.setItem('DonorApplicant_ID', screeningFormData.Applicant_ID)
           navigation.dispatch(
             CommonActions.reset({
-              index: 0, //Reset the stack to 0 so the user cannot go back
-              routes: [{ name: Page, params: Data } ], // Replace 'Login' with the name of your login screen
+              index: 0,
+              routes: [{ name: Page, params: Data } ], 
             })
           );
-
+          return
     } catch (error) {
         // Handle error if the request fails
         console.error('Error saving data:', error);

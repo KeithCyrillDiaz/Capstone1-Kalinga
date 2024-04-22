@@ -14,7 +14,10 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import Header from "./Header";
 
-export default function EditPersonalScreen() {
+export default function EditPersonalScreen({route}) {
+  
+ const userInformation = route.params.userInformation
+
   return (
     <SafeAreaView style={bodyStyle.main}>
       <ScrollView contentContainerStyle={bodyStyle.container}>

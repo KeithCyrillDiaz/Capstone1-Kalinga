@@ -30,7 +30,7 @@ const ResetPasswordCode = ({route}) => {
     };
 
     const handleResendCode = async () => {
-        await axios.post(`${BASED_URL}/kalinga/sendCode/${Email}`)
+        await axios.get(`${BASED_URL}/kalinga/sendCode/${Email}`)
     };
 
     const codeValidation = async (code) => {
