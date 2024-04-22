@@ -17,8 +17,6 @@ const DonorHome = ({route}) => {
 
     const userInformation = route.params.userInformation
     const token = route.params.token
-
-    
    
     const storeInAsync = async () => {
       await AsyncStorage.setItem('userInformation', JSON.stringify(userInformation))

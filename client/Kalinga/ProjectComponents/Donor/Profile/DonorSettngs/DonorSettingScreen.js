@@ -13,11 +13,42 @@ import { Entypo } from "@expo/vector-icons";
 import Header from "./Header";
 import { useNavigation, CommonActions} from '@react-navigation/native';
 import axios from 'axios'
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BASED_URL } from "../../../../MyConstants";
+export default function SettingScreen({route}) {
 
-export default function SettingScreen() {
-
-  
+  const userInformation = route.params.userInformation
+  const UserName = route.params.UserName
   const navigation = useNavigation(); 
+  const deleteToken = async () => {
+    const token = await AsyncStorage.getItem('token')
+    if(!token){
+      console.log("Unauthorized")
+      navigatePage("LogIn")
+      return
+    }
+    const result = await axios.get(`${BASED_URL}/kalinga/userLogout/${token}`)
+    if(result.data.messages.code !== 0){
+      console.log("Unauthorized")
+      navigatePage("LogIn")
+      return
+    }
+
+    await AsyncStorage.removeItem('token')
+    await AsyncStorage.removeItem('userInformation')
+    const checkToken = await AsyncStorage.getItem('token')
+    const checkUserInfo = await AsyncStorage.getItem('userInformation')
+    if(checkToken && checkUserInfo){
+      console.log("Failed to delete token in Async")
+      await AsyncStorage.removeItem('token')
+      await AsyncStorage.removeItem('userInformation')
+    }
+    console.log("Deleted token and user Information in Storage")
+    navigatePage('LogIn')
+    return
+  }
+
+
   const navigatePage = (Page) => {
     if( Page === "LogIn"){
       navigation.dispatch(
@@ -26,16 +57,9 @@ export default function SettingScreen() {
             routes: [{ name: Page }],
         })
     );
-    deleteTOken()
     return
     }
-    navigation.navigate(Page); // Navigate to the Login screen
-  }
-
-  const deleteTOken = async () => {
-    const token = await AsyncStorage.getItem('token')
-    const result = await axios.get(`$BASED_URL/kalinga/userLogout/${token}`)
-    console.log(result.data.messages.message)
+     navigation.navigate(Page, {userInformation: userInformation, userName: UserName}); // Navigate to the Login screen
   }
 
   return (
@@ -65,12 +89,12 @@ export default function SettingScreen() {
               />
 
               <View>
-                <Text style={fontStyle.header}>Rogine Cubelo</Text>
+                <Text style={fontStyle.header}>{UserName}</Text>
                 <Text style={fontStyle.subHeader}>Personal Information</Text>
               </View>
             </View>
 
-            <TouchableOpacity onPress={() => {}} style={buttonStyle.iconBtn}>
+            <TouchableOpacity onPress={() => navigatePage("DonorEditPersonalScreen")} style={buttonStyle.iconBtn}>
               <Entypo name="chevron-right" size={32} color="#E60965" />
             </TouchableOpacity>
           </View>
@@ -134,7 +158,7 @@ export default function SettingScreen() {
             justifyContent: "center",
             alignItems: "center",
           }}>
-          <TouchableOpacity onPress={() => navigatePage("LogIn")}>
+          <TouchableOpacity onPress={() => deleteToken()}>
             <View style={buttonStyle.primary}>
               <Text
                 style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>

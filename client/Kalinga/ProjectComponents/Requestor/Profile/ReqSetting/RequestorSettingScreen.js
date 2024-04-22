@@ -37,12 +37,15 @@ export default function SettingScreen({route}) {
     }
 
     await AsyncStorage.removeItem('token')
+    await AsyncStorage.removeItem('userInformation')
     const checkToken = await AsyncStorage.getItem('token')
-    if(checkToken){
+    const checkUserInfo = await AsyncStorage.getItem('userInformation')
+    if(checkToken && checkUserInfo){
       console.log("Failed to delete token in Async")
       await AsyncStorage.removeItem('token')
+      await AsyncStorage.removeItem('userInformation')
     }
-    console.log("Deleted token in Async")
+    console.log("Deleted token and user Information in Storage")
     navigatePage('LogIn')
     return
   }
@@ -56,7 +59,7 @@ export default function SettingScreen({route}) {
     );
     return
     }
-    navigation.navigate(Page, {userInformation: userInformation}); // Navigate to the Login screen
+    navigation.navigate(Page, {userInformation: userInformation, userName: UserName}); // Navigate to the Login screen
   }
 
   return (

@@ -11,6 +11,7 @@ import { getRequestByID } from '../controllers/Admin/Appointment/getMakeRequest'
 import { getRequestByUserType } from '../controllers/Admin/Appointment/getRequestByUserType';
 import { logInUser, logOutUser } from '../controllers/LogInUser';
 import { isApproved } from '../controllers/isApproved';
+import { updateUserDetails } from '../controllers/updateUser';
 
 export default (router: express.Router) => {
   
@@ -31,7 +32,7 @@ export default (router: express.Router) => {
     router.get ('/kalinga/getRequestByID/:RequestID', getRequestByID)
     router.get('/kalinga/getRequestByUserType/:userType', getRequestByUserType)
 
-
+    router.post('/kalinga/updateUserInformation', updateUserDetails)
 
 
     

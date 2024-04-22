@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
     View, 
     Text, 
@@ -28,7 +28,10 @@ const LogIn = () => {
         console.log("No existing Token")
     }
 
-    checkToken()
+    useEffect(()=>{
+        checkToken();
+    },[])
+
    
     const navigation = useNavigation();
     const [email, setEmail] = useState('');

@@ -15,13 +15,39 @@ import { useNavigation } from '@react-navigation/native';
 
 
 
-const DonorProfile = () => {
+const DonorProfile = ({route}) => {
 
+  const userInformation = route.params.userInformation
+  let nameArray =  userInformation.fullName.split(' ').filter(name => name.trim() !== '')
+  let UserName;
 
-    const UserName = "Rogine"
+  if(!userInformation.fullName.includes(',') && !userInformation.fullName.includes('.')){
+    UserName = nameArray[0] + ' ' + nameArray[nameArray.length - 1];
+    console.log("Name: ", UserName)
+  }
+  else if (nameArray[0].endsWith(',')) {
+    UserName = nameArray[1] + ' ' + nameArray[0].replace(',', '');
+    console.log("Name: ", UserName)
+  } else if(nameArray[1].endsWith(',')){
+      UserName = nameArray[2] + ' ' + nameArray[0] + ' ' + nameArray[1].replace(',', '');
+      console.log("Name: ", UserName);
+  }
+    else if(nameArray[nameArray.length - 2].endsWith('.')) {
+    
+    UserName = nameArray[0] + ' ' + nameArray[nameArray.length - 1] ;
+    console.log("Name: ", UserName)
+  } else if(nameArray[nameArray.length - 3].endsWith('.')){
+    UserName = nameArray[0] + ' ' + nameArray[nameArray.length - 2] + ' ' + nameArray[nameArray.length - 1] ;
+    console.log("Name: ", UserName)
+  } 
+
     const navigation = useNavigation();
 
     const navigatePage = (Page) => {
+      if(Page === "DonorSettingScreen"){
+        navigation.navigate(Page, {userInformation: userInformation, UserName: UserName})
+        return
+      }
       navigation.navigate(Page); // Navigate to the Login screen
     }
 
@@ -49,7 +75,7 @@ const DonorProfile = () => {
                      
                     </View>
 
-                    <Text style = {styles.name}>Rogine Cubelo</Text>
+                    <Text style = {styles.name}>{UserName}</Text>
                     <Text style = {styles.userType}>Donor</Text>
 
                   </View>
