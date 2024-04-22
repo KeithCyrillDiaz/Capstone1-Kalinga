@@ -22,6 +22,7 @@ import mongoose from 'mongoose';
 const DonorSchema = new mongoose.Schema({
 
     Donor_ID: {type:  String},
+    gdriveLink:  {type: String},
     userName: {type: String},
     MilkAmountDonated: {type: Number},
     fullName: {type: String},
@@ -51,6 +52,7 @@ const DonorSchema = new mongoose.Schema({
 const RequestorSchema = new mongoose.Schema({
 
     Requestor_ID: {type: String},
+    gdriveLink:  {type: String},
     userName: {type: String},
     MilkAmountReceived: {type: Number},
     fullName: {type: String},
@@ -84,12 +86,15 @@ export const getDonor = () => DonorModel.find()
 export const getDonorByEmail = (email: string) => DonorModel.findOne({email})
 export const getDonorById = (Donor_ID: string) => DonorModel.findOne({Donor_ID})
 export const createDonor = (values: Record<string, any>) => new DonorModel(values).save().then((donor) => donor.toObject())
-export const updateDonorPassword=(Donor_ID: string, Password: string, salt: string) => DonorModel.findOneAndUpdate({Donor_ID}, { $set: { password: Password, salt: salt } }, { new: true })
-export const updateDonorDetails=(Donor_ID: string, userDetails: any) => DonorModel.findOneAndUpdate({Donor_ID}, { $set: userDetails }, { new: true })
+export const updateDonorPassword = (Donor_ID: string, Password: string, salt: string) => DonorModel.findOneAndUpdate({Donor_ID}, { $set: { password: Password, salt: salt } }, { new: true })
+export const updateDonorDetails = (Donor_ID: string, userDetails: any) => DonorModel.findOneAndUpdate({Donor_ID}, { $set: userDetails }, { new: true })
+export const updateDonorProfilePic = (Donor_ID: string, link: string) => DonorModel.findOneAndUpdate({Donor_ID}, { $set: {gdriveLink: link} }, { new: true })
 
 export const getRequestor = () => RequestorModel.find()
 export const updateRequestorPassword=(Requestor_ID: string, Password: string, salt: string) => RequestorModel.findOneAndUpdate({Requestor_ID}, { $set: { password: Password, salt: salt } }, { new: true })
 export const updateRequestorDetails=(Requestor_ID: string, userDetails: any) => RequestorModel.findOneAndUpdate({Requestor_ID}, { $set: userDetails }, { new: true })
+export const updateRequestorProfilePic = (Requestor_ID: string, link: string) => RequestorModel.findOneAndUpdate({Requestor_ID}, { $set: {gdriveLink: link} }, { new: true })
+
 export const getRequestorByEmail = (email: string) => RequestorModel.findOne({email})
 export const getRequestorById = (Requestor_ID: string) => RequestorModel.findOne({Requestor_ID})
 export const createRequestor = (values: Record<string, any>) => new RequestorModel(values).save().then((donor) => donor.toObject())
