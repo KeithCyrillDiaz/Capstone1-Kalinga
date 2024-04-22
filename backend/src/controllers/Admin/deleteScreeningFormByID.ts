@@ -1,11 +1,19 @@
 import express from 'express'
-import { isDeleteScreeningForm, approvedScreeningForm } from '../../models/ApplyAsDonor'
+import { isDeleteScreeningForm, updateIsApprovedScreeningForm  } from '../../models/ApplyAsDonor'
 
 export const deleteScreeningForm = async (req: express.Request, res: express.Response) => {
     try{
 
         console.log(req.params.Applicant_ID)
-        const updateScreeningForm = await approvedScreeningForm(req.params.Applicant_ID, "Yes")
+        console.log(req.body.status)
+
+        const body = req.body.status
+        console.log("body: ", body )
+        let updateScreeningForm;
+        if(body === "Declined"){
+            updateScreeningForm = await updateIsApprovedScreeningForm (req.params.Applicant_ID, "No")
+        } else  updateScreeningForm = await updateIsApprovedScreeningForm (req.params.Applicant_ID, "Yes")
+       
         if(!updateScreeningForm){
             return res.json({
                 messages: {
@@ -15,6 +23,7 @@ export const deleteScreeningForm = async (req: express.Request, res: express.Res
             }).status(400)
         }
         const screeningForm = await isDeleteScreeningForm(req.params.Applicant_ID, "Deleted")
+        console.log("None existing applicant")
         if(!screeningForm){
             return res.json({
                 messages: {
@@ -24,7 +33,7 @@ export const deleteScreeningForm = async (req: express.Request, res: express.Res
             }).status(400)
         }
 
-        if(updateScreeningForm.isApproved !== "Yes" || screeningForm.isDeleted !== "Deleted"){
+        if((updateScreeningForm.isApproved !== "Yes" && updateScreeningForm.isApproved !== "No" ) || screeningForm.isDeleted !== "Deleted"){
             console.log("Failed to update Applicant Form")
             return res.json({
                 messages: {
@@ -33,11 +42,14 @@ export const deleteScreeningForm = async (req: express.Request, res: express.Res
                 }
             }).status(400)
         }
-        console.log("Approved and Delete Applicant Successfully")
+        if(updateScreeningForm.isApproved !== "Yes"){
+            console.log("Declined and Delete Applicant Successfully")
+        } else console.log("Approved and Delete Applicant Successfully")
+        
         return res.json({
             messages: {
                 code: 0,
-                message: "Approved and Delete Applicant Successfully"
+                message: " Delete Applicant Successfully"
             },
             screeningForm
         }).status(200)

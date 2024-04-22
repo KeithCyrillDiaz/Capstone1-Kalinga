@@ -25,6 +25,7 @@ const DonorSchema = new mongoose.Schema({
     userName: {type: String},
     MilkAmountDonated: {type: Number},
     fullName: {type: String},
+    birthDate: {type: String},
     email: {type: String, required: true},
     password: {
             type: String,
@@ -53,6 +54,7 @@ const RequestorSchema = new mongoose.Schema({
     userName: {type: String},
     MilkAmountReceived: {type: Number},
     fullName: {type: String},
+    birthDate: {type: String},
     email: {type: String, required: true},
     password: {
             type: String,

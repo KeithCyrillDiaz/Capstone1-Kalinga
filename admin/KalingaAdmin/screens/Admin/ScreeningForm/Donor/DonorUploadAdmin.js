@@ -76,7 +76,7 @@ const DonorUploadAdmin = ({ route }) => {
     const navigatePage = (Page, owner, status) => {
       // Navigate to the next screen by route name
       sendEmail(Applicant_ID, status)
-      DeleteUser(Applicant_ID)
+      DeleteUser(Applicant_ID, status)
       
       navigation.dispatch(
         CommonActions.reset({
@@ -94,8 +94,17 @@ const DonorUploadAdmin = ({ route }) => {
       }
       
     }
-    const DeleteUser = async (userID) => {
-      const result = await axios.delete(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
+    const DeleteUser = async (userID, status) => {
+      console.log("ID: ", userID)
+      if(status !== "Approved"){
+          console.log("status: ", status)
+          const result = await axios.post(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`,{
+              status: "Declined"
+          })
+          return
+      }
+      console.log("status: ", status)
+      const result = await axios.post(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
     }
 
     const fetchData = async () => {

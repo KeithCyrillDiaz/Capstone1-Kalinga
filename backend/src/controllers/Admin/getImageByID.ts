@@ -6,6 +6,8 @@ export const getImage = async (req: express.Request, res: express.Response) =>{
 
     try{
         const image = await getMRImage(req.params.ownerID)
+        console.log("req.params.ownerID: ", req.params.ownerID)
+        console.log("image: ", image)
         return res.status(200).json({
             messages: {
                 code: 0,
