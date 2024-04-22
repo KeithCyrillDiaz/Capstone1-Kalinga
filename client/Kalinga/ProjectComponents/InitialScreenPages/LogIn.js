@@ -20,6 +20,16 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 const LogIn = () => {
+    const checkToken = async () =>{
+        const token = await AsyncStorage.getItem('token')
+        if (token) {
+            console.log("token: ", token)
+        }
+        console.log("No existing Token")
+    }
+
+    checkToken()
+   
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -64,8 +74,11 @@ const LogIn = () => {
                 Alert.alert('Login Failed', `${result.data.messages.message}`);
                 
             } else{
-                const registeredUserType = result.data.userType;
-                console.log("User is a " + registeredUserType);
+                const userInformation = result.data.userInformation
+                const token = result.data.token
+                console.log("token: ", result.data.token)
+                console.log("User is a " + result.data.userInformation.userType);
+                const registeredUserType = result.data.userInformation.userType
                 await AsyncStorage.setItem('userType', registeredUserType)
                 let Applicant_ID = ""
                 if(registeredUserType === "Donor"){
@@ -80,7 +93,7 @@ const LogIn = () => {
                 navigation.dispatch(
                     CommonActions.reset({
                         index: 0,
-                        routes: [{ name: 'MainTabs', params: { userType: registeredUserType } }],
+                        routes: [{ name: 'MainTabs', params: { userInformation: userInformation, token: token } }],
                     })
                 );
             }
@@ -267,6 +280,7 @@ const styles = StyleSheet.create({
         shadowRadius: 10,
         elevation: 10,
         color: '#E60965',
+        maxWidth: "100%"
     },
     buttonContainer: {
         marginTop: 10,

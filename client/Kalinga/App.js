@@ -117,9 +117,8 @@ import PendingTabRequest from './ProjectComponents/Requestor/Home/MakeRequest/Ma
 
 
 //Tabs
-import DonorTabs from './routes/MainTabs.js'
 import GuestTabs from './routes/MainTabsGuest.js'
-import RequestorTabs from './routes/MainTabsRequestor.js'
+import MainTabs from './routes/MainTabs.js'
 import SetPassword from './ProjectComponents/Guest/Profile/ApplyDonor/SetPasswordDonor.js';
 import GuestTabsExploreAndMilkBank from './routes/GuestTabsExploreAndMilkBank.js'
 import RequestorTabsExploreAndMilkBank from './routes/RequestorTabsExploreAndMilkBank.js'
@@ -216,7 +215,7 @@ export default function App() {
             <Stack.Screen name="GuestTabsExploreAndMilkBank" component={GuestTabsExploreAndMilkBank} />
             <Stack.Screen name="RequestorTabsExploreAndMilkBank" component={RequestorTabsExploreAndMilkBank} />
             <Stack.Screen name="DonorTabsExploreAndMilkBank" component={RequestorTabsExploreAndMilkBank} />
-            <Stack.Screen name="MainTabs" component = {RequestorTabs}/>
+            <Stack.Screen name="MainTabs" component = {MainTabs}/>
 
             <Stack.Screen name="SetPassword" component={SetPassword} />
             <Stack.Screen name="SendCode" component={SendCode} />
@@ -265,7 +264,6 @@ export default function App() {
              <Stack.Screen name="DonorProfile" component={DonorProfile} />
              <Stack.Screen name="MedicalHistory" component={MedicalHistory} />
              <Stack.Screen name="SetPasswordDonor" component={SetPasswordDonor} />
-             <Stack.Screen name="Donor Tabs" component={DonorTabs} />
              <Stack.Screen name="DonorSettingScreen" component={DonorSettingScreen} />
              <Stack.Screen name="DonorAboutUs" component={DonorAboutUs} />
              <Stack.Screen name="DonorChangePassword" component={DonorChangePassword} />
@@ -298,10 +296,7 @@ export default function App() {
              <Stack.Screen name="MakeRequest" component={MakeRequest} />
              <Stack.Screen name="MakeRequest2" component={MakeRequest2} />
              <Stack.Screen name="RequestorProfile" component={RequestorProfile} />
-             <Stack.Screen name="Requestor Tabs" component={RequestorTabs} />
              
-             {/* <Stack.Screen name="Data Privacy Requestor" component={DataPrivacyNiKit} /> */}
-             {/* <Stack.Screen name="Approval Message" component={ApprovalMessage} /> */}
              <Stack.Screen name="RequestorSettingScreen" component={RequestorSettingScreen} />
              <Stack.Screen name="RequestorAboutUs" component={RequestorAboutUs} />
              <Stack.Screen name="RequestorChangePassword" component={RequestorChangePassword} />
@@ -336,8 +331,6 @@ export default function App() {
 
 
              {/*Admin*/}
-             {/* <Stack.Screen name="Medical Abstract" component={MedicalAbstract} />
-             <Stack.Screen name="Reason For Requesting" component={ReasonForRequesting} /> */}
              <Stack.Screen name="LoginAdmin" component={LoginAdmin} />
              <Stack.Screen name="AdminMenu" component={AdminMenu} />
              <Stack.Screen name="AdminDashboard" component={AdminDashboard} />

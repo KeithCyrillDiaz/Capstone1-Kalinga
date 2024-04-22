@@ -11,14 +11,52 @@ import {
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import Header from "./Header";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, CommonActions} from '@react-navigation/native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from 'axios'
+import { BASED_URL } from "../../../../MyConstants";
 
 
-export default function SettingScreen() {
-
+export default function SettingScreen({route}) {
+  
+  const userInformation = route.params.userInformation
+  const UserName = route.params.UserName
   const navigation = useNavigation(); 
+  const deleteToken = async () => {
+    const token = await AsyncStorage.getItem('token')
+    if(!token){
+      console.log("Unauthorized")
+      navigatePage("LogIn")
+      return
+    }
+    const result = await axios.get(`${BASED_URL}/kalinga/userLogout/${token}`)
+    if(result.data.messages.code !== 0){
+      console.log("Unauthorized")
+      navigatePage("LogIn")
+      return
+    }
+
+    await AsyncStorage.removeItem('token')
+    const checkToken = await AsyncStorage.getItem('token')
+    if(checkToken){
+      console.log("Failed to delete token in Async")
+      await AsyncStorage.removeItem('token')
+    }
+    console.log("Deleted token in Async")
+    navigatePage('LogIn')
+    return
+  }
   const navigatePage = (Page) => {
-    navigation.navigate(Page); // Navigate to the Login screen
+    if( Page === "LogIn"){
+      navigation.dispatch(
+        CommonActions.reset({
+            index: 0,
+            routes: [{ name: Page }],
+        })
+    );
+    return
+    }
+    navigation.navigate(Page, {userInformation: userInformation}); // Navigate to the Login screen
   }
 
   return (
@@ -48,12 +86,12 @@ export default function SettingScreen() {
               />
 
               <View>
-                <Text style={fontStyle.header}>Rogine Cubelo</Text>
+                <Text style={fontStyle.header}>{UserName}</Text>
                 <Text style={fontStyle.subHeader}>Personal Information</Text>
               </View>
             </View>
 
-            <TouchableOpacity onPress={() => {}} style={buttonStyle.iconBtn}>
+            <TouchableOpacity onPress={() => navigatePage("RequestorEditPersonalScreen")} style={buttonStyle.iconBtn}>
               <Entypo name="chevron-right" size={32} color="#E60965" />
             </TouchableOpacity>
           </View>
@@ -117,7 +155,7 @@ export default function SettingScreen() {
             justifyContent: "center",
             alignItems: "center",
           }}>
-          <TouchableOpacity onPress={() => navigatePage("LogIn")}>
+          <TouchableOpacity onPress={() => deleteToken()}>
             <View style={buttonStyle.primary}>
               <Text
                 style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>

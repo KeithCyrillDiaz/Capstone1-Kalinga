@@ -12,22 +12,46 @@ import { useNavigation } from '@react-navigation/native';
 import { Entypo } from "@expo/vector-icons";
 
 
-const RequestorProfile = () => {
+const RequestorProfile = ({route}) => {
+
+  const userInformation = route.params.userInformation
+  const nameArray =  userInformation.fullName.split(' ')
+  let UserName;
+
+  if(!userInformation.fullName.includes(',') && !userInformation.fullName.includes('.')){
+    UserName = nameArray[0] + ' ' + nameArray[nameArray.length - 1];
+    console.log("Name: ", UserName)
+  }
+  else if (nameArray[0].endsWith(',')) {
+    UserName = nameArray[1] + ' ' + nameArray[0].replace(',', '');
+    console.log("Name: ", UserName)
+  } else if(nameArray[1].endsWith(',')){
+      UserName = nameArray[2] + ' ' + nameArray[0] + ' ' + nameArray[1].replace(',', '');
+      console.log("Name: ", UserName);
+  }
+    else if(nameArray[nameArray.length - 2].endsWith('.')) {
+    
+    UserName = nameArray[0] + ' ' + nameArray[nameArray.length - 1] ;
+    console.log("Name: ", UserName)
+  } else if(nameArray[nameArray.length - 3].endsWith('.')){
+    UserName = nameArray[0] + ' ' + nameArray[nameArray.length - 2] + ' ' + nameArray[nameArray.length - 1] ;
+    console.log("Name: ", UserName)
+  } 
+
 
   const navigation = useNavigation();
     
 const navigatePage = (Page) => {
+
+  if(Page === "RequestorSettingScreen"){
+    navigation.navigate(Page, {userInformation: userInformation, UserName: UserName})
+    return
+  }
     navigation.navigate(Page); // Navigate to the Login screen
     
 
 };
-    const FirstParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
-
-    const SecondParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
-
-    const ThridParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
-
-    const UserName = "Rogine"
+    
 
     return (
         
@@ -53,7 +77,7 @@ const navigatePage = (Page) => {
                      
                     </View>
 
-                    <Text style = {styles.name}>Rogine Cubelo</Text>
+                    <Text style = {styles.name}>{UserName}</Text>
                     <Text style = {styles.userType}>Requestor</Text>
 
                   </View>

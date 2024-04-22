@@ -48,7 +48,7 @@ const ReasonForRequesting = ({route}) => {
   };
     const expoIpAddress = "192.168.1.3"
     const navigation = useNavigation();
-    const navigatePage = async (Page) => {
+    const navigatePage = async (Page, Data) => {
 
       try {
       
@@ -127,6 +127,8 @@ const ReasonForRequesting = ({route}) => {
               );
               // console.log('Data saved successfully:', postFiles.data);
           }
+          console.log("Data: ", Data)
+          console.log("ScreeningformData: ", screeningFormData)
           await AsyncStorage.setItem('Pending', 'True')
           await AsyncStorage.setItem('RequestorApplicant_ID', screeningFormData.Applicant_ID)
           const Pending = await AsyncStorage.getItem('Pending')
@@ -135,11 +137,11 @@ const ReasonForRequesting = ({route}) => {
           console.log("RequestorApplicant_ID: ", RequestorApplicant_ID)
           navigation.dispatch(
             CommonActions.reset({
-              index: 0, //Reset the stack to 0 so the user cannot go back
-              routes: [{ name: Page }], 
+              index: 0,
+              routes: [{ name: Page, params: Data } ], 
             })
           );
-
+          return
     } catch (error) {
         // Handle error if the request fails
         setIsLoading(false);

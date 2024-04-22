@@ -11,14 +11,31 @@ import {
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import Header from "./Header";
-import { useNavigation } from '@react-navigation/native';
-
+import { useNavigation, CommonActions} from '@react-navigation/native';
+import axios from 'axios'
 
 export default function SettingScreen() {
 
+  
   const navigation = useNavigation(); 
   const navigatePage = (Page) => {
+    if( Page === "LogIn"){
+      navigation.dispatch(
+        CommonActions.reset({
+            index: 0,
+            routes: [{ name: Page }],
+        })
+    );
+    deleteTOken()
+    return
+    }
     navigation.navigate(Page); // Navigate to the Login screen
+  }
+
+  const deleteTOken = async () => {
+    const token = await AsyncStorage.getItem('token')
+    const result = await axios.get(`$BASED_URL/kalinga/userLogout/${token}`)
+    console.log(result.data.messages.message)
   }
 
   return (
