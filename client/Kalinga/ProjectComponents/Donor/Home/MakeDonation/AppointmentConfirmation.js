@@ -24,7 +24,8 @@
       
         const handleAppointmentCreation = async () => {
             try {
-              const response = await fetch('http://192.168.254.103:7000/kalinga/createAppointment', {
+              const response = await fetch('http://192.168.254.106:7000/kalinga/createAppointment',
+               {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',

@@ -1,4 +1,4 @@
-import React, { useState }from 'react';
+import React, { useState, useEffect }from 'react';
 import { 
 	SafeAreaView, 
 	Text, 
@@ -9,8 +9,8 @@ import {
 	TouchableOpacity, 
 } from 'react-native';
 //import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
-import { useNavigation } from '@react-navigation/native';
-
+import { useNavigation, useRoute } from '@react-navigation/native';
+import axios from 'axios'; // Import axios for API requests
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -18,12 +18,39 @@ import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 
 const CompletedTabRequest = () => {
-		const [inputValue, setInputValue] = useState('');
-		
-		const navigation = useNavigation();
+    const navigation = useNavigation();
+    const route = useRoute();
+    const Requestor_ID ='lkeA9KriaOwOfibtQkRa';
+    const [formData, setFormData] = useState({
+        fullName: '',
+        phoneNumber: '',
+        emailAddress: '',
+        homeAddress: '',
+        medicalCondition: '',
+        milkAmount: '',
+        BabyCategory: '',
+        ReasonForRequesting: '',
+    });
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        try {
+            const response = await axios.get(`http://192.168.254.106:7000/kalinga/getCompletedRequests/${Requestor_ID}`);
+            const responseData = response.data;
+
+            const formDataFromResponse = responseData.RequestData[0];
     
-    const navigatePage = (Page) => {
-        navigation.navigate(Page); // Navigate to the Login screen
+            setFormData(formDataFromResponse);
+
+            setLoading(false); 
+        } catch (error) {
+            console.log('Error fetching data:', error);
+            setLoading(false); 
+        }
     };
 	
 		const handlePress = () => {
@@ -41,30 +68,14 @@ const CompletedTabRequest = () => {
     return (
 			<SafeAreaView style = {styles.container}>
 				<StatusBar barStyle="dark-content" translucent backgroundColor="white" />
-				<View style = {globalHeader.SmallHeader}>
-						<TouchableOpacity onPress={handleBackPress}>
-								<AntDesign name="arrowleft" size={24} color="white" style={{position: 'absolute', top: 5, left: -180}}/>
-						</TouchableOpacity>
-
-						<Text style = {globalHeader.SmallHeaderTitle}>My Requests</Text>
-				</View>
+				
 
 				<ScrollView
 					overScrollMode='never'
 					nestedScrollEnabled={true} 
 					showsVerticalScrollIndicator={false}
 				>
-						<View style={styles.headerButton}>
-							<TouchableOpacity onPress={() => navigatePage("PendingTabRequest")}>
-									<Text style = {styles.button}>Pending</Text>
-							</TouchableOpacity>
-							<TouchableOpacity onPress={() => navigatePage("ApprovedTabRequest")}>
-									<Text style = {styles.button}>Approved</Text>
-							</TouchableOpacity>
-							<TouchableOpacity onPress={() => navigatePage("CompletedTabRequest")}>
-									<Text style = {styles.indicatedButton}>Completed</Text>
-							</TouchableOpacity>
-						</View>
+					
 
 						<View style={styles.body}>
 
@@ -72,77 +83,16 @@ const CompletedTabRequest = () => {
 						<View style={styles.boxColContainer}>
 								<View style={styles.boxContentContainer}>
 										<Text style={styles.boxContentBold}>Amount of milk requested: </Text>
-										<Text style={[styles.boxContent, styles.limitText]}>XX mL</Text>
+										<Text style={[styles.boxContent, styles.limitText]}>{formData.milkAmount}</Text>
 								</View>
+								
 								<View style={styles.boxContentContainer}>
-										<Text style={styles.boxContentBold}>MilkBank: </Text>
-										<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet</Text>
-								</View>
-								<View style={styles.boxContentContainer}>
-										<Text style={styles.boxContentBold}>Date and Time: </Text>
-										<Text style={[styles.boxContent, styles.limitText]}>XX:XX AM/PM  XX - XX - XXXX </Text>
+										<Text style={styles.boxContentBold}>Baby Category: </Text>
+										<Text style={[styles.boxContent, styles.limitText]}>{formData.BabyCategory}</Text>
 								</View>
 							</View>
 
-						<View style={styles.boxColContainer}>
-							<View style={styles.boxContentContainer}>
-									<Text style={styles.boxContentBold}>Amount of milk requested: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>XX mL</Text>
-							</View>
-							<View style={styles.boxContentContainer}>
-									<Text style={styles.boxContentBold}>MilkBank: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet</Text>
-							</View>
-							<View style={styles.boxContentContainer}>
-									<Text style={styles.boxContentBold}>Date and Time: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>XX:XX AM/PM  XX - XX - XXXX </Text>
-							</View>
-						</View>
-
-						<View style={styles.boxColContainer}>
-							<View style={styles.boxContentContainer}>
-									<Text style={styles.boxContentBold}>Amount of milk requested: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>XX mL</Text>
-							</View>
-							<View style={styles.boxContentContainer}>
-									<Text style={styles.boxContentBold}>MilkBank: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet</Text>
-							</View>
-							<View style={styles.boxContentContainer}>
-									<Text style={styles.boxContentBold}>Date and Time: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>XX:XX AM/PM  XX - XX - XXXX </Text>
-							</View>
-						</View>
-
-						<View style={styles.boxColContainer}>
-							<View style={styles.boxContentContainer}>
-									<Text style={styles.boxContentBold}>Amount of milk requested: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>XX mL</Text>
-							</View>
-							<View style={styles.boxContentContainer}>
-									<Text style={styles.boxContentBold}>MilkBank: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet</Text>
-							</View>
-							<View style={styles.boxContentContainer}>
-									<Text style={styles.boxContentBold}>Date and Time: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>XX:XX AM/PM  XX - XX - XXXX </Text>
-							</View>
-						</View>
 						
-						<View style={styles.boxColContainer}>
-							<View style={styles.boxContentContainer}>
-									<Text style={styles.boxContentBold}>Amount of milk requested: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>XX mL</Text>
-							</View>
-							<View style={styles.boxContentContainer}>
-									<Text style={styles.boxContentBold}>MilkBank: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet</Text>
-							</View>
-							<View style={styles.boxContentContainer}>
-									<Text style={styles.boxContentBold}>Date and Time: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>XX:XX AM/PM  XX - XX - XXXX </Text>
-							</View>
-						</View>
 
         </View>
       </View>

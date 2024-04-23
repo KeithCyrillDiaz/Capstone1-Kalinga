@@ -23,26 +23,13 @@ const MyRequestScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
-      <View style={globalHeader.SmallHeader}>
-        <Text style={globalHeader.SmallHeaderTitle}>My Requests</Text>
-      </View>
-
+     
       <ScrollView
         overScrollMode='never'
         nestedScrollEnabled={true}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.headerButton}>
-          <TouchableOpacity onPress={() => navigatePage("PendingTabRequest")}>
-            <Text style={styles.indicatedButton}>Pending</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigatePage("ApprovedTabRequest")}>
-            <Text style={styles.approvedButton}>Approved</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigatePage("CompletedTabRequest")}>
-            <Text style={styles.completedButton}>Completed</Text>
-          </TouchableOpacity>
-        </View>
+        
 
         <View style={styles.contentContainer}>
           <View style={styles.boxContainer}>

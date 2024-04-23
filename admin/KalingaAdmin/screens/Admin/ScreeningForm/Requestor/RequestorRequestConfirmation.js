@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from 'react';
 import { ScrollView, Text, View, StatusBar, StyleSheet, TouchableOpacity, Image, Alert, TextInput, SafeAreaView } from 'react-native';
-import { globalHeader } from '../../../../../../client/Kalinga/styles_kit/globalHeader.js';
-import { globalStyles } from '../../../../../../client/Kalinga/styles_kit/globalStyles.js';
+import { globalHeader } from '../../../../styles_kit/globalHeader.js';
+import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import axios from 'axios'; // Import axios
 import { useNavigation, useRoute } from '@react-navigation/native'; // Correct import
 import * as ImagePicker from 'expo-image-picker';
@@ -12,6 +12,10 @@ import { FontAwesome5 } from '@expo/vector-icons';
 const RequestorRequestConfirmation = () => {
     const route = useRoute();
     const RequestID = route.params;
+    const navigation = useNavigation();
+    const [isLoading, setIsLoading] = useState(false); // Add this line to define isLoading state
+
+
 
     const [formData, setFormData] = useState({
         fullName: '',
@@ -26,7 +30,7 @@ const RequestorRequestConfirmation = () => {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get(`http://192.168.254.103:7000/kalinga/getRequestByID/${RequestID.formData}`);
+            const response = await axios.get(`http://192.168.254.106:7000/kalinga/getRequestByID/${RequestID.formData}`);
             const data = response.data.Request;
             
             // Log fetched data and update formData state
@@ -36,6 +40,75 @@ const RequestorRequestConfirmation = () => {
             console.error('Error fetching data:', error);
         }
     };
+    
+    const handleApproveButtonPress = async () => {
+      Alert.alert(
+        'Are you sure you want to approve this request?',
+        'Once approved, the request process will proceed.',
+        [
+            
+            {
+                text: 'Yes',
+                onPress: async () => {
+                    try {
+                        setIsLoading(true);
+                        await axios.put(`http://192.168.254.106:7000/kalinga/updateRequestStatus/${RequestID.formData}`, {
+                          RequestStatus: 'Approved',
+                        });
+                        fetchData(); // Assuming fetchData updates the data in your component
+                        navigation.navigate('RequestConfirm');
+                    } catch (error) {
+                        console.error('Error updating donation status:', error.response);
+                    } finally {
+                        setIsLoading(false);
+                    }
+                },
+            },
+
+            {
+                text: 'No',
+                style: 'cancel',
+            },
+        ],
+        { cancelable: false },
+        
+    );
+};
+    
+    const handleDeclineButtonPress = async () => {
+      Alert.alert(
+        'Are you sure you want to decline this request?',
+        'Once declined, the request process will not proceed.',
+        [
+            
+            {
+                text: 'Yes',
+                onPress: async () => {
+                    try {
+                        setIsLoading(true);
+                        await axios.put(`http://192.168.254.106:7000/kalinga/updateRequestStatus/${RequestID.formData}`, {
+                          RequestStatus: 'Decline',
+                        });
+                        fetchData(); // Assuming fetchData updates the data in your component
+                        navigation.navigate('RequestDecline');
+                    } catch (error) {
+                        console.error('Error updating donation status:', error.response);
+                    } finally {
+                        setIsLoading(false);
+                    }
+                },
+            },
+
+            {
+                text: 'No',
+                style: 'cancel',
+            },
+        ],
+        { cancelable: false },
+        
+    );
+};
+    
 
     useEffect(() => {
         fetchData();
@@ -141,12 +214,12 @@ const RequestorRequestConfirmation = () => {
         <Image source={{ uri: selectedImage }} style={styles.uploadedImage} />
       )} */}
                 <View style={styles.AdminButton}>
-                    <TouchableOpacity onPress={() => navigatePage("DonorInitialScreeningFormPage2")}>
+                    <TouchableOpacity onPress={() => handleApproveButtonPress(RequestID)}>
                         <View style={styles.ApprovebuttonContainer}>
                             <Text style={styles.label}>Approve</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigatePage("DonorInitialScreeningFormPage2")}>
+                    <TouchableOpacity onPress={() => handleDeclineButtonPress(RequestID)}>
                         <View style={styles.DeclinebuttonContainer}>
                             <Text style={styles.label}>Decline</Text>
                         </View>

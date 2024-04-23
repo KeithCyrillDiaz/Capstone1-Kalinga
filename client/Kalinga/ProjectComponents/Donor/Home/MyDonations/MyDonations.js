@@ -30,24 +30,13 @@ const navigatePage = (Page) => {
     return (
              <SafeAreaView style = {styles.container}>
                 <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
-                <View style = {globalHeader.SmallHeader}>
-                    <Text style = {globalHeader.SmallHeaderTitle}>My Donations</Text>
-                </View>
-
+               
                 <ScrollView
                  overScrollMode='never'
                  nestedScrollEnabled={true}
                 
                 >
-                    <View style={styles.headerButton}>
-							<TouchableOpacity onPress={() => navigatePage("OngoingDonations")}>
-									<Text style = {styles.Tabbutton}>Ongoing</Text>
-							</TouchableOpacity>
-							<TouchableOpacity onPress={() => navigatePage("CompleteDonations")}>
-									<Text style = {styles.Tabbutton}>Copleted</Text>
-							</TouchableOpacity>
-							
-						</View>
+                  
                     <View style = {styles.RowMilk}>
                         <View>
                             {/* Temporary */}

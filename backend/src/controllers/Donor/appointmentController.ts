@@ -5,10 +5,12 @@ import randomatic from 'randomatic'
 // Controller to create a new appointment
 const createAppointment = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { userType, AppointmentDonorID, fullName, phoneNumber, emailAddress, homeAddress, medicalCondition, milkAmount, location} = req.body;
+    const {Donor_ID,DonationStatus, userType, AppointmentDonorID, fullName, phoneNumber, emailAddress, homeAddress, medicalCondition, milkAmount, location} = req.body;
    
 
     const newAppointment: Appointment = await AppointmentModel.create({
+      Donor_ID,
+      DonationStatus,
       userType,
       AppointmentDonorID,
       fullName,

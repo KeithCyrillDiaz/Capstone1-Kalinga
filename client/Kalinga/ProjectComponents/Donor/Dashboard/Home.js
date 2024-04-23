@@ -98,7 +98,7 @@ const DonorHome = () => {
                   </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("My Donations")}>
+                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("MyDonationTabs")}>
                   <SimpleLineIcons name="graph" size={70} color="#E60965"s />
                   <View style = {styles.LabelCenter}>
                     <Text style = {styles.Label}>My Donations</Text>

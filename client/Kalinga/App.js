@@ -21,7 +21,7 @@ import ResetPassword from './ProjectComponents/InitialScreenPages/ResetPassword'
 import ResetPasswordEmail from './ProjectComponents/InitialScreenPages/ResetPasswordEmail';
 import ResetPasswordSuccessful from './ProjectComponents/InitialScreenPages/ResetPasswordSuccessful';
 import FacebookContinue from './ProjectComponents/InitialScreenPages/FacebookContinue';
-
+import RequestParentComponent from './ProjectComponents/Requestor/RequestParentComponent.js'
 
 //Guest
 //import ApplyAsDonor from './screens/Guest/Apply_As_Donor/Approved.js'
@@ -48,7 +48,7 @@ import ChatAssistance from './ProjectComponents/Donor/Home/InstantMessaging/Chat
 import DonorEducContents from './ProjectComponents/Donor/Home/EducLibrary/EducContents.js'
 import DonorEducLibrary from './ProjectComponents/Donor/Home/EducLibrary/EducLibrary.js'
 import CompleteDonations from './ProjectComponents/Donor/Home/MyDonations/CompletedDonations.js'
-import MyDonationTabs from './ProjectComponents/Donor/Home/MyDonations/MyDonationsTabs.js'
+// import MyDonationTabs from './ProjectComponents/Donor/Home/MyDonations/MyDonationsTabs.js'
 import MyDonations from './ProjectComponents/Donor/Home/MyDonations/MyDonations.js'
 import OngoingDonations from './ProjectComponents/Donor/Home/MyDonations/OngoingDonations.js'
 import DonationsHome from './ProjectComponents/Donor/Home/MyDonations/Donation_Home.js'
@@ -77,7 +77,7 @@ import SetDateTimeLocation from './ProjectComponents/Donor/Home/MakeDonation/Set
 import AppointmentConfirmation from './ProjectComponents/Donor/Home/MakeDonation/AppointmentConfirmation.js'
 import DonorHelpAndSupportMessage from './ProjectComponents/Donor/Profile/DonorSettngs/DonorHelpAndSupportMessage.js'
 import AppointmentConfirmationMessage from './ProjectComponents/Donor/Home/MakeDonation/AppointmentConfirmationMessage.js';
-
+import MyDonationTabs from './ProjectComponents/Donor/Home/MyDonations/Donation.js'
 {/* Requestor */}
 import RequestorForum from './ProjectComponents/Requestor/Home/Forum/RequestorForumPage.js'
 import RequestorChatAssistance from './ProjectComponents/Requestor/Home/InstantMessaging/RequestorChatAssistance'
@@ -106,8 +106,8 @@ import RequestorProfile from './ProjectComponents/Requestor/Dashboard/Profile.js
 import MakeRequestReceipt from './ProjectComponents/Requestor/Home/MakeRequest/MakeRequestReceipt.js'
 import MyRequestScreen from './ProjectComponents/Requestor/Home/MyRequest/MyRequestScreen.js';
 import CompletedTabRequest from './ProjectComponents/Requestor/Home/MyRequest/CompletedTabRequest.js';
-import PendingTabRequest from './ProjectComponents/Requestor/Home/MakeRequest/MakeRequestReceipt.js';
-
+import PendingTabRequest from './ProjectComponents/Requestor/Home/MyRequest/PendingTabRequest.js';
+import RequestTab from './ProjectComponents/Requestor/Home/MyRequest/Request.js'
 
 
 //Requestor DUPLICATE THE DONOR PAGES
@@ -132,8 +132,7 @@ import DonorInitialScreeningFormPage2 from './screens/Admin/ScreeningForm/Donor/
 import DonorInitialScreeningFormPage3 from './screens/Admin/ScreeningForm/Donor/DonorInitialScreeningFormPage3.js'
 import DonorInitialScreeningFormPage4 from './screens/Admin/ScreeningForm/Donor/DonorInitialScreeningFormPage4.js'
 
-import LoginAdmin from './screens/Admin/LoginAdmin';
-import AdminMenu from './screens/Admin/AdminMenu';
+
 //import Header from './screens/Admin/header';
 import AdminDashboard from './screens/Admin/AdminDashboard';
 import AdminUser from './screens/Admin/AdminUser';
@@ -233,7 +232,7 @@ export default function App() {
              <Stack.Screen name="Donor Educational Contents" component={DonorEducContents} />
              <Stack.Screen name="Donor Educational Library" component={DonorEducLibrary} />
              <Stack.Screen name="CompleteDonations" component={CompleteDonations} />
-             <Stack.Screen name="My Donation Tabs" component={MyDonationTabs} />
+             {/* <Stack.Screen name="My Donation Tabs" component={MyDonationTabs} /> */}
              <Stack.Screen name="My Donations" component={MyDonations} />
              <Stack.Screen name="OngoingDonations" component={OngoingDonations} />
              <Stack.Screen name="Donations Home" component={DonationsHome} />
@@ -263,6 +262,8 @@ export default function App() {
              <Stack.Screen name="AppointmentConfirmation" component={AppointmentConfirmation} />
              <Stack.Screen name="DonorHelpAndSupportMessage" component={DonorHelpAndSupportMessage} />
              <Stack.Screen name="AppointmentConfirmationMessage" component={AppointmentConfirmationMessage} />
+             <Stack.Screen name="MyDonationTabs" component={MyDonationTabs} />
+
 
 
 
@@ -303,6 +304,12 @@ export default function App() {
              <Stack.Screen name="MyRequestScreen" component={MyRequestScreen} />
              <Stack.Screen name="CompletedTabRequest" component={CompletedTabRequest} />
              <Stack.Screen name="PendingTabRequest" component={PendingTabRequest} />
+             <Stack.Screen name="RequestParentComponent" component={RequestParentComponent} />
+             <Stack.Screen name="RequestTab" component={RequestTab} />
+
+
+
+
 
 
 
@@ -318,8 +325,7 @@ export default function App() {
              {/*Admin*/}
              {/* <Stack.Screen name="Medical Abstract" component={MedicalAbstract} />
              <Stack.Screen name="Reason For Requesting" component={ReasonForRequesting} /> */}
-             <Stack.Screen name="LoginAdmin" component={LoginAdmin} />
-             <Stack.Screen name="AdminMenu" component={AdminMenu} />
+            
              <Stack.Screen name="AdminDashboard" component={AdminDashboard} />
              <Stack.Screen name="AdminUser" component={AdminUser} />
              <Stack.Screen name="AdminMilkbanks" component={AdminMilkbanks} />

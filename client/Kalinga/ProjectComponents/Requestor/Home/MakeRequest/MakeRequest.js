@@ -27,12 +27,19 @@ import { FontAwesome } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 import randomatic from 'randomatic';
+import { BackHandler } from 'react-native';
+
 
 
 
 export default function RequestorProfile() {
+
+  const Requestor_ID = randomatic('Aa0', 20);
+
   const [formData, setFormData] = useState({
+    Requestor_ID: Requestor_ID,
     userType: "Requestor",
+    RequestStatus: "Pending",
       fullName: '',
       phoneNumber: '',
       emailAddress: '',
@@ -42,16 +49,29 @@ export default function RequestorProfile() {
       BabyCategory: '',
       ReasonForRequesting: '',
   });
-
   const handleInputChange = (field, value) => {
     if (field === 'BabyCategory') {
       console.log("Baby Category Value:", value); // Log the BabyCategory value
-
-        setFormData({ ...formData, BabyCategory: value });
+      setFormData({ ...formData, BabyCategory: value });
     } else {
-        setFormData({ ...formData, [field]: value });
+      setFormData({ ...formData, [field]: value });
     }
-};
+  
+    // Perform validation checks for required fields and show alerts if not valid
+    if (field === 'fullName' && value.trim() === '') {
+      Alert.alert('Full Name is required');
+    } else if (field === 'phoneNumber' && !/^[0-9]+$/.test(value)) {
+      Alert.alert('Phone Number must contain only numbers');
+    } else if (field === 'emailAddress' && value.trim() === '') {
+      Alert.alert('Email Address is required');
+    } else if (field === 'homeAddress' && value.trim() === '') {
+      Alert.alert('Home Address is required');
+    } else if (field === 'milkAmount' && !/^[0-9]+$/.test(value)) {
+      Alert.alert('Milk Amount must contain only numbers');
+    } else if (field === 'ReasonForRequesting' && value.trim() === '') {
+      Alert.alert('Reason for Requesting is required');
+    }
+  };
 
   const handleBackPress = () => {
       console.log("Back button pressed");
@@ -60,10 +80,24 @@ export default function RequestorProfile() {
   const navigation = useNavigation();
 
   const navigatePage = () => {
+    setFormData(prevData => ({
+      ...prevData,
+      RequestStatus: 'Pending',
+    }));
     navigation.navigate('MakeRequestReceipt', { formData: formData, BabyCategory: formData.BabyCategory });
 };
 
-  
+useEffect(() => {
+  const backAction = () => {
+    navigation.navigate('Requestor Tabs'); // Navigate to AdminMenu screen on back button press
+    return true; // Prevent default back button behavior (e.g., app exit)
+  };
+
+  const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+  return () => backHandler.remove(); // Cleanup the event listener on component unmount
+}, []);
+
     return (
       <SafeAreaView style={globalStyles.container}>
           <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
