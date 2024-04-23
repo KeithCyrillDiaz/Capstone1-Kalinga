@@ -1,6 +1,17 @@
 
 import React, { useState, useEffect } from 'react';
-import { ScrollView,Text, View, StyleSheet, TouchableOpacity, Dimensions, Image, Modal, TouchableHighlight, Alert} from 'react-native';
+import { 
+  ScrollView,Text, 
+  View, 
+  StyleSheet, 
+  TouchableOpacity, 
+  Dimensions, 
+  Image, 
+  Modal, 
+  TouchableHighlight, 
+  Alert,
+  Linking,
+} from 'react-native';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation, CommonActions} from '@react-navigation/native'; // Import useRoute hook
@@ -15,6 +26,7 @@ const DonorUploadAdmin = ({ route }) => {
   
   const [modalVisible, setModalVisible] = useState(false);
   const [images, setImages] = useState({});
+  const [zip, setZip] = useState({})
   const [url, setUrl] = useState("");
   const [owner, setOwner] = useState("")
 
@@ -63,6 +75,7 @@ const DonorUploadAdmin = ({ route }) => {
 
     const navigatePage = (Page, owner) => {
       // Navigate to the next screen by route name
+      DeleteUser(Applicant_ID)
       navigation.dispatch(
         CommonActions.reset({
           index: 0, //Reset the stack to 0 so the user cannot go back
@@ -71,15 +84,24 @@ const DonorUploadAdmin = ({ route }) => {
       );
     }
 
+    const DeleteUser = async (userID) => {
+      console.log("ID: ", userID)
+      const result = await axios.delete(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
+      console.log(result.data)
+    }
+
     const fetchData = async () => {
       try {
 
-         
           const response = await axios.get(`${BASED_URL}/kalinga/getMedicalRequirementImage/${Applicant_ID}`);
           const result = response.data.image
           // console.log('result: ', result)
           setImages(result)
           setOwner(result[0].owner)
+
+          const zipFile = await axios.get(`${BASED_URL}/kalinga/getMedicalRequirementFile/${Applicant_ID}`)
+          setZip(zipFile.data.zipFile)
+          // console.log("zipFile: ", zipFile.data.zipFile.link)
           
          
       } catch (error) {
@@ -92,15 +114,30 @@ const DonorUploadAdmin = ({ route }) => {
     fetchData(); // Fetch data when component mounts
   }, []);
 
+
  
   const handleImage = (imageName) => {
     images.forEach(image => {
       if(image.originalname === imageName) {
-        setUrl(`${BASED_URL}/kalinga/getImage/${image.filename}`)
+        setUrl(`${image.link}`)
       }// Print the originalname property of each image object
       setModalVisible(true)
   });
   }
+
+  const handleDownload = async () => {
+    const downloadLink = `${zip.link}`; // Replace with your generated download link
+    try {
+        const supported = await Linking.canOpenURL(downloadLink);
+        if (supported) {
+            await Linking.openURL(downloadLink);
+        } else {
+            console.log("Don't know how to open URI: " + downloadLink);
+        }
+    } catch (error) {
+        console.error('Error opening link:', error);
+    }
+};
  
    
     return (
@@ -142,6 +179,12 @@ const DonorUploadAdmin = ({ route }) => {
                     onPress={() =>handleImage('Government_ID.png')}
                   >
                     <Text style={styles.UploadbuttonTitle}>View Government ID Result</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.Uploadbutton}
+                    onPress={() =>handleDownload()}
+                  >
+                    <Text style={styles.UploadbuttonTitle}>Download Documents as Zip</Text>
                   </TouchableOpacity>
                </View>
 

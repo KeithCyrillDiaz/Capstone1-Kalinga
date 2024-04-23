@@ -6,6 +6,8 @@ const screeningFormSchema = new mongoose.Schema({
     Applicant_ID: {type: String},
     Screening_ID: {type: String},
     userType: {type: String},
+    isDeleted: {type: String, default: "notDeleted"},
+
     fullName: {type: String},
     Age: {type: String},
     birthDate: {type: String},
@@ -111,9 +113,10 @@ export const getMRImage = (ownerID: string) => MedicalRequirementsImagesModel.fi
 export const getMRFileZip = (ownerID: string) => MedicalRequirementsFilesModel.findOne({ownerID})
 export const createScreeningForm = (values: Record<string, any>) => new screeningFormModel(values).save().then((ScreeningForm) => ScreeningForm.toObject())
 
-export const getScreeningFormByUserType = (userType: string) => screeningFormModel.find({userType: userType})
+export const getScreeningFormByUserType = (userType: string) => screeningFormModel.find({userType: userType, isDeleted: {$ne: "Deleted"}})
 export const getScreeningFormByName = (fullName: string) => screeningFormModel.findOne({fullName})
 export const getScreeningFormByApplicantID = (Applicant_ID: string) => screeningFormModel.findOne({Applicant_ID})
+export const isDeleteScreeningForm = (Applicant_ID: string, Status: string) => screeningFormModel.findOneAndUpdate({Applicant_ID}, {$set: {isDeleted: Status}}, { new: true } ).then((ScreeningForm) => ScreeningForm.toObject())
 export const getScreeningFormByMaxApplicantID = () => screeningFormModel.findOne({}).sort({ Applicant_ID: -1 }).limit(1).select('Applicant_ID');
 export const getScreeningFormByMaxScreeningID = () => screeningFormModel.findOne({}).sort({ Screening_ID: -1 }).limit(1).select('Screening_ID');
 export const getScreeningFormByScreeningID = (Screening_ID: string) => screeningFormModel.findOne({Screening_ID})

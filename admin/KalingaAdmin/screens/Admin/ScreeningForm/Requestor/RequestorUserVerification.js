@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView, StatusBar } from 'react-native'; // Import Dimensions
-import { useNavigation } from '@react-navigation/native';
-import { Octicons } from '@expo/vector-icons';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView, StatusBar, Alert, BackHandler } from 'react-native'; // Import Dimensions
+import { useNavigation, CommonActions } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { globalHeader } from '../../../../styles_kit/globalHeader';
@@ -9,9 +8,7 @@ import axios from 'axios';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { BASED_URL } from '../../../../MyConstants.js';
 
-const handleLogIn = () => {
-    navigation.navigate('LoginAdmin');
-};
+
 
 const SearchBar = () => {
     return (
@@ -52,10 +49,30 @@ const UserVerification = () => {
         }
     };
     
+const DeleteAlert = (name, userID) => {
+    Alert.alert(
+        'Confirmation',
+        `Are you sure you want to DELETE ${name}'s application form?`,
+        [
+          {
+            text: 'No',
+            style: 'cancel',
+          },
+          {
+            text: 'Yes',
+            onPress: () =>  DeleteUser(userID), // Call a function when "Yes" is pressed
+          },
+        ],
+        { cancelable: false }
+      );
+}
 
-    useEffect(() => {
-      fetchScreeningFormIDs();
-  }, []);
+const DeleteUser = async (userID) => {
+    console.log("ID: ", userID)
+    const result = await axios.delete(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
+    console.log(result.data)
+    fetchScreeningFormIDs();
+}
 
   const refreshPage = (event) => {
     const { y } = event.nativeEvent.contentOffset;
@@ -79,6 +96,29 @@ const UserVerification = () => {
         // console.log("SelectedFormId: ", selectedFormId)
         navigation.navigate('RequestorInitialScreeningFormPage1', data);
     };
+
+    useEffect(() => {
+      fetchScreeningFormIDs();
+  
+      const backAction = () => {
+        // Navigate to the Admin Menu screen
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 1, // Reset the stack to index 1, leaving the first screen behind
+            routes: [{ name: "AdminMenu" }], // Navigate to DonorUserVerification screen
+          })
+        );
+        // Prevent default back behavior
+        return true;
+      };
+    
+      // Add event listener for hardware back button press
+      const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+    
+      // Clean up event listener on component unmount
+      return () => backHandler.remove();
+  }, []);
+  
 
     
     return (
@@ -114,7 +154,7 @@ const UserVerification = () => {
                     <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
                         <Text style={styles.viewButtonText}>Message</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
+                    <TouchableOpacity style={styles.viewButton} onPress={() => DeleteAlert(form.fullName, form.Applicant_ID)}>
                         <Text style={styles.viewButtonText}>Delete</Text>
                     </TouchableOpacity>
                 </View>

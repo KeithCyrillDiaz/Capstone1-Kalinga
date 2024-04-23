@@ -75,7 +75,7 @@ const AdminApprovedDonor = ({route}) => {
             </View>
               
               
-            <TouchableOpacity style = {globalStyles.center} onPress={() => navigatePage("DonorUserVerification")}>
+            <TouchableOpacity style = {globalStyles.center} onPress={() => navigatePage("RequestorUserVerification")}>
                   <View style = {styles.AgreebuttonContainer} >
                       <Text style = {styles.label}>Done</Text>
                   </View>

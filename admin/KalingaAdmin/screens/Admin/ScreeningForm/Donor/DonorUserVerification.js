@@ -1,5 +1,5 @@
 import React  from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView, Dimensions, StatusBar, BackHandler } from 'react-native'; // Import Dimensions
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView, StatusBar, BackHandler, Alert } from 'react-native'; // Import Dimensions
 import { useNavigation, CommonActions } from '@react-navigation/native';
 import { Octicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
@@ -72,6 +72,31 @@ const UserVerification = () => {
     return () => backHandler.remove();
 }, []);
 
+const DeleteAlert = (name, userID) => {
+  Alert.alert(
+      'Confirmation',
+      `Are you sure you want to DELETE ${name}'s application form?`,
+      [
+        {
+          text: 'No',
+          style: 'cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: () =>  DeleteUser(userID), // Call a function when "Yes" is pressed
+        },
+      ],
+      { cancelable: false }
+    );
+}
+
+const DeleteUser = async (userID) => {
+  console.log("ID: ", userID)
+  const result = await axios.delete(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
+  console.log(result.data)
+  fetchScreeningFormIDs();
+}
+
 const handleViewPress = (Applicant_ID) => {
   console.log("id", Applicant_ID)
   navigation.navigate('DonorInitialScreeningFormPage1',  Applicant_ID );
@@ -106,7 +131,7 @@ const handleViewPress = (Applicant_ID) => {
                         <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
                             <Text style={styles.viewButtonText}>Message</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.viewButton} onPress={handleViewPress}>
+                        <TouchableOpacity style={styles.viewButton} onPress={() => DeleteAlert(form.fullName, form.Applicant_ID)}>
                             <Text style={styles.viewButtonText}>Delete</Text>
                         </TouchableOpacity>
                     </View>
