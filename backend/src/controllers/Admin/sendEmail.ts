@@ -23,7 +23,6 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
 
         console.log(req.params.Applicant_ID)
         console.log(process.env.NM_EMAIL)
-        console.log(process.env.NM_PASS)
 
         const existingUser = await getScreeningFormByApplicantID(req.params.Applicant_ID)
             if(!existingUser ){

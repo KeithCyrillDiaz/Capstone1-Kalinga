@@ -28,14 +28,17 @@ export const UploadFiles = async (fileObject:any, folder_id:any) => {
 // DELETE FILES
 export const DeleteFiles = async (fileID: any) => {
   try {
+    console.log("fileID: ", fileID)
     const { data } = await google
       .drive({ version: "v3", auth: authorize })
       .files.delete({
         fileId: fileID,
       });
-
+    console.log("File deleted successfully In Gdrive");
     return data;
   } catch (err) {
-    console.log(err);
+    console.log("Error Deleting Files in Gdrive:", err.message); // Log the specific error message
+    throw new Error("Failed to delete file in Gdrive");
   }
 };
+

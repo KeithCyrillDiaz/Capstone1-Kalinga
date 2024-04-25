@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import Header from "./Header";
-import { useNavigation, CommonActions} from '@react-navigation/native';
+import { useNavigation, CommonActions, useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from 'axios'
 import { BASED_URL } from "../../../../MyConstants";
@@ -36,8 +36,7 @@ export default function SettingScreen({route}) {
       return
     }
 
-    await AsyncStorage.removeItem('token')
-    await AsyncStorage.removeItem('userInformation')
+    await AsyncStorage.multiRemove(['token', 'userInformation', 'DPLink', 'Image_ID']);
     const checkToken = await AsyncStorage.getItem('token')
     const checkUserInfo = await AsyncStorage.getItem('userInformation')
     if(checkToken && checkUserInfo){
@@ -62,6 +61,31 @@ export default function SettingScreen({route}) {
     navigation.navigate(Page, {userInformation: userInformation, userName: UserName}); // Navigate to the Login screen
   }
 
+  const [profilePic, setProfilePic] = useState("")
+  const fetchDP = async () => {
+    const DPLink = await AsyncStorage.getItem("DPLink")
+    if(!DPLink && !userInformation.DPLink){
+      console.log("DPLink: ", DPLink)
+      console.log("userInformation.DPLink: ", userInformation.DPLink)
+      return
+    } 
+    if(!DPLink){
+      setProfilePic(userInformation.DPLink)
+      console.log("userInformation.DPLink: ", userInformation.DPLink)
+    } else{
+      setProfilePic(DPLink)
+      console.log("DPLink: ", DPLink)
+    }
+   
+  } 
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchDP(); // Fetch profile picture whenever screen comes into focus
+    }, [])
+  );
+
+
   return (
     <SafeAreaView style={bodyStyle.main}>
       <ScrollView contentContainerStyle={bodyStyle.container}>
@@ -77,8 +101,9 @@ export default function SettingScreen({route}) {
                 alignItems: "center",
                 justifyContent: "center",
               }}>
-              <Image
-                source={require("../../../../assets/Profile_icon.png")}
+                
+             <Image
+                source={profilePic === "" ? require("../../../../assets/Profile_icon.png") : {uri: profilePic}}
                 style={{
                   width: 84,
                   height: 84,

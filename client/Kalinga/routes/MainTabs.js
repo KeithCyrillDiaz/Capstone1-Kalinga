@@ -22,7 +22,6 @@ const MainTabs = ({route}) => {
     const userInformation = route.params.userInformation;
     const token = route.params.token
     const userType = userInformation.userType
-    console.log("userType: ", userInformation)
     return (
         
             <Tab.Navigator

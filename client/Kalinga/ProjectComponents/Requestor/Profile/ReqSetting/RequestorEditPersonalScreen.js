@@ -17,6 +17,9 @@ import Header from "./Header";
 import axios from 'axios'
 import { BASED_URL } from "../../../../MyConstants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Spinner from 'react-native-loading-spinner-overlay';
+import * as ImagePicker from 'expo-image-picker';
+import ImageZoom from 'react-native-image-pan-zoom';
 
 export default function EditPersonalScreen({route}) {
   
@@ -24,26 +27,146 @@ export default function EditPersonalScreen({route}) {
  const userName = route.params.userName
 
  const [userData, setUserData] = useState(userInformation)
+ const [selectedImage, setSelectedImage] = useState({});
+ const [profilePic, setProfilePic] = useState("")
+ const [isLoading, setIsloading] = useState(false)
 
- const saveDetails = async () => {
-      try{
-        const result = await axios.post(`${BASED_URL}/kalinga/updateUserInformation`,{
-          userData: userData
-        })
-        console.log(result.data.messages.message)
-        if("result: ", result.data.messages.code === 0){
-          setUserData(result.data.result)
-          const updatedData = result.data.result
-          await AsyncStorage.setItem('userInformation', JSON.stringify(updatedData))
-        }
 
-      } catch(error) {
-        if(error)Alert.alert('Network error', `Please check your internet connection`)
-            else
-            Alert.alert('Something went wrong', "Please try again later")
-      }
+ const uploadImage = async () => {
+  try{
+    setIsloading(true)
+    console.log("Number of properties in selectedImage: ", Object.keys(selectedImage).length);
 
+            if(Object.keys(selectedImage).length === 1){
+              const uploadedImages = new FormData();
+              const image = {
+                uri: selectedImage.ProfilePicture.uri,
+                type: 'image/jpeg', 
+                name: `${userData.fullName}.png`,
+              }
+             
+             
+              uploadedImages.append('ProfilePicture', image); 
+              uploadedImages.append(`userType`, "Requestor"); 
+              uploadedImages.append(`owner`, userData.fullName);// Append userType
+              uploadedImages.append(`ownerID`, userData.Requestor_ID);// Append userType
+              const Image_ID = await AsyncStorage.getItem("Image_ID")
+              if(Image_ID){
+                uploadedImages.append('Image_ID', Image_ID)
+              }
+
+              console.log("imageData: ", uploadedImages)
+              console.log("selectedImage: ",selectedImage )
+          
+              const result = await axios.post(`${BASED_URL}/kalinga/uploadDP`, uploadedImages, {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }
+              });
+              await AsyncStorage.setItem('DPLink', result.data.link)
+              await AsyncStorage.setItem('Image_ID', result.data.Image_ID)
+               console.log(result.data.messages.message)
+               if(result.data.messages.code === 0){
+                console.log(result.data.messages.message)
+                console.log("link: ", result.data.link)
+                console.log("Image_ID: ", result.data.Image_ID)
+                setProfilePic(result.data.link)
+                setSelectedImage({})
+                
+               }
+            }
+  }catch (error){
+    console.log("error: ", error)
+  } finally {
+    fetchDP()
+    setIsloading(false)
+  }
  }
+ const handleImageUpload = async () => {
+  try {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+          Alert.alert('Permission Denied', 'Sorry, we need camera roll permissions to make this work!');
+          return;
+      }
+      const result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [Dimensions.get('window').width, Dimensions.get('window').height],
+          quality: 1,
+      });
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+          let fileType = ''
+        result.assets.forEach(image => {
+          if (image.type === 'image' || !image.type.includes('/')) {
+                    fileType = image.type + "/jpeg"
+          } else {
+            fileType = image.type
+          }
+        });
+
+        setSelectedImage({
+            [`ProfilePicture`]: ({
+              uri: result.assets[0].uri,
+              name: userName, 
+              type: result.assets[0].type,
+            })
+        });
+     
+    }
+  } catch (error) {
+      Alert.alert('Error', 'Failed to pick an image.');
+  }
+};
+
+const fetchDP = async () => {
+  const checkImage_ID = await AsyncStorage.getItem("Image_ID")
+  if(!checkImage_ID){
+    if(userInformation.Image_ID) await AsyncStorage.setItem("Image_ID", userInformation.Image_ID)
+  }
+  const result = await AsyncStorage.getItem('DPLink')
+  if(selectedImage.ProfilePicture){
+    console.log("profilePicS: ", selectedImage.ProfilePicture.uri)
+    setProfilePic(selectedImage.ProfilePicture.uri)
+  } else if(result) {
+    setProfilePic(result)
+    console.log("profilePicR: ", result)
+  } else if(userInformation.Image_ID){
+    setProfilePic(userInformation.Image_ID)
+    console.log("profilePicU: ", userInformation.Image_ID)
+  } else setProfilePic("")
+
+  console.log("profilePic: ", profilePic)
+}
+
+useEffect(() => {
+  fetchDP()
+},[selectedImage])
+
+
+const saveDetails = async () => {
+  try{
+    if(userData !== userInformation){
+      const result = await axios.post(`${BASED_URL}/kalinga/updateUserInformation`,{
+        userData: userData
+      })
+      console.log(result.data.messages.message)
+      if("result: ", result.data.messages.code === 0){
+        setUserData(result.data.result)
+        const updatedData = result.data.result
+        await AsyncStorage.setItem('userInformation', JSON.stringify(updatedData))
+      }
+    }
+    uploadImage();
+    return
+  } catch(error) {
+    if(error)Alert.alert('Network error', `Please check your internet connection`)
+        else
+        Alert.alert('Something went wrong', "Please try again later")
+  }
+
+}
 
  const fetchData = async () => {
   const userInformationToString = await AsyncStorage.getItem('userInformation')
@@ -64,6 +187,10 @@ export default function EditPersonalScreen({route}) {
     [
       {
         text: 'No',
+        onPress: () => {
+          setSelectedImage({}),
+          setUserData(userInformation)
+        },
       },
       {
         text: 'Yes',
@@ -79,8 +206,15 @@ export default function EditPersonalScreen({route}) {
       <ScrollView contentContainerStyle={bodyStyle.container}>
         <StatusBar />
         <Header title="Personal Information" />
+        
+        <Spinner 
+          visible = {isLoading}
+          textContent={'Processing...'}
+          textStyle={{ color: '#FFF' }}
+        />
 
-        <View
+
+<View
           style={{
             width: "100%",
             paddingHorizontal: 24,
@@ -88,7 +222,7 @@ export default function EditPersonalScreen({route}) {
           }}>
           <View style={{ position: "relative" }}>
             <Image
-              source={require("../../../../assets/Profile_icon.png")}
+              source={!selectedImage.ProfilePicture && profilePic === "" ? require("../../../../assets/Profile_icon.png") : profilePic === "" ? require("../../../../assets/Profile_icon.png") : { uri: profilePic }}
               style={{
                 width: 127,
                 height: 127,
@@ -98,13 +232,18 @@ export default function EditPersonalScreen({route}) {
                 borderColor: "#E60965",
               }}
             />
-
-            <MaterialIcons
-              name="camera-alt"
-              size={48}
-              color="#E60965"
-              style={{ position: "absolute", bottom: 16, right: -5 }}
-            />
+            {!selectedImage.ProfilePicture && (
+              <TouchableOpacity onPress={()=> handleImageUpload()} >
+                <MaterialIcons
+                name="camera-alt"
+                size={48}
+                color="#E60965"
+                style={{ position: "absolute", bottom: 16, right: -5 }}
+                />
+              </TouchableOpacity>
+            
+            )}
+           
           </View>
 
           <View

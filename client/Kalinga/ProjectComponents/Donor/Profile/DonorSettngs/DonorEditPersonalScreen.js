@@ -18,8 +18,9 @@ import { BASED_URL } from "../../../../MyConstants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import * as ImagePicker from 'expo-image-picker';
-import Spinner from 'react-native-loading-spinner-overlay';
 import ImageZoom from 'react-native-image-pan-zoom';
+import Spinner from 'react-native-loading-spinner-overlay';
+
 
 export default function EditPersonalScreen({route}) {
 
@@ -28,14 +29,9 @@ export default function EditPersonalScreen({route}) {
  
  const [userData, setUserData] = useState(userInformation)
  const [selectedImage, setSelectedImage] = useState({});
- const [url, setUrl] = useState("")
+ const [profilePic, setProfilePic] = useState("")
  const [isLoading, setIsloading] = useState(false)
- let imageURI
- console.log("link: ", userData.gdriveLink)
- if(selectedImage.ProfilePicture){
-  imageURI = selectedImage.ProfilePicture.uri
- } else imageURI = url
- 
+
 
  const uploadImage = async () => {
   try{
@@ -49,12 +45,17 @@ export default function EditPersonalScreen({route}) {
                 type: 'image/jpeg', 
                 name: `${userData.fullName}.png`,
               }
-
+             
+             
               uploadedImages.append('ProfilePicture', image); 
               uploadedImages.append(`userType`, "Donor"); 
               uploadedImages.append(`owner`, userData.fullName);// Append userType
               uploadedImages.append(`ownerID`, userData.Donor_ID);// Append userType
-  
+              const Image_ID = await AsyncStorage.getItem("Image_ID")
+              if(Image_ID){
+                uploadedImages.append('Image_ID', Image_ID)
+              }
+
               console.log("imageData: ", uploadedImages)
               console.log("selectedImage: ",selectedImage )
           
@@ -64,11 +65,13 @@ export default function EditPersonalScreen({route}) {
                 }
               });
               await AsyncStorage.setItem('DPLink', result.data.link)
+              await AsyncStorage.setItem('Image_ID', result.data.Image_ID)
                console.log(result.data.messages.message)
                if(result.data.messages.code === 0){
                 console.log(result.data.messages.message)
                 console.log("link: ", result.data.link)
-                imageURI = result.data.link
+                console.log("Image_ID: ", result.data.Image_ID)
+                setProfilePic(result.data.link)
                 setSelectedImage({})
                 
                }
@@ -76,7 +79,7 @@ export default function EditPersonalScreen({route}) {
   }catch (error){
     console.log("error: ", error)
   } finally {
-    fetchNewDP()
+    fetchDP()
     setIsloading(false)
   }
  }
@@ -109,8 +112,6 @@ export default function EditPersonalScreen({route}) {
               uri: result.assets[0].uri,
               name: userName, 
               type: result.assets[0].type,
-              userType: "Requestor",
-          
             })
         });
      
@@ -120,33 +121,47 @@ export default function EditPersonalScreen({route}) {
   }
 };
 
-const fetchNewDP = async () => {
-  const result = await AsyncStorage.getItem('DPLink')
-  if(!result && selectedImage.ProfilePicture){
-    imageURI = selectedImage.ProfilePicture.uri
-  } else {
-    setUrl(result)
+const fetchDP = async () => {
+  const checkImage_ID = await AsyncStorage.getItem("Image_ID")
+  if(!checkImage_ID){
+    if(userInformation.Image_ID) await AsyncStorage.setItem("Image_ID", userInformation.Image_ID)
   }
+  const result = await AsyncStorage.getItem('DPLink')
+  if(selectedImage.ProfilePicture){
+    console.log("profilePicS: ", result)
+    setProfilePic(selectedImage.ProfilePicture.uri)
+  } else if(result) {
+    setProfilePic(result)
+    console.log("profilePicR: ", result)
+  } else if(userInformation.Image_ID){
+    setProfilePic(userInformation.Image_ID)
+    console.log("profilePicU: ", userInformation.Image_ID)
+  } else setProfilePic("")
+
+  console.log("profilePic: ", profilePic)
+
 }
 
-useEffect(()=>{
-  // console.log("selectedImage:", JSON.stringify(selectedImage, null, 2));
-  fetchNewDP()
+useEffect(() => {
+  fetchDP()
 },[selectedImage])
 
 
  const saveDetails = async () => {
       try{
-        const result = await axios.post(`${BASED_URL}/kalinga/updateUserInformation`,{
-          userData: userData
-        })
-        console.log(result.data.messages.message)
-        if("result: ", result.data.messages.code === 0){
-          setUserData(result.data.result)
-          const updatedData = result.data.result
-          await AsyncStorage.setItem('userInformation', JSON.stringify(updatedData))
+        if(userData !== userInformation){
+          const result = await axios.post(`${BASED_URL}/kalinga/updateUserInformation`,{
+            userData: userData
+          })
+          console.log(result.data.messages.message)
+          if("result: ", result.data.messages.code === 0){
+            setUserData(result.data.result)
+            const updatedData = result.data.result
+            await AsyncStorage.setItem('userInformation', JSON.stringify(updatedData))
+          }
         }
         uploadImage();
+        return
       } catch(error) {
         if(error)Alert.alert('Network error', `Please check your internet connection`)
             else
@@ -174,7 +189,10 @@ useEffect(()=>{
     [
       {
         text: 'No',
-        onPress: () => setSelectedImage({}),
+        onPress: () => {
+          setSelectedImage({}),
+          setUserData(userInformation)
+        },
       },
       {
         text: 'Yes',
@@ -193,11 +211,12 @@ useEffect(()=>{
 
 
         <Spinner 
-                visible = {isLoading}
-                textContent={'Processing...'}
-                textStyle={{ color: '#FFF' }}
-            />
-        <TouchableOpacity
+          visible = {isLoading}
+          textContent={'Processing...'}
+          textStyle={{ color: '#FFF' }}
+        />
+
+        <View
           style={{
             width: "100%",
             paddingHorizontal: 24,
@@ -205,7 +224,7 @@ useEffect(()=>{
           }}>
           <View style={{ position: "relative" }}>
             <Image
-              source={!selectedImage.ProfilePicture && !imageURI? require("../../../../assets/Profile_icon.png") : { uri: imageURI }}
+              source={!selectedImage.ProfilePicture && profilePic === "" ? require("../../../../assets/Profile_icon.png") : profilePic === "" ? require("../../../../assets/Profile_icon.png") : { uri: profilePic }}
               style={{
                 width: 127,
                 height: 127,
@@ -236,9 +255,9 @@ useEffect(()=>{
               marginBottom: 12,
             }}>
             <Text style={fontStyle.header}>{userName}</Text>
-            <Text style={fontStyle.subHeader}>Requestor</Text>
+            <Text style={fontStyle.subHeader}>Donor</Text>
           </View>
-        </TouchableOpacity>
+        </View>
 
         <View style={{ flexDirection: "row", paddingHorizontal: 16, gap: 16 }}>
           <View
@@ -411,7 +430,7 @@ const buttonStyle = StyleSheet.create({
     backgroundColor: "#E60965",
     padding: 12,
     paddingHorizontal: 32,
-    minWidth: 200,
+    minWidth: 150,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 100,
