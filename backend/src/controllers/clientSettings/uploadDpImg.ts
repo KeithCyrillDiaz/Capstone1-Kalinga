@@ -1,11 +1,14 @@
 import express from 'express'
-import { UploadFiles } from '../../helpers/GdriveUploader'
+import { UploadFiles, DeleteFiles } from '../../helpers/GdriveUploader'
 
-import { updateDonorProfilePic, updateRequestorProfilePic } from '../../models/users'
+import { updateDonorProfilePic, updateRequestorProfilePic, getDonorById, getRequestorById} from '../../models/users'
 export const addProfilePicture = async (req: express.Request, res: express.Response) => {
     try{    
+  
         console.log("files: ", req.files as any[])
         console.log("body: ", req.body)
+        console.log("test: ", req.body.ownerID)
+        console.log("Image_ID: ", req.body.Image_ID)
         const images = req.files as any[]
         if(!images){
             console.log("No Images Uploaded")
@@ -16,8 +19,31 @@ export const addProfilePicture = async (req: express.Request, res: express.Respo
                 }
             })
         }
-            console.log("Images Uploads")
+        if(!req.body.ownerID){
+            return res.json({
+                messages: {
+                    code: 1,
+                    message: "Invalid Owner"
+                }
+            })
+        }
+             if(req.body.Image_ID){
+                try {
+                    await DeleteFiles(req.body.Image_ID);
+                    console.log("Image deleted successfully");
+                  } catch (error) {
+                    console.log("Error deleting previous image:", error.message);
+                    return res.json({
+                        messages: {
+                            code: 1,
+                            message: "Error deleting previous image"
+                        }
+                    }).status(400)
+                  }
+             }
+            
 
+            console.log("Images Uploads")
             let subFolderID: string
             if (req.body.userType === "Donor") {
                 subFolderID = process.env.DONOR_PROFILE_PICTURES;
@@ -28,35 +54,44 @@ export const addProfilePicture = async (req: express.Request, res: express.Respo
             const moment = require('moment');
             const currentTime = moment();
             const formattedTime = currentTime.format('YYYY-MM-DD HH:mm:ss');
-
+               
+    
+            let result: any
+            let link: any
+            let Image_ID: any
             for (const image of images as any[]) {
-            
-                const {id, name} = await UploadFiles(image, subFolderID)
-                const link = `https://drive.google.com/thumbnail?id=${id}&sz=w1000`
-                let result: any
-                if(req.body.userType === "Donor"){
-                    result = await updateDonorProfilePic(req.body.ownerID, link)
-                } else result = await updateRequestorProfilePic(req.body.ownerID, link)
+                    // Upload a new image
+                 const { id } = await UploadFiles(image, subFolderID);
+                console.log("Prev_Image_ID: ", req.body.Image_ID)
+                console.log("id: ", id)
+                link = `https://drive.google.com/thumbnail?id=${id}&sz=w1000`
+                Image_ID = id
+              }
 
-                if(!result) {
-                    console.log("Failed to saved the Image Data")
-                    return res.json({
-                        messages: {
-                            code:1 ,
-                            message: "Failed to saved the Image Data"
-                        }
-                    }).status(400)
-                }
-                console.log("result: ", result)
-                console.log("Upload files Successfully")
+              if(req.body.userType === "Donor"){
+                result = await updateDonorProfilePic(req.body.ownerID, link, Image_ID)
+            } else result = await updateRequestorProfilePic(req.body.ownerID, link, Image_ID)
+
+            if(!result) {
+                console.log("Failed to saved the Image Data")
                 return res.json({
                     messages: {
-                        code: 0,
-                        message: "Upload files Successfully"
-                    },
-                    link
-                }).status(200)
-              }
+                        code:1 ,
+                        message: "Failed to saved the Image Data"
+                    }
+                }).status(400)
+            }
+            // console.log("result: ", result)
+            console.log("Upload files Successfully")
+
+            return res.json({
+                messages: {
+                    code: 0,
+                    message: "Upload files Successfully"
+                },
+                link,
+                Image_ID
+            }).status(200)
 
            
     }catch (error){

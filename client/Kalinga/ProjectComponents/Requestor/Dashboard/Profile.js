@@ -1,6 +1,15 @@
 //Guest Home
-import React from 'react';
-import { ScrollView,Text, View, StatusBar, StyleSheet, SafeAreaView, TouchableOpacity} from 'react-native';
+import React, { useState } from 'react';
+import { 
+  ScrollView,
+  Text, 
+  View, 
+  StatusBar, 
+  StyleSheet, 
+  SafeAreaView, 
+  TouchableOpacity,
+  Image
+} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { globalHeader } from '../../../styles_kit/globalHeader.js';
 
@@ -8,8 +17,9 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { Entypo } from "@expo/vector-icons";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const RequestorProfile = ({route}) => {
@@ -48,9 +58,34 @@ const navigatePage = (Page) => {
     return
   }
     navigation.navigate(Page); // Navigate to the Login screen
-    
-
+  
 };
+
+const [profilePic, setProfilePic] = useState("")
+    const fetchDP = async () => {
+      const DPLink = await AsyncStorage.getItem("DPLink")
+      console.log("DPLink", DPLink)
+      if(!DPLink && !userInformation.DPLink){
+        console.log("DPLink: ", DPLink)
+        console.log("userInformation.DPLink: ", userInformation.DPLink)
+        return
+      } 
+      if(!DPLink){
+        setProfilePic(userInformation.DPLink)
+        await AsyncStorage.setItem("DPLink", userInformation.DPLink)
+        console.log("userInformation.DPLink: ", userInformation.DPLink)
+      } else{
+        setProfilePic(DPLink)
+        console.log("DPLink: ", DPLink)
+      }
+     
+    } 
+
+    useFocusEffect(
+      React.useCallback(() => {
+        fetchDP(); // Fetch profile picture whenever screen comes into focus
+      }, [])
+    );
     
 
     return (
@@ -68,9 +103,25 @@ const navigatePage = (Page) => {
                 <View style={styles.container}>
                   <View style = {styles.profileContainer}>
                     <View style = {styles.row}>
-                      <View style = {styles.profilePic}>
+                    {profilePic === "" ? (
+                        <View style = {styles.profilePic}>
                         <FontAwesome name="user-circle-o" size={200} color="#E60965" />
-                      </View>
+                        </View>
+                      ) : (
+                        <Image
+                        style = {{
+                          marginRight: -30,
+                          width: 157,
+                          height: 157,
+                          borderWidth: 1,
+                          borderRadius: 100,
+                          marginBottom: 16,
+                          borderColor: "#E60965",
+                        }}
+                        source = {{uri: profilePic}}
+                        />
+                      )
+                    }
                       <View>
                         <MaterialIcons name="verified" size={24} color="#E60965" />
                       </View>

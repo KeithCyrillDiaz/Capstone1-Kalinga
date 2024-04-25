@@ -17,7 +17,7 @@ const DonorHome = ({route}) => {
 
     const userInformation = route.params.userInformation
     const token = route.params.token
-   
+
     const storeInAsync = async () => {
       await AsyncStorage.setItem('userInformation', JSON.stringify(userInformation))
       await AsyncStorage.setItem('token', token)
@@ -40,7 +40,6 @@ const DonorHome = ({route}) => {
         
 
     };
-
     return (
       <View style={[globalStyles.container, {marginTop: "-5%"}]}>
         <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
