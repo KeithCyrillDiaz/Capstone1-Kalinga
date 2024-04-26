@@ -40,10 +40,10 @@ const DonorSchema = new mongoose.Schema({
     mobileNumber: {type: String},
     homeAddress: {type: String},
     NumberPost: {type: String},
-    Badge_ID: { type: [String] },
-    Community_ID: { type: [String] },
-    Post_ID: { type: [String] },
-    BookMark_ID: { type: [String] },
+    Badge_ID: [{ type: String }],
+    Community_ID: [{ type: String }],
+    Post_ID: [{ type: String }],
+    BookMark_ID: [{ type: String }],
     userType: {type: String},
     createdAt: {type: Date, default: Date.now},
     updatedAt: {type: Date, default: Date.now},
@@ -71,10 +71,10 @@ const RequestorSchema = new mongoose.Schema({
     mobileNumber: {type: String},
     homeAddress: {type: String},
     NumberPost: {type: String},
-    Badge_ID: { type: [String] },
-    Community_ID: { type: [String] },
-    Post_ID: { type: [String] },
-    BookMark_ID: { type: [String] },
+    Badge_ID: [{ type: String }],
+    Community_ID: [{ type: String }],
+    Post_ID: [{ type: String }],
+    BookMark_ID: [{ type: String }],
     userType: {type: String},
     createdAt: {type: Date, default: Date.now},
     updatedAt: {type: Date, default: Date.now},
@@ -91,6 +91,7 @@ export const createDonor = (values: Record<string, any>) => new DonorModel(value
 export const updateDonorPassword = (Donor_ID: string, Password: string, salt: string) => DonorModel.findOneAndUpdate({Donor_ID}, { $set: { password: Password, salt: salt } }, { new: true })
 export const updateDonorDetails = (Donor_ID: string, userDetails: any) => DonorModel.findOneAndUpdate({Donor_ID}, { $set: userDetails }, { new: true })
 export const updateDonorProfilePic = (Donor_ID: string, link: string, id: string) => DonorModel.findOneAndUpdate({Donor_ID}, { $set: {DPLink: link, Image_ID: id} }, { new: true })
+
 
 export const getRequestor = () => RequestorModel.find()
 export const updateRequestorPassword=(Requestor_ID: string, Password: string, salt: string) => RequestorModel.findOneAndUpdate({Requestor_ID}, { $set: { password: Password, salt: salt } }, { new: true })
