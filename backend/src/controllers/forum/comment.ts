@@ -1,5 +1,5 @@
 import express from 'express'
-import { createComment, deleteComment, getCommentsByPost_ID } from '../../models/forum/forum'
+import { createComment, deleteComment, getCommentsByPost_ID, getPostsById} from '../../models/forum/forum'
 import randomatic from 'randomatic'
 import { getDonorById, getRequestorById } from '../../models/users'
 import mongoose from 'mongoose'
@@ -27,8 +27,18 @@ export const addForumComment = async (req: express.Request, res: express.Respons
             }).status(400)
         }
 
-        const comment_ID = randomatic('Aa0', 20);
+        const checkPosts = await getPostsById(req.body.post_ID)
+        if(!checkPosts){
+            console.log("Non Existing Posts")
+            return res.json({
+                messages: {
+                    code: 1,
+                    message: "Non Existing Posts"
+                }
+            }).status(400)
+        }
 
+        const comment_ID = randomatic('Aa0', 20);
 
         if(req.body.userType === "Donor"){
             const existingUser = await getDonorById(req.body.ownerID)
@@ -48,6 +58,8 @@ export const addForumComment = async (req: express.Request, res: express.Respons
                 RequestorOwnerID: existingUser._id,
             }
         }
+
+       
 
         const addComment = await createComment(newComment)
         
@@ -149,10 +161,18 @@ export const fetchCommentByPostID = async (req: express.Request, res: express.Re
                 }
             }).status(400)
         }
+        const checkPost = await getPostsById(req.params.post_ID)
+        if(!checkPost){
+            console.log("Non Existing Post")
+            return res.json({
+                messages: {
+                    code: 1,
+                    message: "Non Existing Post",
+                }
+            }).status(400)
+        }
 
         const fetchComment = await getCommentsByPost_ID(req.params.post_ID)
-        const firstCommentId = fetchComment[0]._id;
-        console.log("Result: ", fetchComment[0]._id)
 
         if(fetchComment.length === 0) {
             console.log("No comments available")
@@ -170,8 +190,7 @@ export const fetchCommentByPostID = async (req: express.Request, res: express.Re
                 code: 0,
                 message: "Successfully fetch Comments"
             },
-            fetchComment,
-            firstCommentId
+            fetchComment
         }).status(200)
 
     } catch(error) {
