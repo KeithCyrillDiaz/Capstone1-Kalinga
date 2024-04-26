@@ -92,6 +92,7 @@ export const updateDonorPassword = (Donor_ID: string, Password: string, salt: st
 export const updateDonorDetails = (Donor_ID: string, userDetails: any) => DonorModel.findOneAndUpdate({Donor_ID}, { $set: userDetails }, { new: true })
 export const updateDonorProfilePic = (Donor_ID: string, link: string, id: string) => DonorModel.findOneAndUpdate({Donor_ID}, { $set: {DPLink: link, Image_ID: id} }, { new: true })
 
+
 export const getRequestor = () => RequestorModel.find()
 export const updateRequestorPassword=(Requestor_ID: string, Password: string, salt: string) => RequestorModel.findOneAndUpdate({Requestor_ID}, { $set: { password: Password, salt: salt } }, { new: true })
 export const updateRequestorDetails=(Requestor_ID: string, userDetails: any) => RequestorModel.findOneAndUpdate({Requestor_ID}, { $set: userDetails }, { new: true })
