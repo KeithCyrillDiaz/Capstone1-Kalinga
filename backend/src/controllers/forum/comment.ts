@@ -1,8 +1,10 @@
 import express from 'express'
-import { createComment, deleteComment, getCommentsByPost_ID, getPostsById} from '../../models/forum/forum'
+import { createComment, deleteComment, getCommentsByPost_ID, getPostsById, updateCommentOnPost} from '../../models/forum/forum'
 import randomatic from 'randomatic'
 import { getDonorById, getRequestorById } from '../../models/users'
 import mongoose from 'mongoose'
+import moment from "moment"
+
 interface NewComment {
     post_ID: string,
     comment_ID: string,
@@ -72,13 +74,31 @@ export const addForumComment = async (req: express.Request, res: express.Respons
                 }
             }).status(400)
         }
+
+
         console.log("Result: ", addComment)
         console.log("Successfuly created comment")
+        const time = moment().toDate()
+        const updatePostComment = await updateCommentOnPost(req.body.post_ID, addComment._id, time)
+
+        if(!updatePostComment){
+            console.log("Created Comment but failed to insert comment in post")
+            return res.json({
+                messages:{
+                    code: 1,
+                    message: "Created Comment but failed to insert comment in post"
+                },
+                addComment
+            }).status(400)
+        }
+
+        console.log("updated: ", updatePostComment)
+        console.log("Successfuly created comment and inserted it on post")
 
         return res.json({
             messages: {
                 code: 0,
-                message: "Successfuly created comment"
+                message: "Successfuly created comment and inserted it on post"
             },
             addComment
         }).status(200)

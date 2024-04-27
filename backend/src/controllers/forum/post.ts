@@ -1,5 +1,5 @@
 import express from 'express'
-import { createPost, deletePost, getPosts } from '../../models/forum/forum';
+import { createPost, deletePost, getPosts, getPostsById } from '../../models/forum/forum';
 import randomatic from 'randomatic'
 import { getDonorById, getRequestorById } from '../../models/users';
 import mongoose from 'mongoose';
@@ -110,28 +110,45 @@ export const removePost = async (req: express.Request, res: express.Response) =>
                 }
             }).status(400)
         }
-
-        const removePost = await deletePost(req.params.post_ID)
-        
-        if(!removePost){
-            console.log("Failed to Delete Post")
+        const checkPost = await getPostsById(req.params.post_ID)
+        if(!checkPost){
+            console.log("Non Existing Post")
             return res.json({
                 messages: {
                     code: 1,
-                    message: "Failed to Delete Post"
+                    message: "Non Existing Post"
                 }
             }).status(400)
         }
 
-        console.log("Result: ", removePost)
-        console.log("Successfully Deleted Post")
-        return res.json({
-            messages: {
-                code: 0,
-                message: "Successfully Deleted Post"
-            },
-            removePost
-        }).status(200)
+        if(checkPost.comments_ID){
+            checkPost.comments_ID.map(commentID =>{
+                console.log("comment_ID: ",commentID)
+            })
+        }
+
+
+        // const removePost = await deletePost(req.params.post_ID)
+        
+        // if(!removePost){
+        //     console.log("Failed to Delete Post")
+        //     return res.json({
+        //         messages: {
+        //             code: 1,
+        //             message: "Failed to Delete Post"
+        //         }
+        //     }).status(400)
+        // }
+
+        // console.log("Result: ", removePost)
+        // console.log("Successfully Deleted Post")
+        // return res.json({
+        //     messages: {
+        //         code: 0,
+        //         message: "Successfully Deleted Post"
+        //     },
+        //     removePost
+        // }).status(200)
 
     } catch(error){
         console.log("Error: ", error)
