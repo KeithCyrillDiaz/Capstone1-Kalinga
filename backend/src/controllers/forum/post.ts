@@ -1,5 +1,5 @@
 import express from 'express'
-import { createPost, deletePost, getPosts, getPostsById } from '../../models/forum/forum';
+import { createPost, getPosts, getPostsById } from '../../models/forum/forum';
 import randomatic from 'randomatic'
 import { getDonorById, getRequestorById } from '../../models/users';
 import mongoose from 'mongoose';
