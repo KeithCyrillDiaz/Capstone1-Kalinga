@@ -16,7 +16,11 @@ import { getApprovedRequests } from '../controllers/Requestor/getApprovedRequest
 import { getRequestStatus} from '../controllers/Requestor/requestStatus';
 import { getOngoingDonation } from '../controllers/Donor/getOngoingDonation';
 import { updateCompleteStatus } from '../controllers/Admin/Appointment/updateCompleteStatus';
-import { getCompletedRequests} from '../controllers/Requestor/getCompletedRequest'
+import { getCompletedRequests} from '../controllers/Requestor/getCompletedRequest';
+import { getRequestStats } from '../controllers/Requestor/getRequestStats';
+import { updateDonationComplete } from '../controllers/Admin/Appointment/updateDonationComplete'
+import { getCompletedDonation } from '../controllers/Donor/getCompletedDonation';
+import { getDonorStats } from '../controllers/Donor/getDonorStats'
 
 export default (router: express.Router) => {
   
@@ -34,6 +38,7 @@ export default (router: express.Router) => {
     router.get('/kalinga/getRequestByUserType/:userType', getRequestByUserType)
 
     router.put('/kalinga/updateDonationStatus/:AppointmentDonorID', updateDonationStatus);
+    router.put('/kalinga/updateDonationComplete/:AppointmentDonorID', updateDonationComplete)
     router.put('/kalinga/updateRequestStatus/:RequestID', updateRequestStatus)
     router.put('/kalinga/updateCompleteStatus/:Requestor_ID', updateCompleteStatus)
 
@@ -41,10 +46,13 @@ export default (router: express.Router) => {
     router.get('/kalinga/getPendingRequests/:Requestor_ID', getPendingRequests);
     router.get('/kalinga/getApprovedRequests/:Requestor_ID', getApprovedRequests);
     router.get('/kalinga/getCompletedRequests/:Requestor_ID', getCompletedRequests);
+    router.get('/kalinga/getCompletedDonation/:Donor_ID', getCompletedDonation)
 
     router.get ('/kalinga/getRequestStatus', getRequestStatus)
 
     router.get('/kalinga/getOngoingDonation/:Donor_ID', getOngoingDonation)
+    router.get('/kalinga/getRequestStats/:Requestor_ID', getRequestStats)
+    router.get('/kalinga/getDonorStats/:Donor_ID', getDonorStats)
     
 
 

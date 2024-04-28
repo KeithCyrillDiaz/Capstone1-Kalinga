@@ -144,92 +144,92 @@ const RequestorRequestConfirmation = () => {
                         </View>
 
 
-      <View style={styles.boxContainer}>
-        <View style={styles.boxContentContainer}>
-          <Text style={styles.boxLabel}>Phone Number</Text>
-          <Text style={[styles.boxContent, styles.limitText]}>{formData.phoneNumber}</Text>
-        </View>
-      </View>
+                <View style={styles.boxContainer}>
+                    <View style={styles.boxContentContainer}>
+                    <Text style={styles.boxLabel}>Phone Number</Text>
+                    <Text style={[styles.boxContent, styles.limitText]}>{formData.phoneNumber}</Text>
+                    </View>
+                </View>
 
-      <View style={styles.boxContainer}>
-        <View style={styles.boxContentContainer}>
-          <Text style={styles.boxLabel}>Email Address</Text>
-          <Text style={[styles.boxContent, styles.limitText]}>{formData.emailAddress}</Text>
-        </View>
-      </View>
+                <View style={styles.boxContainer}>
+                    <View style={styles.boxContentContainer}>
+                    <Text style={styles.boxLabel}>Email Address</Text>
+                    <Text style={[styles.boxContent, styles.limitText]}>{formData.emailAddress}</Text>
+                    </View>
+                </View>
 
-      <View style={styles.boxContainer2}>
-        <View style={styles.boxContentContainer}>
-          <Text style={styles.boxLabel}>Home Address</Text>
-          <Text style={[styles.boxContent, styles.limitText]}>{formData.homeAddress}</Text>
-        </View>
-      </View>
+                <View style={styles.boxContainer2}>
+                    <View style={styles.boxContentContainer}>
+                    <Text style={styles.boxLabel}>Home Address</Text>
+                    <Text style={[styles.boxContent, styles.limitText]}>{formData.homeAddress}</Text>
+                    </View>
+                </View>
 
-      <View style={styles.boxContainer}>
-        <View style={styles.boxContentContainer}>
-          <Text style={styles.boxLabel}>Medical Condition (if applicable)</Text>
-          <Text style={[styles.boxContent, styles.limitText]}>{formData.medicalCondition}</Text>
-        </View>
-      </View>
+                <View style={styles.boxContainer}>
+                    <View style={styles.boxContentContainer}>
+                    <Text style={styles.boxLabel}>Medical Condition (if applicable)</Text>
+                    <Text style={[styles.boxContent, styles.limitText]}>{formData.medicalCondition}</Text>
+                    </View>
+                </View>
 
-      <View style={styles.bodyForm1}>
-      <TextInput
-            style={[styles.form3, { color: '#E60965' }]}
-            value={ formData.milkAmount }               
-             placeholder="Amount of milk to be requested (mL) *"
-            placeholderTextColor="#E60965"
-            editable={false}
-            />
+                <View style={styles.bodyForm1}>
+                <TextInput
+                        style={[styles.form3, { color: '#E60965' }]}
+                        value={ formData.milkAmount }               
+                        placeholder="Amount of milk to be requested (mL) *"
+                        placeholderTextColor="#E60965"
+                        editable={false}
+                        />
 
-      <View style={styles.bodyForm2}>
-          <View style={styles.form4}>
-              <Text style={styles.boxLabel}>Baby Category</Text>
-              <Text style={[styles.boxContent, styles.limitText]}>{formData.BabyCategory}</Text>
-          </View>
-      </View>
-      </View>
+                <View style={styles.bodyForm2}>
+                    <View style={styles.form4}>
+                        <Text style={styles.boxLabel}>Baby Category</Text>
+                        <Text style={[styles.boxContent, styles.limitText]}>{formData.BabyCategory}</Text>
+                    </View>
+                </View>
+                </View>
 
-      <View style={styles.boxContainer2}>
-        <View style={styles.boxContentContainer}>
-          <Text style={styles.boxLabel}>Reason for Requesting</Text>
-          <Text style={[styles.boxContent, styles.limitText]}>{formData.ReasonForRequesting}</Text>
-        </View>
-      </View>
+                <View style={styles.boxContainer2}>
+                    <View style={styles.boxContentContainer}>
+                    <Text style={styles.boxLabel}>Reason for Requesting</Text>
+                    <Text style={[styles.boxContent, styles.limitText]}>{formData.ReasonForRequesting}</Text>
+                    </View>
+                </View>
 
-      {/* <Text style={styles.bodyNote}>Note: Maximum of 3 images or files per field.</Text>
+                {/* <Text style={styles.bodyNote}>Note: Maximum of 3 images or files per field.</Text>
 
-      <View style={styles.attachmentContainer}>
-        <Text style={styles.labelPicture}>Prescription.jpg</Text>
-        <View style={styles.rowAlignment}>
-          <FontAwesome5 name="asterisk" size={12} color="#E60965" />
-          <TouchableOpacity onPress={handleImageUpload} style={styles.iconContainer}>
-            <AntDesign name="picture" size={27} color="#E60965" />
-            <Text style={styles.verticalLine}>|</Text>
-            <AntDesign name="file1" size={24} color="#E60965" />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {selectedImage && (
-        <Image source={{ uri: selectedImage }} style={styles.uploadedImage} />
-      )} */}
-                <View style={styles.AdminButton}>
-                    <TouchableOpacity onPress={() => handleApproveButtonPress(RequestID)}>
-                        <View style={styles.ApprovebuttonContainer}>
-                            <Text style={styles.label}>Approve</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleDeclineButtonPress(RequestID)}>
-                        <View style={styles.DeclinebuttonContainer}>
-                            <Text style={styles.label}>Decline</Text>
-                        </View>
+                <View style={styles.attachmentContainer}>
+                    <Text style={styles.labelPicture}>Prescription.jpg</Text>
+                    <View style={styles.rowAlignment}>
+                    <FontAwesome5 name="asterisk" size={12} color="#E60965" />
+                    <TouchableOpacity onPress={handleImageUpload} style={styles.iconContainer}>
+                        <AntDesign name="picture" size={27} color="#E60965" />
+                        <Text style={styles.verticalLine}>|</Text>
+                        <AntDesign name="file1" size={24} color="#E60965" />
                     </TouchableOpacity>
                     </View>
-                    </View>
-    </View>
-    
+                </View>
 
-  </ScrollView>
+                {selectedImage && (
+                    <Image source={{ uri: selectedImage }} style={styles.uploadedImage} />
+                )} */}
+                             {formData.RequestStatus === 'Pending' && ( // Only render buttons if DonationStatus is 'Pending'
+                        <View style={styles.AdminButton}>
+                            <TouchableOpacity onPress={() => handleApproveButtonPress(RequestID)}>
+                                <View style={styles.ApprovebuttonContainer}>
+                                    <Text style={styles.label}>Approve</Text>
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => handleDeclineButtonPress(RequestID)}>
+                                <View style={styles.DeclinebuttonContainer}>
+                                    <Text style={styles.label}>Decline</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    )}
+                </View>
+            </View>
+        </ScrollView>
 </SafeAreaView>
 );
 };

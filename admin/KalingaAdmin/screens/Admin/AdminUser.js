@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Octicons } from '@expo/vector-icons';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { Feather } from '@expo/vector-icons';
-import { globalHeader } from '../../../../client/Kalinga/styles_kit/globalHeader';
+import { globalHeader } from '../../styles_kit/globalHeader';
 import axios from 'axios';
 
 
@@ -35,7 +35,7 @@ const FirstScreen = ({}) => {
     const fetchDonorAppointments = async () => {
         try {
             setIsLoading(true);
-            const response = await axios.get('http://192.168.254.103:7000/kalinga/getAppointmentByUserType/Donor');
+            const response = await axios.get('http://192.168.254.106:7000/kalinga/getAppointmentByUserType/Donor');
             setAppointments(response.data.appointment); // Assuming the data structure has an 'appointment' key containing the array
         } catch (error) {
             console.error('Error fetching donor appointments:', error);
@@ -44,12 +44,13 @@ const FirstScreen = ({}) => {
         }
     };
 
+
     useEffect(() => {
         fetchDonorAppointments();
-    }, []);
+    },{isLoading}); // Tr // Add isLoading to the dependency array so that the effect runs when isLoading changes
+    
 
     const handleViewPress = (appointment) => {
-        console.log("id", appointment.AppointmentDonorID);
         navigation.navigate('DonorAppointmentConfirmation', { formData: appointment.AppointmentDonorID });
     };
     
@@ -62,7 +63,7 @@ const FirstScreen = ({}) => {
                     <Text>Name</Text>
                 </View>
                 <View style={styles.donorInfoContainer}>
-                    <Text>Phone Number</Text>
+                    <Text>Status</Text>
                 </View>
             </View>
             <View style={styles.lineContainer}>
@@ -75,7 +76,7 @@ const FirstScreen = ({}) => {
                         <Text>{appointment.fullName}</Text>
                     </View>
                     <View style={styles.donorInfoSecondContainer}>
-                        <Text>{appointment.phoneNumber}</Text>
+                        <Text>{appointment.DonationStatus}</Text>
                     </View>
                     <TouchableOpacity style={styles.logInButton} onPress={() => handleViewPress(appointment)}>
                         <Text style={styles.logInButtonText}>View</Text>
@@ -98,7 +99,7 @@ const SecondScreen = () => {
     const fetchMakeRequest = async () => {
         try {
             setIsLoading(true);
-            const response = await axios.get('http://192.168.254.103:7000/kalinga/getRequestByUserType/Requestor');
+            const response = await axios.get('http://192.168.254.106:7000/kalinga/getRequestByUserType/Requestor');
             setRequests(response.data.request); // Assuming the data structure has an 'appointment' key containing the array
         } catch (error) {
             console.error('Error fetching:', error);
@@ -107,9 +108,10 @@ const SecondScreen = () => {
         }
     };
 
+   
     useEffect(() => {
         fetchMakeRequest();
-    }, []);
+    },{isLoading});
 
     const handleViewPress = (request) => {
         console.log("id", request.RequestID);
@@ -124,7 +126,7 @@ const SecondScreen = () => {
                         <Text>Name</Text>
                     </View>
                     <View style={styles.RequestorInfoContainer}>
-                        <Text>Phone Number</Text>
+                        <Text>Status</Text>
                     </View>
                     <View style={styles.RequestorInfoContainer}>
                         <Text>Category</Text>
@@ -141,7 +143,7 @@ const SecondScreen = () => {
                         <Text>{request.fullName}</Text>
                     </View>
                     <View style={styles.RequestorInfoSecondContainer}>
-                        <Text>{request.phoneNumber}</Text>
+                        <Text>{request.RequestStatus}</Text>
                     </View>
                     <View style={styles.RequestorInfoSecondContainer}>
                         <Text>{request.BabyCategory}</Text>

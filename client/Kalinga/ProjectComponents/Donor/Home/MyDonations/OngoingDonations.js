@@ -25,7 +25,7 @@ const OngoingDonations = () => {
  
   const navigation = useNavigation();
   const route = useRoute();
-  const Donor_ID ='tSUnvRQj7m990c8CQcVQ';
+  const Donor_ID ='dHphY4FyVPlOCHAtCG3a';
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [formData, setFormData] = useState({

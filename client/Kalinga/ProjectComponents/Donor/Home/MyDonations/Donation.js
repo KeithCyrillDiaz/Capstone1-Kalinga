@@ -33,7 +33,7 @@ const MyDonationTabs = () => {
                             paddingVertical: 10,
                             borderWidth: 1,
                             borderColor: "#E60965",
-                            fontSize: 13,
+                            fontSize: 12,
                             borderRadius: 10,
                             backgroundColor:"#FFE5EC",
                         },
@@ -52,7 +52,7 @@ const MyDonationTabs = () => {
                         name="Pending"
                         component={Ongoing} 
                         options= {{
-                            tabBarLabel: 'Pending',
+                            tabBarLabel: 'Ongoing',
                         }}
                     />
                     <Tab.Screen

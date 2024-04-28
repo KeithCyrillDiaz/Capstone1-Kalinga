@@ -20,17 +20,9 @@ import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 const CompletedTabRequest = () => {
     const navigation = useNavigation();
     const route = useRoute();
-    const Requestor_ID ='lkeA9KriaOwOfibtQkRa';
-    const [formData, setFormData] = useState({
-        fullName: '',
-        phoneNumber: '',
-        emailAddress: '',
-        homeAddress: '',
-        medicalCondition: '',
-        milkAmount: '',
-        BabyCategory: '',
-        ReasonForRequesting: '',
-    });
+    const Requestor_ID ='LP8n21tQjcENorDCwFWl';
+	const [formDataList, setFormDataList] = useState([]);
+
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -42,14 +34,27 @@ const CompletedTabRequest = () => {
             const response = await axios.get(`http://192.168.254.106:7000/kalinga/getCompletedRequests/${Requestor_ID}`);
             const responseData = response.data;
 
-            const formDataFromResponse = responseData.RequestData[0];
-    
-            setFormData(formDataFromResponse);
+            if ('RequestData' in responseData && responseData.RequestData.length > 0) {
+                const formattedData = responseData.RequestData.map(item => ({
+                    fullName: item.fullName,
+                    phoneNumber: item.phoneNumber,
+                    emailAddress: item.emailAddress,
+                    homeAddress: item.homeAddress,
+                    medicalCondition: item.medicalCondition,
+                    milkAmount: item.milkAmount,
+                    BabyCategory: item.BabyCategory,
+                    ReasonForRequesting: item.ReasonForRequesting,
+                }));
 
-            setLoading(false); 
+                setFormDataList(formattedData);
+            } else {
+                console.log('No completed requests found for the specified Requestor_ID.');
+            }
+
+            setLoading(false);
         } catch (error) {
             console.log('Error fetching data:', error);
-            setLoading(false); 
+            setLoading(false);
         }
     };
 	
@@ -75,31 +80,23 @@ const CompletedTabRequest = () => {
 					nestedScrollEnabled={true} 
 					showsVerticalScrollIndicator={false}
 				>
-					
-
 						<View style={styles.body}>
-
-          <View style={styles.columnContainer}>
-						<View style={styles.boxColContainer}>
-								<View style={styles.boxContentContainer}>
-										<Text style={styles.boxContentBold}>Amount of milk requested: </Text>
-										<Text style={[styles.boxContent, styles.limitText]}>{formData.milkAmount}</Text>
-								</View>
-								
-								<View style={styles.boxContentContainer}>
-										<Text style={styles.boxContentBold}>Baby Category: </Text>
-										<Text style={[styles.boxContent, styles.limitText]}>{formData.BabyCategory}</Text>
-								</View>
-							</View>
-
-						
-
-        </View>
-      </View>
-
-						
-		</ScrollView>
-
+					{formDataList.map((formData, index) => (
+                    <View key={index} style={styles.columnContainer}>
+                        <View style={styles.boxColContainer}>
+                            <View style={styles.boxContentContainer}>
+                                <Text style={styles.boxContentBold}>Amount of milk requested:</Text>
+                                <Text style={[styles.boxContent, styles.limitText]}>{formData.milkAmount}</Text>
+                            </View>
+                            <View style={styles.boxContentContainer}>
+                                <Text style={styles.boxContentBold}>Baby Category:</Text>
+                                <Text style={[styles.boxContent, styles.limitText]}>{formData.BabyCategory}</Text>
+                            </View>
+                        </View>
+                    </View>
+                ))}
+				</View>
+            </ScrollView>
 	</SafeAreaView>
         
     );

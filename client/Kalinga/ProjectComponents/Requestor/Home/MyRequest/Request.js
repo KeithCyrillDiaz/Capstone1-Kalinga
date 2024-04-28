@@ -17,7 +17,7 @@ const RequestTab = () => {
         <View style={{ flex: 1 }}>
             <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
                 <View style = {globalHeader.SmallHeader}>
-                    <Text style = {globalHeader.SmallHeaderTitle}>My Donations</Text>
+                    <Text style = {globalHeader.SmallHeaderTitle}>My Request</Text>
                 </View>
 
                 <Tab.Navigator
@@ -31,11 +31,11 @@ const RequestTab = () => {
                         },
                         tabBarLabelStyle: {
                             fontFamily: "Open-Sans-Bold",
-                            paddingHorizontal: 6,
-                            paddingVertical: 15,
+                            paddingHorizontal: 10,
+                            paddingVertical: 14,
                             borderWidth: 1,
                             borderColor: "#E60965",
-                            fontSize: 12,
+                            fontSize: 15,
                             borderRadius: 10,
                             backgroundColor:"#FFE5EC",
                         },
@@ -50,13 +50,7 @@ const RequestTab = () => {
                             tabBarLabel: 'Overall' ,
                         }}
                     />
-                    <Tab.Screen 
-                        name="Pending"
-                        component={PendingTabRequest} 
-                        options= {{
-                            tabBarLabel: 'Pending',
-                        }}
-                    />
+                   
                      <Tab.Screen 
                         name="Approved"
                         component={ApprovedTabRequest} 

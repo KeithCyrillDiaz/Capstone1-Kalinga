@@ -99,7 +99,7 @@ const DonorAppointmentConfirmation = () => {
                                 DonationStatus: 'Ongoing',
                             });
                             fetchData(); // Assuming fetchData updates the data in your component
-                            navigation.navigate('AppointmentConfirm');
+                            navigation.navigate('AdminUser');
                         } catch (error) {
                             console.error('Error updating donation status:', error.response);
                         } finally {
@@ -133,7 +133,7 @@ const DonorAppointmentConfirmation = () => {
                                 DonationStatus: 'Decline',
                             });
                             fetchData(); // Assuming fetchData updates the data in your component
-                            navigation.navigate('AppointmentDecline');
+                            navigation.navigate('AdminUser');
                         } catch (error) {
                             console.error('Error updating donation status:', error.response);
                         } finally {
@@ -151,6 +151,41 @@ const DonorAppointmentConfirmation = () => {
             
         );
     };
+
+    const handleCompleteButtonPress = async () => {
+        Alert.alert(
+            'Are you sure you want to complete this appointment?',
+            'Once completed, the appointment status will be changed to Complete.',
+            [
+                
+                {
+                    text: 'Yes',
+                    onPress: async () => {
+                        try {
+                            setIsLoading(true);
+                            await axios.put(`http://192.168.254.106:7000/kalinga/updateDonationStatus/${AppointmentDonorID.formData}`, {
+                                DonationStatus: 'Complete',
+                            });
+                            fetchData(); // Assuming fetchData updates the data in your component
+                            navigation.navigate('AdminUser');
+                        } catch (error) {
+                            console.error('Error updating donation status:', error.response);
+                        } finally {
+                            setIsLoading(false);
+                        }
+                    },
+                },
+    
+                {
+                    text: 'No',
+                    style: 'cancel',
+                },
+            ],
+            { cancelable: false },
+            
+        );
+    };
+
     useEffect(() => {
         fetchData(); // Fetch data when component mounts
     }, []);
@@ -251,20 +286,30 @@ return (
                 <FontAwesome6 name="hospital" size={24} color="#E60965" style={styles.icon3} />
                 </View>
 
-                <View style={styles.AdminButton}>
-                    <TouchableOpacity onPress={() => handleApproveButtonPress(AppointmentDonorID)}>
-                        <View style={styles.ApprovebuttonContainer}>
-                            <Text style={styles.label}>Approve</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleDeclineButtonPress(AppointmentDonorID)}>
-                        <View style={styles.DeclinebuttonContainer}>
-                            <Text style={styles.label}>Decline</Text>
-                        </View>
-                    </TouchableOpacity>
-                    </View>
-                    </View>
-                )}
+                {formData.DonationStatus === 'Pending' && (
+    <View style={styles.AdminButton}>
+        <TouchableOpacity onPress={() => handleApproveButtonPress(AppointmentDonorID)}>
+            <View style={styles.ApprovebuttonContainer}>
+                <Text style={styles.label}>Approve</Text>
+            </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleDeclineButtonPress(AppointmentDonorID)}>
+            <View style={styles.DeclinebuttonContainer}>
+                <Text style={styles.label}>Decline</Text>
+            </View>
+        </TouchableOpacity>
+    </View>
+)}
+
+{formData.DonationStatus === 'Ongoing' && (
+    <TouchableOpacity onPress={() => handleCompleteButtonPress(AppointmentDonorID)}>
+        <View style={styles.CompleteButtonContainer}>
+            <Text style={styles.label}>Complete</Text>
+        </View>
+    </TouchableOpacity>
+)}
+                     </View>
+                 )}
             </ScrollView>
         </View>
     );
@@ -297,6 +342,15 @@ const styles = StyleSheet.create({
         
     },
     DeclinebuttonContainer: {
+        backgroundColor: '#E60965',
+        paddingHorizontal: 37,
+        borderRadius: 20,
+        paddingVertical: 5,
+        marginHorizontal: 10
+
+     
+    },
+    CompleteButtonContainer: {
         backgroundColor: '#E60965',
         paddingHorizontal: 37,
         borderRadius: 20,
