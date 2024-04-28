@@ -85,7 +85,6 @@ export default function SettingScreen({route}) {
     }, [])
   );
 
-
   return (
     <SafeAreaView style={bodyStyle.main}>
       <ScrollView contentContainerStyle={bodyStyle.container}>
