@@ -5,6 +5,9 @@ import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as Linking from 'expo-linking'
 
+import * as Location from 'expo-location';
+import { UserLocationContext } from './Context/UserLocationContext.js';
+
 //InitialScreenPages
 import SplashScreen from './ProjectComponents/InitialScreenPages/splashscreen';
 import Onboarding from './ProjectComponents/InitialScreenPages/Onboarding';
@@ -36,7 +39,7 @@ import DonorApproved from './ProjectComponents/Guest/Profile/ApplyDonor/DonorApp
 import GuestEducContents from './ProjectComponents/Guest/Home/EducContents.js'
 import GuestEducLibrary from './ProjectComponents/Guest/Home/EducLibrary.js'
 import InstantMess from './ProjectComponents/Guest/Home/InstantMess.js'
-import GuestExplore from './ProjectComponents/Guest/Home/Explore.js'
+import GuestExplore from './ProjectComponents/Guest/GuestDashboard/Explore/ExploreFinal.js'
 import GuestHome from './ProjectComponents/Guest/GuestDashboard/GuestHome.js'
 import GuestProfile from './ProjectComponents/Guest/GuestDashboard/GuestProfile.js'
 import ApplyAsDonorStack from './ProjectComponents/Guest/Profile/ApplyDonor/ApplyAsDonorStack.js';
@@ -189,10 +192,28 @@ export default function App() {
     }
   }
 
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+
+    })();
+  }, []);
+
   if (fontsLoaded) {
     const Stack = createStackNavigator();
     return (
-
+      <>
+        <UserLocationContext.Provider value={{ location, setLocation }}>
         <NavigationContainer
           linking={{
             prefixes: [prefixes],
@@ -365,6 +386,9 @@ export default function App() {
 
             </Stack.Navigator>
         </NavigationContainer>
+
+        </UserLocationContext.Provider>
+      </>
       
     ) 
   
