@@ -22,7 +22,7 @@ import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import { Picker } from '@react-native-picker/picker';
 import { BackHandler } from 'react-native';
-
+import { BASED_URL } from '../../../../MyConstants.js';
 
 
 const MakeRequestReceipt = ({ Requestor_ID }) => {
@@ -41,7 +41,7 @@ const MakeRequestReceipt = ({ Requestor_ID }) => {
 
     const handleRequestCreation = async () => {
       try {
-        const response = await fetch('http://192.168.254.106:7000/kalinga/createRequest', {
+        const response = await fetch(`${BASED_URL}/kalinga/createRequest`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

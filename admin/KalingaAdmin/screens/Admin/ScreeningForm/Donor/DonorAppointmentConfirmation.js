@@ -42,7 +42,7 @@ const DonorAppointmentConfirmation = () => {
     const fetchData = async () => {
         try {
             setIsLoading(true);
-            const response = await axios.get(`http://192.168.254.106:7000/kalinga/getAppointmentsByDonorID/${AppointmentDonorID.formData}`);
+            const response = await axios.get(`${BASED_URL}/kalinga/getAppointmentsByDonorID/${AppointmentDonorID.formData}`);
             console.log('API Response:', response.data);
             const data = response.data.Appointment;
             console.log('Fetched Data:', data);
@@ -95,7 +95,7 @@ const DonorAppointmentConfirmation = () => {
                     onPress: async () => {
                         try {
                             setIsLoading(true);
-                            await axios.put(`http://192.168.254.106:7000/kalinga/updateDonationStatus/${AppointmentDonorID.formData}`, {
+                            await axios.put(`${BASED_URL}/kalinga/updateDonationStatus/${AppointmentDonorID.formData}`, {
                                 DonationStatus: 'Ongoing',
                             });
                             fetchData(); // Assuming fetchData updates the data in your component
@@ -129,7 +129,7 @@ const DonorAppointmentConfirmation = () => {
                     onPress: async () => {
                         try {
                             setIsLoading(true);
-                            await axios.put(`http://192.168.254.106:7000/kalinga/updateDonationStatus/${AppointmentDonorID.formData}`, {
+                            await axios.put(`${BASED_URL}/kalinga/updateDonationStatus/${AppointmentDonorID.formData}`, {
                                 DonationStatus: 'Decline',
                             });
                             fetchData(); // Assuming fetchData updates the data in your component
@@ -163,7 +163,7 @@ const DonorAppointmentConfirmation = () => {
                     onPress: async () => {
                         try {
                             setIsLoading(true);
-                            await axios.put(`http://192.168.254.106:7000/kalinga/updateDonationStatus/${AppointmentDonorID.formData}`, {
+                            await axios.put(`${BASED_URL}/kalinga/updateDonationStatus/${AppointmentDonorID.formData}`, {
                                 DonationStatus: 'Complete',
                             });
                             fetchData(); // Assuming fetchData updates the data in your component
