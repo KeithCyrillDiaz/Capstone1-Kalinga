@@ -32,10 +32,9 @@ const ForumPage = ({route}) => {
 
   //const { width, height } = Dimensions.get('window');
 
-    const [isHeartClicked, setIsHeartClicked] = useState(false);
-    const [isCommentVisible, setIsCommentVisible] = useState(false);
+   
     const [commentTexts, setCommentTexts] = useState({});
-    const [comments, setComments] = useState([{}]);
+    const [comments, setComments] = useState([]);
     const [posts, setPosts] = useState([])
     const [postContent, setPostContent] = useState('')
     const [comment, setComment] = useState("")
@@ -148,7 +147,6 @@ const ForumPage = ({route}) => {
          fetchPost(); // Fetch profile picture whenever screen comes into focus
          fetchAsyncData();
          fetchDP();
-         console.log(comments)
         }, [])
       );
 
@@ -289,8 +287,8 @@ const ForumPage = ({route}) => {
                             {item.comments_ID && item.comments_ID.map((comment, index) => (
                                 <View style ={{marginTop: 10}} key={index}>
                                     <View style={styles.flex_start}>
-                                        { !comment.DonorOwnerID && !comment.DonorOwnerID.DPLink
-                                            && !comment.RequestorOwnerID && !comment.RequestorOwnerID.DPLink
+                                        { (!comment.DonorOwnerID || !comment.DonorOwnerID.DPLink)
+                                            && (!comment.RequestorOwnerID || !comment.RequestorOwnerID.DPLink)
                                             ?<FontAwesome name="user-circle-o" size={40} color="#E60965" />
                                             : comment.DonorOwnerID && comment.DonorOwnerID.DPLink 
                                             ?  <Image
