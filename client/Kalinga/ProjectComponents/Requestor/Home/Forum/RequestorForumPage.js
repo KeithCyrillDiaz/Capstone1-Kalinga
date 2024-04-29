@@ -1,19 +1,18 @@
 //Guest EducLibrary
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { 
   ScrollView, 
   Text, 
   View, 
-  SafeAreaView, 
   StatusBar,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   FlatList,
   Image,
-  Modal
+  Modal,
+  Alert
 } from 'react-native';
-import { globalStyles } from "../../../../styles_kit/globalStyles.js";
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { FontAwesome } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -24,6 +23,7 @@ import axios from 'axios'
 import { BASED_URL } from "../../../../MyConstants.js";
 import { useFocusEffect } from '@react-navigation/native'
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Spinner from "react-native-loading-spinner-overlay";
 
 const ForumPage = ({route}) => {
 
@@ -31,9 +31,8 @@ const ForumPage = ({route}) => {
 
   //const { width, height } = Dimensions.get('window');
 
-    const [isHeartClicked, setIsHeartClicked] = useState(false);
-    const [isCommentVisible, setIsCommentVisible] = useState(false);
-    const [commentText, setCommentText] = useState('');
+   
+    const [commentTexts, setCommentTexts] = useState({});
     const [comments, setComments] = useState([]);
     const [posts, setPosts] = useState([])
     const [postContent, setPostContent] = useState('')
@@ -42,6 +41,9 @@ const ForumPage = ({route}) => {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [likedPosts, setLikedPosts] = useState([]);
     const [openComments, setOpenComments] = useState({});
+    const [totalPosts, setTotalPosts] = useState(0);
+    const [loadedPosts, setLoadedPosts] = useState(0);
+    const [isLoading, setIsLoading] = useState(false)
 
     const fetchDP = async () => {
       const DPLink = await AsyncStorage.getItem("DPLink")
@@ -83,30 +85,43 @@ const ForumPage = ({route}) => {
         }
     };
 
-    
-    const handleCommentChange = (text) => {
-        setCommentText(text);
-        setComment(text)
-    };
-
-    
     const handleAddPost = async () => {
-        const userType = userInformation.userType ;
-        const owner_ID = userType === "Donor" ? userInformation.Donor_ID : userInformation.Requestor_ID;
-        const result = await axios.post(`${BASED_URL}/kalinga/addPost`,{
-            ownerID: owner_ID,
-            content: postContent,
-            userType: userType
-        })
-
-        setIsModalOpen(false)
+        try{
+            setIsLoading(true)
+            const userType = userInformation.userType ;
+            const owner_ID = userType === "Donor" ? userInformation.Donor_ID : userInformation.Requestor_ID;
+            const result = await axios.post(`${BASED_URL}/kalinga/addPost`,{
+                ownerID: owner_ID,
+                content: postContent,
+                userType: userType
+            })
+            setIsModalOpen(false)
+            fetchPost();
+        } catch(error) {
+            if(error)Alert.alert('Network error', `Please check your internet connection`)
+            else
+            Alert.alert('Something went wrong', "Please try again later")
+        } finally {
+            setIsLoading(false)
+        }
+        
     }
 
-    const handleAddComment = async (post_ID) => {
-        if(comment === "") return
-        if (commentText.trim() !== '') {
-            setComments([...comments, commentText]);
-            setCommentText('');
+    const handleCommentChange = (text, post_ID) => {
+        setCommentTexts((prevCommentTexts) => ({
+            ...prevCommentTexts,
+            [post_ID]: text, // Update the comment text for the specified post ID
+        }));
+        setComment(text)
+    };
+    
+    const handleAddComment = async (post_ID, content) => {
+        console.log("content: ", content)
+        if(comment === "" || (content === ""|| !content)) return
+        if (content.trim() !== '') {
+            const newComment = {post_ID: post_ID, content: content};
+            setComments(prevComments => [...prevComments, newComment]);
+            setCommentTexts('');
         }
         console.log(post_ID)
         console.log(comment)
@@ -125,7 +140,6 @@ const ForumPage = ({route}) => {
         }
     };
 
-    const FirstParagraph = 'Im looking for some advice on how to properly store breast milk. Any tips or suggestions would be greatly appreciated!'
     const fetchAsyncData = async () => {
         const stringifyUserInformation = await AsyncStorage.getItem("userInformation")
         if(!stringifyUserInformation){
@@ -134,25 +148,58 @@ const ForumPage = ({route}) => {
     }
     
     const fetchPost = async () => {
-        const response = await axios.get(`${BASED_URL}/kalinga/getPosts`)
-        const posts = response.data.posts
-        setPosts(posts)
+        try{
+            setIsLoading(true)
+            const response = await axios.get(`${BASED_URL}/kalinga/getPosts`)
+            const posts = response.data.posts
+            setPosts(posts)
+            setTotalPosts(posts.length)
+            setLoadedPosts(posts.length)
+        } catch(error) {
+            if(error)Alert.alert('Network error', `Please check your internet connection`)
+            else
+            Alert.alert('Something went wrong', "Please try again later")
+        } finally {
+            setIsLoading(false)
+        }
+       
     }
 
+    const handleScrollRefresh = (event) => {
+        const { layoutMeasurement, contentSize, contentOffset } = event.nativeEvent;
+
+  // Calculate the maximum scrollable offset
+        const maxOffset = contentSize.height - layoutMeasurement.height;
+
+        // If the user has reached the bottom, trigger refresh
+        if (contentOffset.y >= maxOffset) {
+            console.log("Refresh");
+            setComments([]);
+            fetchPost();
+            fetchAsyncData();
+        }
+      };
+      
     useFocusEffect(
         React.useCallback(() => {
          fetchPost(); // Fetch profile picture whenever screen comes into focus
          fetchAsyncData();
          fetchDP();
+         console.log("comments: ", comments)
         }, [])
       );
 
   return (
-      <SafeAreaView style = {globalStyles.SafeArea}>
+        <View 
+            style={{ flex: 1}} 
+            behavior={Platform.OS === "ios" ? "padding" : "height"} // Adjust behavior based on platform
+            keyboardVerticalOffset={Platform.OS === "ios" ? 0 : -150} // Adjust vertical offset if needed
+        >
           <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style = {globalHeader.SmallHeader}>
               <Text style = {globalHeader.SmallHeaderTitle}>Forum</Text>
             </View>
+            
             <View style = {styles.ForumContainer}>
                 { profilePic === "" 
                     ?<FontAwesome name="user-circle-o" size={40} color="#E60965" />
@@ -180,38 +227,23 @@ const ForumPage = ({route}) => {
                 <MaterialIcons onPress={() => setIsModalOpen(true)} name="post-add" size={50} color="#E60965" />
                 </TouchableOpacity>
               
-              </View>
-
-            
+            </View>
             <FlatList
             overScrollMode="never"
-            style = {{
-                flex: 1,
-                height: "100%",
-                paddingVertical: "5%",
-            }}
+            onScroll={handleScrollRefresh} 
+            scrollEventThrottle={16}
+            // style = {{backgroundColor: "yellow", }}
             data={posts}
             renderItem={({ item }) => (
                 <>
-                <View style = {[styles.Box]}>
-                    <View style = {styles.flex_start}>
-                        { ((!item.DonorOwnerID || !item.DonorOwnerID.DPLink) &&
-                             (!item.RequestorOwnerID || !item.RequestorOwnerID.DPLink))
-                            ?<FontAwesome name="user-circle-o" size={40} color="#E60965" />
-                            : item.DonorOwnerID && item.DonorOwnerID.DPLink 
-                            ?  <Image
-                                source = {{uri: item.DonorOwnerID.DPLink}}
-                                style = {{
-                                    width: 45,
-                                    height: 45,
-                                    borderWidth: 1,
-                                    borderRadius: 100,
-                                    borderColor: "#E60965",
-                                }} 
-                            />
-                            : item.RequestorOwnerID && item.RequestorOwnerID.DPLink 
-                            && <Image
-                                    source = {{uri: item.RequestorOwnerID.DPLink}}
+                    <View style = {[styles.Box]}>
+                        <View style = {styles.flex_start}>
+                            { ((!item.DonorOwnerID || !item.DonorOwnerID.DPLink) &&
+                                (!item.RequestorOwnerID || !item.RequestorOwnerID.DPLink))
+                                ?<FontAwesome name="user-circle-o" size={40} color="#E60965" />
+                                : item.DonorOwnerID && item.DonorOwnerID.DPLink 
+                                ?  <Image
+                                    source = {{uri: item.DonorOwnerID.DPLink}}
                                     style = {{
                                         width: 45,
                                         height: 45,
@@ -220,89 +252,87 @@ const ForumPage = ({route}) => {
                                         borderColor: "#E60965",
                                     }} 
                                 />
-                            }
-                            <View>
-                                <Text style = {styles.Name}>
-                                        {
-                                           item.DonorOwnerID && item.DonorOwnerID.userName
-                                           ? item.DonorOwnerID.userName 
-                                           : item.RequestorOwnerID && item.RequestorOwnerID.userName  
-                                        }
-                                </Text>
-                              
-                                <View style = {styles.flex_Row}>
-                                    <MaterialIcons name="verified" size={14} color="#E60965"/>
-                                    <Text style = {styles.UserType}>
-                                        {
-                                           item.DonorOwnerID && item.DonorOwnerID.userType
-                                           ? item.DonorOwnerID.userType
-                                           : item.RequestorOwnerID && item.RequestorOwnerID.userType   
-                                        }
+                                : item.RequestorOwnerID && item.RequestorOwnerID.DPLink 
+                                && <Image
+                                        source = {{uri: item.RequestorOwnerID.DPLink}}
+                                        style = {{
+                                            width: 45,
+                                            height: 45,
+                                            borderWidth: 1,
+                                            borderRadius: 100,
+                                            borderColor: "#E60965",
+                                        }} 
+                                    />
+                                }
+                                <View>
+                                    <Text style = {styles.Name}>
+                                            {
+                                            item.DonorOwnerID && item.DonorOwnerID.userName
+                                            ? item.DonorOwnerID.userName 
+                                            : item.RequestorOwnerID && item.RequestorOwnerID.userName  
+                                            }
                                     </Text>
+                                
+                                    <View style = {styles.flex_Row}>
+                                        <MaterialIcons name="verified" size={14} color="#E60965"/>
+                                        <Text style = {styles.UserType}>
+                                            {
+                                            item.DonorOwnerID && item.DonorOwnerID.userType
+                                            ? item.DonorOwnerID.userType
+                                            : item.RequestorOwnerID && item.RequestorOwnerID.userType   
+                                            }
+                                        </Text>
+                                    </View>
                                 </View>
-                            </View>
-                            
+                                
+                        </View>
+                                <Text style = {[styles.postContent]}>
+                                    {item.content}
+                                </Text>
                     </View>
-                            <Text style = {[styles.postContent]}>
-                                {item.content}
-                            </Text>
-                </View>
-                <View style = {{
-                    flexDirection: "row",
-                    marginHorizontal: "6%",
-                    alignItems: "center",
-                    justifyContent: "space-evenly"
-                    }}>
-                    <View style={styles.reactionContainer}>
-                        <View style = {styles.reactionLeftBox}>
-                            <TouchableOpacity>
-                            <AntDesign name={likedPosts.includes(item.post_ID) ? "heart" : "hearto"} size={24} color="#E60965" onPress={() => handleHeartClick(item.post_ID)} />
-                            </TouchableOpacity>
-                            <Text style = {styles.ReactsLeftLabel}>
-                                Love
-                            </Text>
+                    <View style = {{
+                        flexDirection: "row",
+                        marginHorizontal: "6%",
+                        alignItems: "center",
+                        justifyContent: "space-evenly"
+                        }}>
+                        <View style={styles.reactionContainer}>
+                            <View style = {styles.reactionLeftBox}>
+                                <TouchableOpacity>
+                                <AntDesign name={likedPosts.includes(item.post_ID) ? "heart" : "hearto"} size={24} color="#E60965" onPress={() => handleHeartClick(item.post_ID)} />
+                                </TouchableOpacity>
+                                <Text style = {styles.ReactsLeftLabel}>
+                                    Love
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={styles.reactionContainer}>
+                            <View style = {styles.reactionRightBox}>
+                                <TouchableOpacity onPress={() => handleCommentClick(item.post_ID)}>
+                                    <Feather name="message-circle" size={24} color="#E60965" />
+                                </TouchableOpacity>
+                                <Text style={styles.ReactsLabel}>Comments</Text>
+                            </View> 
                         </View>
                     </View>
-                    <View style={styles.reactionContainer}>
-                        <View style = {styles.reactionRightBox}>
-                            <TouchableOpacity onPress={() => handleCommentClick(item.post_ID)}>
-                                <Feather name="message-circle" size={24} color="#E60965" />
-                            </TouchableOpacity>
-                            <Text style={styles.ReactsLabel}>Comments</Text>
-                        </View> 
-                    </View>
-                </View>
-                <ScrollView 
-                style = {{
-                    flex: 1, 
-                    paddingBottom: "5%",
-                    marginBottom: 20
-                }}
-                overScrollMode="never"
-                >
-                    {openComments[item.post_ID] && (
-                    <>
-                    <View style = {styles.commentOutputBox}>
-                        {item.comments_ID && item.comments_ID.map((comment, index) => (
-                            <View style ={{marginTop: 10}} key={index}>
-                                <View style={styles.flex_start}>
-                                    { !comment.DonorOwnerID && !comment.DonorOwnerID.DPLink
-                                        && !comment.RequestorOwnerID && !comment.RequestorOwnerID.DPLink
-                                        ?<FontAwesome name="user-circle-o" size={40} color="#E60965" />
-                                        : comment.DonorOwnerID && comment.DonorOwnerID.DPLink 
-                                        ?  <Image
-                                            source = {{uri: comment.DonorOwnerID.DPLink}}
-                                            style = {{
-                                                width: 45,
-                                                height: 45,
-                                                borderWidth: 1,
-                                                borderRadius: 100,
-                                                borderColor: "#E60965",
-                                            }} 
-                                        />
-                                        : comment.RequestorOwnerID && comment.RequestorOwnerID.DPLink 
-                                        && <Image
-                                                source = {{uri: comment.RequestorOwnerID.DPLink}}
+                    <ScrollView
+                    style = {{ 
+                        flex: 1,
+                        marginBottom: 20,  
+                    }}
+                    >
+                        {openComments[item.post_ID] && (
+                        <>
+                        <View style = {styles.commentOutputBox}>
+                            {item.comments_ID && item.comments_ID.map((comment, index) => (
+                                <View style ={{marginTop: 10}} key={index}>
+                                    <View style={styles.flex_start}>
+                                        { (!comment.DonorOwnerID || !comment.DonorOwnerID.DPLink)
+                                            && (!comment.RequestorOwnerID || !comment.RequestorOwnerID.DPLink)
+                                            ?<FontAwesome name="user-circle-o" size={40} color="#E60965" />
+                                            : comment.DonorOwnerID && comment.DonorOwnerID.DPLink 
+                                            ?  <Image
+                                                source = {{uri: comment.DonorOwnerID.DPLink}}
                                                 style = {{
                                                     width: 45,
                                                     height: 45,
@@ -311,98 +341,112 @@ const ForumPage = ({route}) => {
                                                     borderColor: "#E60965",
                                                 }} 
                                             />
-                                    }
-                                    <View>
-                                        <Text style={styles.Name}>
-                                            {
-                                                comment.DonorOwnerID && comment.DonorOwnerID.userName
-                                                ? comment.DonorOwnerID.userName 
-                                                : comment.RequestorOwnerID && comment.RequestorOwnerID.userName  
-                                            }
-
-                                        </Text>
-                                        <View style={styles.flex_Row}>
-                                            <MaterialIcons name="verified" size={14} color="#E60965" />
-                                            <Text style={styles.UserType}>
+                                            : comment.RequestorOwnerID && comment.RequestorOwnerID.DPLink 
+                                            && <Image
+                                                    source = {{uri: comment.RequestorOwnerID.DPLink}}
+                                                    style = {{
+                                                        width: 45,
+                                                        height: 45,
+                                                        borderWidth: 1,
+                                                        borderRadius: 100,
+                                                        borderColor: "#E60965",
+                                                    }} 
+                                                />
+                                        }
+                                        <View>
+                                            <Text style={styles.Name}>
                                                 {
-                                                    comment.DonorOwnerID && comment.DonorOwnerID.userType
-                                                    ? comment.DonorOwnerID.userType
-                                                    : comment.RequestorOwnerID && comment.RequestorOwnerID.userType
+                                                    comment.DonorOwnerID && comment.DonorOwnerID.userName
+                                                    ? comment.DonorOwnerID.userName 
+                                                    : comment.RequestorOwnerID && comment.RequestorOwnerID.userName  
                                                 }
+
                                             </Text>
-                                        </View>
-                                        <View>
-                                            <Text style={styles.commentInput}>{comment.content}</Text>
-                                        </View>
-                                    </View>
-                                </View>
-                            </View>
-                        ))}
-                        
-                            {comments.map((comment, index) => (
-                                <View key={index}>
-                                    
-                                    <View style = {styles.flex_start}>
-                                        {!userInformation.DPLink 
-                                        ? <FontAwesome name="user-circle-o" size={40} color="#E60965" />
-                                        : <Image
-                                            source = {{uri: userInformation.DPLink}}
-                                            style = {{
-                                                width: 45,
-                                                height: 45,
-                                                borderWidth: 1,
-                                                borderRadius: 100,
-                                                borderColor: "#E60965",
-                                            }} 
-                                           />
-                                    }
-                                        
-                                        <View>
-                                            <Text style = {styles.Name}>
-                                                    {userInformation.userName}
-                                            </Text>
-                                        
-                                            <View style = {styles.flex_Row}>
-                                                <MaterialIcons name="verified" size={14} color="#E60965"/>
-                                                <Text style = {styles.UserType}>
-                                                    {userInformation.userType}
+                                            <View style={styles.flex_Row}>
+                                                <MaterialIcons name="verified" size={14} color="#E60965" />
+                                                <Text style={styles.UserType}>
+                                                    {
+                                                        comment.DonorOwnerID && comment.DonorOwnerID.userType
+                                                        ? comment.DonorOwnerID.userType
+                                                        : comment.RequestorOwnerID && comment.RequestorOwnerID.userType
+                                                    }
                                                 </Text>
                                             </View>
                                             <View>
-                                                <Text style={styles.commentInput}>
-                                                        {comment}
-                                                </Text>
+                                                <Text style={styles.commentInput}>{comment.content}</Text>
                                             </View>
                                         </View>
-                                        
                                     </View>
-
-                                    
+                                </View>
+                                ))}
+                            
+                            {comments
+                                .filter(comment => comment.post_ID === item.post_ID) // Filter comments for the current post
+                                .map((comment, index) => (
+                                <View key={index}>
+                                    <View style={styles.flex_start}>
+                                        {!userInformation.DPLink ? (
+                                            <FontAwesome name="user-circle-o" size={40} color="#E60965" />
+                                        ) : (
+                                            <Image
+                                                source={{ uri: userInformation.DPLink }}
+                                                style={{
+                                                    width: 45,
+                                                    height: 45,
+                                                    borderWidth: 1,
+                                                    borderRadius: 100,
+                                                    borderColor: "#E60965",
+                                                }}
+                                            />
+                                        )}
+                                        <View>
+                                            <Text style={styles.Name}>{userInformation.userName}</Text>
+                                            <View style={styles.flex_Row}>
+                                                <MaterialIcons name="verified" size={14} color="#E60965" />
+                                                <Text style={styles.UserType}>{userInformation.userType}</Text>
+                                            </View>
+                                            <View>
+                                                <Text style={styles.commentInput}>{comment.content}</Text>
+                                            </View>
+                                        </View>
+                                    </View>
                                 </View>
                             ))}
-                        </View>
-                        <View style = {styles.Row}>
-                            <View style = {styles.commentContainer}>
-                                <TextInput
-                                    style={styles.commentInput}
-                                    placeholder="Write a comment..."
-                                    placeholderTextColor="#E60965"
-                                    onChangeText={(text) => handleCommentChange(text)}
-                                    value={commentText}
-
-                                />
-                            
                             </View>
-                            <TouchableOpacity disabled={comment === ""} onPress={() => handleAddComment( item.post_ID)}>
-                                <Ionicons name="send" size={24} color="#E60965" />
-                            </TouchableOpacity>
-                        </View>
-                    </>
-  )} 
+                            <View style = {styles.Row}>
+                                <View style = {styles.commentContainer}>
+                                    <TextInput
+                                        style={styles.commentInput}
+                                        placeholder="Write a comment..."
+                                        placeholderTextColor="#E60965"
+                                        onChangeText={(text) => handleCommentChange(text, item.post_ID)}
+                                        value={commentTexts[item.post_ID] || ''} // Use the comment text for the current post ID
+
+                                    />
+                                
+                                </View>
+                                <TouchableOpacity disabled={comment === ""} onPress={() => handleAddComment( item.post_ID, comment)}>
+                                    <Ionicons name="send" size={24} color="#E60965" />
+                                </TouchableOpacity>
+                            </View>
+                        </>
+                    )} 
                     </ScrollView>
                 </>
               )}
               keyExtractor={item => item._id}
+              ListFooterComponent={
+                totalPosts === loadedPosts ? (
+                    <View style={{ paddingVertical: "10%", alignItems: 'center', marginBottom: 10}}>
+                        <Text>No more posts</Text>
+                    </View>
+                ) : null
+            }
+            />
+             <Spinner
+              visible={isLoading}
+              textContent={'Loading...'}
+              textStyle={{ color: '#FFF' }}
             />
 
             <Modal 
@@ -492,7 +536,7 @@ const ForumPage = ({route}) => {
                 </View>
             </Modal>
             
-      </SafeAreaView>
+      </View >
 
       
 
@@ -540,6 +584,7 @@ const ForumPage = ({route}) => {
       borderBlockColor: "#FFACC7",
       //maxWidth: "90%"
       marginHorizontal: "6%",
+      marginBottom: 20,
     },
     modalBox: {
         marginHorizontal: "6%",
@@ -603,7 +648,6 @@ const ForumPage = ({route}) => {
         color: "#E60965",
         fontSize: 15,
         fontFamily: "Open-Sans-Regular",
-        marginTop: 10,
         marginLeft: 7,
     },
     commentOutputBox: {
