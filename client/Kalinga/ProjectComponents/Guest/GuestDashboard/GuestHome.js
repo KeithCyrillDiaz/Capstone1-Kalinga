@@ -26,7 +26,7 @@ export default function GuestHome({ onPress }) {
           
     
       <View style={styles.rowContainer}>
-        <TouchableOpacity onPress={() => navigatePage("GuestTabsExploreAndMilkBank")} style={styles.rowButton}>
+        <TouchableOpacity onPress={() => navigatePage("Guest Explore")} style={styles.rowButton}>
           <View style={styles.buttonRowContainer}>
             <MaterialIcons name="location-on" size={100} color="#E60965"/>
             <Text style={styles.button_H1}>Milk Bank Locator</Text>

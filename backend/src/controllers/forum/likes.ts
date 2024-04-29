@@ -1,8 +1,7 @@
 import express from 'express'
 import { getPostsById, updateRequestorLikes, updateDonorLikes, removeDonorLikes, removeRequestorLikes, getCommentById, updateCommentDonorLikes, updateCommentRequestorLikes, removeCommentDonorLikes, removeCommentRequestorLikes } from '../../models/forum/forum'
-import { getDonor, getDonorById, getRequestorById } from '../../models/users'
+import { getDonorById, getRequestorById } from '../../models/users'
 import moment from 'moment'
-import { posix } from 'path'
 export const updatePostLikes = async (req: express.Request, res: express.Response) => {
     try{
 

@@ -41,15 +41,39 @@ export const registerUserOrSetNewPassword = async (req: express.Request, res: ex
             })
         }
 
-        const salt = random();
-        // console.log("salt",salt)
+        let nameArray =  existingUser.fullName.split(' ').filter(name => name.trim() !== '')
+        let UserName;
+       
         console.log("Applicant_ID: ", Applicant_ID)
+
+        if(!existingUser.fullName.includes(',') && !existingUser.fullName.includes('.')){
+            UserName = nameArray[0] + ' ' + nameArray[nameArray.length - 1];
+            // console.log("Name: ", UserName)
+          }
+          else if (nameArray[0].endsWith(',')) {
+            UserName = nameArray[1] + ' ' + nameArray[0].replace(',', '');
+            // console.log("Name: ", UserName)
+          } else if(nameArray[1].endsWith(',')){
+              UserName = nameArray[2] + ' ' + nameArray[0] + ' ' + nameArray[1].replace(',', '');
+              // console.log("Name: ", UserName);
+          }
+            else if(nameArray[nameArray.length - 2].endsWith('.')) {
+            
+            UserName = nameArray[0] + ' ' + nameArray[nameArray.length - 1] ;
+            // console.log("Name: ", UserName)
+          } else if(nameArray[nameArray.length - 3].endsWith('.')){
+            UserName = nameArray[0] + ' ' + nameArray[nameArray.length - 2] + ' ' + nameArray[nameArray.length - 1] ;
+            // console.log("Name: ", UserName)
+          } 
+
+        const salt = random();
+  
         const newDonor = {
             fullName: existingUser.fullName,
             password: passEncryption(salt, req.body.password),
             email: existingUser.email,
             Donor_ID: existingUser.Applicant_ID,
-            userName: existingUser.email,
+            userName: UserName,
             age: existingUser.Age,
             birthDate: existingUser.birthDate,
             mobileNumber: existingUser.contactNumber,
@@ -66,7 +90,7 @@ export const registerUserOrSetNewPassword = async (req: express.Request, res: ex
             password: passEncryption(salt, req.body.password),
             email: existingUser.email,
             Requestor_ID: existingUser.Applicant_ID,
-            userName: existingUser.email,
+            userName: UserName,
             age: existingUser.Age,
             birthDate: existingUser.birthDate,
             mobileNumber: existingUser.contactNumber,

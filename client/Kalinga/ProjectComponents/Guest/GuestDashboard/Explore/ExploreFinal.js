@@ -1,30 +1,47 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, StatusBar, Text, TextInput } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, StyleSheet, StatusBar, Text, TextInput, TouchableOpacity } from 'react-native';
 import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import MapContainer from './map.js';
 import { FontAwesome5 } from '@expo/vector-icons';
+import * as Location from 'expo-location';
 
 const GuestExplore = () => {
+  
 
   const [search, setSearch] = useState('');
+  const [initialLocation, setInitialLocation] = useState(null);
+
+  useEffect(() => {
+    const fetchInitialLocation = async () => {
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          console.error('Permission to access location was denied');
+          return;
+        }
+
+        const location = await Location.getCurrentPositionAsync({});
+        setInitialLocation({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude
+        });
+      } catch (error) {
+        console.error('Error fetching initial location:', error);
+      }
+    };
+
+   
+
+    fetchInitialLocation();
+  }, []);
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
-      <View style={styles.smallHeader}>
+      <View style={globalHeader.SmallHeader}>
         <Text style={globalHeader.SmallHeaderTitle}>Explore</Text>
       </View>
-      <View style={styles.searchBox}>
-        <FontAwesome5 name="search" size={20} color="#E60965" style={styles.icon} />
-        <TextInput
-          style={styles.input}
-          value={search}
-          onChangeText={setSearch}
-          placeholder="Search..."
-          placeholderTextColor="#E60965"
-        />
-      </View>
-      <MapContainer/>
+      <MapContainer initialLocation={initialLocation} />
     </View>
   );
 };
@@ -55,7 +72,7 @@ const styles = StyleSheet.create({
     marginHorizontal: "7%",
     borderWidth: 1,
     borderColor: "#E60965",
-    borderRadius: 20,
+    borderRadius: 15,
   },
   input: {
     flex: 1,
@@ -66,7 +83,7 @@ const styles = StyleSheet.create({
     color: "#E60965",
   },
   icon: {
-    marginLeft: 10
+    marginRight: 10
   },
 });
 

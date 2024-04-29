@@ -121,34 +121,27 @@ export const removePost = async (req: express.Request, res: express.Response) =>
             }).status(400)
         }
 
-        if(checkPost.comments_ID){
-            checkPost.comments_ID.map(commentID =>{
-                console.log("comment_ID: ",commentID)
-            })
+        const removePost = await deletePost(req.params.post_ID)
+        
+        if(!removePost){
+            console.log("Failed to Delete Post")
+            return res.json({
+                messages: {
+                    code: 1,
+                    message: "Failed to Delete Post"
+                }
+            }).status(400)
         }
 
-
-        // const removePost = await deletePost(req.params.post_ID)
-        
-        // if(!removePost){
-        //     console.log("Failed to Delete Post")
-        //     return res.json({
-        //         messages: {
-        //             code: 1,
-        //             message: "Failed to Delete Post"
-        //         }
-        //     }).status(400)
-        // }
-
-        // console.log("Result: ", removePost)
-        // console.log("Successfully Deleted Post")
-        // return res.json({
-        //     messages: {
-        //         code: 0,
-        //         message: "Successfully Deleted Post"
-        //     },
-        //     removePost
-        // }).status(200)
+        console.log("Result: ", removePost)
+        console.log("Successfully Deleted Post")
+        return res.json({
+            messages: {
+                code: 0,
+                message: "Successfully Deleted Post"
+            },
+            removePost
+        }).status(200)
 
     } catch(error){
         console.log("Error: ", error)
@@ -165,8 +158,8 @@ export const removePost = async (req: express.Request, res: express.Response) =>
 
 export const fetchposts = async (req: express.Request, res: express.Response) => {
     try {   
-        const fetchPosts = await getPosts()
-        if (!fetchPosts) {
+        const posts = await getPosts()
+        if (!posts) {
             console.log("Error fetching posts")
             return res.json({
                 messages: {
@@ -175,14 +168,14 @@ export const fetchposts = async (req: express.Request, res: express.Response) =>
                 }
             }).status(400)
         }
-        console.log("Results: ", fetchPosts)
+        console.log("Results: ", posts)
         console.log("Successfully fetch posts")
         return res.json({
             messages:{
                 code: 0,
                 message: "Successfully fetch posts"
             },
-            fetchPosts
+            posts
            
         }).status(200)
 
