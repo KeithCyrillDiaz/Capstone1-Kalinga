@@ -7,7 +7,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import { useNavigation } from '@react-navigation/native';
-
+import { BASED_URL } from '../../../../MyConstants.js';
 
 
 
@@ -25,7 +25,7 @@ const MyRequestScreen = () => {
     const fetchUserData = async () => {
       try {
         // Make an API call to fetch data from the backend
-        const response = await axios.get(`http://192.168.254.106:7000/kalinga/getRequestStats/${Requestor_ID}`);
+        const response = await axios.get(`${BASED_URL}/kalinga/getRequestStats/${Requestor_ID}`);
         const { totalMilkRequested, completedRequestsCount } = response.data;
         setTotalMilkRequested(totalMilkRequested);
         setCompletedRequests(completedRequestsCount);

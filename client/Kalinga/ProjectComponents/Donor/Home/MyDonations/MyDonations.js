@@ -5,6 +5,7 @@ import { SafeAreaView, Text, View,ScrollView, StatusBar, StyleSheet, TouchableOp
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { BASED_URL } from '../../../../MyConstants.js';
 import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import { useNavigation } from '@react-navigation/native';
 import { PDFDocument, PDFText, PDFPage } from 'react-native-pdf-lib';
@@ -26,7 +27,7 @@ const MyDonation = () => {
     const fetchUserData = async () => {
       try {
         // Make an API call to fetch data from the backend
-        const response = await axios.get(`http://192.168.254.106:7000/kalinga/getDonorStats/${Donor_ID}`);
+        const response = await axios.get(`${BASED_URL}/kalinga/getDonorStats/${Donor_ID}`);
         const { totalMilkRequested, completedRequestsCount } = response.data;
         setTotalMilkRequested(totalMilkRequested);
         setCompletedRequests(completedRequestsCount);

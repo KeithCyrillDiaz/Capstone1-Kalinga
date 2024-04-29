@@ -10,7 +10,7 @@
     import { FontAwesome6 } from '@expo/vector-icons';
     import randomatic from 'randomatic';
     import { format } from 'date-fns';
-
+    import { BASED_URL } from '../../../../MyConstants.js';
 
 
     const AppointmentConfirmation = () => {
@@ -24,7 +24,7 @@
       
         const handleAppointmentCreation = async () => {
             try {
-              const response = await fetch('http://192.168.254.106:7000/kalinga/createAppointment',
+              const response = await fetch(`${BASED_URL}/kalinga/createAppointment`,
                {
                 method: 'POST',
                 headers: {

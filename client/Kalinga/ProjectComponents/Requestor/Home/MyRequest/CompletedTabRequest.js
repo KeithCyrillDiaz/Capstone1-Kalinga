@@ -16,6 +16,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
+import { BASED_URL } from '../../../../MyConstants.js';
 
 const CompletedTabRequest = () => {
     const navigation = useNavigation();
@@ -31,7 +32,7 @@ const CompletedTabRequest = () => {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get(`http://192.168.254.106:7000/kalinga/getCompletedRequests/${Requestor_ID}`);
+            const response = await axios.get(`${BASED_URL}/kalinga/getCompletedRequests/${Requestor_ID}`);
             const responseData = response.data;
 
             if ('RequestData' in responseData && responseData.RequestData.length > 0) {
