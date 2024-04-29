@@ -1,5 +1,5 @@
 //Guest EducLibrary
-import React, { useState, useEffect }from 'react';
+import React from "react";
 import { 
   ScrollView, 
   Text, 
@@ -16,40 +16,24 @@ import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { Octicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';  
 import { useNavigation } from '@react-navigation/native';
-import { BackHandler } from 'react-native';
 
 
-const AppointmentConfirmationMessage = () => {
+const AppointmentConfirm = () => {
 
-    const TitleParagraph = 'Thank You!'
 
-    const FirstParagraph = 'We’ll confirm your milk donation through your contact details.'
+    const FirstParagraph = 'The appointment has been successfully approved, and the user will receive a notification about its status.'
     const navigation = useNavigation();
 
     const navigatePage = (Page) => {
       navigation.navigate(Page); // Navigate to the Login screen
     }
-
-         
-useEffect(() => {
-  const backAction = () => {
-    navigation.navigate('Donor Tabs'); // Navigate to AdminMenu screen on back button press
-    return true; // Prevent default back button behavior (e.g., app exit)
-  };
-
-  const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
-
-  return () => backHandler.remove(); // Cleanup the event listener on component unmount
-}, []);
-
-
     
   return (
 
       <SafeAreaView style = {styles.SafeArea}>
           <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style = {globalHeader.SmallHeader}>
-              <Text style = {globalHeader.SmallHeaderTitle}>My Donation</Text>
+              <Text style = {globalHeader.SmallHeaderTitle}>Set Appointment</Text>
             </View>
           <ScrollView 
             style = {globalStyles.ScrollView}
@@ -62,8 +46,6 @@ useEffect(() => {
                 <MaterialCommunityIcons name="check-decagram" size={200} color="#E60965" /></View>
               
                 <View style = {styles.labelContainer}>
-                <Text style = {styles.messTitle}>{TitleParagraph}</Text>
-
                  <Text style = {styles.mess}>{FirstParagraph}</Text>
                 </View>
               </View>
@@ -72,7 +54,7 @@ useEffect(() => {
 
               <View style = {globalStyles.center}>
                 <Pressable>
-                <TouchableOpacity style={[styles.AgreebuttonContainer]}onPress={() => navigatePage("Donor Tabs")}>
+                <TouchableOpacity style={[styles.AgreebuttonContainer]}onPress={() => navigatePage("AdminMenu")}>
                   <Text style={styles.label}>Done</Text>
                 </TouchableOpacity>
                 </Pressable>
@@ -169,6 +151,6 @@ useEffect(() => {
 
   })
 
-  export default AppointmentConfirmationMessage;
+  export default AppointmentConfirm;
 
   

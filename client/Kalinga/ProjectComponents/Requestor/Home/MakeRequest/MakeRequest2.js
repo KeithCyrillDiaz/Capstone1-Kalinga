@@ -1,5 +1,5 @@
 //Guest EducLibrary
-import React from "react";
+import React, { useState, useEffect }from 'react';
 import { 
   ScrollView, 
   Text, 
@@ -16,6 +16,7 @@ import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { Octicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';  
 import { useNavigation } from '@react-navigation/native';
+import { BackHandler } from 'react-native';
 
 
 const MakeRequest2 = () => {
@@ -28,6 +29,19 @@ const MakeRequest2 = () => {
     const navigatePage = (Page) => {
       navigation.navigate(Page); // Navigate to the Login screen
     }
+
+    
+useEffect(() => {
+  const backAction = () => {
+    navigation.navigate('Requestor Tabs'); // Navigate to AdminMenu screen on back button press
+    return true; // Prevent default back button behavior (e.g., app exit)
+  };
+
+  const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+  return () => backHandler.remove(); // Cleanup the event listener on component unmount
+}, []);
+
   return (
 
       <SafeAreaView style = {styles.SafeArea}>

@@ -1,12 +1,17 @@
 import React, { useState, useEffect} from 'react';
 import { ScrollView, Text, View, StatusBar, StyleSheet, TouchableOpacity, Image, Alert, TextInput, SafeAreaView } from 'react-native';
 import { globalHeader } from '../../../../styles_kit/globalHeader.js';
+import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import axios from 'axios'; // Import axios
 import { BASED_URL } from '../../../../MyConstants.js';
 
 const RequestorRequestConfirmation = () => {
     const route = useRoute();
     const RequestID = route.params;
+    const navigation = useNavigation();
+    const [isLoading, setIsLoading] = useState(false); // Add this line to define isLoading state
+
+
 
     const [formData, setFormData] = useState({
         fullName: '',
@@ -21,7 +26,7 @@ const RequestorRequestConfirmation = () => {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get(`${BASED_URL}/kalinga/getRequestByID/${RequestID.formData}`);
+            const response = await axios.get(`http://192.168.254.106:7000/kalinga/getRequestByID/${RequestID.formData}`);
             const data = response.data.Request;
             
             // Log fetched data and update formData state
@@ -31,6 +36,75 @@ const RequestorRequestConfirmation = () => {
             console.error('Error fetching data:', error);
         }
     };
+    
+    const handleApproveButtonPress = async () => {
+      Alert.alert(
+        'Are you sure you want to approve this request?',
+        'Once approved, the request process will proceed.',
+        [
+            
+            {
+                text: 'Yes',
+                onPress: async () => {
+                    try {
+                        setIsLoading(true);
+                        await axios.put(`http://192.168.254.106:7000/kalinga/updateRequestStatus/${RequestID.formData}`, {
+                          RequestStatus: 'Approved',
+                        });
+                        fetchData(); // Assuming fetchData updates the data in your component
+                        navigation.navigate('RequestConfirm');
+                    } catch (error) {
+                        console.error('Error updating donation status:', error.response);
+                    } finally {
+                        setIsLoading(false);
+                    }
+                },
+            },
+
+            {
+                text: 'No',
+                style: 'cancel',
+            },
+        ],
+        { cancelable: false },
+        
+    );
+};
+    
+    const handleDeclineButtonPress = async () => {
+      Alert.alert(
+        'Are you sure you want to decline this request?',
+        'Once declined, the request process will not proceed.',
+        [
+            
+            {
+                text: 'Yes',
+                onPress: async () => {
+                    try {
+                        setIsLoading(true);
+                        await axios.put(`http://192.168.254.106:7000/kalinga/updateRequestStatus/${RequestID.formData}`, {
+                          RequestStatus: 'Decline',
+                        });
+                        fetchData(); // Assuming fetchData updates the data in your component
+                        navigation.navigate('RequestDecline');
+                    } catch (error) {
+                        console.error('Error updating donation status:', error.response);
+                    } finally {
+                        setIsLoading(false);
+                    }
+                },
+            },
+
+            {
+                text: 'No',
+                style: 'cancel',
+            },
+        ],
+        { cancelable: false },
+        
+    );
+};
+    
 
     useEffect(() => {
         fetchData();
@@ -66,92 +140,92 @@ const RequestorRequestConfirmation = () => {
                         </View>
 
 
-      <View style={styles.boxContainer}>
-        <View style={styles.boxContentContainer}>
-          <Text style={styles.boxLabel}>Phone Number</Text>
-          <Text style={[styles.boxContent, styles.limitText]}>{formData.phoneNumber}</Text>
-        </View>
-      </View>
+                <View style={styles.boxContainer}>
+                    <View style={styles.boxContentContainer}>
+                    <Text style={styles.boxLabel}>Phone Number</Text>
+                    <Text style={[styles.boxContent, styles.limitText]}>{formData.phoneNumber}</Text>
+                    </View>
+                </View>
 
-      <View style={styles.boxContainer}>
-        <View style={styles.boxContentContainer}>
-          <Text style={styles.boxLabel}>Email Address</Text>
-          <Text style={[styles.boxContent, styles.limitText]}>{formData.emailAddress}</Text>
-        </View>
-      </View>
+                <View style={styles.boxContainer}>
+                    <View style={styles.boxContentContainer}>
+                    <Text style={styles.boxLabel}>Email Address</Text>
+                    <Text style={[styles.boxContent, styles.limitText]}>{formData.emailAddress}</Text>
+                    </View>
+                </View>
 
-      <View style={styles.boxContainer2}>
-        <View style={styles.boxContentContainer}>
-          <Text style={styles.boxLabel}>Home Address</Text>
-          <Text style={[styles.boxContent, styles.limitText]}>{formData.homeAddress}</Text>
-        </View>
-      </View>
+                <View style={styles.boxContainer2}>
+                    <View style={styles.boxContentContainer}>
+                    <Text style={styles.boxLabel}>Home Address</Text>
+                    <Text style={[styles.boxContent, styles.limitText]}>{formData.homeAddress}</Text>
+                    </View>
+                </View>
 
-      <View style={styles.boxContainer}>
-        <View style={styles.boxContentContainer}>
-          <Text style={styles.boxLabel}>Medical Condition (if applicable)</Text>
-          <Text style={[styles.boxContent, styles.limitText]}>{formData.medicalCondition}</Text>
-        </View>
-      </View>
+                <View style={styles.boxContainer}>
+                    <View style={styles.boxContentContainer}>
+                    <Text style={styles.boxLabel}>Medical Condition (if applicable)</Text>
+                    <Text style={[styles.boxContent, styles.limitText]}>{formData.medicalCondition}</Text>
+                    </View>
+                </View>
 
-      <View style={styles.bodyForm1}>
-      <TextInput
-            style={[styles.form3, { color: '#E60965' }]}
-            value={ formData.milkAmount }               
-             placeholder="Amount of milk to be requested (mL) *"
-            placeholderTextColor="#E60965"
-            editable={false}
-            />
+                <View style={styles.bodyForm1}>
+                <TextInput
+                        style={[styles.form3, { color: '#E60965' }]}
+                        value={ formData.milkAmount }               
+                        placeholder="Amount of milk to be requested (mL) *"
+                        placeholderTextColor="#E60965"
+                        editable={false}
+                        />
 
-      <View style={styles.bodyForm2}>
-          <View style={styles.form4}>
-              <Text style={styles.boxLabel}>Baby Category</Text>
-              <Text style={[styles.boxContent, styles.limitText]}>{formData.BabyCategory}</Text>
-          </View>
-      </View>
-      </View>
+                <View style={styles.bodyForm2}>
+                    <View style={styles.form4}>
+                        <Text style={styles.boxLabel}>Baby Category</Text>
+                        <Text style={[styles.boxContent, styles.limitText]}>{formData.BabyCategory}</Text>
+                    </View>
+                </View>
+                </View>
 
-      <View style={styles.boxContainer2}>
-        <View style={styles.boxContentContainer}>
-          <Text style={styles.boxLabel}>Reason for Requesting</Text>
-          <Text style={[styles.boxContent, styles.limitText]}>{formData.ReasonForRequesting}</Text>
-        </View>
-      </View>
+                <View style={styles.boxContainer2}>
+                    <View style={styles.boxContentContainer}>
+                    <Text style={styles.boxLabel}>Reason for Requesting</Text>
+                    <Text style={[styles.boxContent, styles.limitText]}>{formData.ReasonForRequesting}</Text>
+                    </View>
+                </View>
 
-      {/* <Text style={styles.bodyNote}>Note: Maximum of 3 images or files per field.</Text>
+                {/* <Text style={styles.bodyNote}>Note: Maximum of 3 images or files per field.</Text>
 
-      <View style={styles.attachmentContainer}>
-        <Text style={styles.labelPicture}>Prescription.jpg</Text>
-        <View style={styles.rowAlignment}>
-          <FontAwesome5 name="asterisk" size={12} color="#E60965" />
-          <TouchableOpacity onPress={handleImageUpload} style={styles.iconContainer}>
-            <AntDesign name="picture" size={27} color="#E60965" />
-            <Text style={styles.verticalLine}>|</Text>
-            <AntDesign name="file1" size={24} color="#E60965" />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {selectedImage && (
-        <Image source={{ uri: selectedImage }} style={styles.uploadedImage} />
-      )} */}
-                <View style={styles.AdminButton}>
-                    <TouchableOpacity onPress={() => navigatePage("DonorInitialScreeningFormPage2")}>
-                        <View style={styles.ApprovebuttonContainer}>
-                            <Text style={styles.label}>Approve</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigatePage("DonorInitialScreeningFormPage2")}>
-                        <View style={styles.DeclinebuttonContainer}>
-                            <Text style={styles.label}>Decline</Text>
-                        </View>
+                <View style={styles.attachmentContainer}>
+                    <Text style={styles.labelPicture}>Prescription.jpg</Text>
+                    <View style={styles.rowAlignment}>
+                    <FontAwesome5 name="asterisk" size={12} color="#E60965" />
+                    <TouchableOpacity onPress={handleImageUpload} style={styles.iconContainer}>
+                        <AntDesign name="picture" size={27} color="#E60965" />
+                        <Text style={styles.verticalLine}>|</Text>
+                        <AntDesign name="file1" size={24} color="#E60965" />
                     </TouchableOpacity>
                     </View>
-                    </View>
-    </View>
-    
+                </View>
 
-  </ScrollView>
+                {selectedImage && (
+                    <Image source={{ uri: selectedImage }} style={styles.uploadedImage} />
+                )} */}
+                             {formData.RequestStatus === 'Pending' && ( // Only render buttons if DonationStatus is 'Pending'
+                        <View style={styles.AdminButton}>
+                            <TouchableOpacity onPress={() => handleApproveButtonPress(RequestID)}>
+                                <View style={styles.ApprovebuttonContainer}>
+                                    <Text style={styles.label}>Approve</Text>
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => handleDeclineButtonPress(RequestID)}>
+                                <View style={styles.DeclinebuttonContainer}>
+                                    <Text style={styles.label}>Decline</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    )}
+                </View>
+            </View>
+        </ScrollView>
 </SafeAreaView>
 );
 };

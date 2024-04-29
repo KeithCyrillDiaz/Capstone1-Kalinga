@@ -1,8 +1,19 @@
-import React from 'react';
-import { SafeAreaView, Text, View,ScrollView, StatusBar, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import { SafeAreaView, Text, View,ScrollView, StatusBar, StyleSheet, TouchableOpacity, Image, ActivityIndicator, TextInput} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import axios from 'axios'; // Import axios for API requests
+import { format } from 'date-fns';
 
+
+import { MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
+
+import { globalHeader } from '../../../../styles_kit/globalHeader.js';
+import { globalStyles } from '../../../../styles_kit/globalStyles.js';
+
+import Tabs from './MyDonationsTabs.js';
 
 
 
@@ -10,39 +21,81 @@ const Tab = createBottomTabNavigator()
 
 
 
-const CompletedDonations = () => {
+const CompleteDonations = () => {
  
-
   const navigation = useNavigation();
-const navigatePage = (Page) => {
-  navigation.navigate(Page); // Navigate to the Login screen
+  const route = useRoute();
+  const Donor_ID ='tSUnvRQj7m990c8CQcVQ';
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedTime, setSelectedTime] = useState(new Date());
+  const [formData, setFormData] = useState([]); 
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+      fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+        const response = await axios.get(`http://192.168.254.106:7000/kalinga/getCompletedDonation/${Donor_ID}`);
+        const responseData = response.data;
+
+        if ('DonorData' in responseData && responseData.DonorData.length > 0) {
+            const formattedData = responseData.DonorData.map(item => ({
+                milkAmount: item.milkAmount,
+                location: item.location,
+                selectedDate: format(new Date(item.selectedDate), 'EEE MMM dd yyyy HH:mm:ss'),
+                selectedTime: format(new Date(item.selectedTime), 'EEE MMM dd yyyy HH:mm:ss'),
+            }));
+
+            setFormData(formattedData);
+        } else {
+            console.log('No completed donations found for the specified Donor_ID.');
+        }
+
+        setLoading(false);
+    } catch (error) {
+        console.log('Error fetching data:', error);
+        setLoading(false);
+    }
+
+
   
 
 };
     return (
              <SafeAreaView style = {styles.container}>
-                  {/* <View style={styles.headerButton}>
-                      <Text style = {styles.Tabbutton}>Overall</Text>
-                      <Text style = {styles.Tabbutton}>Ongoing</Text>
-                      <Text style = {styles.indicatedButton}>Completed</Text>
-                  </View> */}
+                <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
+              
                 <ScrollView
                  overScrollMode='never'
                  nestedScrollEnabled={true}
                 
                 >
-                    
-            <View>
-                <Image
-                source={require('../../../../assets/Kalinga_Logo.png')} 
-                style={styles.img}
-                 />
-                  </View>
-                <View style = {styles.OngoingTextContainer}>
-                    <Text style = {styles.OngoingText}>Any previous transaction will appear here</Text>
+            <View style={styles.columnContainer}>
+            {formData.map((data, index) => (
+                    <View key={index} style={styles.columnContainer}>
+                        <View style={styles.boxColContainer}>
+                            <View style={styles.boxContentContainer}>
+                                <Text style={styles.boxContentBold}>Amount of milk requested:</Text>
+                                <Text style={[styles.boxContent, styles.limitText]}>{data.milkAmount}</Text>
+                            </View>
+                            <View style={styles.boxContentContainer}>
+                                <Text style={styles.boxContentBold}>Milk Bank:</Text>
+                                <Text style={[styles.boxContent, styles.limitText]}>{data.location}</Text>
+                            </View>
+                            <View style={styles.boxContentContainer}>
+                                <Text style={styles.boxContentBold}>Time and Date:</Text>
+                                <Text style={[styles.boxContent, styles.limitText]}>
+                                    {data.selectedDate}
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
+                ))}
                 </View>
-                      
-                </ScrollView>
+            </ScrollView>
         
             </SafeAreaView>
         
@@ -185,6 +238,38 @@ const styles = StyleSheet.create ({
 		fontSize: 18,
     textAlign: "center"
 	},
+
+  boxColContainer: {
+		alignSelf:"center",
+		width: 350,
+		height: 130,
+		backgroundColor: "#FFE5EC",
+		marginTop: 15,
+		borderRadius: 18,
+		justifyContent: 'center',
+		elevation: 3,
+	},
+
+	boxContentContainer: {
+		flexDirection: 'row', // Arrange children horizontally
+		padding: 5,
+		marginLeft: 20,
+		marginTop: 3,
+		marginRight:5,
+	},
+
+	boxContentBold: {
+		fontFamily: "OpenSans-Regular",
+		fontWeight: 'bold',
+		color: '#E60965',
+		fontSize: 17,
+	},
+
+	boxContent: {
+		fontFamily: "OpenSans-Regular",
+		color: '#E60965',
+		fontSize: 15,
+	},
 });
 
-export default CompletedDonations;
+export default CompleteDonations;

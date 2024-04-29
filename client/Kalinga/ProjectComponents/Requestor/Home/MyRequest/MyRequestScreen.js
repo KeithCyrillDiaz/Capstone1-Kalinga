@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import {NavigationContainer} from '@react-navigation/native';
 import { SafeAreaView, Text, View,ScrollView, StatusBar, StyleSheet, TouchableOpacity} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
@@ -15,34 +16,38 @@ const Tab = createBottomTabNavigator()
 
 
 const MyRequestScreen = () => {
-    const navigation = useNavigation();
-    
-    const navigatePage = (Page) => {
-        navigation.navigate(Page); // Navigate to the Login screen
+  const [totalMilkRequested, setTotalMilkRequested] = useState(0);
+  const [completedRequests, setCompletedRequests] = useState(0);
+  const Requestor_ID ='LP8n21tQjcENorDCwFWl';
+
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        // Make an API call to fetch data from the backend
+        const response = await axios.get(`http://192.168.254.106:7000/kalinga/getRequestStats/${Requestor_ID}`);
+        const { totalMilkRequested, completedRequestsCount } = response.data;
+        setTotalMilkRequested(totalMilkRequested);
+        setCompletedRequests(completedRequestsCount);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
     };
+
+    fetchUserData();
+  }, []);
+
+  
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
-      <View style={globalHeader.SmallHeader}>
-        <Text style={globalHeader.SmallHeaderTitle}>My Requests</Text>
-      </View>
-
+     
       <ScrollView
         overScrollMode='never'
         nestedScrollEnabled={true}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.headerButton}>
-          <TouchableOpacity onPress={() => navigatePage("PendingTabRequest")}>
-            <Text style={styles.indicatedButton}>Pending</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigatePage("ApprovedTabRequest")}>
-            <Text style={styles.approvedButton}>Approved</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigatePage("CompletedTabRequest")}>
-            <Text style={styles.completedButton}>Completed</Text>
-          </TouchableOpacity>
-        </View>
+        
 
         <View style={styles.contentContainer}>
           <View style={styles.boxContainer}>
@@ -50,7 +55,7 @@ const MyRequestScreen = () => {
               <MaterialIcons name="local-drink" size={150} color="#E60965" />
               <View style={styles.textContainer}>
                 <Text style={styles.upperText}>You Have Requested a total of</Text>
-                <Text style={styles.lowerText}>50 mL</Text>
+                <Text style={styles.lowerText}>{totalMilkRequested} mL</Text>
               </View>
             </View>
           </View>
@@ -60,7 +65,7 @@ const MyRequestScreen = () => {
               <FontAwesome5 name="hand-holding-water" size={100} color="#E60965" />
               <View style={styles.textContainer}>
                 <Text style={styles.upperText}>You have completed</Text>
-                <Text style={styles.lowerText}>5</Text>
+                <Text style={styles.lowerText}>{completedRequests}</Text>
                 <Text style={styles.upperText}>Requests</Text>
               </View>
             </View>
