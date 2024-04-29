@@ -13,23 +13,26 @@ import DonorInitialScreeningFormPage4 from './screens/Admin/ScreeningForm/Donor/
 import AdminApprovedDonor from './screens/Admin/ScreeningForm/Donor/AdminApprovedDonor.js'
 import AdminDeclinedDonor from './screens/Admin/ScreeningForm/Donor/AdminDeclinedDonor.js'
 
-import LoginAdmin from './screens/Admin/LoginAdmin';
-import AdminMenu from './screens/Admin/AdminMenu';
+import LoginAdmin from '../../admin/KalingaAdmin/screens/Admin/LoginAdmin.js';
+import AdminMenu from '../../admin/KalingaAdmin/screens/Admin/AdminMenu.js';
 //import Header from './screens/Admin/header';
-import AdminDashboard from './screens/Admin/AdminDashboard';
-import AdminUser from './screens/Admin/AdminUser';
+import AdminDashboard from '../../admin/KalingaAdmin/screens/Admin/AdminDashboard.js';
+import AdminUser from '../../admin/KalingaAdmin/screens/Admin/AdminUser.js';
 import AdminMilkbanks from './screens/Admin/AdminMilkbanks';
 import DonorUserVerification from './screens/Admin/ScreeningForm/Donor/DonorUserVerification.js'; 
 import DonorUploadAdmin from './screens/Admin/ScreeningForm/Donor/DonorUploadAdmin.js';   //<Stack.Screen name="RequestorVerification" component={RequestorVerification} />
 //import RequestorVerification from './screens/Admin/RequestorVerification'; 
-import DonorAppointmentConfirmation from './screens/Admin/ScreeningForm/Donor/DonorAppointmentConfirmation.js';
+import DonorAppointmentConfirmation from '../../admin/KalingaAdmin/screens/Admin/ScreeningForm/Donor/DonorAppointmentConfirmation.js';
 import RequestorRequestConfirmation from './screens/Admin/ScreeningForm/Requestor/RequestorRequestConfirmation.js'
 
 import RequestorInitialScreeningFormPage1 from './screens/Admin/ScreeningForm/Requestor/RequestorInitialScreeningFormPage1.js'
 import RequestorUserVerification from './screens/Admin/ScreeningForm/Requestor/RequestorUserVerification.js';   //<Stack.Screen name="RequestorVerification" component={RequestorVerification} />
 import AdminApprovedRequestor from './screens/Admin/ScreeningForm/Requestor/AdminApprovedRequestor.js'
 import AdminDeclinedRequestor from './screens/Admin/ScreeningForm/Requestor/AdminDeclinedRequestor.js'
-
+import AppointmentConfirm from './screens/Admin/ScreeningForm/Donor/AppointmentConfirm.js'
+import RequestConfirm from './screens/Admin/ScreeningForm/Requestor/RequestConfirm.js';
+import AppointmentDecline from './screens/Admin/ScreeningForm/Donor/AppointmentDecline.js';
+import RequestDecline from './screens/Admin/ScreeningForm/Requestor/RequestDecline.js';
 
 const getFonts = async () => {
   await Font.loadAsync({
@@ -83,6 +86,10 @@ export default function App() {
              <Stack.Screen name="DonorAppointmentConfirmation" component={DonorAppointmentConfirmation} />
              <Stack.Screen name="AdminApprovedDonor" component={AdminApprovedDonor}/>
              <Stack.Screen name="AdminDeclinedDonor" component={AdminDeclinedDonor}/>
+             <Stack.Screen name="AppointmentConfirm" component={AppointmentConfirm}/>
+             <Stack.Screen name="AppointmentDecline" component={AppointmentDecline}/>
+
+
 
 
 
@@ -91,6 +98,12 @@ export default function App() {
              <Stack.Screen name="RequestorUserVerification" component={RequestorUserVerification} />
              <Stack.Screen name="AdminApprovedRequestor" component={AdminApprovedRequestor}/>
              <Stack.Screen name="AdminDeclinedRequestor" component={AdminDeclinedRequestor}/>
+             <Stack.Screen name="MedicalHistory" component={MedicalHistory}/>
+             <Stack.Screen name="RequestConfirm" component={RequestConfirm}/>
+             <Stack.Screen name="RequestDecline" component={RequestDecline}/>
+
+
+
       
 
 

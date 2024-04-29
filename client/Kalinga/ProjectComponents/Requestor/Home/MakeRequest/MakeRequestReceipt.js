@@ -1,4 +1,4 @@
-import React, { useState }from 'react';
+import React, { useState, useEffect }from 'react';
 import { 
 	SafeAreaView, 
 	Text, 
@@ -21,60 +21,34 @@ import { AntDesign } from '@expo/vector-icons';
 import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import { Picker } from '@react-native-picker/picker';
+import { BackHandler } from 'react-native';
 
 
 
-const MakeRequestReceipt = () => {
+const MakeRequestReceipt = ({ Requestor_ID }) => {
   const navigation = useNavigation();
   const route = useRoute();
-const { formData, BabyCategory } = route.params;
-console.log('BabyCategory value:', BabyCategory);
-
-
-
+  const { formData, BabyCategory } = route.params;
 
 
   // State to track selected image and input value
   const [selectedImage, setSelectedImage] = useState(null);
   const [inputValue, setInputValue] = useState('');
 
-
-  const handleApprove = async () => {
-      try {
-          const response = await fetch('192.168.254.105:7000/kalinga/createRequest', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(formData), // Assuming formData has the required fields
-          });
-
-          if (response.ok) {
-              // Request successful, navigate or show success message
-              navigation.navigate('SuccessScreen');
-          } else {
-              // Handle error response from server
-              Alert.alert('Error', 'Failed to create request. Please try again.');
-          }
-      } catch (error) {
-          // Handle network or other errors
-          Alert.alert('Error', 'Failed to connect to the server. Please check your internet connection.');
-      }
-  };
-
   const handleImageUpload = async () => {
       // Code for handling image upload
   };
 
-  const handleRequestCreation = async () => {
-    try {
-      const response = await fetch('http://192.168.254.103:7000/kalinga/createRequest', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+    const handleRequestCreation = async () => {
+      try {
+        const response = await fetch('http://192.168.254.106:7000/kalinga/createRequest', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+          
+        });
 
       if (!response.ok) {
         throw new Error('Network response was not ok.');
@@ -85,6 +59,21 @@ console.log('BabyCategory value:', BabyCategory);
       console.error('Error creating appointment:', error);
     }
   };
+
+      
+useEffect(() => {
+  const backAction = () => {
+    navigation.navigate('Requestor Tabs'); // Navigate to AdminMenu screen on back button press
+    return true; // Prevent default back button behavior (e.g., app exit)
+  };
+
+  const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+  return () => backHandler.remove(); // Cleanup the event listener on component unmount
+}, []);
+
+
+  
     return (
 			<SafeAreaView style = {styles.container}>
 				<StatusBar barStyle="dark-content" translucent backgroundColor="white" />

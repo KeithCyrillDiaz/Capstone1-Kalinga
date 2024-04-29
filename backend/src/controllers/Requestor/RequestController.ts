@@ -5,7 +5,9 @@ import RequestModel from '../../models/Requestor/RequestorRequestModel';
 const createRequest = async (req: Request, res: Response): Promise<void> => {
   try {
     const {
+      Requestor_ID,
       userType,
+      RequestStatus,
       fullName,
       phoneNumber,
       emailAddress,
@@ -17,7 +19,9 @@ const createRequest = async (req: Request, res: Response): Promise<void> => {
     } = req.body;
 
     const newRequest = await RequestModel.create({
+      Requestor_ID,
       userType,
+      RequestStatus,
       fullName,
       phoneNumber,
       emailAddress,
