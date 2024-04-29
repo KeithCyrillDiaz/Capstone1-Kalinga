@@ -36,7 +36,7 @@ const DonorHome = ({route}) => {
     const navigation = useNavigation();
     
     const navigatePage = (Page) => {
-        navigation.navigate(Page); // Navigate to the Login screen
+        navigation.navigate(Page, {data: userInformation}); // Navigate to the Login screen
         
 
     };
@@ -86,7 +86,7 @@ const DonorHome = ({route}) => {
                   </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("DonorForum")}>
+                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("DonorForum", userInformation)}>
                 <MaterialIcons name="forum" size={70} color="#E60965" />
                   <View style = {styles.LabelCenter}>
                     <Text style = {styles.Label}>Forum</Text>

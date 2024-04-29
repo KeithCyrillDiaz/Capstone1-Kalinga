@@ -37,7 +37,7 @@ export default function RequestorHome({route}) {
     const navigation = useNavigation();
     
     const navigatePage = (Page) => {
-        navigation.navigate(Page); // Navigate to the Login screen
+        navigation.navigate(Page, {data: userInformation}); // Navigate to the Login screen
         
 
     };
