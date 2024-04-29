@@ -26,7 +26,7 @@ const RequestorRequestConfirmation = () => {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get(`http://192.168.254.106:7000/kalinga/getRequestByID/${RequestID.formData}`);
+            const response = await axios.get(`${BASED_URL}/kalinga/getRequestByID/${RequestID.formData}`);
             const data = response.data.Request;
             
             // Log fetched data and update formData state
@@ -48,7 +48,7 @@ const RequestorRequestConfirmation = () => {
                 onPress: async () => {
                     try {
                         setIsLoading(true);
-                        await axios.put(`http://192.168.254.106:7000/kalinga/updateRequestStatus/${RequestID.formData}`, {
+                        await axios.put(`${BASED_URL}/kalinga/updateRequestStatus/${RequestID.formData}`, {
                           RequestStatus: 'Approved',
                         });
                         fetchData(); // Assuming fetchData updates the data in your component
@@ -82,7 +82,7 @@ const RequestorRequestConfirmation = () => {
                 onPress: async () => {
                     try {
                         setIsLoading(true);
-                        await axios.put(`http://192.168.254.106:7000/kalinga/updateRequestStatus/${RequestID.formData}`, {
+                        await axios.put(`${BASED_URL}/kalinga/updateRequestStatus/${RequestID.formData}`, {
                           RequestStatus: 'Decline',
                         });
                         fetchData(); // Assuming fetchData updates the data in your component

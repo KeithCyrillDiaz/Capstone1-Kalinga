@@ -19,6 +19,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
+import { BASED_URL } from '../../../../MyConstants.js';
  
 
 const ApprovedTabRequest = () => {
@@ -43,7 +44,7 @@ const ApprovedTabRequest = () => {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get(`http://192.168.254.106:7000/kalinga/getApprovedRequests/${Requestor_ID}`);
+            const response = await axios.get(`${BASED_URL}/kalinga/getApprovedRequests/${Requestor_ID}`);
             const responseData = response.data;
 
             const formDataFromResponse = responseData.RequestData[0];
@@ -71,7 +72,7 @@ const ApprovedTabRequest = () => {
 			  onPress: async () => {
 				try {
 					
-					await axios.put(`http://192.168.254.106:7000/kalinga/updateCompleteStatus/${Requestor_ID}`, {
+					await axios.put(`${BASED_URL}/kalinga/updateCompleteStatus/${Requestor_ID}`, {
 					RequestStatus: 'Complete',
 				  });
 				  Alert.alert('Success', 'Request status updated to Complete');
