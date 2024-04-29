@@ -25,17 +25,40 @@ const SetAppointment = () => {
   const { AppointmentDonorID } = route.params || {};
 
   const Appointment_DonorID = randomatic('Aa0', 20);
+  const Donor_ID = randomatic('Aa0', 20);
+
 
   const [formData, setFormData] = useState({
     AppointmentDonorID: Appointment_DonorID,
+    Donor_ID: Donor_ID,
     userType: "Donor",
+    DonationStatus: "Ongoing",
     fullName: '',
     phoneNumber: '',
     emailAddress: '',
     homeAddress: '',
     medicalCondition: '',
     milkAmount: '',
+
   });
+
+  
+  const validatePhoneNumber = (text) => {
+    if (/^\d+$/.test(text)) {
+      handleChange("phoneNumber", text);
+    } else {
+      Alert.alert("Error", "Please enter a valid phone number.");
+    }
+  };
+
+  const validateMilkAmount = (text) => {
+    if (/^\d+$/.test(text)) {
+      handleChange("milkAmount", text);
+    } else {
+      Alert.alert("Error", "Please enter a numeric value for milk amount.");
+    }
+  };
+
 
   const handleChange = (name, value) => {
     setFormData(prevData => ({
@@ -44,6 +67,10 @@ const SetAppointment = () => {
     }));
   };
   const navigatePage = () => {
+    setFormData(prevData => ({
+      ...prevData,
+      DonationStatus: 'Ongoing',
+    }));
     navigation.navigate('SetDateTimeLocation', { formData: formData });
   };
 
@@ -92,8 +119,8 @@ const SetAppointment = () => {
                       style={styles.placeholderDesign}
                       placeholder="Phone Number"
                       placeholderTextColor="#E60965"
-                      onChangeText={(text) => handleChange("phoneNumber", text)}
-                    />
+                      onChangeText={(text) => validatePhoneNumber(text)}
+                      />
                   </View>
                       
                     <Text style = {styles.asterix}>
@@ -148,8 +175,8 @@ const SetAppointment = () => {
                       style={styles.placeholderDesign}
                       placeholder="Amount of milk to be donated (ml)"
                       placeholderTextColor="#E60965"
-                      onChangeText={(text) => handleChange("milkAmount", text)}
-                    />
+                      onChangeText={(text) => validateMilkAmount(text)}
+                      />
                   </View>
                  
                     <Text style = {styles.asterix}>

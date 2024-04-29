@@ -1,4 +1,4 @@
-import React, { useState }from 'react';
+import React, { useState, useEffect }from 'react';
 import { 
 	SafeAreaView, 
 	Text, 
@@ -7,102 +7,143 @@ import {
 	StatusBar, 
 	StyleSheet, 
 	TouchableOpacity, 
+	ActivityIndicator,
+	Alert
 } from 'react-native';
 //import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import axios from 'axios'; // Import axios for API requests
 
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
+import { BASED_URL } from '../../../../MyConstants.js';
+ 
 
 const ApprovedTabRequest = () => {
-		const [inputValue, setInputValue] = useState('');
-		
-		const navigation = useNavigation();
+    const navigation = useNavigation();
+    const route = useRoute();
+    const Requestor_ID ='lkeA9KriaOwOfibtQkRa';
+    const [formData, setFormData] = useState({
+        fullName: '',
+        phoneNumber: '',
+        emailAddress: '',
+        homeAddress: '',
+        medicalCondition: '',
+        milkAmount: '',
+        BabyCategory: '',
+        ReasonForRequesting: '',
+    });
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        try {
+            const response = await axios.get(`${BASED_URL}/kalinga/getApprovedRequests/${Requestor_ID}`);
+            const responseData = response.data;
+
+            const formDataFromResponse = responseData.RequestData[0];
     
-    const navigatePage = (Page) => {
-        navigation.navigate(Page); // Navigate to the Login screen
+            setFormData(formDataFromResponse);
+
+            setLoading(false); 
+        } catch (error) {
+            console.log('Error fetching data:', error);
+            setLoading(false); 
+        }
     };
+	const handleReceivedButton = () => {
+		Alert.alert(
+		  'Confirmation',
+		  'Are you certain that you have received the milk? Please note that this action cannot be undone.',
+		  [
+			{
+			  text: 'No',
+			  onPress: () => console.log('Cancelled'),
+			  style: 'cancel',
+			},
+			{
+			  text: 'Yes',
+			  onPress: async () => {
+				try {
+					
+					await axios.put(`${BASED_URL}/kalinga/updateCompleteStatus/${Requestor_ID}`, {
+					RequestStatus: 'Complete',
+				  });
+				  Alert.alert('Success', 'Request status updated to Complete');
+				} catch (error) {
+				  console.log('Error updating request status:', error);
+				  Alert.alert('Error', 'Failed to update request status');
+				}
+			  },
+			},
+		  ],
+		  { cancelable: false }
+		);
+	  };
 	
-		const handlePress = () => {
-			console.log('Button Pressed!');
-		};
-		
-		const handleBackPress = () => {
-			console.log("Back button pressed");
-		};
-
-		const handleInputChange = (text) => {
-			setInputValue(text); // Update the local inputValue
-		};
-
+	  if (loading) {
+		return <ActivityIndicator size="large" color="#E60965" />;
+	  }
+	
+	  const navigatePage = (Page) => {
+		navigation.navigate(Page);
+	  };
+	
     return (
 			<SafeAreaView style = {styles.container}>
 				<StatusBar barStyle="dark-content" translucent backgroundColor="white" />
-				<View style = {globalHeader.SmallHeader}>
-						<TouchableOpacity onPress={handleBackPress}>
-								<AntDesign name="arrowleft" size={24} color="white" style={{position: 'absolute', top: 5, left: -180}}/>
-						</TouchableOpacity>
-
-						<Text style = {globalHeader.SmallHeaderTitle}>My Requests</Text>
-				</View>
+				
 
 				<ScrollView
 					overScrollMode='never'
 					nestedScrollEnabled={true} 
 					showsVerticalScrollIndicator={false}
 				>
-						<View style={styles.headerButton}>
-							<TouchableOpacity onPress={() => navigatePage("PendingTabRequest")}>
-									<Text style = {styles.button}>Pending</Text>
-							</TouchableOpacity>
-							<TouchableOpacity onPress={() => navigatePage("ApprovedTabRequest")}>
-									<Text style = {styles.indicatedButton}>Approved</Text>
-							</TouchableOpacity>
-							<TouchableOpacity onPress={() => navigatePage("CompletedTabRequest")}>
-									<Text style = {styles.button}>Completed</Text>
-							</TouchableOpacity>
-						</View>
+						
 
 						<View style ={styles.boxContainer}>
 							<View style={{marginTop: 10}}>
 								<View style={styles.boxContentContainer}>	
 									<Text style={styles.boxContentBold}>Fullname: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>Juan Dela Cruz</Text>
+									<Text style={[styles.boxContent, styles.limitText]}>{formData.fullName}</Text>
 								</View>
 							</View>
 							<View style={styles.boxContentContainer}>
 								<Text style={styles.boxContentBold}>Phone Number: </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>09XXXXXXXXX</Text>
+								<Text style={[styles.boxContent, styles.limitText]}>{formData.phoneNumber}</Text>
 							</View>
 							<View style={styles.boxContentContainer}>
 								<Text style={styles.boxContentBold}>Medical Condition: </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do</Text>
+								<Text style={[styles.boxContent, styles.limitText]}>{formData.medicalCondition}</Text>
 							</View>
 							<View style={styles.boxContentContainer}>
 								<Text style={styles.boxContentBold}>Amount of milk requested (mL): </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>XX mL</Text>
+								<Text style={[styles.boxContent, styles.limitText]}>{formData.milkAmount}</Text>
 							</View>
 							<View style={styles.boxContentContainer}>
 								<Text style={styles.boxContentBold}>Baby Category: </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>Medically Fragile Baby</Text>
+								<Text style={[styles.boxContent, styles.limitText]}>{formData.BabyCategory}</Text>
 							</View>
-							<View style={styles.boxContentContainer}>
-								<Text style={styles.boxContentBold}>Milk Bank: </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do</Text>
-							</View>
+							
 							<View style={styles.boxContentContainer}>
 								<Text style={styles.boxContentBold}>Address: </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do</Text>
+								<Text style={[styles.boxContent, styles.limitText]}>{formData.homeAddress}</Text>
 							</View>
-							<View style={styles.boxContentContainer}>
-								<Text style={styles.boxContentBold}>Time and Date: </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>XX - XX - XXXX</Text>
+							
+							<View style={styles.ApproveButton}>
+								<TouchableOpacity onPress={handleReceivedButton}>
+								<View style={styles.ConfirmbuttonContainer}>
+									<Text style={styles.label}>Received</Text>
+								</View>
+								</TouchableOpacity>
 							</View>
-
-						</View>
+							</View>
 
 				</ScrollView>
 
@@ -200,6 +241,28 @@ const styles = StyleSheet.create ({
     flexShrink: 1,
     overflow: 'hidden',
   },
+
+  ConfirmbuttonContainer: {
+    backgroundColor: '#E60965',
+    paddingHorizontal: 37,
+    borderRadius: 20,
+    paddingVertical: 5,
+    marginHorizontal: 10
+
+    
+},
+
+
+ApproveButton:{
+    flexDirection: "row",
+    justifyContent:"center",
+    marginTop: 20
+},
+label: {
+    color: 'white',
+    fontFamily: 'Open-Sans-Bold',
+    fontSize: 15,
+},
 	
 });
 

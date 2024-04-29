@@ -1,10 +1,9 @@
 //Guest EducLibrary
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { 
   ScrollView, 
   Text, 
   View, 
-  SafeAreaView, 
   StatusBar,
   StyleSheet,
   TextInput,
@@ -12,9 +11,8 @@ import {
   FlatList,
   Image,
   Modal,
-  KeyboardAvoidingView
+  Alert
 } from 'react-native';
-import { globalStyles } from "../../../../styles_kit/globalStyles.js";
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { FontAwesome } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -25,6 +23,7 @@ import axios from 'axios'
 import { BASED_URL } from "../../../../MyConstants.js";
 import { useFocusEffect } from '@react-navigation/native'
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Spinner from "react-native-loading-spinner-overlay";
 
 const ForumPage = ({route}) => {
 
@@ -42,6 +41,9 @@ const ForumPage = ({route}) => {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [likedPosts, setLikedPosts] = useState([]);
     const [openComments, setOpenComments] = useState({});
+    const [totalPosts, setTotalPosts] = useState(0);
+    const [loadedPosts, setLoadedPosts] = useState(0);
+    const [isLoading, setIsLoading] = useState(false)
 
     const fetchDP = async () => {
       const DPLink = await AsyncStorage.getItem("DPLink")
@@ -84,15 +86,25 @@ const ForumPage = ({route}) => {
     };
 
     const handleAddPost = async () => {
-        const userType = userInformation.userType ;
-        const owner_ID = userType === "Donor" ? userInformation.Donor_ID : userInformation.Requestor_ID;
-        const result = await axios.post(`${BASED_URL}/kalinga/addPost`,{
-            ownerID: owner_ID,
-            content: postContent,
-            userType: userType
-        })
-
-        setIsModalOpen(false)
+        try{
+            setIsLoading(true)
+            const userType = userInformation.userType ;
+            const owner_ID = userType === "Donor" ? userInformation.Donor_ID : userInformation.Requestor_ID;
+            const result = await axios.post(`${BASED_URL}/kalinga/addPost`,{
+                ownerID: owner_ID,
+                content: postContent,
+                userType: userType
+            })
+            setIsModalOpen(false)
+            fetchPost();
+        } catch(error) {
+            if(error)Alert.alert('Network error', `Please check your internet connection`)
+            else
+            Alert.alert('Something went wrong', "Please try again later")
+        } finally {
+            setIsLoading(false)
+        }
+        
     }
 
     const handleCommentChange = (text, post_ID) => {
@@ -103,12 +115,12 @@ const ForumPage = ({route}) => {
         setComment(text)
     };
     
-    const handleAddComment = async (post_ID) => {
-        if(comment === "") return
-        console.log("Test: ", commentTexts[post_ID])
-        if (commentTexts[post_ID].trim() !== '') {
-           
-            setComments([...comments, commentTexts[post_ID]]);
+    const handleAddComment = async (post_ID, content) => {
+        console.log("content: ", content)
+        if(comment === "" || (content === ""|| !content)) return
+        if (content.trim() !== '') {
+            const newComment = {post_ID: post_ID, content: content};
+            setComments(prevComments => [...prevComments, newComment]);
             setCommentTexts('');
         }
         console.log(post_ID)
@@ -128,7 +140,6 @@ const ForumPage = ({route}) => {
         }
     };
 
-    const FirstParagraph = 'Im looking for some advice on how to properly store breast milk. Any tips or suggestions would be greatly appreciated!'
     const fetchAsyncData = async () => {
         const stringifyUserInformation = await AsyncStorage.getItem("userInformation")
         if(!stringifyUserInformation){
@@ -137,22 +148,50 @@ const ForumPage = ({route}) => {
     }
     
     const fetchPost = async () => {
-        const response = await axios.get(`${BASED_URL}/kalinga/getPosts`)
-        const posts = response.data.posts
-        setPosts(posts)
+        try{
+            setIsLoading(true)
+            const response = await axios.get(`${BASED_URL}/kalinga/getPosts`)
+            const posts = response.data.posts
+            setPosts(posts)
+            setTotalPosts(posts.length)
+            setLoadedPosts(posts.length)
+        } catch(error) {
+            if(error)Alert.alert('Network error', `Please check your internet connection`)
+            else
+            Alert.alert('Something went wrong', "Please try again later")
+        } finally {
+            setIsLoading(false)
+        }
+       
     }
 
+    const handleScrollRefresh = (event) => {
+        const { layoutMeasurement, contentSize, contentOffset } = event.nativeEvent;
+
+  // Calculate the maximum scrollable offset
+        const maxOffset = contentSize.height - layoutMeasurement.height;
+
+        // If the user has reached the bottom, trigger refresh
+        if (contentOffset.y >= maxOffset) {
+            console.log("Refresh");
+            setComments([]);
+            fetchPost();
+            fetchAsyncData();
+        }
+      };
+      
     useFocusEffect(
         React.useCallback(() => {
          fetchPost(); // Fetch profile picture whenever screen comes into focus
          fetchAsyncData();
          fetchDP();
+         console.log("comments: ", comments)
         }, [])
       );
 
   return (
-        <SafeAreaView 
-            style={{ flex: 1 }} 
+        <View 
+            style={{ flex: 1}} 
             behavior={Platform.OS === "ios" ? "padding" : "height"} // Adjust behavior based on platform
             keyboardVerticalOffset={Platform.OS === "ios" ? 0 : -150} // Adjust vertical offset if needed
         >
@@ -189,9 +228,11 @@ const ForumPage = ({route}) => {
                 </TouchableOpacity>
               
             </View>
-            
             <FlatList
             overScrollMode="never"
+            onScroll={handleScrollRefresh} 
+            scrollEventThrottle={16}
+            // style = {{backgroundColor: "yellow", }}
             data={posts}
             renderItem={({ item }) => (
                 <>
@@ -277,8 +318,7 @@ const ForumPage = ({route}) => {
                     <ScrollView
                     style = {{ 
                         flex: 1,
-                        paddingBottom: "5%",
-                        marginBottom: 20,   
+                        marginBottom: 20,  
                     }}
                     >
                         {openComments[item.post_ID] && (
@@ -340,49 +380,40 @@ const ForumPage = ({route}) => {
                                 </View>
                                 ))}
                             
-                                {comments.map((comment, index) => (
-                                    <View key={index}>
-                                        
-                                        <View style = {styles.flex_start}>
-                                            {!userInformation.DPLink 
-                                            ? <FontAwesome name="user-circle-o" size={40} color="#E60965" />
-                                            : <Image
-                                                source = {{uri: userInformation.DPLink}}
-                                                style = {{
+                            {comments
+                                .filter(comment => comment.post_ID === item.post_ID) // Filter comments for the current post
+                                .map((comment, index) => (
+                                <View key={index}>
+                                    <View style={styles.flex_start}>
+                                        {!userInformation.DPLink ? (
+                                            <FontAwesome name="user-circle-o" size={40} color="#E60965" />
+                                        ) : (
+                                            <Image
+                                                source={{ uri: userInformation.DPLink }}
+                                                style={{
                                                     width: 45,
                                                     height: 45,
                                                     borderWidth: 1,
                                                     borderRadius: 100,
                                                     borderColor: "#E60965",
-                                                }} 
+                                                }}
                                             />
-                                        }
-                                            
-                                            <View>
-                                                <Text style = {styles.Name}>
-                                                        {userInformation.userName}
-                                                </Text>
-                                            
-                                                <View style = {styles.flex_Row}>
-                                                    <MaterialIcons name="verified" size={14} color="#E60965"/>
-                                                    <Text style = {styles.UserType}>
-                                                        {userInformation.userType}
-                                                    </Text>
-                                                </View>
-                                                <View>
-                                                    <Text style={styles.commentInput}>
-                                                            {comment}
-                                                    </Text>
-                                                </View>
+                                        )}
+                                        <View>
+                                            <Text style={styles.Name}>{userInformation.userName}</Text>
+                                            <View style={styles.flex_Row}>
+                                                <MaterialIcons name="verified" size={14} color="#E60965" />
+                                                <Text style={styles.UserType}>{userInformation.userType}</Text>
                                             </View>
-                                            
+                                            <View>
+                                                <Text style={styles.commentInput}>{comment.content}</Text>
+                                            </View>
                                         </View>
-
-                                        
                                     </View>
-                                ))}
+                                </View>
+                            ))}
                             </View>
-                            <View style = {[styles.Row, {marginBottom: 0}]}>
+                            <View style = {styles.Row}>
                                 <View style = {styles.commentContainer}>
                                     <TextInput
                                         style={styles.commentInput}
@@ -394,7 +425,7 @@ const ForumPage = ({route}) => {
                                     />
                                 
                                 </View>
-                                <TouchableOpacity disabled={comment === ""} onPress={() => handleAddComment( item.post_ID)}>
+                                <TouchableOpacity disabled={comment === ""} onPress={() => handleAddComment( item.post_ID, comment)}>
                                     <Ionicons name="send" size={24} color="#E60965" />
                                 </TouchableOpacity>
                             </View>
@@ -404,6 +435,18 @@ const ForumPage = ({route}) => {
                 </>
               )}
               keyExtractor={item => item._id}
+              ListFooterComponent={
+                totalPosts === loadedPosts ? (
+                    <View style={{ paddingVertical: "10%", alignItems: 'center', marginBottom: 10}}>
+                        <Text>No more posts</Text>
+                    </View>
+                ) : null
+            }
+            />
+             <Spinner
+              visible={isLoading}
+              textContent={'Loading...'}
+              textStyle={{ color: '#FFF' }}
             />
 
             <Modal 
@@ -493,7 +536,7 @@ const ForumPage = ({route}) => {
                 </View>
             </Modal>
             
-      </SafeAreaView >
+      </View >
 
       
 
@@ -541,7 +584,7 @@ const ForumPage = ({route}) => {
       borderBlockColor: "#FFACC7",
       //maxWidth: "90%"
       marginHorizontal: "6%",
-      marginBottom: 20
+      marginBottom: 20,
     },
     modalBox: {
         marginHorizontal: "6%",
@@ -605,7 +648,6 @@ const ForumPage = ({route}) => {
         color: "#E60965",
         fontSize: 15,
         fontFamily: "Open-Sans-Regular",
-        marginTop: 10,
         marginLeft: 7,
     },
     commentOutputBox: {

@@ -12,6 +12,18 @@ import { getRequestByUserType } from '../controllers/Admin/Appointment/getReques
 import { logInUser, logOutUser } from '../controllers/LogInUser';
 import { isApproved } from '../controllers/isApproved';
 import { updateUserDetails } from '../controllers/updateUser';
+import { updateDonationStatus } from '../controllers/Admin/Appointment/updateAppointmentStatus';
+import { updateRequestStatus }  from '../controllers/Admin/Appointment/updateRequestStatus';
+import { getPendingRequests } from '../controllers/Requestor/getPendingRequest';
+import { getApprovedRequests } from '../controllers/Requestor/getApprovedRequest';
+import { getRequestStatus} from '../controllers/Requestor/requestStatus';
+import { getOngoingDonation } from '../controllers/Donor/getOngoingDonation';
+import { updateCompleteStatus } from '../controllers/Admin/Appointment/updateCompleteStatus';
+import { getCompletedRequests} from '../controllers/Requestor/getCompletedRequest';
+import { getRequestStats } from '../controllers/Requestor/getRequestStats';
+import { updateDonationComplete } from '../controllers/Admin/Appointment/updateDonationComplete'
+import { getCompletedDonation } from '../controllers/Donor/getCompletedDonation';
+import { getDonorStats } from '../controllers/Donor/getDonorStats'
 
 export default (router: express.Router) => {
   
@@ -23,6 +35,8 @@ export default (router: express.Router) => {
     router.get('/kalinga/userLogout/:token', logOutUser)
     router.post('/kalinga/adminLoginIn', AdminLogIn)
     router.get('/kalinga/isApproved/:Applicant_ID', isApproved)
+
+    
     //donor
     router.post('/kalinga/createAppointment', createAppointment);
     router.get('/kalinga/getAppointmentsByDonorID/:AppointmentDonorID', getAppointmentByDonorID);
@@ -32,7 +46,7 @@ export default (router: express.Router) => {
     router.get ('/kalinga/getRequestByID/:RequestID', getRequestByID)
     router.get('/kalinga/getRequestByUserType/:userType', getRequestByUserType)
 
-    router.post('/kalinga/updateUserInformation', updateUserDetails)
+
 
 
     

@@ -1,6 +1,6 @@
 //Guest Home
-import React from 'react';
-import { ScrollView,Text, View, StatusBar, StyleSheet, TouchableOpacity} from 'react-native';
+import React, { useState, useEffect }from 'react';
+import { ScrollView,Text, View, StatusBar, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
@@ -35,12 +35,58 @@ export default function RequestorHome({route}) {
     
     console.log("Name: ",UserName )
     const navigation = useNavigation();
+
+    const [requestStatus, setRequestStatus] = useState('empty'); // State to hold request status
+
     
     const navigatePage = (Page) => {
         navigation.navigate(Page, {data: userInformation}); // Navigate to the Login screen
         
 
-    };
+    };    
+    useEffect(() => {
+      const simulateFetchRequestStatus = async () => {
+          try {
+              const response = await fetch('http://192.168.254.106:7000/kalinga/getRequestStatus');
+              if (!response.ok) {
+                  throw new Error('Network response was not ok');
+              }
+  
+              const contentType = response.headers.get('content-type');
+              if (contentType && contentType.includes('application/json')) {
+                  const data = await response.json();
+                  console.log('Fetched Data:', data); // Log the fetched data
+                  setRequestStatus(data.RequestStatus);
+                  console.log('Updated Request Status:', data.RequestStatus); // Log the updated state
+              } else {
+                  throw new Error('Invalid content type received');
+              }
+          } catch (error) {
+              console.error('Error fetching request status:', error);
+          }
+      };
+  
+      simulateFetchRequestStatus();
+  }, []);
+  
+  const handleMakeRequest = () => {
+      console.log('Current Request Status:', requestStatus);
+  
+      const canMakeRequest = requestStatus !== 'Pending' && requestStatus !== 'Approved';
+      console.log('Can Make Request:', canMakeRequest); // Log the evaluation result
+  
+      if (canMakeRequest) {
+          console.log('Navigating to MakeRequest');
+          navigatePage('MakeRequest');
+      } else {
+          console.log('Cannot Make Request');
+          Alert.alert(
+              'Cannot Make Request',
+              'You already have a pending or ongoing request. Please wait until it is resolved.',
+              [{ text: 'OK', onPress: () => console.log('OK Pressed') }]
+          );
+      }
+  };
 
     return (
       <View style={[globalStyles.container, {marginTop: "-5%"}]}>
@@ -98,7 +144,7 @@ export default function RequestorHome({route}) {
               </View>
 
               <View style = {styles.flex_Row}>
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("MakeRequest")}>
+              <TouchableOpacity style={globalStyles.smallBackgroundBox} onPress={handleMakeRequest}>
                 <Ionicons name="calendar" size={70} color="#E60965" />
                   <View style = {styles.LabelCenter}>
                     <Text style = {styles.Label}>Make Request</Text>
@@ -106,7 +152,7 @@ export default function RequestorHome({route}) {
                   </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("MyRequestScreen")}>
+                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("RequestTab")}>
                   <SimpleLineIcons name="graph" size={70} color="#E60965"s />
                   <View style = {styles.LabelCenter}>
                     <Text style = {styles.Label}>My Request</Text>
