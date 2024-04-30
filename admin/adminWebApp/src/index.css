@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  @apply box-border p-0 m-0 font-kurale scrollbar-primary;
+}
+
+::selection {
+  @apply bg-primary-default !important;
+}
+
+.body-color {
+  @apply bg-gradient-to-bl from-[#ee96ba] via-[#d16391] to-[#d94a76];
+}
