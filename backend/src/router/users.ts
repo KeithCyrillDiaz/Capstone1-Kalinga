@@ -41,10 +41,32 @@ export default (router: express.Router) => {
     router.post('/kalinga/createAppointment', createAppointment);
     router.get('/kalinga/getAppointmentsByDonorID/:AppointmentDonorID', getAppointmentByDonorID);
     router.get('/kalinga/getAppointmentByUserType/:userType', getAppointmentByUsertype)
+    router.put ('/kalinga/updateDonationStatus/:AppointmentDonorID', updateDonationStatus)
+    router.get('/kalinga/getOngoingDonation/:Donor_ID', getOngoingDonation)
+    router.put ('/kalinga/updateDonationComplete/:AppointmentDonorID', updateDonationComplete)
+    router.get('/kalinga/getCompletedDonation/:Donor_ID', getCompletedDonation)
+    router.get('/kalinga/getDonorStats/:Donor_ID', getDonorStats)
+
+
     //Requestor
     router.post('/kalinga/createRequest', createRequest)
     router.get ('/kalinga/getRequestByID/:RequestID', getRequestByID)
     router.get('/kalinga/getRequestByUserType/:userType', getRequestByUserType)
+    router.put('/kalinga/updateRequestStatus/:RequestID',updateRequestStatus)
+    router.get('/kalinga/getPendingRequests/:Requestor_ID', getPendingRequests)
+    router.get('/kalinga/getApprovedRequests/:Requestor_ID', getApprovedRequests)
+    router.get('/kalinga/getRequestStatus', getRequestStatus)
+    router.put('/kalinga/updateCompleteStatus/:Requestor_ID',updateCompleteStatus)
+    router.get('/kalinga/getCompletedRequests/:Requestor_ID', getCompletedRequests)
+    router.get('/kalinga/getRequestStats/:Requestor_ID', getRequestStats)
+
+
+
+
+
+
+
+
 
 
 
