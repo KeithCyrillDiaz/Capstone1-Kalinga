@@ -1,24 +1,41 @@
 import React, { useState } from 'react';
 import { Image, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, StyleSheet, ScrollView } from 'react-native';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
-import Icon from 'react-native-vector-icons/FontAwesome';
+
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import axios from 'axios'
+import { BASED_URL } from '../../MyConstants';
 
-const EmailVerification = () => {
+const EmailVerification = ({route}) => {
+    
+    const screeningForm = route.params
+    console.log("form: ", screeningForm)
     const navigation = useNavigation(); 
 
     const handleBackButton = () => {
         navigation.goBack(); 
     };
 
-    const handleSendCode = () => {
-        console.log("Send Code");
+    const handleSendCode = async () => {
+        const result = await axios.post(`${BASED_URL}/kalinga/sendEmail/${screeningForm.Applicant_ID}`)
+        console.log("result: ",result.data.messages.code)
+        console.log("Vcode: ",result.data.verificationCode)
+        if(result.data.messages.code !== 0){
+            console.log("Failed Sending Email");
+            return 
+        }
+        return result.data.verificationCode
     };
 
-    const handleSubmitButton = () => {
-        navigation.navigate('EmailVerificationCode'); 
+    const handleSubmitButton = async () => {
+        navigation.navigate('EmailVerificationCode', { 
+            verificationCode: verificationCode, 
+            data: screeningForm
+        }); 
+        const verificationCode = await handleSendCode();
+        
     };
 
     return (
@@ -37,14 +54,15 @@ const EmailVerification = () => {
                     style={styles.SecondContainer}
                 >
                     <Text style={styles.FirstText}>Email Verification</Text>
-                    <Text style={styles.SecondText}>Hi! please click the button below to verify your email address to register your account. Put the code in the next page</Text>
-
+                    <Text style={[styles.SecondText, {textAlign: "center"}]}>{`Hi there! Thank you for applying. Please click the button below to receive a verification code so you'll be updated in your ${screeningForm.userType} application.`}</Text>
+                    <Text style = {[styles.SecondText, {marginTop: 20, textAlign: "center"}]}>Note: Kindly check your spam inbox as well</Text>
+        
                     <Image
                         source={require('../../assets/Email_verification.png')}style={styles.image}
                      />
 
                     <TouchableOpacity style={styles.SubmitButton} onPress={handleSubmitButton}>
-                        <Text style={styles.SubmitButtonText}>Send</Text>
+                        <Text style={styles.SubmitButtonText}>Send Verification Code</Text>
                     </TouchableOpacity>
 
                 

@@ -14,6 +14,7 @@ import { CommonActions } from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import ImageZoom from 'react-native-image-pan-zoom';
 import { BASED_URL } from '../../../../MyConstants.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const DonorUploadMedicalRequirements = ({route}) => {
@@ -33,7 +34,7 @@ const DonorUploadMedicalRequirements = ({route}) => {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
  
-  const navigatePage = async (Page) => {
+  const navigatePage = async (Page, Data) => {
     try {
 
         setIsLoading(true);
@@ -117,13 +118,15 @@ const DonorUploadMedicalRequirements = ({route}) => {
               console.log('Data saved successfully:', postFiles.data);
           }
           
+          await AsyncStorage.setItem('Pending', 'True')
+          await AsyncStorage.setItem('DonorApplicant_ID', screeningFormData.Applicant_ID)
           navigation.dispatch(
             CommonActions.reset({
-              index: 0, //Reset the stack to 0 so the user cannot go back
-              routes: [{ name: Page }], // Replace 'Login' with the name of your login screen
+              index: 0,
+              routes: [{ name: Page, params: Data } ], 
             })
           );
-
+          return
     } catch (error) {
         // Handle error if the request fails
         console.error('Error saving data:', error);
@@ -150,7 +153,7 @@ const DonorUploadMedicalRequirements = ({route}) => {
             quality: 1,
         });
 
-        if (!result.cancelled && result.assets && result.assets.length > 0) {
+        if (!result.canceled && result.assets && result.assets.length > 0) {
             let fileType = ''
           result.assets.forEach(image => {
 
@@ -195,7 +198,7 @@ const DonorUploadMedicalRequirements = ({route}) => {
 const handleFileUpload = async (attachmentType) => {
   try {
     const result = await DocumentPicker.getDocumentAsync();
-    if (!result.cancelled && result.assets && result.assets.length > 0) {
+    if (!result.canceled && result.assets && result.assets.length > 0) {
             if (
               result.assets[0].mimeType === "application/pdf" ||
               result.assets[0].mimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -539,7 +542,7 @@ const handleFileUpload = async (attachmentType) => {
               { opacity: (isChecked && Object.keys(selectedImage).length + Object.keys(selectedFile).length >= 5) ? 1 : 0.5 } // Apply opacity based on conditions
             ]}
             disabled={!isChecked || Object.keys(selectedImage).length + Object.keys(selectedFile).length < 5} // Disable the button based on conditions
-            onPress={() => navigatePage("DonorApproved")}
+            onPress={() => navigatePage("EmailVerification", screeningFormData)}
           > 
             <Text style={styles.buttonTitle}>Submit</Text>
           </TouchableOpacity>

@@ -9,31 +9,37 @@ import { globalHeader } from '../../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../../styles_kit/globalStyles.js';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 
+const DonorHome = ({route}) => {
 
-const DonorHome = () => {
+    const userInformation = route.params.userInformation
+    const token = route.params.token
 
-  const FirstParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
+    const storeInAsync = async () => {
+      await AsyncStorage.setItem('userInformation', JSON.stringify(userInformation))
+      await AsyncStorage.setItem('token', token)
+    }
+    storeInAsync()
+    const nameArray =  userInformation.fullName.split(' ')
+    
+    let UserName;
 
-  const SecondParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
+    if (nameArray[0].endsWith(',')) {
+      UserName = nameArray[1];
+    } else {
+      UserName = nameArray[0];
+    }
 
-  const ThridParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
-
-  const UserName = "Rogine"
     const navigation = useNavigation();
     
     const navigatePage = (Page) => {
-        navigation.navigate(Page); // Navigate to the Login screen
+        navigation.navigate(Page, {data: userInformation}); // Navigate to the Login screen
         
 
     };
-
-    const handleHomePress = () => {
-      console.log("Home button pressed");
-    };
-
     return (
       <View style={[globalStyles.container, {marginTop: "-5%"}]}>
         <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
@@ -80,7 +86,7 @@ const DonorHome = () => {
                   </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("DonorForum")}>
+                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("DonorForum", userInformation)}>
                 <MaterialIcons name="forum" size={70} color="#E60965" />
                   <View style = {styles.LabelCenter}>
                     <Text style = {styles.Label}>Forum</Text>

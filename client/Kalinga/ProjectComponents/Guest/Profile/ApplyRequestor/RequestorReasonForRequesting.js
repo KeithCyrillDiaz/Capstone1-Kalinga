@@ -27,6 +27,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import ImageZoom from 'react-native-image-pan-zoom';
 import axios from 'axios';
 import { BASED_URL } from "../../../../MyConstants.js";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ReasonForRequesting = ({route}) => {
    
@@ -47,7 +48,7 @@ const ReasonForRequesting = ({route}) => {
   };
     const expoIpAddress = "192.168.1.3"
     const navigation = useNavigation();
-    const navigatePage = async (Page) => {
+    const navigatePage = async (Page, Data) => {
 
       try {
       
@@ -126,14 +127,21 @@ const ReasonForRequesting = ({route}) => {
               );
               // console.log('Data saved successfully:', postFiles.data);
           }
-          
+          console.log("Data: ", Data)
+          console.log("ScreeningformData: ", screeningFormData)
+          await AsyncStorage.setItem('Pending', 'True')
+          await AsyncStorage.setItem('RequestorApplicant_ID', screeningFormData.Applicant_ID)
+          const Pending = await AsyncStorage.getItem('Pending')
+          const RequestorApplicant_ID = await AsyncStorage.getItem('RequestorApplicant_ID')
+          console.log("Pending: ", Pending)
+          console.log("RequestorApplicant_ID: ", RequestorApplicant_ID)
           navigation.dispatch(
             CommonActions.reset({
-              index: 0, //Reset the stack to 0 so the user cannot go back
-              routes: [{ name: Page }], 
+              index: 0,
+              routes: [{ name: Page, params: Data } ], 
             })
           );
-
+          return
     } catch (error) {
         // Handle error if the request fails
         setIsLoading(false);
@@ -162,7 +170,7 @@ const ReasonForRequesting = ({route}) => {
               multiple: true, 
           });
   
-          if (!result.cancelled && result.assets && result.assets.length > 0) {
+          if (!result.canceled && result.assets && result.assets.length > 0) {
               let fileType = ''
             result.assets.forEach(image => {
   
@@ -209,7 +217,7 @@ const ReasonForRequesting = ({route}) => {
   const handleFileUpload = async (attachmentType) => {
     try {
       const result = await DocumentPicker.getDocumentAsync();
-      if (!result.cancelled && result.assets && result.assets.length > 0) {
+      if (!result.canceled && result.assets && result.assets.length > 0) {
               if (
                 result.assets[0].mimeType === "application/pdf" ||
                 result.assets[0].mimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -480,7 +488,7 @@ const ReasonForRequesting = ({route}) => {
                 <TouchableOpacity style={[
                   styles.AgreebuttonContainer, { width: 150 },
                   (Object.keys(selectedImage).length === 0 && Object.keys(selectedFile).length === 0) && { opacity: 0.5 } 
-                  ]}onPress={() => navigatePage("RequestorApprovalMessage")}
+                  ]} onPress={() => navigatePage("EmailVerification", screeningFormData)}
                   disabled={Object.keys(selectedImage).length === 0 && Object.keys(selectedFile).length === 0}
                   >
                   <Text style={styles.label}>Submit</Text>

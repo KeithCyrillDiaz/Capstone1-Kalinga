@@ -5,6 +5,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios'; // Import axios for API requests
 import { format } from 'date-fns';
+import { BASED_URL } from '../../../../MyConstants.js';
 
 
 import { MaterialIcons } from '@expo/vector-icons';
@@ -38,7 +39,7 @@ const CompleteDonations = () => {
 
   const fetchData = async () => {
     try {
-        const response = await axios.get(`http://192.168.254.106:7000/kalinga/getCompletedDonation/${Donor_ID}`);
+        const response = await axios.get(`${BASED_URL}/kalinga/getCompletedDonation/${Donor_ID}`);
         const responseData = response.data;
 
         if ('DonorData' in responseData && responseData.DonorData.length > 0) {
@@ -104,13 +105,20 @@ const CompleteDonations = () => {
 }
 
 const styles = StyleSheet.create ({
-
-    container: {
-        flex: 1,
-       //backgroundColor: "gray",
-
-    },
-
+  container: {
+    flex: 1,
+    backgroundColor: "#FFF8EB",
+  },
+  SmallHeader: {
+    backgroundColor: '#E60965', // Set the background color of the header
+    borderRadius: 34,
+    paddingTop: "12%",
+    paddingBottom: "5%",
+    marginTop: "-10%",
+    width: '100%', // the size will depend on the screen, this is better so it will look the same on all phones
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+},
     
     img: {
     
@@ -200,39 +208,36 @@ const styles = StyleSheet.create ({
 	headerButton: {
 		flexDirection: "row",
 		alignItems: "center",
-		padding: 10,
-		paddingBottom: 18,
+		paddingVertical: 20,
 		justifyContent: "space-evenly",
-		marginVertical: 10,
-		marginHorizontal: "3%",
 		borderBottomWidth: 1,
 		borderBlockColor: "#FFACC7"
 	},
 
 	Tabbutton: {
 		borderWidth: 1,
-		padding: 10,
-		paddingHorizontal: 18,
+		paddingVertical: 10,
+		width: "25%",
 		color: "#E60965",
 		borderColor: "#E60965",
 		fontFamily: "Open-Sans-Bold",
 		backgroundColor: "#FFE5EC",
 		borderRadius: 7,
 		fontSize: 18,
-
+    textAlign: "center"
 	},
 	
 	indicatedButton: {
 		borderWidth: 1,
-		padding: 10,
-		paddingHorizontal: 18,
+		paddingVertical: 10,
+		width: "25%",
 		color: "white",
 		borderRadius: 7,
 		borderColor: "#E60965",
 		fontFamily: "Open-Sans-Bold",
 		backgroundColor: "#E60965",
 		fontSize: 18,
-
+    textAlign: "center"
 	},
 
   boxColContainer: {

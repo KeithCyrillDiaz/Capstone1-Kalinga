@@ -91,14 +91,11 @@ const DeleteAlert = (name, userID) => {
 }
 
 const DeleteUser = async (userID) => {
-  console.log("ID: ", userID)
-  const result = await axios.delete(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
-  console.log(result.data)
+  const result = await axios.post(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
   fetchScreeningFormIDs();
 }
 
 const handleViewPress = (Applicant_ID) => {
-  console.log("id", Applicant_ID)
   navigation.navigate('DonorInitialScreeningFormPage1',  Applicant_ID );
 };
   return (

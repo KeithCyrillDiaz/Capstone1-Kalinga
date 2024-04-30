@@ -45,7 +45,7 @@ const DonorUploadAdmin = ({ route }) => {
           },
           {
             text: 'Yes',
-            onPress: () =>  navigatePage(Page, owner), // Call a function when "Yes" is pressed
+            onPress: () =>  navigatePage(Page, owner, "Approved"), // Call a function when "Yes" is pressed
           },
         ],
         { cancelable: false }
@@ -66,16 +66,18 @@ const DonorUploadAdmin = ({ route }) => {
           },
           {
             text: 'Yes',
-            onPress: () => navigatePage(Page, owner), // Call a function when "Yes" is pressed
+            onPress: () => navigatePage(Page, owner, "Decline"), // Call a function when "Yes" is pressed
           },
         ],
         { cancelable: false }
       );
     };
 
-    const navigatePage = (Page, owner) => {
+    const navigatePage = (Page, owner, status) => {
       // Navigate to the next screen by route name
-      DeleteUser(Applicant_ID)
+      sendEmail(Applicant_ID, status)
+      DeleteUser(Applicant_ID, status)
+      
       navigation.dispatch(
         CommonActions.reset({
           index: 0, //Reset the stack to 0 so the user cannot go back
@@ -84,10 +86,25 @@ const DonorUploadAdmin = ({ route }) => {
       );
     }
 
-    const DeleteUser = async (userID) => {
+    const sendEmail = async (userID, status) => {
+      if(status === "Approved"){
+        await axios.post(`${BASED_URL}/kalinga/sendApprovedEmail/${userID}`)
+      } else {
+        await axios.post(`${BASED_URL}/kalinga/sendDeclinedEmail/${userID}`)
+      }
+      
+    }
+    const DeleteUser = async (userID, status) => {
       console.log("ID: ", userID)
-      const result = await axios.delete(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
-      console.log(result.data)
+      if(status !== "Approved"){
+          console.log("status: ", status)
+          const result = await axios.post(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`,{
+              status: "Declined"
+          })
+          return
+      }
+      console.log("status: ", status)
+      const result = await axios.post(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
     }
 
     const fetchData = async () => {

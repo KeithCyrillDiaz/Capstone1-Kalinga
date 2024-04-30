@@ -7,10 +7,10 @@ import { Feather } from '@expo/vector-icons'; // Import Feather icon from Expo
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
-import randomatic from 'randomatic';
 import { format } from 'date-fns';
 import axios from 'axios'; // Import axios
 import { useNavigation, useRoute } from '@react-navigation/native'; // Correct import
+import { BASED_URL } from '../../../../MyConstants.js';
 
 
 
@@ -42,7 +42,7 @@ const DonorAppointmentConfirmation = () => {
     const fetchData = async () => {
         try {
             setIsLoading(true);
-            const response = await axios.get(`http://192.168.254.106:7000/kalinga/getAppointmentsByDonorID/${AppointmentDonorID.formData}`);
+            const response = await axios.get(`${BASED_URL}/kalinga/getAppointmentsByDonorID/${AppointmentDonorID.formData}`);
             console.log('API Response:', response.data);
             const data = response.data.Appointment;
             console.log('Fetched Data:', data);
@@ -95,7 +95,7 @@ const DonorAppointmentConfirmation = () => {
                     onPress: async () => {
                         try {
                             setIsLoading(true);
-                            await axios.put(`http://192.168.254.106:7000/kalinga/updateDonationStatus/${AppointmentDonorID.formData}`, {
+                            await axios.put(`${BASED_URL}/kalinga/updateDonationStatus/${AppointmentDonorID.formData}`, {
                                 DonationStatus: 'Ongoing',
                             });
                             fetchData(); // Assuming fetchData updates the data in your component
@@ -129,7 +129,7 @@ const DonorAppointmentConfirmation = () => {
                     onPress: async () => {
                         try {
                             setIsLoading(true);
-                            await axios.put(`http://192.168.254.106:7000/kalinga/updateDonationStatus/${AppointmentDonorID.formData}`, {
+                            await axios.put(`${BASED_URL}/kalinga/updateDonationStatus/${AppointmentDonorID.formData}`, {
                                 DonationStatus: 'Decline',
                             });
                             fetchData(); // Assuming fetchData updates the data in your component
@@ -163,7 +163,7 @@ const DonorAppointmentConfirmation = () => {
                     onPress: async () => {
                         try {
                             setIsLoading(true);
-                            await axios.put(`http://192.168.254.106:7000/kalinga/updateDonationStatus/${AppointmentDonorID.formData}`, {
+                            await axios.put(`${BASED_URL}/kalinga/updateDonationStatus/${AppointmentDonorID.formData}`, {
                                 DonationStatus: 'Complete',
                             });
                             fetchData(); // Assuming fetchData updates the data in your component

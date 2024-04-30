@@ -1,11 +1,10 @@
 import path from 'path';
 import fs from 'fs';
 import multer from 'multer';
-
 const multerConfiguration = () => {
     const storage = multer.diskStorage({
         destination: function (req, file, cb) {
-            let uploadPath = '../../uploads'; // Base upload path
+            let uploadPath = './uploads'; // Base upload path
             let subfolder = ''; // Subfolder based on fieldname
             
             // Create subfolders based on fieldname
@@ -23,10 +22,10 @@ const multerConfiguration = () => {
             // Create directory if it doesn't exist
             if (!fs.existsSync(uploadPath)) {
                 try {
-                    fs.mkdirSync(path.join(__dirname, `../../uploads/Donor/Images`), {recursive: true})
-                    fs.mkdirSync(path.join(__dirname, `../../uploads/Donor/Files`), {recursive: true})
-                    fs.mkdirSync(path.join(__dirname, `../../uploads/Requestor/Images`), {recursive: true})
-                    fs.mkdirSync(path.join(__dirname, `../../uploads/Requestor/Files`), {recursive: true})
+                    fs.mkdirSync(path.join(__dirname, `./uploads/Donor/Images`), {recursive: true})
+                    fs.mkdirSync(path.join(__dirname, `./uploads/Donor/Files`), {recursive: true})
+                    fs.mkdirSync(path.join(__dirname, `./uploads/Requestor/Images`), {recursive: true})
+                    fs.mkdirSync(path.join(__dirname, `./uploads/Requestor/Files`), {recursive: true})
                     // fs.mkdirSync(uploadPath, { recursive: true });
                 } catch (err) {
                     console.error("Error creating directory:", err);

@@ -122,11 +122,12 @@ export const FirstScreen = ({route}) => {
                 </Text>
                     <View style = {styles.flex_Row}>
 
+                  
                     <TextInput
-                        style={styles.birthDateInputField}
-                        placeholder="Birthdate"
+                        style={styles.birthDateWeight }
+                        placeholder="Birth Weight"
                         placeholderTextColor="#E60965"
-                        value={"Birthday: " + screeningFormID.childBirthDate}
+                        value={"Birth Weight: " + screeningFormID.birthWeight}
                         editable={false}
                     />
                     
@@ -148,14 +149,14 @@ export const FirstScreen = ({route}) => {
                         value={"Age: " + screeningFormID.childAge}
                         editable={false}
                     />
-
                     <TextInput
-                        style={styles.birthDateInputField }
-                        placeholder="Birth Weight"
+                        style={styles.birthDateInputField}
+                        placeholder="Birthdate"
                         placeholderTextColor="#E60965"
-                        value={"Birth Weight: " + screeningFormID.birthWeight}
+                        value={"Birthday: " + screeningFormID.childBirthDate}
                         editable={false}
                     />
+       
                    
                    
                     </View>
@@ -193,10 +194,10 @@ export const SecondScreen = ({route}) => {
   
             const response = await axios.get(`${BASED_URL}/kalinga/getMedicalRequirementImage/${Applicant_ID}`);
             const result = response.data.image
-            // console.log('result: ', result)
+            console.log('result: ', result)
             setImages(result)
             setOwner(result[0].owner)
-            // console.log("owner: ",result[0].owner)
+            console.log("owner: ",result[0].owner)
 
             const zipFile = await axios.get(`${BASED_URL}/kalinga/getMedicalRequirementFile/${Applicant_ID}`)
             setZip(zipFile.data.zipFile)
@@ -238,12 +239,15 @@ export const SecondScreen = ({route}) => {
     }
 
     useEffect(() => {
-        fetchMedicalAbstract();
         fetchData();
+        fetchMedicalAbstract();
+       
     },[])
-    const navigatePage = (Page, owner) => {
+
+    const navigatePage = (Page, owner, status) => {
         // Navigate to the next screen by route name
-        DeleteUser(Applicant_ID)
+        DeleteUser(Applicant_ID, status)
+        sendEmail(Applicant_ID, status)
         navigation.dispatch(
           CommonActions.reset({
             index: 0, //Reset the stack to 0 so the user cannot go back
@@ -251,11 +255,26 @@ export const SecondScreen = ({route}) => {
           })
         );
       }
-    const DeleteUser = async (userID) => {
+
+      const sendEmail = async (userID, status) => {
+        if(status === "Approved"){
+          await axios.post(`${BASED_URL}/kalinga/sendApprovedEmail/${userID}`)
+        } else {
+          await axios.post(`${BASED_URL}/kalinga/sendDeclinedEmail/${userID}`)
+        }
+        
+      }
+    const DeleteUser = async (userID, status) => {
         console.log("ID: ", userID)
-        const result = await axios.delete(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
-        console.log(result.data)
-        fetchScreeningFormIDs();
+        if(status !== "Approved"){
+            console.log("status: ", status)
+            const result = await axios.post(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`,{
+                status: "Declined"
+            })
+            return
+        }
+        console.log("status: ", status)
+        const result = await axios.post(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
     }
 
     const approvedUser = (Page) => {
@@ -270,7 +289,7 @@ export const SecondScreen = ({route}) => {
             },
             {
               text: 'Yes',
-              onPress: () =>  navigatePage(Page, owner), // Call a function when "Yes" is pressed
+              onPress: () =>  navigatePage(Page, owner, "Approved"), // Call a function when "Yes" is pressed
             },
           ],
           { cancelable: false }
@@ -291,16 +310,17 @@ export const SecondScreen = ({route}) => {
             },
             {
               text: 'Yes',
-              onPress: () => navigatePage(Page, owner), // Call a function when "Yes" is pressed
+              onPress: () => navigatePage(Page, owner, "Declined"), // Call a function when "Yes" is pressed
             },
           ],
           { cancelable: false }
         );
       };
   
+ 
      
     return (
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <ScrollView style={styles.scrollContainer}>
             <View style = {styles.Medicalcontainer}>
                 <View style={styles.tabContent}>
                     <Text style = {styles.title}>Medical Abstract of Infant</Text>
@@ -438,15 +458,15 @@ export const RequestorInitialScreeningFormPage1 = ({route}) => {
             </View>
 
             <Tab.Navigator
-                tabBarOptions={{
-                    labelStyle: {
+                screenOptions={{
+                    tabBarLabelStyle: {
                         fontSize: 16,
                         fontWeight: 'bold',
                     },
-                    style: {
+                    tabBarStyle: {
                         backgroundColor: '#FFF8EB',
                     },
-                    indicatorStyle: {
+                    tabBarIndicatorStyle: {
                         backgroundColor: '#E60965',
                     },
                 }}
@@ -522,7 +542,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent:"center",
-        // backgroundColor: "pink"
+
     },
 
     screeningFormcontainer: {
@@ -563,9 +583,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#FFF8EB',
     },
-    container: {
-        flex: 1,
-    },
 
     text: {
         fontFamily: "Open-Sans-Regular",
@@ -605,7 +622,9 @@ const styles = StyleSheet.create({
         borderColor: "#E60965",
         paddingVertical: 5,
         paddingLeft: 15,
-        width: 90,
+        width: 80,
+        marginLeft: 1,
+        marginRight: 10,
         marginVertical: 10,
         justifyContent: "center",
         color: "#E60965",
@@ -618,11 +637,25 @@ const styles = StyleSheet.create({
         borderColor: "#E60965",
         paddingVertical: 5,
         paddingLeft: 15,
+        width: 210,
+        marginVertical: 10,
+        justifyContent: "center",
+        color: "#E60965",
+        backgroundColor: "white",  
+    },
+
+    birthDateWeight: {
+        borderWidth: 1,
+        borderRadius: 10,
+        borderColor: "#E60965",
+        paddingVertical: 5,
+        paddingLeft: 15,
         width: 190,
         marginVertical: 10,
         justifyContent: "center",
         color: "#E60965",
         backgroundColor: "white",  
+        marginRight: 10,
     },
 
     childSexInputField: {

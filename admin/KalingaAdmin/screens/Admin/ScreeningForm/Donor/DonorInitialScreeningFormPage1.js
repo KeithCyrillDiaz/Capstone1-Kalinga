@@ -122,11 +122,12 @@ const FirstScreen = ({route}) => {
                             value={"Sex: " + formData.sex}
                             editable={false}
                         />
+                    
                         <TextInput
-                            style={styles.birthDateInputField}
-                            placeholder="Birthdate"
+                            style={styles.birthDateWeight}
+                            placeholder="Birth Weight"
                             placeholderTextColor="#E60965"
-                            value={"Birthday: " + formData.childBirthDate}
+                            value={"Birth Weight: " + formData.birthWeight}
                             editable={false}
                         />
                        
@@ -142,13 +143,14 @@ const FirstScreen = ({route}) => {
                             value={"Age: " + formData.childAge}
                             editable={false}
                         />
-                        <TextInput
+                            <TextInput
                             style={styles.birthDateInputField}
-                            placeholder="Birth Weight"
+                            placeholder="Birthdate"
                             placeholderTextColor="#E60965"
-                            value={"Birth Weight: " + formData.birthWeight}
+                            value={"Birthday: " + formData.childBirthDate}
                             editable={false}
                         />
+     
                     </View>
                     <TextInput
                         style={styles.BiginputField}
@@ -206,19 +208,19 @@ const DonorInitialScreeningFormPage1 = ({route}) => {
           </View>
 
           <Tab.Navigator
-              tabBarOptions={{
-                  labelStyle: {
-                      fontSize: 16,
-                      fontWeight: 'bold',
-                  },
-                  style: {
-                      backgroundColor: '#FFF8EB',
-                  },
-                  indicatorStyle: {
-                      backgroundColor: '#E60965',
-                  },
-              }}
-          >
+                screenOptions={{
+                    tabBarLabelStyle: {
+                    fontSize: 16,
+                    fontWeight: 'bold',
+                    },
+                    tabBarStyle: {
+                    backgroundColor: '#FFF8EB',
+                    },
+                    tabBarIndicatorStyle: {
+                    backgroundColor: '#E60965',
+                    },
+                }}
+                >
               <Tab.Screen name="Screening Form" component={FirstScreen} initialParams = {{screeningFormId}} />
               <Tab.Screen name="Medical Requirements" component={SecondScreen} initialParams = {{screeningFormId}} />
           </Tab.Navigator>
@@ -242,13 +244,24 @@ const styles = StyleSheet.create({
         borderColor: "#E60965",
         paddingVertical: 5,
         paddingLeft: 15,
+        width: 210,
+        marginVertical: 10,
+        justifyContent: "center",
+        color: "#E60965",
+        backgroundColor: "white",  
+    },
+    birthDateWeight: {
+        borderWidth: 1,
+        borderRadius: 10,
+        borderColor: "#E60965",
+        paddingVertical: 5,
+        paddingLeft: 15,
         width: 190,
         marginVertical: 10,
         justifyContent: "center",
         color: "#E60965",
         backgroundColor: "white",  
     },
-
     childSexInputField: {
         borderWidth: 1,
         borderRadius: 10,
@@ -256,6 +269,7 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
         paddingLeft: 15,
         width: 100,
+
         marginVertical: 10,
         justifyContent: "center",
         color: "#E60965",
@@ -269,7 +283,7 @@ const styles = StyleSheet.create({
         borderColor: "#E60965",
         paddingVertical: 5,
         paddingLeft: 15,
-        width: 90,
+        width: 80,
         marginVertical: 10,
         justifyContent: "center",
         color: "#E60965",
@@ -280,6 +294,7 @@ const styles = StyleSheet.create({
         width: "95%",
         flexDirection: "row",
         justifyContent: "space-between",
+        marginLeft: "2%",
 
     },
   container: {

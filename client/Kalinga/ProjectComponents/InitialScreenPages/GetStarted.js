@@ -1,13 +1,18 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, CommonActions } from '@react-navigation/native';
 
 const GetStarted = () => {
     const navigation = useNavigation();
 
     const handleGetStarted = () => {
-        navigation.navigate("GuestTabs"); 
-        // navigation.navigate('RequestorTabs'); 
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'LogIn'}],
+            })
+        );
+       // navigation.navigate('RequestorTabs'); 
     };
 
     return (
@@ -45,7 +50,7 @@ const styles = StyleSheet.create({
     FirstTextOverlay: {
         position: 'absolute',
         top: 150, 
-        left: 80, 
+        left: 60, 
     },
     FirstText: {
         color: 'white',
@@ -57,7 +62,7 @@ const styles = StyleSheet.create({
     SecondTextOverlay: {
         position: 'absolute',
         top: 180, 
-        left: 250, 
+        left: 230, 
     },
     SecondText: {
         color: 'white',

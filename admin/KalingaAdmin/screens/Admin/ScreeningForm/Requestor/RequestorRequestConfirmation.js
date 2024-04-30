@@ -3,11 +3,7 @@ import { ScrollView, Text, View, StatusBar, StyleSheet, TouchableOpacity, Image,
 import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import axios from 'axios'; // Import axios
-import { useNavigation, useRoute } from '@react-navigation/native'; // Correct import
-import * as ImagePicker from 'expo-image-picker';
-import { MaterialIcons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { BASED_URL } from '../../../../MyConstants.js';
 
 const RequestorRequestConfirmation = () => {
     const route = useRoute();
@@ -30,7 +26,7 @@ const RequestorRequestConfirmation = () => {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get(`http://192.168.254.106:7000/kalinga/getRequestByID/${RequestID.formData}`);
+            const response = await axios.get(`${BASED_URL}/kalinga/getRequestByID/${RequestID.formData}`);
             const data = response.data.Request;
             
             // Log fetched data and update formData state
@@ -52,7 +48,7 @@ const RequestorRequestConfirmation = () => {
                 onPress: async () => {
                     try {
                         setIsLoading(true);
-                        await axios.put(`http://192.168.254.106:7000/kalinga/updateRequestStatus/${RequestID.formData}`, {
+                        await axios.put(`${BASED_URL}/kalinga/updateRequestStatus/${RequestID.formData}`, {
                           RequestStatus: 'Approved',
                         });
                         fetchData(); // Assuming fetchData updates the data in your component
@@ -86,7 +82,7 @@ const RequestorRequestConfirmation = () => {
                 onPress: async () => {
                     try {
                         setIsLoading(true);
-                        await axios.put(`http://192.168.254.106:7000/kalinga/updateRequestStatus/${RequestID.formData}`, {
+                        await axios.put(`${BASED_URL}/kalinga/updateRequestStatus/${RequestID.formData}`, {
                           RequestStatus: 'Decline',
                         });
                         fetchData(); // Assuming fetchData updates the data in your component

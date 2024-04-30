@@ -3,7 +3,10 @@ import React, {useState, useEffect} from 'react';
 import * as Font from 'expo-font';
 import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import * as Linking from 'expo-linking'
 
+import * as Location from 'expo-location';
+import { UserLocationContext } from './Context/UserLocationContext.js';
 
 //InitialScreenPages
 import SplashScreen from './ProjectComponents/InitialScreenPages/splashscreen';
@@ -14,11 +17,13 @@ import SendCode from './ProjectComponents/InitialScreenPages//SendCode';
 import MobileNumber from './ProjectComponents/InitialScreenPages/MobileNumber';
 import MobileNumberExpired from './ProjectComponents/InitialScreenPages/MobileNumberExpired';
 import EmailVerification from './ProjectComponents/InitialScreenPages/EmailVerification';
+import ChangeEmail from './ProjectComponents/InitialScreenPages/ChangeEmail.js';
 import EmailVerificationCode from './ProjectComponents/InitialScreenPages/EmailVerificationCode';
 import DoneEmailVerification from './ProjectComponents/InitialScreenPages/DoneEmailVerification';
 import Facebook from './ProjectComponents/InitialScreenPages/Facebook';
 import ResetPassword from './ProjectComponents/InitialScreenPages/ResetPassword';
 import ResetPasswordEmail from './ProjectComponents/InitialScreenPages/ResetPasswordEmail';
+import ResetPasswordCode from './ProjectComponents/InitialScreenPages/ResetPasswordCode.js';
 import ResetPasswordSuccessful from './ProjectComponents/InitialScreenPages/ResetPasswordSuccessful';
 import FacebookContinue from './ProjectComponents/InitialScreenPages/FacebookContinue';
 import RequestParentComponent from './ProjectComponents/Requestor/RequestParentComponent.js'
@@ -26,7 +31,7 @@ import RequestParentComponent from './ProjectComponents/Requestor/RequestParentC
 //Guest
 //import ApplyAsDonor from './screens/Guest/Apply_As_Donor/Approved.js'
 //import Approved from './screens/Guest/Apply_As_Requestor/Approved.js' <Stack.Screen name="Approved" component={Approved} />
-//import DonorApproved from './screens/Guest/Apply_As_Donor/Approved.js'  <Stack.Screen name="Donor Approved" component={DonorApproved} />
+import DonorApproved from './ProjectComponents/Guest/Profile/ApplyDonor/DonorApproved.js'  
 // import ApprovalMessage from './ProjectComponents/Guest/Profile/ApplyRequestor/ApprovalMessage.js'
 // import MedicalAbstract from './ProjectComponents/Guest/Profile/ApplyRequestor/MedicalAbstract.js'
 // import ReasonForRequesting from './ProjectComponents/Guest/Profile/ApplyRequestor/ReasonForRequesting.js'
@@ -34,7 +39,7 @@ import RequestParentComponent from './ProjectComponents/Requestor/RequestParentC
 import GuestEducContents from './ProjectComponents/Guest/Home/EducContents.js'
 import GuestEducLibrary from './ProjectComponents/Guest/Home/EducLibrary.js'
 import InstantMess from './ProjectComponents/Guest/Home/InstantMess.js'
-import GuestExplore from './ProjectComponents/Guest/Home/Explore.js'
+import GuestExplore from './ProjectComponents/Guest/GuestDashboard/Explore/ExploreFinal.js'
 import GuestHome from './ProjectComponents/Guest/GuestDashboard/GuestHome.js'
 import GuestProfile from './ProjectComponents/Guest/GuestDashboard/GuestProfile.js'
 import ApplyAsDonorStack from './ProjectComponents/Guest/Profile/ApplyDonor/ApplyAsDonorStack.js';
@@ -51,7 +56,6 @@ import CompleteDonations from './ProjectComponents/Donor/Home/MyDonations/Comple
 // import MyDonationTabs from './ProjectComponents/Donor/Home/MyDonations/MyDonationsTabs.js'
 import MyDonations from './ProjectComponents/Donor/Home/MyDonations/MyDonations.js'
 import OngoingDonations from './ProjectComponents/Donor/Home/MyDonations/OngoingDonations.js'
-import DonationsHome from './ProjectComponents/Donor/Home/MyDonations/Donation_Home.js'
 import DonorSavedArticles from './ProjectComponents/Donor/Profile/SaveArticles/DonorSavedArticles.js'
 import DonorFavoriteArticles from './ProjectComponents/Donor/Profile/SaveArticles/DonorFavoriteArticles.js'
 import SetAnAppointment from './ProjectComponents/Donor/Home/MakeDonation/SetAppointForm.js'
@@ -116,10 +120,9 @@ import RequestTab from './ProjectComponents/Requestor/Home/MyRequest/Request.js'
 
 
 //Tabs
-import DonorTabs from './routes/MainTabs.js'
 import GuestTabs from './routes/MainTabsGuest.js'
-import RequestorTabs from './routes/MainTabsRequestor.js'
-import SetPassword from './ProjectComponents/Requestor/SetPasswordRequestor.js';
+import MainTabs from './routes/MainTabs.js'
+import SetPassword from './ProjectComponents/Guest/Profile/ApplyDonor/SetPasswordDonor.js';
 import GuestTabsExploreAndMilkBank from './routes/GuestTabsExploreAndMilkBank.js'
 import RequestorTabsExploreAndMilkBank from './routes/RequestorTabsExploreAndMilkBank.js'
 import DonorTabsExploreAndMilkBank from './routes/DonorTabsExploreAndMilkBank.js'
@@ -165,8 +168,12 @@ const getFonts = async () => {
   });
 };
 
+
 export default function App() {
   const [fontsLoaded,  setFontsLoaded] = useState(false);
+
+ 
+
 
   useEffect(() => {
     async function loadFonts() {
@@ -177,11 +184,43 @@ export default function App() {
     loadFonts();
   }, []);
 
+  const prefixes = Linking.createURL('https://kalinga.com');
+  const config ={
+    screens:{
+      SetPassword: "setPassword"
+    }
+  }
+
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+
+    })();
+  }, []);
+
   if (fontsLoaded) {
     const Stack = createStackNavigator();
     return (
-
-        <NavigationContainer>
+      <>
+        <UserLocationContext.Provider value={{ location, setLocation }}>
+        <NavigationContainer
+          linking={{
+            prefixes: [prefixes],
+            config: config
+          }}
+        
+        >
+         
           <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
           {/* <Stack.Navigator initialRouteName="Data Privacy Requestor" screenOptions={{ headerShown: false }}> */}
           
@@ -196,18 +235,20 @@ export default function App() {
             <Stack.Screen name="GuestTabsExploreAndMilkBank" component={GuestTabsExploreAndMilkBank} />
             <Stack.Screen name="RequestorTabsExploreAndMilkBank" component={RequestorTabsExploreAndMilkBank} />
             <Stack.Screen name="DonorTabsExploreAndMilkBank" component={RequestorTabsExploreAndMilkBank} />
-            <Stack.Screen name="RequestorTabs" component = {RequestorTabs}/>
+            <Stack.Screen name="MainTabs" component = {MainTabs}/>
 
             <Stack.Screen name="SetPassword" component={SetPassword} />
             <Stack.Screen name="SendCode" component={SendCode} />
             <Stack.Screen name="MobileNumber" component={MobileNumber} />
             <Stack.Screen name="MobileNumberExpired" component={MobileNumberExpired} />
+            <Stack.Screen name="ChangeEmail" component={ChangeEmail} />
             <Stack.Screen name="EmailVerification" component={EmailVerification} />
             <Stack.Screen name="EmailVerificationCode" component={EmailVerificationCode} />
             <Stack.Screen name="DoneEmailVerification" component={DoneEmailVerification} />
             <Stack.Screen name="Facebook" component={Facebook} />
             <Stack.Screen name="ResetPassword" component={ResetPassword} />
             <Stack.Screen name="ResetPasswordEmail" component={ResetPasswordEmail} />
+            <Stack.Screen name="ResetPasswordCode" component={ResetPasswordCode} />
             <Stack.Screen name="ResetPasswordSuccessful" component={ResetPasswordSuccessful} />
             <Stack.Screen name="FacebookContinue" component={FacebookContinue} />
             
@@ -219,7 +260,7 @@ export default function App() {
              <Stack.Screen name="Guest Educational Contents" component={GuestEducContents} />
              <Stack.Screen name="Guest Educational Library" component={GuestEducLibrary} />
              <Stack.Screen name="GuestTabs" component={GuestTabs} />
-             {/* <Stack.Screen name="Screening Form" component={ScreeningForm} /> */}
+             <Stack.Screen name="DonorApproved" component={DonorApproved} />
              <Stack.Screen name="ApplyAsDonorStack" component={ApplyAsDonorStack} />
              <Stack.Screen name="ApplyAsRequestorStack" component={ApplyAsRequestorStack}/>
              
@@ -235,7 +276,6 @@ export default function App() {
              {/* <Stack.Screen name="My Donation Tabs" component={MyDonationTabs} /> */}
              <Stack.Screen name="My Donations" component={MyDonations} />
              <Stack.Screen name="OngoingDonations" component={OngoingDonations} />
-             <Stack.Screen name="Donations Home" component={DonationsHome} />
              <Stack.Screen name="DonorSavedArticles" component={DonorSavedArticles} />
              <Stack.Screen name="DonorFavoriteArticles" component={DonorFavoriteArticles} />
              <Stack.Screen name="SetAnAppointment" component={SetAnAppointment} />
@@ -244,7 +284,6 @@ export default function App() {
              <Stack.Screen name="DonorProfile" component={DonorProfile} />
              <Stack.Screen name="MedicalHistory" component={MedicalHistory} />
              <Stack.Screen name="SetPasswordDonor" component={SetPasswordDonor} />
-             <Stack.Screen name="Donor Tabs" component={DonorTabs} />
              <Stack.Screen name="DonorSettingScreen" component={DonorSettingScreen} />
              <Stack.Screen name="DonorAboutUs" component={DonorAboutUs} />
              <Stack.Screen name="DonorChangePassword" component={DonorChangePassword} />
@@ -279,10 +318,7 @@ export default function App() {
              <Stack.Screen name="MakeRequest" component={MakeRequest} />
              <Stack.Screen name="MakeRequest2" component={MakeRequest2} />
              <Stack.Screen name="RequestorProfile" component={RequestorProfile} />
-             <Stack.Screen name="Requestor Tabs" component={RequestorTabs} />
              
-             {/* <Stack.Screen name="Data Privacy Requestor" component={DataPrivacyNiKit} /> */}
-             {/* <Stack.Screen name="Approval Message" component={ApprovalMessage} /> */}
              <Stack.Screen name="RequestorSettingScreen" component={RequestorSettingScreen} />
              <Stack.Screen name="RequestorAboutUs" component={RequestorAboutUs} />
              <Stack.Screen name="RequestorChangePassword" component={RequestorChangePassword} />
@@ -325,7 +361,8 @@ export default function App() {
              {/*Admin*/}
              {/* <Stack.Screen name="Medical Abstract" component={MedicalAbstract} />
              <Stack.Screen name="Reason For Requesting" component={ReasonForRequesting} /> */}
-            
+             {/* <Stack.Screen name="LoginAdmin" component={LoginAdmin} />
+             <Stack.Screen name="AdminMenu" component={AdminMenu} /> */}
              <Stack.Screen name="AdminDashboard" component={AdminDashboard} />
              <Stack.Screen name="AdminUser" component={AdminUser} />
              <Stack.Screen name="AdminMilkbanks" component={AdminMilkbanks} />
@@ -358,6 +395,9 @@ export default function App() {
 
             </Stack.Navigator>
         </NavigationContainer>
+
+        </UserLocationContext.Provider>
+      </>
       
     ) 
   
@@ -366,6 +406,3 @@ export default function App() {
   }
 
 }
-
-
-

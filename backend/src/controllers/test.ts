@@ -1,5 +1,5 @@
 import express from 'express'
-import { createToken } from '../models/token'
+import { createToken } from '../models/Authentication'
 import jwt from "jsonwebtoken";
 import moment from 'moment';
 

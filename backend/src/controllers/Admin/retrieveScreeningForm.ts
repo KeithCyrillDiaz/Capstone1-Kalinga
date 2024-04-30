@@ -4,23 +4,31 @@ export const retrieveSoftDeletedForm = async (req: express.Request, res: express
     try{
         console.log(req.params.Applicant_ID)
         const retrieveScreeningForm = await isDeleteScreeningForm(req.params.Applicant_ID, "notDeleted")
-        console.log("result: ",retrieveScreeningForm)
         if(!retrieveScreeningForm){
-            return res.status(400).json({
+            return res.json({
                 messages: {
                     code: 1,
                     message: "None Existing User"
                 }
-            })
+            }).status(400)
         }
-
-        return res.status(200).json({
+        if(retrieveScreeningForm.isDeleted === "Deleted"){
+            console.log("Failed to update Applicant Form")
+            return res.json({
+                messages: {
+                    code: 1,
+                    message: "Failed to update Applicant Form"
+                }
+            }).status(400)
+        }
+        console.log("Retrieved Applicant Successfully")
+        return res.json({
             messages: {
                 code: 0,
                 messages: "Retrieved Applicant Successfully"
             },
             retrieveScreeningForm
-        })
+        }).status(200)
 
     } catch(error) {
 

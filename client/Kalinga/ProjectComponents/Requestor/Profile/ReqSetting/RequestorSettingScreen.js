@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -11,15 +11,79 @@ import {
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import Header from "./Header";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, CommonActions, useFocusEffect} from '@react-navigation/native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from 'axios'
+import { BASED_URL } from "../../../../MyConstants";
 
 
-export default function SettingScreen() {
-
+export default function SettingScreen({route}) {
+  
+  const userInformation = route.params.userInformation
+  const UserName = route.params.UserName
   const navigation = useNavigation(); 
-  const navigatePage = (Page) => {
-    navigation.navigate(Page); // Navigate to the Login screen
+  const deleteToken = async () => {
+    const token = await AsyncStorage.getItem('token')
+    if(!token){
+      console.log("Unauthorized")
+      navigatePage("LogIn")
+      return
+    }
+    const result = await axios.get(`${BASED_URL}/kalinga/userLogout/${token}`)
+    if(result.data.messages.code !== 0){
+      console.log("Unauthorized")
+      navigatePage("LogIn")
+      return
+    }
+
+    await AsyncStorage.multiRemove(['token', 'userInformation', 'DPLink', 'Image_ID']);
+    const checkToken = await AsyncStorage.getItem('token')
+    const checkUserInfo = await AsyncStorage.getItem('userInformation')
+    if(checkToken && checkUserInfo){
+      console.log("Failed to delete token in Async")
+      await AsyncStorage.removeItem('token')
+      await AsyncStorage.removeItem('userInformation')
+    }
+    console.log("Deleted token and user Information in Storage")
+    navigatePage('LogIn')
+    return
   }
+  const navigatePage = (Page) => {
+    if( Page === "LogIn"){
+      navigation.dispatch(
+        CommonActions.reset({
+            index: 0,
+            routes: [{ name: Page }],
+        })
+    );
+    return
+    }
+    navigation.navigate(Page, {userInformation: userInformation, userName: UserName}); // Navigate to the Login screen
+  }
+
+  const [profilePic, setProfilePic] = useState("")
+  const fetchDP = async () => {
+    const DPLink = await AsyncStorage.getItem("DPLink")
+    if(!DPLink && !userInformation.DPLink){
+      console.log("DPLink: ", DPLink)
+      console.log("userInformation.DPLink: ", userInformation.DPLink)
+      return
+    } 
+    if(!DPLink){
+      setProfilePic(userInformation.DPLink)
+      console.log("userInformation.DPLink: ", userInformation.DPLink)
+    } else{
+      setProfilePic(DPLink)
+      console.log("DPLink: ", DPLink)
+    }
+   
+  } 
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchDP(); // Fetch profile picture whenever screen comes into focus
+    }, [])
+  );
 
   return (
     <SafeAreaView style={bodyStyle.main}>
@@ -36,8 +100,9 @@ export default function SettingScreen() {
                 alignItems: "center",
                 justifyContent: "center",
               }}>
-              <Image
-                source={require("../../../../assets/Profile_icon.png")}
+                
+             <Image
+                source={profilePic === "" ? require("../../../../assets/Profile_icon.png") : {uri: profilePic}}
                 style={{
                   width: 84,
                   height: 84,
@@ -48,12 +113,12 @@ export default function SettingScreen() {
               />
 
               <View>
-                <Text style={fontStyle.header}>Rogine Cubelo</Text>
+                <Text style={fontStyle.header}>{UserName}</Text>
                 <Text style={fontStyle.subHeader}>Personal Information</Text>
               </View>
             </View>
 
-            <TouchableOpacity onPress={() => {}} style={buttonStyle.iconBtn}>
+            <TouchableOpacity onPress={() => navigatePage("RequestorEditPersonalScreen")} style={buttonStyle.iconBtn}>
               <Entypo name="chevron-right" size={32} color="#E60965" />
             </TouchableOpacity>
           </View>
@@ -117,7 +182,7 @@ export default function SettingScreen() {
             justifyContent: "center",
             alignItems: "center",
           }}>
-          <TouchableOpacity onPress={() => navigatePage("LogIn")}>
+          <TouchableOpacity onPress={() => deleteToken()}>
             <View style={buttonStyle.primary}>
               <Text
                 style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>

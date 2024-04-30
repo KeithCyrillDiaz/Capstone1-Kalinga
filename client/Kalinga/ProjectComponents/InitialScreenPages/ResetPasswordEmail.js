@@ -22,20 +22,21 @@ const ResetPasswordEmail = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <TouchableOpacity onPress={handleBackButton} style={styles.backButton}>
-                <MaterialIcons name="arrow-back" size={28} color="#E60965" />
-                <Text style={styles.goBackText}>Go back</Text>
-            </TouchableOpacity>
+
             <ScrollView contentContainerStyle={styles.scrollContainer}>
+                <TouchableOpacity onPress={handleBackButton} style={styles.backButton}>
+                    <MaterialIcons name="arrow-back" size={28} color="white" />
+                    <Text style={styles.goBackText}>Go back</Text>
+                </TouchableOpacity>
                 <KeyboardAvoidingView
                     behavior={Platform.OS === "ios" ? "padding" : null}
                     style={styles.SecondContainer}
                 >
                     <Text style={styles.FirstText}>Email has been sent!</Text>
-                    <Text style={styles.SecondText}>Check your emeil for retrieving your account.</Text>
+                    <Text style={styles.SecondText}>Check your email for retrieving your account.</Text>
 
                     <View style={styles.iconContainer}>
-                        <Icon name="envelope" size={120} color="white" />
+                        <Icon name="envelope" size={120} color="#F94892" />
                     </View>
 
                     <TouchableOpacity style={styles.ContinueButton} onPress={handleContinueButton}>
@@ -46,7 +47,7 @@ const ResetPasswordEmail = () => {
                         <TouchableOpacity onPress={handleResend}>
                             <Text style={styles.HandleCode}>
                                 Didn’t received the code?{' '}
-                                <Text style={{ textDecorationLine: 'underline', color: 'white' }}>Resend</Text>
+                                <Text style={{ textDecorationLine: 'underline', color: '#F94892' }}>Resend</Text>
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -61,9 +62,12 @@ const ResetPasswordEmail = () => {
 export default ResetPasswordEmail;
 
 const styles = StyleSheet.create({
+    TextInputStyle: {
+        color: "#E60965"
+    },
     container: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: '#EF5487',
     },
     backButton: {
         position: 'absolute',
@@ -74,14 +78,14 @@ const styles = StyleSheet.create({
     },
     goBackText: {
         marginLeft: 5,
-        color: '#E60965',
+        color: 'white',
         fontSize: 20
     },
     scrollContainer: {
         flexGrow: 1,
     },
     SecondContainer: {
-        backgroundColor: '#E60965',
+        backgroundColor: '#FFF8EB',
         justifyContent: 'center',
         alignItems: 'center',
         paddingVertical: 30,
@@ -94,27 +98,27 @@ const styles = StyleSheet.create({
     FirstText: {
         marginHorizontal: 50,
         fontSize: 35,
-        color: 'white',
+        color: '#F94892',
         marginBottom: 80,
         textAlign: 'center'
     },
     SecondText: {
         fontSize: 18,
-        color: 'white',
+        color: '#F94892',
         bottom: 70,
         marginHorizontal: 42,
         alignContent: 'center'
     },
     ThirdText: {
         fontSize: 12,
-        color: 'white',
+        color: '#F94892',
         bottom: 70,
         marginHorizontal: 40,
         alignContent: 'center'
     },
     FifthText:{
         fontSize: 18,
-        color: 'white',
+        color: '#F94892',
         top: 40,
         marginHorizontal: 30,
         alignContent: 'center',
@@ -122,7 +126,7 @@ const styles = StyleSheet.create({
     },
     Sixthtext:{
         fontSize: 18,
-        color: 'white',
+        color: '#F94892',
         top: 40,
         marginHorizontal: 30,
         alignContent: 'center',
@@ -132,7 +136,7 @@ const styles = StyleSheet.create({
         bottom: 50
     },
     ContinueButton: {
-        backgroundColor: "#FFEECC",
+        backgroundColor: "#F94892",
         paddingHorizontal: 50,
         paddingVertical: 10,
         borderRadius: 50,
@@ -141,11 +145,11 @@ const styles = StyleSheet.create({
 
     },
     ContinueButtonText: {
-        color: "#E60965",
+        color: 'white',
         fontSize: 20,
     },
     HandleCode: {
-        color: "white",
+        color: "#F94892",
         fontSize: 15,
         marginBottom: 10,
         top: 100

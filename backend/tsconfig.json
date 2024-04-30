@@ -7,5 +7,5 @@
     "sourceMap": true,
     "noImplicitAny": true,
 },
-  "include": ["src/**/*", "practice/backup.ts", "practice/workingBackup.ts", "practice/mutler.ts"]
+  "include": ["./api/*", "src/**/*", "practice/backup.ts", "practice/workingBackup.ts", "practice/mutler.ts"]
 }

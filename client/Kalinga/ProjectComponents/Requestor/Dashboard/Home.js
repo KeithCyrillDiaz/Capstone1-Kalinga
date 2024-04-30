@@ -8,27 +8,39 @@ import { globalHeader } from '../../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../../styles_kit/globalStyles.js';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 
+export default function RequestorHome({route}) {
 
-export default function RequestorHome() {
+    const userInformation = route.params.userInformation
+    const token = route.params.token
+    
+   
+    const storeInAsync = async () => {
+      await AsyncStorage.setItem('userInformation', JSON.stringify(userInformation))
+      await AsyncStorage.setItem('token', token)
+    }
+    storeInAsync()
+   
+     const nameArray =  userInformation.fullName.split(' ')
+    let UserName;
 
-    const FirstParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
-
-    const SecondParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
-
-    const ThridParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
-
-    const UserName = "Beverly"
-
+    if (nameArray[0].endsWith(',')) {
+      UserName = nameArray[1];
+    } else {
+      UserName = nameArray[0];
+    }
+    
+    console.log("Name: ",UserName )
     const navigation = useNavigation();
 
     const [requestStatus, setRequestStatus] = useState('empty'); // State to hold request status
 
     
     const navigatePage = (Page) => {
-        navigation.navigate(Page); // Navigate to the Login screen
+        navigation.navigate(Page, {data: userInformation}); // Navigate to the Login screen
         
 
     };    

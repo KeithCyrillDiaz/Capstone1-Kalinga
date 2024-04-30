@@ -1,8 +1,8 @@
 import express from 'express';
-import { addScreeningForm } from '../controllers/Apply_As_Donor/addScreeningForm'
-import { reqMedAbstractForm, getMedicalAbstract } from '../controllers/Apply_As_Requestor/req_medicalAbstract';
-import { getScreeningFormsUserType, getScreeningFormApplicantID } from '../controllers/Apply_As_Requestor/Requestor/getScreeningForms';
-import { getScreeningFormByID } from '../controllers/Apply_As_Donor/DonorScreeningForm/getScreeningFormsByApplicantID';
+import { addScreeningForm } from '../controllers/Donor/Apply_As_Donor/addScreeningForm'
+import { reqMedAbstractForm, getMedicalAbstract } from '../controllers/Requestor/Apply_As_Requestor/req_medicalAbstract';
+import { getScreeningFormsUserType, getScreeningFormApplicantID } from '../controllers/Requestor/Apply_As_Requestor/getScreeningForms';
+import { getScreeningFormByID } from '../controllers/Donor/Apply_As_Donor/DonorScreeningForm/getScreeningFormsByApplicantID';
 import { deleteScreeningForm } from '../controllers/Admin/deleteScreeningFormByID'
 import { retrieveSoftDeletedForm } from '../controllers/Admin/retrieveScreeningForm';
 
@@ -19,7 +19,7 @@ export default (router: express.Router) => {
     router.get('/kalinga/getMedicalAbstractByID/:Applicant_ID', getMedicalAbstract)
 
 
-    router.delete('/kalinga/deleteScreeningFormByID/:Applicant_ID', deleteScreeningForm)
+    router.post('/kalinga/deleteScreeningFormByID/:Applicant_ID', deleteScreeningForm)
     router.get('/kalinga/retrieveApplicantForm/:Applicant_ID', retrieveSoftDeletedForm)
     
 

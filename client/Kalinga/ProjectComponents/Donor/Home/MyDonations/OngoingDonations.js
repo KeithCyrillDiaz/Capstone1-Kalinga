@@ -5,10 +5,12 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios'; // Import axios for API requests
 import { format } from 'date-fns';
+import { BASED_URL } from '../../../../MyConstants.js';
 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
+import { BASED_URL } from '../../../../MyConstants.js';
 
 import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
@@ -47,7 +49,7 @@ const OngoingDonations = () => {
 
   const fetchData = async () => {
       try {
-          const response = await axios.get(`http://192.168.254.106:7000/kalinga/getOngoingDonation/${Donor_ID}`);
+          const response = await axios.get(`${BASED_URL}/kalinga/getOngoingDonation/${Donor_ID}`);
           const responseData = response.data;
 
           const formDataFromResponse = responseData.DonationData[0];

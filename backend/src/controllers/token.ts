@@ -1,5 +1,5 @@
 import express from 'express';
-import { createToken } from '../models/token';
+import { createToken } from '../models/Authentication';
 import jwt from "jsonwebtoken";
 import basicAuth from 'express-basic-auth';
 import moment from 'moment';
@@ -20,7 +20,7 @@ export const getToken = async (req: IBasicAuthedRequest, res: express.Response) 
         }
 
         const newToken: any = await createToken({
-            token: jwt.sign({ user, pass }, process.env.SECRET_KEY, { expiresIn: '1m' }),
+            logInToken: jwt.sign({ user, pass }, process.env.SECRET_KEY, { expiresIn: '1m' }),
             expiresAt: moment().add('1m').toDate()
         });
 

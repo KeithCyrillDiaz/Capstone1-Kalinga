@@ -1,11 +1,8 @@
 
 import React, {useState, useEffect} from 'react';
 import * as Font from 'expo-font';
-import { Text } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { EXPO_IP_ADDRESS, REACT_NATIVE_EXPO_IP_ADDRESS} from '@env'
-import Config from 'react-native-config'
 
 import MedicalHistory from './screens/Admin/ScreeningForm/Donor/MedicalHistory.js'
 import AdminMedicalHistory2 from './screens/Admin/ScreeningForm/Donor/AdminMedicalHistory2.js'
@@ -58,12 +55,7 @@ export default function App() {
   const [fontsLoaded,  setFontsLoaded] = useState(false);
 
   useEffect(() => {
-    const expoIpAddress = Config.EXPO_IP_ADDRESS;
-    if(expoIpAddress === undefined){
-      console.log("empty")
-    } else  console.log("expo ", expoIpAddress)
-    console.log("ip COnfig", Config.TEST)
-    async function loadFonts() {
+      async function loadFonts() {
       await getFonts();
       setFontsLoaded(true); 
     
@@ -79,8 +71,6 @@ export default function App() {
           <Stack.Navigator initialRouteName="LoginAdmin" screenOptions={{ headerShown: false }}>
 
              {/*Admin*/}
-             {/* <Stack.Screen name="Medical Abstract" component={MedicalAbstract} />
-             <Stack.Screen name="Reason For Requesting" component={ReasonForRequesting} /> */}
              <Stack.Screen name="LoginAdmin" component={LoginAdmin} />
              <Stack.Screen name="DonorUserVerification" component={DonorUserVerification} />
              <Stack.Screen name="AdminMenu" component={AdminMenu} />

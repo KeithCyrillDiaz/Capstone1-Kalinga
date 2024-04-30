@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView, StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Octicons } from '@expo/vector-icons';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { Feather } from '@expo/vector-icons';
 import { globalHeader } from '../../styles_kit/globalHeader';
 import axios from 'axios';
+import { BASED_URL } from '../../MyConstants';
 
 
 const Tab = createMaterialTopTabNavigator();
@@ -35,7 +35,7 @@ const FirstScreen = ({}) => {
     const fetchDonorAppointments = async () => {
         try {
             setIsLoading(true);
-            const response = await axios.get('http://192.168.254.106:7000/kalinga/getAppointmentByUserType/Donor');
+            const response = await axios.get(`${BASED_URL}/kalinga/getAppointmentByUserType/Donor`);
             setAppointments(response.data.appointment); // Assuming the data structure has an 'appointment' key containing the array
         } catch (error) {
             console.error('Error fetching donor appointments:', error);
@@ -99,7 +99,7 @@ const SecondScreen = () => {
     const fetchMakeRequest = async () => {
         try {
             setIsLoading(true);
-            const response = await axios.get('http://192.168.254.106:7000/kalinga/getRequestByUserType/Requestor');
+            const response = await axios.get(`${BASED_URL}/kalinga/getRequestByUserType/Requestor`);
             setRequests(response.data.request); // Assuming the data structure has an 'appointment' key containing the array
         } catch (error) {
             console.error('Error fetching:', error);
@@ -176,15 +176,15 @@ const AdminUser = () => {
             </View>
 
             <Tab.Navigator
-                tabBarOptions={{
-                    labelStyle: {
+                screenOptions={{
+                    tabBarLabelStyle: {
                         fontSize: 16,
                         fontWeight: 'bold',
                     },
-                    style: {
+                    tabBarStyle: {
                         backgroundColor: '#FFF8EB',
                     },
-                    indicatorStyle: {
+                    tabBarIndicatorStyle: {
                         backgroundColor: '#E60965',
                     },
                 }}
