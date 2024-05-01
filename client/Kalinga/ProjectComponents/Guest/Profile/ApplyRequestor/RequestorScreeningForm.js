@@ -1,12 +1,65 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StatusBar, StyleSheet, TextInput, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, TouchableOpacity, StatusBar, StyleSheet, TextInput, ScrollView, SafeAreaView} from 'react-native';
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
-import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import randomatic from 'randomatic';
+import { Dropdown } from 'react-native-element-dropdown';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { AntDesign } from '@expo/vector-icons';
 
 const ApplyAs_DonorISF = () => {
+
+  const data = [
+    { label: 'Item 1', value: '1' },
+    { label: 'Item 2', value: '2' },
+    { label: 'Item 3', value: '3' },
+    { label: 'Item 4', value: '4' },
+    { label: 'Item 5', value: '5' },
+    { label: 'Item 6', value: '6' },
+    { label: 'Item 7', value: '7' },
+    { label: 'Item 8', value: '8' },
+  ];
   
+  const [selectedItem, setSelectedItem] = useState("")
+
+  const [birthdate, setBirthdate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [userBirthday, setUserBirthDay] = useState("")
+
+   const handleDateChange = (name, selectedDate) => {
+    const currentDate = selectedDate || birthdate;
+    setShowDatePicker(false);
+
+    const currentDatetoString = currentDate.toISOString()
+    const birthDateArray = currentDatetoString.split("T")
+    const splitbirthDateArray = birthDateArray[0].split("-")
+    const Month = setMonth(splitbirthDateArray[1])
+    const FormmattedBirthday = Month + " " + splitbirthDateArray[2]+ " " + splitbirthDateArray[0]
+    // console.log("FormmattedBirthday: ", FormmattedBirthday)
+    setUserBirthDay(FormmattedBirthday);
+    birthdateFormat(currentDate)
+    // setScreeningFormData({ ...screeningFormData, [name]: value });
+    // birthDate
+  };
+
+  const setMonth = (num) => {
+    console.log("num: ", num)
+         if(num === "01") return "January"
+    else if(num === "02") return "February"
+    else if(num === "03") return "March"
+    else if(num === "04") return "April"
+    else if(num === "05") return "May"
+    else if(num === "06") return "June"
+    else if(num === "07") return "July"
+    else if(num === "08") return "August"
+    else if(num === "09") return "September"
+    else if(num === "10") return "October"
+    else if(num === "11") return "November"
+    else if(num === "12") return "December"
+    else "Invalid Month"
+
+  }
+
   const applicantId = randomatic('Aa0', 20);
   const [screeningFormData, setScreeningFormData] = useState({
     Applicant_ID: applicantId,
@@ -25,24 +78,32 @@ const ApplyAs_DonorISF = () => {
     RFR: '',
 });
 
+const handleSelectItem = (item) => {
+  setSelectedItem(item);
+};
+
 const handleChangeText = (name, value) => {
+  console.log("value: ", value)
   setScreeningFormData({ ...screeningFormData, [name]: value });
 };
 
-  const formatBirthday = (text) => {
-    if (text.length === 2 || text.length === 5) {
-      if (text.charAt(text.length - 1) !== '/') {
-        text += '/';
-      }
-    }
-    setBirthday(text);
-  };
+  // const formatBirthday = (text) => {
+  //   if (text.length === 2 || text.length === 5) {
+  //     if (text.charAt(text.length - 1) !== '/') {
+  //       text += '/';
+  //     }
+  //   }
+  //   setBirthday(text);
+  // };
 
   const navigation = useNavigation();
 
   const navigatePage = (Page, Data) => {
     navigation.navigate(Page, Data); // Navigate to the Login screen
 };
+
+const [value, setValue] = useState(null);
+const [isFocus, setIsFocus] = useState(false);
 
   return (
     
@@ -91,21 +152,31 @@ const handleChangeText = (name, value) => {
             <TextInput
               placeholder="Age"
               style={styles.inputField}
-             
+              editable={false}
               onChangeText={(value) => handleChangeText('Age', value)}
               keyboardType="numeric"
             />
           </View>
 
-          <View style={[styles.inputBirthdayContainer, { elevation: 5 }]}>
-            <TextInput
-              placeholder="Birthdate"
-              style={styles.inputField}
-             
-              onChangeText={(value) => handleChangeText('birthDate', value)}
-              
-
+          <View style={[styles.inputBirthdayContainer, { elevation: 5 }]}> 
+          {showDatePicker && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={birthdate}
+              mode="date"
+              display="spinner"
+              onChange={handleDateChange}
             />
+            )}
+            <TextInput 
+              onPress={() => setShowDatePicker(true)}
+              placeholder="Birthdate"
+              style={[styles.inputField]}
+              onChangeText={(value) => handleChangeText('birthDate', value)}
+              editable={false}
+              value = {userBirthday}
+            />
+            <AntDesign onPress={() => setShowDatePicker(true)} style = {{position: "absolute", right: 10}} name="calendar" size={24} color="black" />
           </View>
         </View>
 
@@ -130,6 +201,27 @@ const handleChangeText = (name, value) => {
         </View>
 
         <View style={[styles.inputHomeAddressContainer, { elevation: 5 }]}>
+        <Dropdown
+                style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                inputSearchStyle={styles.inputSearchStyle}
+                iconStyle={styles.iconStyle}
+                data={data}
+                search
+                maxHeight={300}
+                labelField="label"
+                valueField="value"
+                placeholder={!isFocus ? 'Select item' : '...'}
+                searchPlaceholder="Search..."
+                value={value}
+                onFocus={() => setIsFocus(true)}
+                onBlur={() => setIsFocus(false)}
+                onChange={item => {
+                  setValue(item.value);
+                  setIsFocus(false);
+                }}
+              />
           <TextInput
             placeholder="Home Address"
             style={styles.inputHomeAddressField}
@@ -206,9 +298,41 @@ const handleChangeText = (name, value) => {
 };
 
 const styles = StyleSheet.create({
+ 
   container: {
     backgroundColor: '#FFF8EB',
     flex: 1,
+  },
+
+  dropdown: {
+    height: 20,
+    paddingHorizontal: 8,
+  },
+  icon: {
+    marginRight: 5,
+  },
+  label: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    left: 22,
+    top: 8,
+    zIndex: 999,
+    paddingHorizontal: 8,
+    fontSize: 14,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
   },
 
     IndicatedPage: {
@@ -353,6 +477,9 @@ const styles = StyleSheet.create({
     marginLeft: -15, // Move the input field to the right
   },
   inputBirthdayContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     borderWidth: 0.5, // Border width
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
