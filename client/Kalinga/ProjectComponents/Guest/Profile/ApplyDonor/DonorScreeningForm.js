@@ -1,5 +1,5 @@
 //Guest EducLibrary
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
   ScrollView, 
   Text, 
@@ -9,11 +9,15 @@ import {
   StyleSheet,
   TextInput, 
   TouchableOpacity,
+  Alert
 } from 'react-native';
 import { globalStyles } from "../../../../styles_kit/globalStyles.js";
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { useNavigation } from '@react-navigation/native';
 import randomatic from 'randomatic';
+import { Dropdown } from 'react-native-element-dropdown';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { AntDesign } from '@expo/vector-icons';
 
 
 const DonorScreeningForm = () => {
@@ -77,6 +81,67 @@ const handleChangeText = (name, value) => {
     setScreeningFormData({ ...screeningFormData, [name]: value });
 };
 
+const [dateToday, setDateToday] = useState(new Date());
+const [showDatePicker, setShowDatePicker] = useState(false);
+const [userBirthday, setUserBirthDay] = useState("")
+const [userAge, setUserAge] = useState("")
+
+const handleDateChange = (event, selectedDate) => {
+  console.log("Date: ", selectedDate)
+  if(selectedDate > dateToday){
+    Alert.alert("Invalid Birthdate", "Please input your proper birthday")
+    setShowDatePicker(false);
+    return
+  }
+  const currentDate = selectedDate || dateToday;
+  setShowDatePicker(false);
+  
+  const age = calculateAge(selectedDate, dateToday)
+  const currentDatetoString = currentDate.toISOString()
+  const birthDateArray = currentDatetoString.split("T")
+  const splitbirthDateArray = birthDateArray[0].split("-")
+  const Month = setMonth(splitbirthDateArray[1])
+  const FormmattedBirthday = Month + " " + splitbirthDateArray[2]+ " " + splitbirthDateArray[0]
+  console.log("FormmattedBirthday: ", FormmattedBirthday)
+  setScreeningFormData({ 
+    ...screeningFormData, 
+    Age: age,
+    birthDate: FormmattedBirthday
+  
+  });
+  setUserBirthDay(FormmattedBirthday)
+};
+
+const calculateAge = (birthDay, currentDate) => {
+  const differenceMs = currentDate - birthDay;
+  const age = Math.floor(differenceMs / (1000 * 60 * 60 * 24 * 365.25));
+  setUserAge(age.toString())
+  return age.toString()
+}
+
+const setMonth = (num) => {
+  console.log("num: ", num)
+       if(num === "01") return "January"
+  else if(num === "02") return "February"
+  else if(num === "03") return "March"
+  else if(num === "04") return "April"
+  else if(num === "05") return "May"
+  else if(num === "06") return "June"
+  else if(num === "07") return "July"
+  else if(num === "08") return "August"
+  else if(num === "09") return "September"
+  else if(num === "10") return "October"
+  else if(num === "11") return "November"
+  else if(num === "12") return "December"
+  else "Invalid Month"
+
+}
+
+useEffect(() => {
+  console.log('Screening Form Data:', screeningFormData);
+}, [screeningFormData]);
+
+
   return (
     
 
@@ -113,20 +178,47 @@ const handleChangeText = (name, value) => {
                         placeholderTextColor="#E60965"
                         onChangeText={(value) => handleChangeText('fullName', value)}
                     />
-                    <View style = {globalStyles.flex_Row}>
+                    <View style = {{
+                      flexDirection: "row",
+                      marginHorizontal: "4%",
+                    }}>
                     <TextInput
                         style={styles.ageInputField}
                         placeholder="Age"
                         placeholderTextColor="#E60965"
-                          keyboardType="numeric"
-                        onChangeText={(value) => handleChangeText('Age', value)}
+                        editable={false}
+                        value = {"Age: " + userAge}
                     />
-                    <TextInput
-                        style={styles.birthDayInputField}
-                        placeholder="Birth Date: MM/DD/YY"
-                        placeholderTextColor="#E60965"
-                        onChangeText={(value) => handleChangeText('birthDate', value)}
-                    />
+                     {showDatePicker && (
+                      <DateTimePicker
+                        testID="dateTimePicker"
+                        value={dateToday}
+                        mode="date"
+                        display="spinner"
+                        onChange={handleDateChange}
+                      />
+                      )}
+                    <View style = {{
+                      flexDirection: "row", 
+                      alignItems: "center", 
+                      width: "70%", 
+                      alignSelf: "center",
+                      }}>
+                      <TextInput
+                          style={[styles.birthDayInputField, {width: "100%", marginLeft: 0, marginRight: 0}]}
+                          placeholder="Birth Date"
+                          placeholderTextColor="#E60965"
+                          editable={false}
+                          value = {"Birthday: " + userBirthday}
+                      />
+                      <AntDesign 
+                      onPress={() => setShowDatePicker(true)} 
+                      style = {{position: "absolute", right: 20}} 
+                      name="calendar" size={24} 
+                      color="#E60965" 
+                      />
+                    </View>
+                   
                     </View>
                     <TextInput
                         style={styles.BiginputField}
@@ -352,9 +444,9 @@ const handleChangeText = (name, value) => {
       borderColor: "#E60965",
       paddingVertical: 5,
       paddingHorizontal: 20,
-      width: "23%",
+      width: "25%",
       marginVertical: "1.5%",
-      marginHorizontal: "3%",
+      marginRight: "3%",
       color: "#E60965",
       backgroundColor: "#FFFFFF",
       elevation: 5,
