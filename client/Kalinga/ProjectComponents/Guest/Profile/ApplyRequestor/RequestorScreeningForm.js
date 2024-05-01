@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StatusBar, StyleSheet, TextInput, ScrollView, SafeAreaView} from 'react-native';
+import { View, Text, TouchableOpacity, StatusBar, StyleSheet, TextInput, ScrollView, SafeAreaView, Alert} from 'react-native';
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { useNavigation } from '@react-navigation/native';
 import randomatic from 'randomatic';
@@ -27,6 +27,12 @@ const ApplyAs_DonorISF = () => {
   const [userBirthday, setUserBirthDay] = useState("")
 
    const handleDateChange = (name, selectedDate) => {
+    console.log("Date: ", selectedDate)
+    if(selectedDate > birthdate){
+      Alert.alert("Invalid Birthdate", "Please input yopur proper birthday")
+      return
+    }
+    console.log("Result: ", selectedDate - birthdate)
     const currentDate = selectedDate || birthdate;
     setShowDatePicker(false);
 
@@ -471,7 +477,7 @@ const styles = StyleSheet.create({
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
-    width: '50%',
+    width: '20%',
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 45, // Adjust height
     marginLeft: -15, // Move the input field to the right
@@ -484,7 +490,7 @@ const styles = StyleSheet.create({
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
-    width: '50%',
+    width: '80%',
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 45, // Adjust height
     marginLeft: 15, // Move the input field to the right
