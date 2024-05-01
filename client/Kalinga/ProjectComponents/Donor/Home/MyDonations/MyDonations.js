@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import {NavigationContainer} from '@react-navigation/native';
 import { SafeAreaView, Text, View,ScrollView, StatusBar, StyleSheet, TouchableOpacity, ActivityIndicator} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import { MaterialIcons } from '@expo/vector-icons';
