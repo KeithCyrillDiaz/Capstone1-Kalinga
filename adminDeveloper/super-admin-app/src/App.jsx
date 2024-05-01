@@ -13,6 +13,11 @@ import {
   Forum,
   Approved,
   Rejected,
+  Bugs,
+  BugReport,
+  BugResolve,
+  Feedback,
+  FeedbackReport
 } from "@/pages";
 import { RootLayout, NotFound, MainLayout, AdminLayout } from "@/layouts";
 import { MobileChecker } from "@/components";
@@ -30,6 +35,7 @@ const router = createBrowserRouter(
       </Route>
 
       {/* Private Routes */}
+      
       <Route path="admin" element={<AdminLayout />}>
         <Route index element={<AdminDashboard />} />
         <Route path="city" element={<City />} />
@@ -37,6 +43,15 @@ const router = createBrowserRouter(
         <Route path="forum" element={<Forum />} />
         <Route path="approved" element={<Approved />} />
         <Route path="rejected" element={<Rejected />} />
+        <Route path="bugs" element={<Bugs />} />
+        <Route path="bugReport" element={<BugReport />} />
+        <Route path="bugResolve" element={<BugResolve />} />
+        <Route path="feedback" element={<Feedback />} />
+        <Route path="feedbackReport" element={<FeedbackReport />} />
+
+
+
+
       </Route>
 
       {/* 404 */}

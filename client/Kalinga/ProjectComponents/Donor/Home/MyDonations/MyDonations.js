@@ -8,7 +8,6 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { BASED_URL } from '../../../../MyConstants.js';
 import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import { useNavigation } from '@react-navigation/native';
-import { PDFDocument, PDFText, PDFPage } from 'react-native-pdf-lib';
 
 
 
