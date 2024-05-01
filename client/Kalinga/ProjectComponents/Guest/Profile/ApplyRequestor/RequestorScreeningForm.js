@@ -6,6 +6,9 @@ import randomatic from 'randomatic';
 import { Dropdown } from 'react-native-element-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { AntDesign } from '@expo/vector-icons';
+import axios from 'axios';
+import { BASED_URL } from '../../../../MyConstants.js';
+
 
 const ApplyAs_DonorISF = () => {
 
@@ -23,9 +26,12 @@ const ApplyAs_DonorISF = () => {
   const [selectedItem, setSelectedItem] = useState("")
 
   const [dateToday, setDateToday] = useState(new Date());
+  const [dateSelected, setDateSelected] = useState(new Date())
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showDate1Picker, setShowDate1Picker] = useState(false);
   const [userBirthday, setUserBirthDay] = useState("")
   const [userAge, setUserAge] = useState("")
+  const [isEmailExisted, setIsEmailExisted] = useState(false)
 
   const applicantId = randomatic('Aa0', 20);
   const [screeningFormData, setScreeningFormData] = useState({
@@ -45,31 +51,85 @@ const ApplyAs_DonorISF = () => {
     RFR: '',
 });
 
-   const handleDateChange = (event, selectedDate) => {
-    console.log("Date: ", selectedDate)
+const [isFormFilled, setIsFormFilled] = useState(false)
+const checkForm = () => {
+  const keysToCheck = [
+    'Applicant_ID',
+    'userType',
+    'fullName',
+    'Age',
+    'birthDate',
+    'email',
+    'contactNumber',
+    'homeAddress',
+    'childName',
+    'childAge',
+    'sex',
+    'childBirthDate',
+    'birthWeight',
+    'ageOfGestation',
+    'medicalCondition'
+    ];
+
+    const isFormDataValid = keysToCheck.every(key => screeningFormData[key].trim() !== '');
+
+    if (isFormDataValid) {
+        console.log('All values until medical condition are valid');
+        setIsFormFilled(true)
+    } else {
+        console.log('Some values until medical condition are empty');
+        setIsFormFilled(false)
+    }
+}
+   const handleDateChange = (event, selectedDate, info) => {
     if(selectedDate > dateToday){
       Alert.alert("Invalid Birthdate", "Please input your proper birthday")
       setShowDatePicker(false);
+      setShowDate1Picker(false)
       return
     }
-    const currentDate = selectedDate || dateToday;
-    setShowDatePicker(false);
-    
+    if(info !== "Personal"){
+      setShowDate1Picker(false);
+    } else setShowDatePicker(false);
+  
+    setDateSelected(selectedDate)
     const age = calculateAge(selectedDate, dateToday)
-    const currentDatetoString = currentDate.toISOString()
+    const birthDate =  formatBirthday(selectedDate)
+    console.log("info: ", info)
+    if(info === "infant") {
+      console.log("infant", info)
+      setScreeningFormData({ 
+        ...screeningFormData, 
+        childAge: age,
+        childBirthDate: birthDate
+      });
+      return
+    }
+  setScreeningFormData({ 
+    ...screeningFormData, 
+    Age: age,
+    birthDate: birthDate
+  
+  });
+  setUserBirthDay(birthDate)
+  };
+
+  const formatBirthday = (date) => {
+    console.log("SelectedDate: ", date)
+    const currentDatetoString = date.toISOString()
     const birthDateArray = currentDatetoString.split("T")
     const splitbirthDateArray = birthDateArray[0].split("-")
     const Month = setMonth(splitbirthDateArray[1])
-    const FormmattedBirthday = Month + " " + splitbirthDateArray[2]+ " " + splitbirthDateArray[0]
-    console.log("FormmattedBirthday: ", FormmattedBirthday)
-    setScreeningFormData({ 
-      ...screeningFormData, 
-      Age: age,
-      birthDate: FormmattedBirthday
-    
-    });
-    setUserBirthDay(FormmattedBirthday)
-  };
+    const getDay = splitbirthDateArray[2].toString()
+    let newDay = ""
+    if(getDay.startsWith("0")){
+      newDay = parseInt(getDay).toString();
+      console.log("newDay: ", newDay)
+    } else newDay = getDay
+  
+    const FormmattedBirthday = Month + " " + newDay + ", " + splitbirthDateArray[0]
+    return FormmattedBirthday
+  }
 
   const calculateAge = (birthDay, currentDate) => {
     const differenceMs = currentDate - birthDay;
@@ -106,6 +166,12 @@ const handleSelectItem = (item) => {
 
 const handleChangeText = (name, value) => {
   setScreeningFormData({ ...screeningFormData, [name]: value });
+
+  if(name === "email" && value.includes("@") && (value.endsWith("com") || value.endsWith("ph"))){
+    console.log("Email: ", value)
+    checkEmail(value)
+  }
+  checkForm()
   return
 };
   const navigation = useNavigation();
@@ -116,6 +182,16 @@ const handleChangeText = (name, value) => {
 
 const [value, setValue] = useState(null);
 const [isFocus, setIsFocus] = useState(false);
+
+const checkEmail = async (email) => {
+  const response = await axios.get(`${BASED_URL}/kalinga/checkEmail/${email}`)
+  if(response.data.messages.code === 1){
+    console.log(response.data.messages.message)
+    setIsEmailExisted(true)
+    return
+  } else setIsEmailExisted(false)
+  return
+}
 
   return (
     
@@ -165,7 +241,7 @@ const [isFocus, setIsFocus] = useState(false);
               placeholder="Age"
               style={{
                 flex: 1,
-                color: '#E60965', // Text color
+                color: userAge === "" ? 'gray': '#E60965', // Text color
                 fontSize: 16, // Font size
                 paddingVertical: 10, // Vertical padding
                 textAlign: "center",
@@ -180,20 +256,23 @@ const [isFocus, setIsFocus] = useState(false);
           {showDatePicker && (
             <DateTimePicker
               testID="dateTimePicker"
-              value={dateToday}
+              value={dateSelected === new Date() ? dateToday : dateSelected}
               mode="date"
               display="spinner"
-              onChange={handleDateChange}
+              onChange={(event, value) => handleDateChange(event, value, "Personal")}
             />
             )}
             <TextInput 
-              onPress={() => setShowDatePicker(true)}
               placeholder="Birthdate"
-              style={[styles.inputField]}
+              style={[styles.inputField, {color: userBirthday === "" ? 'gray': '#E60965',}]}
               editable={false}
               value = {userBirthday}
             />
-            <AntDesign onPress={() => setShowDatePicker(true)} style = {{position: "absolute", right: 10}} name="calendar" size={24} color="black" />
+            <AntDesign 
+            onPress={() => setShowDatePicker(true)} 
+            style = {{position: "absolute", right: 10}} 
+            name="calendar" size={24} 
+            color="black" />
           </View>
         </View>
 
@@ -206,7 +285,14 @@ const [isFocus, setIsFocus] = useState(false);
             keyboardType="email-address"
           />
         </View>
-
+        {isEmailExisted && (
+          <Text 
+          style = {{
+            marginLeft: "10%", 
+            marginTop: 5, 
+            marginBottom: -10, 
+            color: "red"}}>Email is already existing!</Text>
+        )}
         <View style={[styles.inputPhoneNumberContainer, { elevation: 5 }]}>
           <TextInput
             placeholder="Phone Number"
@@ -249,14 +335,15 @@ const [isFocus, setIsFocus] = useState(false);
 
         <Text style={styles.infantinfoText}>Infant Information</Text>
         <View style={styles.inputRowContainer1}>
-            <View style={[styles.inputAgeContainer1, { elevation: 5 }]}>
-              <TextInput
-                placeholder="Age"
-                style={styles.inputField}
-             
-                onChangeText={(value) => handleChangeText('childAge', value)}
-               
-              />
+         
+            <View style={[styles.inputBirthWeightContainer, { elevation: 5 }]}>
+            <TextInput
+              placeholder="Birth Weight (kg)"
+              style={styles.inputField}
+              
+              onChangeText={(value) => handleChangeText('birthWeight', value)}
+              keyboardType="numeric"
+            />
             </View>
           <View style={[styles.inputSexContainer, { elevation: 5 }]}>
               <TextInput
@@ -269,24 +356,44 @@ const [isFocus, setIsFocus] = useState(false);
 
         <View style={styles.inputRowContainer2}>
           <View style={[styles.inputBirthdateContainer1, { elevation: 5 }]}>
-            <TextInput
-              placeholder="Birthdate"
-              style={styles.inputField}
-             
-              onChangeText={(value) => handleChangeText('childBirthDate', value)}
-         
-            
+          {showDate1Picker && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={dateSelected === new Date() ? dateToday : dateSelected}
+              mode="date"
+              display="spinner"
+              onChange={(event, value) => handleDateChange(event, value, "infant")}
             />
+            )}
+            <View style = {{
+              flexDirection: "row",
+              alignItems: "center"
+            }}>
+              <TextInput
+                placeholder="Birthdate"
+                style={[styles.inputField]}
+                editable={false}
+                value = {screeningFormData.childBirthDate}
+              />
+              <AntDesign 
+                onPress={() => setShowDate1Picker(true)} 
+                style = {{position: "absolute", right: 10}} 
+                name="calendar" size={24} 
+                color="black"
+              />
+            </View>
+            
           </View>
 
-          <View style={[styles.inputBirthWeightContainer, { elevation: 5 }]}>
+          <View style={[styles.inputAgeContainer1, { elevation: 5 }]}>
             <TextInput
-              placeholder="Birth Weight (kg)"
-              style={styles.inputField}
-              
-              onChangeText={(value) => handleChangeText('birthWeight', value)}
-              keyboardType="numeric"
-            />
+                placeholder="Age"
+                style={styles.inputField}
+                onChangeText={(value) => handleChangeText('childAge', value)}
+                value = {screeningFormData.childAge}
+               
+              />
+           
           </View>
         </View>
 
@@ -300,7 +407,15 @@ const [isFocus, setIsFocus] = useState(false);
         </View>
 
         <View style={[styles.buttonContainer, { elevation: 5 }]}>
-          <TouchableOpacity style={[styles.nextButton, { width: 150 }]}onPress={() => navigatePage("RequestorMedicalAbstract", {screeningFormData: screeningFormData})}>
+          <TouchableOpacity style={[
+            styles.nextButton, 
+              { 
+                width: 150,
+                opacity: isEmailExisted || !isFormFilled ? 0.5 : 1
+              }
+            ]}
+            disabled = {isEmailExisted || !isFormFilled}
+            onPress={() => navigatePage("RequestorMedicalAbstract", {screeningFormData: screeningFormData})}>
             <Text style={styles.nextButtonText}>Next</Text>
           </TouchableOpacity>
         </View>
@@ -555,10 +670,10 @@ inputAgeContainer1: {
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
-    width: '50%',
+    width: '30%',
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 45, // Adjust height
-    marginLeft: -15, // Move the input field to the right
+    marginLeft: 20, // Move the input field to the right
   },
 inputSexContainer: {
   borderWidth: 0.5, // Border width
@@ -581,7 +696,7 @@ inputBirthdateContainer1: {
   borderRadius: 18,
   borderColor: '#E60965',
   backgroundColor: '#FFFFFF',
-  width: '50%', // Adjust width as needed
+  width: '70%', // Adjust width as needed
   marginTop: 15,
   height: 45, // Adjust height
   marginLeft: -15,
@@ -593,15 +708,15 @@ inputBirthdateContainer1: {
   backgroundColor: '#FFFFFF',
   width: '50%', // Adjust width as needed
   marginTop: 15,
-  height: 45, // Adjust height
-  marginLeft: 20,
+  height: 45, // Adjust height,
+  marginLeft: -15,
 },
   inputAgeOfGestationContainer: {
   borderWidth: 0.5,
   borderRadius: 18,
   borderColor: '#E60965',
   backgroundColor: '#FFFFFF',
-  width: '80%',
+  width: '82%',
   marginTop: 15,
   height: 45, // Adjust height
   marginLeft: 30,
