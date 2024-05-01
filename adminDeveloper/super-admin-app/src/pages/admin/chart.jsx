@@ -1,5 +1,5 @@
 import React from "react";
-import { PieChart, LoadPercentage } from "@components";
+import { PieChart, LoadPercentage, RequestpieChart } from "@components";
 
 export default function () {
   return (
@@ -61,7 +61,7 @@ export default function () {
               <PieChart name="Donations" />
             </span>
             <span className="lg:pt-4 lg:pb-8 xl:p-0">
-              <PieChart name="Requests" />
+              <RequestpieChart name="Requests" />
             </span>
           </div>
           <LoadPercentage name="Lactating Mothers" />

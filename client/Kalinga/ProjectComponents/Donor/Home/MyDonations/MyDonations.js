@@ -4,6 +4,9 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { BASED_URL } from '../../../../MyConstants.js';
+import { globalHeader } from '../../../../styles_kit/globalHeader.js';
+import { useNavigation } from '@react-navigation/native';
+
 
 
 const Tab = createBottomTabNavigator()

@@ -44,6 +44,7 @@ export default function RequestorProfile() {
       phoneNumber: '',
       emailAddress: '',
       homeAddress: '',
+      city: '',
       medicalCondition: '',
       milkAmount: '',
       BabyCategory: '',

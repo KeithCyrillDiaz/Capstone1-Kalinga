@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import KalingaLogo from "@assets/Kalinga-Logo-Small.png";
 import { useNavigate, NavLink } from "react-router-dom";
-
 export default function () {
   const navigate = useNavigate();
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [showReportsDropdown, setShowReportsDropdown] = useState(false);
+  const [showIssuesDropdown, setShowIssuesDropdown] = useState(false);
 
   const isActiveRoute = (route) => {
     const currentPath = window.location.pathname;
@@ -66,9 +66,9 @@ export default function () {
             </NavLink>
             <div>
               <div
-                onClick={() => setShowDropdown(!showDropdown)}
+                onClick={() => setShowReportsDropdown(!showReportsDropdown)}
                 className={`grid items-center justify-start pl-10 grid-flow-col-dense cursor-pointer w-full rounded-2xl gap-x-8 py-2 ${
-                  showDropdown ? "mb-2" : "mb-10"
+                  showReportsDropdown ? "mb-2" : "mb-10"
                 } `}
               >
                 <svg
@@ -91,13 +91,13 @@ export default function () {
                   height="48"
                   viewBox="0 0 24 24"
                   className={`transform transition-transform duration-300 ${
-                    showDropdown ? "rotate-0" : "rotate-180"
+                    showReportsDropdown ? "rotate-0" : "rotate-180"
                   }`}
                 >
                   <path fill="#FFEECC" d="m7 10l5 5l5-5z" />
                 </svg>
               </div>
-              {showDropdown && (
+              {showReportsDropdown && (
                 <div className="p-2">
                   <NavLink
                     to="/admin/chart"
@@ -126,6 +126,7 @@ export default function () {
                 </div>
               )}
             </div>
+            <div>
             <NavLink
               to="/admin/forum"
               className={`grid items-center justify-center grid-flow-col-dense cursor-pointer w-full rounded-2xl gap-x-8 py-2 pl-4 mb-10 ${
@@ -151,6 +152,67 @@ export default function () {
             </NavLink>
           </div>
         </div>
+
+        <div>
+              <div
+                onClick={() => setShowIssuesDropdown(!showIssuesDropdown)}
+                className={`grid items-center justify-start pl-10 grid-flow-col-dense cursor-pointer w-full rounded-2xl gap-x-8 py-2 ${
+                  showIssuesDropdown ? "mb-2" : "mb-10"
+                } `}
+              >
+          <svg 
+          xmlns="http://www.w3.org/2000/svg"
+          width="55"
+          height="55"
+            viewBox="0 0 256 256">
+              <path
+                fill="#FFEECC"
+                d="M230.92 212c-15.23-26.33-38.7-45.21-66.09-54.16a72 72 0 1 0-73.66 0c-27.39 8.94-50.86 27.82-66.09 54.16a8 8 0 1 0 13.85 8c18.84-32.56 52.14-52 89.07-52s70.23 19.44 89.07 52a8 8 0 1 0 13.85-8M72 96a56 56 0 1 1 56 56a56.06 56.06 0 0 1-56-56"/>
+              </svg>
+                <h1 className="text-3xl text-neutral-primary">Issue</h1>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="48"
+                  height="48"
+                  viewBox="0 0 24 24"
+                  className={`transform transition-transform duration-300 ${
+                    showIssuesDropdown ? "rotate-0" : "rotate-180"
+                  }`}
+                >
+                  <path fill="#FFEECC" d="m7 10l5 5l5-5z" />
+                </svg>
+              </div>
+              {showIssuesDropdown && (
+                <div className="p-2">
+                  <NavLink
+                    to="/admin/bugs"
+                    className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-8 py-2 mb-5 ${
+                      isActiveRoute("bugs")
+                        ? "bg-secondary-default"
+                        : " bg-transparent"
+                    }`}
+                  >
+                    <h1 className="text-xl text-neutral-primary">
+                        Bugs
+                    </h1>
+                  </NavLink>
+                  <NavLink
+                    to="/admin/feedback"
+                    className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-8 py-2 mb-5 ${
+                      isActiveRoute("feedback")
+                        ? "bg-secondary-default"
+                        : " bg-transparent"
+                    }`}
+                  >
+                    <h1 className="text-xl text-neutral-primary">
+                      Feedbacks
+                    </h1>
+                  </NavLink>
+                </div>
+              )}
+            </div>
+            </div>
+          
         <div className="grid items-center justify-center grid-flow-col-dense mb-6 gap-x-4">
           <span>
             <svg
@@ -165,6 +227,9 @@ export default function () {
               />
             </svg>
           </span>
+
+
+          
           <button
             onClick={handleSignOut}
             className="text-3xl text-neutral-primary"

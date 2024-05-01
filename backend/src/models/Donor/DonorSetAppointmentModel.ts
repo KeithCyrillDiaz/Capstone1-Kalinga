@@ -15,6 +15,7 @@ export interface Appointment extends Document {
   fullName: string;
   phoneNumber: string; // Changed from String to { type: String, required: true, validate: numericValidator }
   emailAddress: string;
+  city: string;
   homeAddress: string;
   medicalCondition?: string;
   milkAmount?: string; // Changed from String to { type: String, required: true, validate: numericValidator }
@@ -32,6 +33,7 @@ const AppointmentSchema: Schema = new Schema({
   phoneNumber: { type: String, required: true, validate: numericValidator },
   emailAddress: { type: String, required: true },
   homeAddress: { type: String, required: true },
+  city: { type: String, required: true },
   medicalCondition: String,
   milkAmount: { type: String, required: true, validate: numericValidator },
   selectedDate: { type: String, required: true },
