@@ -18,8 +18,8 @@ import randomatic from 'randomatic';
 import { Dropdown } from 'react-native-element-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { AntDesign } from '@expo/vector-icons';
-
-
+import axios from "axios";
+import { BASED_URL } from "../../../../MyConstants.js";
 const DonorScreeningForm = () => {
 
     const navigation = useNavigation();
@@ -77,40 +77,117 @@ const DonorScreeningForm = () => {
 });
 
 // Handler to update the state with the entered values
+
+const [isEmailExisted, setIsEmailExisted] = useState(false)
+const [isFormFilled, setIsFormFilled] = useState(false)
+
+const checkForm = () => {
+  const keysToCheck = [
+    'Applicant_ID',
+    'userType',
+    'fullName',
+    'Age',
+    'birthDate',
+    'email',
+    'contactNumber',
+    'homeAddress',
+    'childName',
+    'childAge',
+    'sex',
+    'childBirthDate',
+    'birthWeight',
+    'ageOfGestation',
+    'medicalCondition'
+    ];
+
+    const isFormDataValid = keysToCheck.every(key => screeningFormData[key].trim() !== '');
+
+    if (isFormDataValid) {
+        console.log('All values until medical condition are valid');
+        setIsFormFilled(true)
+    } else {
+        console.log('Some values until medical condition are empty');
+        setIsFormFilled(false)
+    }
+}
+const checkEmail = async (email) => {
+  const response = await axios.get(`${BASED_URL}/kalinga/checkEmail/${email}`)
+  if(response.data.messages.code === 1){
+    console.log(response.data.messages.message)
+    setIsEmailExisted(true)
+    return
+  } else setIsEmailExisted(false)
+  return
+}
+
+
 const handleChangeText = (name, value) => {
     setScreeningFormData({ ...screeningFormData, [name]: value });
+    if(name === "email" && value.includes("@") && (value.endsWith("com") || value.endsWith("ph"))){
+      console.log("Email: ", value)
+      checkEmail(value)
+    }
+    checkForm()
+    return
 };
 
 const [dateToday, setDateToday] = useState(new Date());
+const [dateSelected, setDateSelected] = useState(new Date())
 const [showDatePicker, setShowDatePicker] = useState(false);
+const [showDate1Picker, setShowDate1Picker] = useState(false);
 const [userBirthday, setUserBirthDay] = useState("")
 const [userAge, setUserAge] = useState("")
 
-const handleDateChange = (event, selectedDate) => {
-  console.log("Date: ", selectedDate)
+const handleDateChange = (event, selectedDate, info) => {
   if(selectedDate > dateToday){
     Alert.alert("Invalid Birthdate", "Please input your proper birthday")
     setShowDatePicker(false);
+    setShowDate1Picker(false)
     return
   }
-  const currentDate = selectedDate || dateToday;
-  setShowDatePicker(false);
+  setDateSelected(selectedDate)
+  if(info !== "Personal"){
+    setShowDate1Picker(false);
+  } else setShowDatePicker(false);
+
   
   const age = calculateAge(selectedDate, dateToday)
-  const currentDatetoString = currentDate.toISOString()
+  const birthDate =  formatBirthday(selectedDate)
+  console.log("info: ", info)
+  if(info === "infant") {
+    console.log("infant", info)
+    setScreeningFormData({ 
+      ...screeningFormData, 
+      childAge: age,
+      childBirthDate: birthDate
+    });
+    return
+  }
+setScreeningFormData({ 
+  ...screeningFormData, 
+  Age: age,
+  birthDate: birthDate
+
+});
+setUserBirthDay(birthDate)
+};
+
+const formatBirthday = (date) => {
+  console.log("SelectedDate: ", date)
+  const currentDatetoString = date.toISOString()
   const birthDateArray = currentDatetoString.split("T")
   const splitbirthDateArray = birthDateArray[0].split("-")
   const Month = setMonth(splitbirthDateArray[1])
-  const FormmattedBirthday = Month + " " + splitbirthDateArray[2]+ " " + splitbirthDateArray[0]
-  console.log("FormmattedBirthday: ", FormmattedBirthday)
-  setScreeningFormData({ 
-    ...screeningFormData, 
-    Age: age,
-    birthDate: FormmattedBirthday
-  
-  });
-  setUserBirthDay(FormmattedBirthday)
-};
+  const getDay = splitbirthDateArray[2].toString()
+  let newDay = ""
+  if(getDay.startsWith("0")){
+    newDay = parseInt(getDay).toString();
+    console.log("newDay: ", newDay)
+  } else newDay = getDay
+
+  const FormmattedBirthday = Month + " " + newDay + ", " + splitbirthDateArray[0]
+  return FormmattedBirthday
+}
 
 const calculateAge = (birthDay, currentDate) => {
   const differenceMs = currentDate - birthDay;
@@ -192,10 +269,10 @@ useEffect(() => {
                      {showDatePicker && (
                       <DateTimePicker
                         testID="dateTimePicker"
-                        value={dateToday}
+                        value={dateSelected === new Date() ? dateToday : dateSelected}
                         mode="date"
                         display="spinner"
-                        onChange={handleDateChange}
+                        onChange={(event, value) => handleDateChange(event, value, "Personal")}
                       />
                       )}
                     <View style = {{
@@ -226,6 +303,13 @@ useEffect(() => {
                         placeholderTextColor="#E60965"
                         onChangeText={(value) => handleChangeText('email', value)}
                     />
+                    {isEmailExisted && (
+                      <Text 
+                      style = {{
+                        alignSelf: "flex-start",
+                        marginLeft: "10%",
+                        color: "red"}}>Email is already existing!</Text>
+                    )}
                      <TextInput
                         style={styles.BiginputField}
                         placeholder="Contact Number"
@@ -260,12 +344,14 @@ useEffect(() => {
                         keyboardType="numeric"
                         onChangeText={(value) => handleChangeText('birthWeight', value)}
                     />
+                     
                     <TextInput
                         style={styles.SmallinputField}
                         placeholder="Age: (Yr/Month)"
                         placeholderTextColor="#E60965"
                         onChangeText={(value) => handleChangeText('childAge', value)}
                     />
+                   
                     </View>
 
                     <View style = {globalStyles.flex_Row}>
@@ -276,13 +362,29 @@ useEffect(() => {
                         onChangeText={(value) => handleChangeText('sex', value)}
                         
                     />
+                    {showDate1Picker && (
+                      <DateTimePicker
+                        testID="dateTimePicker"
+                        value={dateSelected === new Date() ? dateToday : dateSelected}
+                        mode="date"
+                        display="spinner"
+                        onChange={(event, value) => handleDateChange(event, value, "infant")}
+                      />
+                    )}
                     <TextInput
                         style={styles.birthDayInputField}
                         placeholder="Birth Date: MM/DD/YY"
                         placeholderTextColor="#E60965"
-                  
-                        onChangeText={(value) => handleChangeText('childBirthDate', value)}
+                        editable={false}
+                        value = {"Birthday: " + screeningFormData.childBirthDate}
                     />
+                     <AntDesign 
+                        onPress={() => setShowDate1Picker(true)} 
+                        style = {{position: "absolute", right: 15}} 
+                        name="calendar" size={24} 
+                        color="#E60965"
+                      />
+                 
                     </View>
                     <TextInput
                         style={styles.BiginputField}
@@ -303,7 +405,11 @@ useEffect(() => {
               <View style = {globalStyles.center}>
 
                     <TouchableOpacity 
-                      style={styles.AgreebuttonContainer} 
+                      style={[
+                        styles.AgreebuttonContainer,
+                        {opacity: isEmailExisted || !isFormFilled ? 0.5 : 1}
+                      ]}
+                      disabled = {isEmailExisted || isFormFilled === false} 
                       onPress={() => navigatePage("DonorScreeningForm2", { screeningFormData: screeningFormData })}
                     >
                       <Text style={styles.label}>Next</Text>
