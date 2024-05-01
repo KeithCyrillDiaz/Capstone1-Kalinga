@@ -59,11 +59,6 @@ export default (router: express.Router) => {
     router.get('/kalinga/getDonorStats/:Donor_ID', getDonorStats)
 
 
-   router.put ('/kalinga/updateDonationStatus/:AppointmentDonorID', updateDonationStatus)
-   router.get('/kalinga/getOngoingDonation/:Donor_ID', getOngoingDonation)
-   router.put ('/kalinga/updateDonationComplete/:AppointmentDonorID', updateDonationComplete)
-   router.get('/kalinga/getCompletedDonation/:Donor_ID', getCompletedDonation)
-   router.get('/kalinga/getDonorStats/:Donor_ID', getDonorStats)
 
 
    //Requestor
