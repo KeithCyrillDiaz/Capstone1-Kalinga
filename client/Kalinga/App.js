@@ -26,7 +26,7 @@ import ResetPasswordEmail from './ProjectComponents/InitialScreenPages/ResetPass
 import ResetPasswordCode from './ProjectComponents/InitialScreenPages/ResetPasswordCode.js';
 import ResetPasswordSuccessful from './ProjectComponents/InitialScreenPages/ResetPasswordSuccessful';
 import FacebookContinue from './ProjectComponents/InitialScreenPages/FacebookContinue';
-import RequestParentComponent from './ProjectComponents/Requestor/RequestParentComponent.js'
+
 
 //Guest
 //import ApplyAsDonor from './screens/Guest/Apply_As_Donor/Approved.js'
@@ -54,6 +54,7 @@ import DonorEducContents from './ProjectComponents/Donor/Home/EducLibrary/EducCo
 import DonorEducLibrary from './ProjectComponents/Donor/Home/EducLibrary/EducLibrary.js'
 import CompleteDonations from './ProjectComponents/Donor/Home/MyDonations/CompletedDonations.js'
 // import MyDonationTabs from './ProjectComponents/Donor/Home/MyDonations/MyDonationsTabs.js'
+import MyDonationTabs from './ProjectComponents/Donor/Home/MyDonations/Donation.js'
 import MyDonations from './ProjectComponents/Donor/Home/MyDonations/MyDonations.js'
 import OngoingDonations from './ProjectComponents/Donor/Home/MyDonations/OngoingDonations.js'
 import DonorSavedArticles from './ProjectComponents/Donor/Profile/SaveArticles/DonorSavedArticles.js'
@@ -81,7 +82,7 @@ import SetDateTimeLocation from './ProjectComponents/Donor/Home/MakeDonation/Set
 import AppointmentConfirmation from './ProjectComponents/Donor/Home/MakeDonation/AppointmentConfirmation.js'
 import DonorHelpAndSupportMessage from './ProjectComponents/Donor/Profile/DonorSettngs/DonorHelpAndSupportMessage.js'
 import AppointmentConfirmationMessage from './ProjectComponents/Donor/Home/MakeDonation/AppointmentConfirmationMessage.js';
-import MyDonationTabs from './ProjectComponents/Donor/Home/MyDonations/Donation.js'
+
 {/* Requestor */}
 import RequestorForum from './ProjectComponents/Requestor/Home/Forum/RequestorForumPage.js'
 import RequestorChatAssistance from './ProjectComponents/Requestor/Home/InstantMessaging/RequestorChatAssistance'
@@ -340,7 +341,6 @@ export default function App() {
              <Stack.Screen name="MyRequestScreen" component={MyRequestScreen} />
              <Stack.Screen name="CompletedTabRequest" component={CompletedTabRequest} />
              <Stack.Screen name="PendingTabRequest" component={PendingTabRequest} />
-             <Stack.Screen name="RequestParentComponent" component={RequestParentComponent} />
              <Stack.Screen name="RequestTab" component={RequestTab} />
 
 
