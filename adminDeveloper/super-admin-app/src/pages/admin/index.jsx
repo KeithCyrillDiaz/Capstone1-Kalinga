@@ -1,7 +1,45 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Human from "@assets/human.png";
+import { WebHost } from '../../../MyConstantSuperAdmin'
 
-export default function () {
+export default function Dashboard() {
+  const [totalDonors, setTotalDonors] = useState(0);
+  const [totalRequestors, setTotalRequestors] = useState(0);
+
+  useEffect(() => {
+    console.log("Fetching data..."); 
+    const fetchCounts = async () => {
+        try {
+          const responseDonors = await axios.get(`${WebHost}/kalinga/getTotalDonor`);
+          console.log("Donors Response:", responseDonors.data); // Log the response data
+          if (responseDonors.data && responseDonors.data.totalDonors) {
+            setTotalDonors(responseDonors.data.totalDonors);
+          } else {
+            console.error("Invalid response format for total donors");
+          }
+        } catch (error) {
+          console.error("Error fetching total donors:", error);
+          if (error.response) {
+            console.log("Response data:", error.response.data); // Log the response data if available
+          }
+        }
+      
+        try {
+          const responseRequestors = await axios.get(`${WebHost}/kalinga/getTotalRequestor`);
+          console.log("Requestors Response:", responseRequestors.data); // Log the response data
+          setTotalRequestors(responseRequestors.data.totalRequestors);
+        } catch (error) {
+          console.error("Error fetching total requestors:", error);
+          if (error.response) {
+            console.log("Response data:", error.response.data); // Log the response data if available
+          }
+        }
+      };
+
+    fetchCounts();
+  }, []);
+
   return (
     <>
       <section className="w-full min-h-screen bg-neutral-variant">
@@ -35,7 +73,8 @@ export default function () {
               </div>
               <div className="grid items-center justify-center py-8">
                 <h1 className="text-center text-[6rem] font-semibold text-primary-default">
-                  456
+                {totalDonors}
+
                 </h1>
                 <p className="text-4xl font-medium text-center text-primary-default">
                   Total Donors
@@ -49,7 +88,8 @@ export default function () {
               </div>
               <div className="grid items-center justify-center py-8">
                 <h1 className="text-center text-[6rem] font-semibold text-primary-default">
-                  789
+                {totalRequestors}
+
                 </h1>
                 <p className="text-4xl font-medium text-center text-primary-default">
                   Total Requestors

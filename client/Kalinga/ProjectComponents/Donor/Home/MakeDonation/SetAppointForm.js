@@ -37,6 +37,7 @@ const SetAppointment = () => {
     phoneNumber: '',
     emailAddress: '',
     homeAddress: '',
+    city: '',
     medicalCondition: '',
     milkAmount: '',
 

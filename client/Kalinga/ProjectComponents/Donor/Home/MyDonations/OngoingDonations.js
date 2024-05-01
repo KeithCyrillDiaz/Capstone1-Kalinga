@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {NavigationContainer} from '@react-navigation/native';
 import { SafeAreaView, Text, View,ScrollView, StatusBar, StyleSheet, TouchableOpacity, Image, ActivityIndicator, TextInput} from 'react-native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios'; // Import axios for API requests
 import { format } from 'date-fns';
@@ -10,17 +8,6 @@ import { BASED_URL } from '../../../../MyConstants.js';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
-import { BASED_URL } from '../../../../MyConstants.js';
-
-import { globalHeader } from '../../../../styles_kit/globalHeader.js';
-import { globalStyles } from '../../../../styles_kit/globalStyles.js';
-
-import Tabs from './MyDonationsTabs.js';
-
-
-
-const Tab = createBottomTabNavigator()
-
 
 
 const OngoingDonations = () => {
