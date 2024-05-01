@@ -61,7 +61,4 @@ export default (router: express.Router) => {
    router.get('/kalinga/getRequestStats/:Requestor_ID', getRequestStats)
 
 
-
-
-    
 } 
