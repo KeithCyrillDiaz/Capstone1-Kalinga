@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StatusBar, StyleSheet, TextInput, ScrollView, SafeAreaView, Alert} from 'react-native';
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { useNavigation } from '@react-navigation/native';
@@ -22,49 +22,10 @@ const ApplyAs_DonorISF = () => {
   
   const [selectedItem, setSelectedItem] = useState("")
 
-  const [birthdate, setBirthdate] = useState(new Date());
+  const [dateToday, setDateToday] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [userBirthday, setUserBirthDay] = useState("")
-
-   const handleDateChange = (name, selectedDate) => {
-    console.log("Date: ", selectedDate)
-    if(selectedDate > birthdate){
-      Alert.alert("Invalid Birthdate", "Please input yopur proper birthday")
-      return
-    }
-    console.log("Result: ", selectedDate - birthdate)
-    const currentDate = selectedDate || birthdate;
-    setShowDatePicker(false);
-
-    const currentDatetoString = currentDate.toISOString()
-    const birthDateArray = currentDatetoString.split("T")
-    const splitbirthDateArray = birthDateArray[0].split("-")
-    const Month = setMonth(splitbirthDateArray[1])
-    const FormmattedBirthday = Month + " " + splitbirthDateArray[2]+ " " + splitbirthDateArray[0]
-    // console.log("FormmattedBirthday: ", FormmattedBirthday)
-    setUserBirthDay(FormmattedBirthday);
-    birthdateFormat(currentDate)
-    // setScreeningFormData({ ...screeningFormData, [name]: value });
-    // birthDate
-  };
-
-  const setMonth = (num) => {
-    console.log("num: ", num)
-         if(num === "01") return "January"
-    else if(num === "02") return "February"
-    else if(num === "03") return "March"
-    else if(num === "04") return "April"
-    else if(num === "05") return "May"
-    else if(num === "06") return "June"
-    else if(num === "07") return "July"
-    else if(num === "08") return "August"
-    else if(num === "09") return "September"
-    else if(num === "10") return "October"
-    else if(num === "11") return "November"
-    else if(num === "12") return "December"
-    else "Invalid Month"
-
-  }
+  const [userAge, setUserAge] = useState("")
 
   const applicantId = randomatic('Aa0', 20);
   const [screeningFormData, setScreeningFormData] = useState({
@@ -84,24 +45,69 @@ const ApplyAs_DonorISF = () => {
     RFR: '',
 });
 
+   const handleDateChange = (event, selectedDate) => {
+    console.log("Date: ", selectedDate)
+    if(selectedDate > dateToday){
+      Alert.alert("Invalid Birthdate", "Please input your proper birthday")
+      setShowDatePicker(false);
+      return
+    }
+    const currentDate = selectedDate || dateToday;
+    setShowDatePicker(false);
+    
+    const age = calculateAge(selectedDate, dateToday)
+    const currentDatetoString = currentDate.toISOString()
+    const birthDateArray = currentDatetoString.split("T")
+    const splitbirthDateArray = birthDateArray[0].split("-")
+    const Month = setMonth(splitbirthDateArray[1])
+    const FormmattedBirthday = Month + " " + splitbirthDateArray[2]+ " " + splitbirthDateArray[0]
+    console.log("FormmattedBirthday: ", FormmattedBirthday)
+    setScreeningFormData({ 
+      ...screeningFormData, 
+      Age: age,
+      birthDate: FormmattedBirthday
+    
+    });
+    setUserBirthDay(FormmattedBirthday)
+  };
+
+  const calculateAge = (birthDay, currentDate) => {
+    const differenceMs = currentDate - birthDay;
+    const age = Math.floor(differenceMs / (1000 * 60 * 60 * 24 * 365.25));
+    setUserAge(age.toString())
+    return age.toString()
+  }
+
+  const setMonth = (num) => {
+    console.log("num: ", num)
+         if(num === "01") return "January"
+    else if(num === "02") return "February"
+    else if(num === "03") return "March"
+    else if(num === "04") return "April"
+    else if(num === "05") return "May"
+    else if(num === "06") return "June"
+    else if(num === "07") return "July"
+    else if(num === "08") return "August"
+    else if(num === "09") return "September"
+    else if(num === "10") return "October"
+    else if(num === "11") return "November"
+    else if(num === "12") return "December"
+    else "Invalid Month"
+
+  }
+
+
+// useEffect(() => {
+//   console.log('Screening Form Data:', screeningFormData);
+// }, [screeningFormData]);
 const handleSelectItem = (item) => {
   setSelectedItem(item);
 };
 
 const handleChangeText = (name, value) => {
-  console.log("value: ", value)
   setScreeningFormData({ ...screeningFormData, [name]: value });
+  return
 };
-
-  // const formatBirthday = (text) => {
-  //   if (text.length === 2 || text.length === 5) {
-  //     if (text.charAt(text.length - 1) !== '/') {
-  //       text += '/';
-  //     }
-  //   }
-  //   setBirthday(text);
-  // };
-
   const navigation = useNavigation();
 
   const navigatePage = (Page, Data) => {
@@ -157,10 +163,16 @@ const [isFocus, setIsFocus] = useState(false);
         <View style={[styles.inputAgeContainer, { elevation: 5 }]}>
             <TextInput
               placeholder="Age"
-              style={styles.inputField}
+              style={{
+                flex: 1,
+                color: '#E60965', // Text color
+                fontSize: 16, // Font size
+                paddingVertical: 10, // Vertical padding
+                textAlign: "center",
+              }}
               editable={false}
-              onChangeText={(value) => handleChangeText('Age', value)}
               keyboardType="numeric"
+              value={"Age: " + userAge}
             />
           </View>
 
@@ -168,7 +180,7 @@ const [isFocus, setIsFocus] = useState(false);
           {showDatePicker && (
             <DateTimePicker
               testID="dateTimePicker"
-              value={birthdate}
+              value={dateToday}
               mode="date"
               display="spinner"
               onChange={handleDateChange}
@@ -178,7 +190,6 @@ const [isFocus, setIsFocus] = useState(false);
               onPress={() => setShowDatePicker(true)}
               placeholder="Birthdate"
               style={[styles.inputField]}
-              onChangeText={(value) => handleChangeText('birthDate', value)}
               editable={false}
               value = {userBirthday}
             />
@@ -477,7 +488,7 @@ const styles = StyleSheet.create({
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
-    width: '20%',
+    width: '25%',
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 45, // Adjust height
     marginLeft: -15, // Move the input field to the right
@@ -490,7 +501,7 @@ const styles = StyleSheet.create({
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
-    width: '80%',
+    width: '75%',
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 45, // Adjust height
     marginLeft: 15, // Move the input field to the right
