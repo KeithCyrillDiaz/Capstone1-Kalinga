@@ -5,11 +5,13 @@ import { getScreeningFormsUserType, getScreeningFormApplicantID } from '../contr
 import { getScreeningFormByID } from '../controllers/Donor/Apply_As_Donor/DonorScreeningForm/getScreeningFormsByApplicantID';
 import { deleteScreeningForm } from '../controllers/Admin/deleteScreeningFormByID'
 import { retrieveSoftDeletedForm } from '../controllers/Admin/retrieveScreeningForm';
+import { checkEmail } from '../controllers/checkEmailValidity';
 
 export default (router: express.Router) => {
   
     router.post('/kalinga/addScreeningForm', addScreeningForm);
     router.post('/req_MedAbstract', reqMedAbstractForm);
+    router.get('/kalinga/checkEmail/:email', checkEmail)
 
     router.get('/kalinga/getScreeningFormsUserType/:userType', getScreeningFormsUserType)
     router.get('/kalinga/getScreeningFormsRequestorApplicant_ID/:Applicant_ID', getScreeningFormApplicantID)
