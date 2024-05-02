@@ -8,6 +8,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { AntDesign } from '@expo/vector-icons';
 import axios from 'axios';
 import { BASED_URL } from '../../../../MyConstants.js';
+// import phil from "phil-reg-prov-mun-brgy";
 
 
 const ApplyAs_DonorISF = () => {
@@ -22,9 +23,7 @@ const ApplyAs_DonorISF = () => {
     { label: 'Item 7', value: '7' },
     { label: 'Item 8', value: '8' },
   ];
-  
-  const [selectedItem, setSelectedItem] = useState("")
-
+  console.log(phil)
   const [dateToday, setDateToday] = useState(new Date());
   const [dateSelected, setDateSelected] = useState(new Date())
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -160,9 +159,6 @@ const checkForm = () => {
 // useEffect(() => {
 //   console.log('Screening Form Data:', screeningFormData);
 // }, [screeningFormData]);
-const handleSelectItem = (item) => {
-  setSelectedItem(item);
-};
 
 const handleChangeText = (name, value) => {
   setScreeningFormData({ ...screeningFormData, [name]: value });
@@ -182,7 +178,26 @@ const handleChangeText = (name, value) => {
 
 const [value, setValue] = useState(null);
 const [isFocus, setIsFocus] = useState(false);
+const [openSexDropdown, setOpenSexDropdown] = useState(false)
 
+const sexData = [
+  { 
+    label: 'Female', 
+    value: '1' 
+  },
+
+  { 
+   label: 'Male',
+   value: '2' 
+  },
+]
+const handledSaveSex = (value) => {
+  console.log("value: ", value)
+  setScreeningFormData({
+    ...screeningFormData,
+    sex: value
+  })
+}
 const checkEmail = async (email) => {
   const response = await axios.get(`${BASED_URL}/kalinga/checkEmail/${email}`)
   if(response.data.messages.code === 1){
@@ -248,7 +263,7 @@ const checkEmail = async (email) => {
               }}
               editable={false}
               keyboardType="numeric"
-              value={"Age: " + userAge}
+              value={"Age: " + screeningFormData.Age}
             />
           </View>
 
@@ -302,30 +317,39 @@ const checkEmail = async (email) => {
             keyboardType="phone-pad"
           />
         </View>
+        
+        <View 
+        style = {{
+          backgroundColor: "white", 
+          marginRight: "12%", 
+          marginLeft: "9%",
+          marginTop: "5%"
+          }}>
+          <Dropdown
+              style={[ isFocus && { borderColor: 'blue' }]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              data={data}
+              search
+              maxHeight={300}
+              labelField="label"
+              valueField="value"
+              placeholder={!isFocus ? 'Select Region' : '...'}
+              searchPlaceholder="Search..."
+              value={value}
+              onFocus={() => setIsFocus(true)}
+              onBlur={() => setIsFocus(false)}
+              onChange={item => {
+                setValue(item.value);
+                setIsFocus(false);
+              }}
+            />
+        </View>
 
         <View style={[styles.inputHomeAddressContainer, { elevation: 5 }]}>
-        <Dropdown
-                style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
-                placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.selectedTextStyle}
-                inputSearchStyle={styles.inputSearchStyle}
-                iconStyle={styles.iconStyle}
-                data={data}
-                search
-                maxHeight={300}
-                labelField="label"
-                valueField="value"
-                placeholder={!isFocus ? 'Select item' : '...'}
-                searchPlaceholder="Search..."
-                value={value}
-                onFocus={() => setIsFocus(true)}
-                onBlur={() => setIsFocus(false)}
-                onChange={item => {
-                  setValue(item.value);
-                  setIsFocus(false);
-                }}
-              />
-          <TextInput
+            <TextInput
             placeholder="Home Address"
             style={styles.inputHomeAddressField}
            
@@ -346,10 +370,24 @@ const checkEmail = async (email) => {
             />
             </View>
           <View style={[styles.inputSexContainer, { elevation: 5 }]}>
-              <TextInput
-                placeholder="Sex"
-                style={styles.inputField}
-                onChangeText={(value) => handleChangeText('sex', value)}
+            <Dropdown
+                style={[styles.sexDropdown, openSexDropdown  && { borderColor: 'blue' }]}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                iconStyle={styles.iconStyle}
+                data={sexData}
+                labelField="label"
+                valueField="value"
+                placeholder={'Sex'}
+                searchPlaceholder="Search..."
+                value={value}
+                onFocus={() => setOpenSexDropdown(true)}
+                onBlur={() => setOpenSexDropdown(false)}
+                onChange={item => {
+                  setValue(item.value);
+                  handledSaveSex(item.label);
+                  setOpenSexDropdown(false);
+                }}
               />
           </View>
         </View>
@@ -436,13 +474,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
+  sexDropdown: {
+    marginHorizontal: 10
+  },
   dropdown: {
     height: 20,
     paddingHorizontal: 8,
+    marginVertical: 10,
+    backgroundColor: "white",
+    marginHorizontal: "10%",
+    
   },
-  icon: {
-    marginRight: 5,
-  },
+
   label: {
     position: 'absolute',
     backgroundColor: 'white',
@@ -684,6 +727,7 @@ inputSexContainer: {
   marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
   height: 45, // Adjust height
   marginLeft: 20, // Move the input field to the right
+  justifyContent: "center"
 },
 inputRowContainer2: {
   flexDirection: 'row',

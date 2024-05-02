@@ -81,6 +81,30 @@ const DonorScreeningForm = () => {
 const [isEmailExisted, setIsEmailExisted] = useState(false)
 const [isFormFilled, setIsFormFilled] = useState(false)
 
+
+const [value, setValue] = useState(null);
+const [isFocus, setIsFocus] = useState(false);
+const [openSexDropdown, setOpenSexDropdown] = useState(false)
+
+const sexData = [
+  { 
+    label: 'Female', 
+    value: '1' 
+  },
+
+  { 
+   label: 'Male',
+   value: '2' 
+  },
+]
+const handledSaveSex = (value) => {
+  console.log("value: ", value)
+  setScreeningFormData({
+    ...screeningFormData,
+    sex: value
+  })
+}
+
 const checkForm = () => {
   const keysToCheck = [
     'Applicant_ID',
@@ -139,17 +163,15 @@ const [userBirthday, setUserBirthDay] = useState("")
 const [userAge, setUserAge] = useState("")
 
 const handleDateChange = (event, selectedDate, info) => {
-  if(selectedDate > dateToday){
-    Alert.alert("Invalid Birthdate", "Please input your proper birthday")
-    setShowDatePicker(false);
-    setShowDate1Picker(false)
-    return
-  }
-  setDateSelected(selectedDate)
-  if(info !== "Personal"){
+    if(info !== "Personal"){
     setShowDate1Picker(false);
   } else setShowDatePicker(false);
 
+  if(selectedDate > dateToday){
+    Alert.alert("Invalid Birthdate", "Please input your proper birthday")
+    return
+  }
+  setDateSelected(selectedDate)
   
   const age = calculateAge(selectedDate, dateToday)
   const birthDate =  formatBirthday(selectedDate)
@@ -264,7 +286,7 @@ useEffect(() => {
                         placeholder="Age"
                         placeholderTextColor="#E60965"
                         editable={false}
-                        value = {"Age: " + userAge}
+                        value = {"Age: " + screeningFormData.Age}
                     />
                      {showDatePicker && (
                       <DateTimePicker
@@ -275,13 +297,15 @@ useEffect(() => {
                         onChange={(event, value) => handleDateChange(event, value, "Personal")}
                       />
                       )}
-                    <View style = {{
+                    <View 
+                      style = {{
                       flexDirection: "row", 
                       alignItems: "center", 
                       width: "70%", 
                       alignSelf: "center",
                       }}>
                       <TextInput
+                       
                           style={[styles.birthDayInputField, {width: "100%", marginLeft: 0, marginRight: 0}]}
                           placeholder="Birth Date"
                           placeholderTextColor="#E60965"
@@ -344,22 +368,34 @@ useEffect(() => {
                         keyboardType="numeric"
                         onChangeText={(value) => handleChangeText('birthWeight', value)}
                     />
-                     
-                    <TextInput
-                        style={styles.SmallinputField}
-                        placeholder="Age: (Yr/Month)"
-                        placeholderTextColor="#E60965"
-                        onChangeText={(value) => handleChangeText('childAge', value)}
-                    />
-                   
+                     <View style ={styles.sexInputField}>
+                      <Dropdown
+                          style={[ openSexDropdown  && { borderColor: 'blue'}]}
+                          placeholderStyle={styles.placeholderStyle}
+                          selectedTextStyle={styles.selectedTextStyle}
+                          data={sexData}
+                          labelField="label"
+                          valueField="value"
+                          placeholder={!openSexDropdown ? 'Sex' : '...'}
+                          searchPlaceholder="Search..."
+                          value={value}
+                          onFocus={() => setOpenSexDropdown(true)}
+                          onBlur={() => setOpenSexDropdown(false)}
+                          onChange={item => {
+                            setValue(item.value);
+                            handledSaveSex(item.label);
+                            setOpenSexDropdown(false);
+                          }}
+                        />
+                     </View>
                     </View>
 
                     <View style = {globalStyles.flex_Row}>
                     <TextInput
-                        style={styles.sexInputField}
-                        placeholder="Sex"
+                        style={styles.ageInfantInputField}
+                        placeholder="Age:"
                         placeholderTextColor="#E60965"
-                        onChangeText={(value) => handleChangeText('sex', value)}
+                        value={screeningFormData.childAge}
                         
                     />
                     {showDate1Picker && (
@@ -428,6 +464,40 @@ useEffect(() => {
   }
 
   const styles = StyleSheet.create ({
+
+    dropdown: {
+      height: 20,
+      paddingHorizontal: 8,
+      marginVertical: 10,
+      backgroundColor: "white",
+      marginHorizontal: "10%",
+      width: "100%"
+    },
+  
+    label: {
+      position: 'absolute',
+      backgroundColor: 'white',
+      left: 22,
+      top: 8,
+      zIndex: 999,
+      paddingHorizontal: 8,
+      fontSize: 14,
+    },
+    placeholderStyle: {
+      fontSize: 16,
+    },
+    selectedTextStyle: {
+      fontSize: 16,
+      color: "#E60965"
+    },
+    iconStyle: {
+      width: 20,
+      height: 20,
+    },
+    inputSearchStyle: {
+      height: 40,
+      fontSize: 16,
+    },
 
     flex_start: {
       flex: 1,
@@ -529,8 +599,7 @@ useEffect(() => {
         backgroundColor: "#FFFFFF",
         elevation: 5
     },
-
-    sexInputField: {
+    ageInfantInputField: {
       borderWidth: 1,
       borderRadius: 20,
       borderColor: "#E60965",
@@ -542,6 +611,16 @@ useEffect(() => {
       color: "#E60965",
       backgroundColor: "#FFFFFF",
       elevation: 5,
+    },
+
+    sexInputField: {
+      width: "35%",
+      backgroundColor: "#FFFFFF",
+      borderWidth: 1,
+      borderRadius: 20,
+      borderColor: "#E60965",
+      elevation: 5,
+      paddingHorizontal: 10,
     },
 
     ageInputField: {
@@ -578,9 +657,9 @@ useEffect(() => {
         borderColor: "#E60965",
         paddingVertical: 5,
         paddingHorizontal: 20,
-        width: "47%",
+        width: "63%",
         marginVertical: "1.5%",
-        marginHorizontal: "3%",
+        marginRight: "3%",
         color: "#E60965",
         backgroundColor: "#FFFFFF",
         elevation: 5,
