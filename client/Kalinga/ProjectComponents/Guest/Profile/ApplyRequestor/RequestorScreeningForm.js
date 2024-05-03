@@ -8,22 +8,13 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { AntDesign } from '@expo/vector-icons';
 import axios from 'axios';
 import { BASED_URL } from '../../../../MyConstants.js';
-// import phil from "phil-reg-prov-mun-brgy";
+import phil from "philippine-location-json-for-geer";
+import ProvincesData from '../Provinces.json'
 
 
 const ApplyAs_DonorISF = () => {
 
-  const data = [
-    { label: 'Item 1', value: '1' },
-    { label: 'Item 2', value: '2' },
-    { label: 'Item 3', value: '3' },
-    { label: 'Item 4', value: '4' },
-    { label: 'Item 5', value: '5' },
-    { label: 'Item 6', value: '6' },
-    { label: 'Item 7', value: '7' },
-    { label: 'Item 8', value: '8' },
-  ];
-  console.log(phil)
+  // console.log("Regions: ", phil.regions)
   const [dateToday, setDateToday] = useState(new Date());
   const [dateSelected, setDateSelected] = useState(new Date())
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -31,6 +22,26 @@ const ApplyAs_DonorISF = () => {
   const [userBirthday, setUserBirthDay] = useState("")
   const [userAge, setUserAge] = useState("")
   const [isEmailExisted, setIsEmailExisted] = useState(false)
+  const [value, setValue] = useState(null);
+  const [isFormFilled, setIsFormFilled] = useState(false)
+
+  //Dropdowns
+  const [isRegionFocus, setIsRegionFocus] = useState(false);
+  const [isMunicipalityFocus, setIsMunicipalityFocus] = useState(false);
+  const [isProvincesFocus, setIsProvincesFocus] = useState(false);
+  const [isBarangayFocus, setIsBarangayFocus] = useState(false);
+  const [openSexDropdown, setOpenSexDropdown] = useState(false)
+
+  //Places
+  const [listProvinces, setListProvinces] = useState(null)
+  const [listCity, setListCity] = useState(null)
+  const [listBarangays, setListBarangays] = useState(null)
+
+  //Values
+  const [regionCode, setRegionCode] = useState("")
+  const [provinceCode, setProvinceCode] = useState("")
+  const [municipalityCode, setMunicipalityCode] = useState("")
+  const [barangayCode, setBarangayCode] = useState("")
 
   const applicantId = randomatic('Aa0', 20);
   const [screeningFormData, setScreeningFormData] = useState({
@@ -50,9 +61,9 @@ const ApplyAs_DonorISF = () => {
     RFR: '',
 });
 
-const [isFormFilled, setIsFormFilled] = useState(false)
-const checkForm = () => {
-  const keysToCheck = [
+
+const checkForm = (value) => {
+  let keysToCheck = [
     'Applicant_ID',
     'userType',
     'fullName',
@@ -70,6 +81,16 @@ const checkForm = () => {
     'medicalCondition'
     ];
 
+    if(value === "Address") {
+      keysToCheck = [
+        'Municipality',
+        'Barangay',
+      ]
+      const isFormDataValid = keysToCheck.every(key => address[key].trim() !== '');
+      if(isFormDataValid) return true
+      else return false
+    }
+
     const isFormDataValid = keysToCheck.every(key => screeningFormData[key].trim() !== '');
 
     if (isFormDataValid) {
@@ -81,22 +102,20 @@ const checkForm = () => {
     }
 }
    const handleDateChange = (event, selectedDate, info) => {
-    if(selectedDate > dateToday){
-      Alert.alert("Invalid Birthdate", "Please input your proper birthday")
-      setShowDatePicker(false);
-      setShowDate1Picker(false)
-      return
-    }
     if(info !== "Personal"){
       setShowDate1Picker(false);
     } else setShowDatePicker(false);
+    
+    if(selectedDate > dateToday){
+      Alert.alert("Invalid Birthdate", "Please input your proper birthday")
+      return
+    }
+
   
     setDateSelected(selectedDate)
     const age = calculateAge(selectedDate, dateToday)
     const birthDate =  formatBirthday(selectedDate)
-    console.log("info: ", info)
     if(info === "infant") {
-      console.log("infant", info)
       setScreeningFormData({ 
         ...screeningFormData, 
         childAge: age,
@@ -114,7 +133,6 @@ const checkForm = () => {
   };
 
   const formatBirthday = (date) => {
-    console.log("SelectedDate: ", date)
     const currentDatetoString = date.toISOString()
     const birthDateArray = currentDatetoString.split("T")
     const splitbirthDateArray = birthDateArray[0].split("-")
@@ -123,7 +141,6 @@ const checkForm = () => {
     let newDay = ""
     if(getDay.startsWith("0")){
       newDay = parseInt(getDay).toString();
-      console.log("newDay: ", newDay)
     } else newDay = getDay
   
     const FormmattedBirthday = Month + " " + newDay + ", " + splitbirthDateArray[0]
@@ -138,7 +155,6 @@ const checkForm = () => {
   }
 
   const setMonth = (num) => {
-    console.log("num: ", num)
          if(num === "01") return "January"
     else if(num === "02") return "February"
     else if(num === "03") return "March"
@@ -167,18 +183,21 @@ const handleChangeText = (name, value) => {
     console.log("Email: ", value)
     checkEmail(value)
   }
-  checkForm()
+  // checkForm("ScreeningForm")
   return
 };
   const navigation = useNavigation();
 
   const navigatePage = (Page, Data) => {
+    console.log("check Screening Form: ", screeningFormData)
+    if(!checkForm("ScreeningForm")) {
+      Alert.alert("Invalid Form", "Please complete the form first")
+      return
+    }
     navigation.navigate(Page, Data); // Navigate to the Login screen
 };
 
-const [value, setValue] = useState(null);
-const [isFocus, setIsFocus] = useState(false);
-const [openSexDropdown, setOpenSexDropdown] = useState(false)
+
 
 const sexData = [
   { 
@@ -192,7 +211,6 @@ const sexData = [
   },
 ]
 const handledSaveSex = (value) => {
-  console.log("value: ", value)
   setScreeningFormData({
     ...screeningFormData,
     sex: value
@@ -204,9 +222,98 @@ const checkEmail = async (email) => {
     console.log(response.data.messages.message)
     setIsEmailExisted(true)
     return
-  } else setIsEmailExisted(false)
+  } else {
+    console.log("Email is valid")
+    setIsEmailExisted(false)
+  }
   return
 }
+
+const getProvnincesByRegCode = (id) => ProvincesData.filter(province => province.reg_code === id);
+const fetchProvinces = (region_code) => {
+  const provinces = getProvnincesByRegCode(region_code)
+  const provincesList = provinces.map(province => ({ label: province.name, value: province.prov_code}))
+  setListProvinces(provincesList)
+  return
+}
+
+// const getMunicipalityByProvCode = (id) => citiesData.filter(province => province.prov_code === id);
+
+const fetchMunicipality = (prov_code) => {
+
+  // const municipality = getMunicipalityByProvCode(prov_code)
+  const municipality = phil.getCityMunByProvince(prov_code)
+  const municipalityList  = municipality.map(city => ({ label: city.name, value: city.mun_code}))
+  const municipalitySortedData = municipalityList.sort((a, b) => a.label.toLowerCase() < b.label.toLowerCase() ? -1 : a.label.toLowerCase() > b.label.toLowerCase() ? 1 : 0);
+  setListCity(municipalitySortedData)
+  return
+}
+
+const fetchBarangays = (city_code) => {
+  const barangays = phil.getBarangayByMun(city_code)
+  const barangayList = barangays.map(barangay => ({ label: barangay.name, value: barangay.brgy_code}))
+  const barangaySortedData = barangayList.sort((a, b) => a.label.toLowerCase() < b.label.toLowerCase() ? -1 : a.label.toLowerCase() > b.label.toLowerCase() ? 1 : 0);
+  setListBarangays(barangaySortedData)
+  return
+}
+
+const [address, setAddress] = useState({
+  Municipality: "",
+  Barangay: ""
+})
+
+// console.log("Form: ", screeningFormData)
+const updateAddress = (label, name) => {
+  
+  let data = label;
+
+  if (label.toLowerCase().includes("city")) {
+    data = formatCity(label);
+  }
+
+  const result = uncapitalizedString(data);
+  // console.log("result: ", result);
+
+  setAddress(prevAddress => {
+    const updatedAddress = {
+      ...prevAddress,
+      [name === "Municipality" ? "Municipality" : "Barangay"]: result
+    };
+    return updatedAddress;
+  });
+};
+
+
+//update screening form after address data changes
+useEffect(() => {
+  // console.log("check Address after function: ", address)
+  if (checkForm("Address")) {
+    setScreeningFormData(prevData => ({
+      ...prevData,
+      homeAddress: address.Barangay + " " + address.Municipality
+    }));
+  }
+
+}, [address.Barangay, address.Municipality])
+
+const uncapitalizedString = (string) => {
+  const trimmedString = string.trim();
+  const formattedString = trimmedString.toLowerCase().replace(/(^|\s)\S/g, (letter) => letter.toUpperCase());
+  return formattedString
+}
+
+const formatCity = (city) => {
+  if(!city) return
+  if(!city.toLowerCase().includes("city")) return
+  const cityArray = city.toLowerCase().split("of")
+  if(cityArray[0].includes("city")){
+    const cityName = cityArray[1] + " " + cityArray[0]
+    const result = uncapitalizedString(cityName)
+    console.log(result)
+    return result
+  }
+}
+
 
   return (
     
@@ -295,7 +402,6 @@ const checkEmail = async (email) => {
           <TextInput
             placeholder="Email Address"
             style={styles.inputField}
-           
             onChangeText={(value) => handleChangeText('email', value)}
             keyboardType="email-address"
           />
@@ -318,42 +424,113 @@ const checkEmail = async (email) => {
           />
         </View>
         
-        <View 
-        style = {{
-          backgroundColor: "white", 
-          marginRight: "12%", 
-          marginLeft: "9%",
-          marginTop: "5%"
-          }}>
+        <View style = {styles.addressDropdown}>
           <Dropdown
-              style={[ isFocus && { borderColor: 'blue' }]}
+              style={[, isRegionFocus && { borderColor: 'blue'}]}
               placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
+              selectedTextStyle={[styles.selectedTextStyle, {marginTop: 20, paddingTop: 15}]}
               inputSearchStyle={styles.inputSearchStyle}
-              iconStyle={styles.iconStyle}
-              data={data}
+              data={phil.regions.map(region => ({ label: region.name, value: region.reg_code }))}
               search
               maxHeight={300}
               labelField="label"
               valueField="value"
-              placeholder={!isFocus ? 'Select Region' : '...'}
+              placeholder={'Select Region'}
               searchPlaceholder="Search..."
-              value={value}
-              onFocus={() => setIsFocus(true)}
-              onBlur={() => setIsFocus(false)}
+              value={regionCode}
+              onFocus={() => setIsRegionFocus(true)}
+              onBlur={() => setIsRegionFocus(false)}
               onChange={item => {
-                setValue(item.value);
-                setIsFocus(false);
+                setRegionCode(item.value);
+                fetchProvinces(item.value)
+                setIsRegionFocus(false);
               }}
             />
         </View>
+        <View style = {[styles.addressDropdown, {paddingVertical: 20}]}>
+            
+            <Dropdown
+                disable={listProvinces === null}
+                style={[, isProvincesFocus && { borderColor: 'blue'}]}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={[styles.selectedTextStyle, { marginTop: !provinceCode.includes("1339") ? 30 : 10, paddingTop: 10}]}
+                inputSearchStyle={styles.inputSearchStyle}
+                data={listProvinces === null ? phil.provinces.map(province => ({ label: province.name, value: province.prov_code})) : listProvinces}
+                search
+                maxHeight={300}
+                labelField="label"
+                valueField="value"
+                placeholder={'Select Provinces'}
+                searchPlaceholder="Search..."
+                value={provinceCode}
+                onFocus={() => setIsProvincesFocus(true)}
+                onBlur={() => setIsProvincesFocus(false)}
+                onChange={item => {
+                  setProvinceCode(item.value);
+                  console.log(item.label)
+                  // console.log(phil.provinces)
+                  fetchMunicipality(item.value)
+                  setIsProvincesFocus(false);
+                }}
+              />
+        </View>
 
+        <View style = {styles.addressDropdown}>
+            
+            <Dropdown
+                style={[, isMunicipalityFocus && { borderColor: 'blue'}]}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={[styles.selectedTextStyle, {paddingTop: 25}]}
+                inputSearchStyle={styles.inputSearchStyle}
+                data={listCity === null ? phil.city_mun.map(city => ({ label: city.name, value: city.mun_code })) : listCity}
+                search
+                maxHeight={300}
+                labelField="label"
+                valueField="value"
+                placeholder={'Select Municipality'}
+                searchPlaceholder="Search..."
+                value={municipalityCode}
+                onFocus={() => setIsMunicipalityFocus(true)}
+                onChange={item => {
+                  setMunicipalityCode(item.value);
+                  fetchBarangays(item.value)
+                  updateAddress(item.label, "Municipality")
+                  setIsMunicipalityFocus(false);
+                }}
+              />
+        </View>
+            
+
+        <View style = {styles.addressDropdown}>
+           <Dropdown
+              disable = {listBarangays === null}
+              style={[, isBarangayFocus && { borderColor: 'blue'}]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={[styles.selectedTextStyle, {paddingTop: 25}]}
+              inputSearchStyle={styles.inputSearchStyle}
+              data={listBarangays === null ? phil.barangays.map(barangay => ({ label: barangay.name, value: barangay.reg_code })) : listBarangays}
+              search
+              maxHeight={300}
+              labelField="label"
+              valueField="value"
+              placeholder={'Select Barangay'}
+              searchPlaceholder="Search..."
+              value={barangayCode}
+              onFocus={() => setIsBarangayFocus(true)}
+              onBlur={() => setIsBarangayFocus(false)}
+              onChange={item => {
+                setBarangayCode(item.value);
+                updateAddress(item.label, "Barangay")
+                setIsBarangayFocus(false);
+              }}
+            />
+        </View>
         <View style={[styles.inputHomeAddressContainer, { elevation: 5 }]}>
             <TextInput
             placeholder="Home Address"
             style={styles.inputHomeAddressField}
-           
             onChangeText={(value) => handleChangeText('homeAddress', value)}
+            value = {screeningFormData.homeAddress}
           />
         </View>
 
@@ -374,7 +551,6 @@ const checkEmail = async (email) => {
                 style={[styles.sexDropdown, openSexDropdown  && { borderColor: 'blue' }]}
                 placeholderStyle={styles.placeholderStyle}
                 selectedTextStyle={styles.selectedTextStyle}
-                iconStyle={styles.iconStyle}
                 data={sexData}
                 labelField="label"
                 valueField="value"
@@ -452,7 +628,7 @@ const checkEmail = async (email) => {
                 opacity: isEmailExisted || !isFormFilled ? 0.5 : 1
               }
             ]}
-            disabled = {isEmailExisted || !isFormFilled}
+            disabled = {isEmailExisted || screeningFormData.email === ""}
             onPress={() => navigatePage("RequestorMedicalAbstract", {screeningFormData: screeningFormData})}>
             <Text style={styles.nextButtonText}>Next</Text>
           </TouchableOpacity>
@@ -468,7 +644,8 @@ const checkEmail = async (email) => {
 };
 
 const styles = StyleSheet.create({
- 
+
+
   container: {
     backgroundColor: '#FFF8EB',
     flex: 1,
@@ -477,15 +654,22 @@ const styles = StyleSheet.create({
   sexDropdown: {
     marginHorizontal: 10
   },
-  dropdown: {
-    height: 20,
-    paddingHorizontal: 8,
-    marginVertical: 10,
-    backgroundColor: "white",
-    marginHorizontal: "10%",
-    
-  },
 
+  addressDropdown: {
+    backgroundColor: '#FFFFFF',
+    marginRight: "12%", 
+    marginLeft: "9%",
+    marginTop: "5%",
+    flex: 1,
+    paddingVertical: 10,
+    borderWidth: 0.5,
+    borderRadius: 18,
+    borderColor: '#E60965',
+    elevation: 5,
+    justifyContent: "center",
+    paddingRight: "3%"
+  },
+ 
   label: {
     position: 'absolute',
     backgroundColor: 'white',
@@ -497,14 +681,18 @@ const styles = StyleSheet.create({
   },
   placeholderStyle: {
     fontSize: 16,
+    marginLeft: 10
   },
+
   selectedTextStyle: {
     fontSize: 16,
+    marginLeft: 10,
+    height: 70,
+    justifyContent: "center",
+    alignItems: "center",
+    color: '#E60965',
   },
-  iconStyle: {
-    width: 20,
-    height: 20,
-  },
+
   inputSearchStyle: {
     height: 40,
     fontSize: 16,
