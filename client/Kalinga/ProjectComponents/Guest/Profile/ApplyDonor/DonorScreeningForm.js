@@ -648,7 +648,8 @@ const setMonth = (num) => {
                         justifyContent: "space-between",
                         paddingRight: 15,
                         paddingVertical: 4,
-                        elevation: 5
+                        elevation: 5,
+                        marginTop: 7,
                       }}
                     >
                         <View
@@ -736,7 +737,7 @@ const setMonth = (num) => {
     transparent ={true}
     animationType='slide'
     visible = {openGestationInfo}
-    onRequestClose={() => setOpenGestationInfo(!openGestationInfo)}
+    onRequestClose={() => setOpenGestationInfo(false)}
     >
       <View style={{
         flex: 1,
@@ -1011,10 +1012,10 @@ const setMonth = (num) => {
       borderRadius: 20,
       borderColor: "#E60965",
       backgroundColor:"white",
-      width: "90%",
+      width: "91%",
       paddingRight: 15,
       paddingVertical: 4,
-      marginTop: 5,
+      marginTop: 10,
       elevation: 5
     },
 
