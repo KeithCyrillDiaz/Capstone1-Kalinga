@@ -20,13 +20,18 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { AntDesign } from '@expo/vector-icons';
 import axios from "axios";
 import { BASED_URL } from "../../../../MyConstants.js";
+import phil from "philippine-location-json-for-geer";
+import ProvincesData from '../Provinces.json'
 const DonorScreeningForm = () => {
 
     const navigation = useNavigation();
 
   const navigatePage = (Page, data) => {
-    // Navigate to the next screen by route name
-  //  console.log(data)
+    console.log("check Screening Form: ", screeningFormData)
+    if(!checkForm("ScreeningForm")) {
+      Alert.alert("Invalid Form", "Please complete the form first")
+      return
+    }
     navigation.navigate(Page, data);
   };
 
@@ -81,10 +86,33 @@ const DonorScreeningForm = () => {
 const [isEmailExisted, setIsEmailExisted] = useState(false)
 const [isFormFilled, setIsFormFilled] = useState(false)
 
-
 const [value, setValue] = useState(null);
-const [isFocus, setIsFocus] = useState(false);
-const [openSexDropdown, setOpenSexDropdown] = useState(false)
+
+ //Dropdowns
+ const [isRegionFocus, setIsRegionFocus] = useState(false);
+ const [isMunicipalityFocus, setIsMunicipalityFocus] = useState(false);
+ const [isProvincesFocus, setIsProvincesFocus] = useState(false);
+ const [isBarangayFocus, setIsBarangayFocus] = useState(false);
+ const [openSexDropdown, setOpenSexDropdown] = useState(false)
+
+ //Places
+ const [listProvinces, setListProvinces] = useState(null)
+ const [listCity, setListCity] = useState(null)
+ const [listBarangays, setListBarangays] = useState(null)
+
+ //Values
+ const [regionCode, setRegionCode] = useState("")
+ const [provinceCode, setProvinceCode] = useState("")
+ const [municipalityCode, setMunicipalityCode] = useState("")
+ const [barangayCode, setBarangayCode] = useState("")
+
+//BirhtDay
+ const [dateToday, setDateToday] = useState(new Date());
+ const [dateSelected, setDateSelected] = useState(new Date())
+ const [showDatePicker, setShowDatePicker] = useState(false);
+ const [showDate1Picker, setShowDate1Picker] = useState(false);
+ const [userBirthday, setUserBirthDay] = useState("")
+
 
 const sexData = [
   { 
@@ -97,6 +125,7 @@ const sexData = [
    value: '2' 
   },
 ]
+
 const handledSaveSex = (value) => {
   console.log("value: ", value)
   setScreeningFormData({
@@ -105,8 +134,8 @@ const handledSaveSex = (value) => {
   })
 }
 
-const checkForm = () => {
-  const keysToCheck = [
+const checkForm = (value) => {
+  let keysToCheck = [
     'Applicant_ID',
     'userType',
     'fullName',
@@ -124,6 +153,16 @@ const checkForm = () => {
     'medicalCondition'
     ];
 
+    if(value === "Address") {
+      keysToCheck = [
+        'Municipality',
+        'Barangay',
+      ]
+      const isFormDataValid = keysToCheck.every(key => address[key].trim() !== '');
+      if(isFormDataValid) return true
+      else return false
+    }
+
     const isFormDataValid = keysToCheck.every(key => screeningFormData[key].trim() !== '');
 
     if (isFormDataValid) {
@@ -134,6 +173,8 @@ const checkForm = () => {
         setIsFormFilled(false)
     }
 }
+
+
 const checkEmail = async (email) => {
   const response = await axios.get(`${BASED_URL}/kalinga/checkEmail/${email}`)
   if(response.data.messages.code === 1){
@@ -142,6 +183,91 @@ const checkEmail = async (email) => {
     return
   } else setIsEmailExisted(false)
   return
+}
+
+const getProvnincesByRegCode = (id) => ProvincesData.filter(province => province.reg_code === id);
+const fetchProvinces = (region_code) => {
+  const provinces = getProvnincesByRegCode(region_code)
+  const provincesList = provinces.map(province => ({ label: province.name, value: province.prov_code}))
+  setListProvinces(provincesList)
+  return
+}
+
+// const getMunicipalityByProvCode = (id) => citiesData.filter(province => province.prov_code === id);
+
+const fetchMunicipality = (prov_code) => {
+
+  // const municipality = getMunicipalityByProvCode(prov_code)
+  const municipality = phil.getCityMunByProvince(prov_code)
+  const municipalityList  = municipality.map(city => ({ label: city.name, value: city.mun_code}))
+  const municipalitySortedData = municipalityList.sort((a, b) => a.label.toLowerCase() < b.label.toLowerCase() ? -1 : a.label.toLowerCase() > b.label.toLowerCase() ? 1 : 0);
+  setListCity(municipalitySortedData)
+  return
+}
+
+const fetchBarangays = (city_code) => {
+  const barangays = phil.getBarangayByMun(city_code)
+  const barangayList = barangays.map(barangay => ({ label: barangay.name, value: barangay.brgy_code}))
+  const barangaySortedData = barangayList.sort((a, b) => a.label.toLowerCase() < b.label.toLowerCase() ? -1 : a.label.toLowerCase() > b.label.toLowerCase() ? 1 : 0);
+  setListBarangays(barangaySortedData)
+  return
+}
+
+const [address, setAddress] = useState({
+  Municipality: "",
+  Barangay: ""
+})
+
+// console.log("Form: ", screeningFormData)
+const updateAddress = (label, name) => {
+  
+  let data = label;
+
+  if (label.toLowerCase().includes("city")) {
+    data = formatCity(label);
+  }
+
+  const result = uncapitalizedString(data);
+  // console.log("result: ", result);
+
+  setAddress(prevAddress => {
+    const updatedAddress = {
+      ...prevAddress,
+      [name === "Municipality" ? "Municipality" : "Barangay"]: result
+    };
+    return updatedAddress;
+  });
+};
+
+
+//update screening form after address data changes
+useEffect(() => {
+  // console.log("check Address after function: ", address)
+  if (checkForm("Address")) {
+    setScreeningFormData(prevData => ({
+      ...prevData,
+      homeAddress: address.Barangay + " " + address.Municipality
+    }));
+  }
+
+}, [address.Barangay, address.Municipality])
+
+const uncapitalizedString = (string) => {
+  const trimmedString = string.trim();
+  const formattedString = trimmedString.toLowerCase().replace(/(^|\s)\S/g, (letter) => letter.toUpperCase());
+  return formattedString
+}
+
+const formatCity = (city) => {
+  if(!city) return
+  if(!city.toLowerCase().includes("city")) return
+  const cityArray = city.toLowerCase().split("of")
+  if(cityArray[0].includes("city")){
+    const cityName = cityArray[1] + " " + cityArray[0]
+    const result = uncapitalizedString(cityName)
+    console.log(result)
+    return result
+  }
 }
 
 
@@ -155,12 +281,6 @@ const handleChangeText = (name, value) => {
     return
 };
 
-const [dateToday, setDateToday] = useState(new Date());
-const [dateSelected, setDateSelected] = useState(new Date())
-const [showDatePicker, setShowDatePicker] = useState(false);
-const [showDate1Picker, setShowDate1Picker] = useState(false);
-const [userBirthday, setUserBirthDay] = useState("")
-const [userAge, setUserAge] = useState("")
 
 const handleDateChange = (event, selectedDate, info) => {
     if(info !== "Personal"){
@@ -214,7 +334,6 @@ const formatBirthday = (date) => {
 const calculateAge = (birthDay, currentDate) => {
   const differenceMs = currentDate - birthDay;
   const age = Math.floor(differenceMs / (1000 * 60 * 60 * 24 * 365.25));
-  setUserAge(age.toString())
   return age.toString()
 }
 
@@ -341,12 +460,122 @@ useEffect(() => {
                         keyboardType="numeric"
                         onChangeText={(value) => handleChangeText('contactNumber', value)}
                     />
-                     <TextInput
-                        style={styles.BiginputField}
-                        placeholder="Home Address"
-                        placeholderTextColor="#E60965"
-                        onChangeText={(value) => handleChangeText('homeAddress', value)}
-                    /> 
+
+                      <View style = {styles.addressDropdown}>
+                        <Dropdown
+                          style={[, isRegionFocus && { borderColor: 'blue'}]}
+                          placeholderStyle={styles.placeholderStyle}
+                          selectedTextStyle={[styles.selectedTextStyle, {marginTop: 20, paddingTop: 15}]}
+                          inputSearchStyle={styles.inputSearchStyle}
+                          data={phil.regions.map(region => ({ label: region.name, value: region.reg_code }))}
+                          search
+                          maxHeight={300}
+                          labelField="label"
+                          valueField="value"
+                          placeholder={'Select Region'}
+                          searchPlaceholder="Search..."
+                          value={regionCode}
+                          onFocus={() => setIsRegionFocus(true)}
+                          onBlur={() => setIsRegionFocus(false)}
+                          onChange={item => {
+                            setRegionCode(item.value);
+                            fetchProvinces(item.value)
+                            setIsRegionFocus(false);
+                          }}
+                        />
+                      </View>
+                      <View style = {[styles.addressDropdown, {height: 50, paddingVertical: 10}]}>
+                        <Dropdown
+                            disable={listProvinces === null}
+                            style={[, isProvincesFocus && { borderColor: 'blue'}]}
+                            placeholderStyle={styles.placeholderStyle}
+                            selectedTextStyle={[styles.selectedTextStyle, { marginTop:30, paddingTop: 10}]}
+                            inputSearchStyle={styles.inputSearchStyle}
+                            data={listProvinces === null ? phil.provinces.map(province => ({ label: province.name, value: province.prov_code})) : listProvinces}
+                            search
+                            maxHeight={300}
+                            labelField="label"
+                            valueField="value"
+                            placeholder={'Select Provinces'}
+                            searchPlaceholder="Search..."
+                            value={provinceCode}
+                            onFocus={() => setIsProvincesFocus(true)}
+                            onBlur={() => setIsProvincesFocus(false)}
+                            onChange={item => {
+                              setProvinceCode(item.value);
+                              console.log(item.label)
+                              // console.log(phil.provinces)
+                              fetchMunicipality(item.value)
+                              setIsProvincesFocus(false);
+                            }}
+                          />
+                      </View>
+
+                      <View style = {styles.addressDropdown}>
+                        <Dropdown
+                            style={[, isMunicipalityFocus && { borderColor: 'blue'}]}
+                            placeholderStyle={styles.placeholderStyle}
+                            selectedTextStyle={[styles.selectedTextStyle, {paddingTop: 25}]}
+                            inputSearchStyle={styles.inputSearchStyle}
+                            data={listCity === null ? phil.city_mun.map(city => ({ label: city.name, value: city.mun_code })) : listCity}
+                            search
+                            maxHeight={300}
+                            labelField="label"
+                            valueField="value"
+                            placeholder={'Select Municipality'}
+                            searchPlaceholder="Search..."
+                            value={municipalityCode}
+                            onFocus={() => setIsMunicipalityFocus(true)}
+                            onChange={item => {
+                              setMunicipalityCode(item.value);
+                              fetchBarangays(item.value)
+                              updateAddress(item.label, "Municipality")
+                              setIsMunicipalityFocus(false);
+                            }}
+                          />
+                      </View>
+                        
+
+                      <View style = {styles.addressDropdown}>
+                        <Dropdown
+                          disable = {listBarangays === null}
+                          style={[, isBarangayFocus && { borderColor: 'blue'}]}
+                          placeholderStyle={styles.placeholderStyle}
+                          selectedTextStyle={[styles.selectedTextStyle, {paddingTop: 25}]}
+                          inputSearchStyle={styles.inputSearchStyle}
+                          data={listBarangays === null ? phil.barangays.map(barangay => ({ label: barangay.name, value: barangay.reg_code })) : listBarangays}
+                          search
+                          maxHeight={300}
+                          labelField="label"
+                          valueField="value"
+                          placeholder={'Select Barangay'}
+                          searchPlaceholder="Search..."
+                          value={barangayCode}
+                          onFocus={() => setIsBarangayFocus(true)}
+                          onBlur={() => setIsBarangayFocus(false)}
+                          onChange={item => {
+                            setBarangayCode(item.value);
+                            updateAddress(item.label, "Barangay")
+                            setIsBarangayFocus(false);
+                          }}
+                        />
+                      </View>
+                    <View style = {{
+                      marginTop: 5, 
+                      flex: 1, 
+                      width: "90%"
+                      }}>
+                      <Text style={{ color: "#E60965", fontSize: 14, marginLeft: 10, fontFamily: "Open-Sans-SemiBold"}}>Complete Address:</Text>
+                      <TextInput
+                          style={[styles.BiginputField, {width: "100%"}]}
+                          placeholder="Complete Home Address"
+                          multiline={true}
+                          placeholderTextColor="#E60965"
+                          onChangeText={(value) => handleChangeText('homeAddress', value)}
+                          value={screeningFormData.homeAddress}
+                        /> 
+                    </View>
+                   
                     
               </View>
 
@@ -372,7 +601,7 @@ useEffect(() => {
                       <Dropdown
                           style={[ openSexDropdown  && { borderColor: 'blue'}]}
                           placeholderStyle={styles.placeholderStyle}
-                          selectedTextStyle={styles.selectedTextStyle}
+                          selectedTextStyle={styles.sexSelectedTextStyle}
                           data={sexData}
                           labelField="label"
                           valueField="value"
@@ -445,7 +674,7 @@ useEffect(() => {
                         styles.AgreebuttonContainer,
                         {opacity: isEmailExisted || !isFormFilled ? 0.5 : 1}
                       ]}
-                      disabled = {isEmailExisted || isFormFilled === false} 
+                      disabled = {isEmailExisted || screeningFormData.email === ""} 
                       onPress={() => navigatePage("DonorScreeningForm2", { screeningFormData: screeningFormData })}
                     >
                       <Text style={styles.label}>Next</Text>
@@ -465,15 +694,19 @@ useEffect(() => {
 
   const styles = StyleSheet.create ({
 
-    dropdown: {
-      height: 20,
-      paddingHorizontal: 8,
-      marginVertical: 10,
-      backgroundColor: "white",
-      marginHorizontal: "10%",
-      width: "100%"
+    addressDropdown: {
+      borderWidth: 1,
+      borderRadius: 20,
+      borderColor: "#E60965",
+      paddingVertical: 5,
+      width: "90%",
+      marginVertical: "1.5%",
+      color: "#E60965",
+      backgroundColor: "#FFFFFF",
+      elevation: 5,
+      paddingRight: 10,
     },
-  
+   
     label: {
       position: 'absolute',
       backgroundColor: 'white',
@@ -485,20 +718,32 @@ useEffect(() => {
     },
     placeholderStyle: {
       fontSize: 16,
+      marginLeft: 10,
+      color: "#E60965",
+
     },
+  
     selectedTextStyle: {
-      fontSize: 16,
-      color: "#E60965"
+      fontSize: 13,
+      marginLeft: 20,
+      height: 70,
+      justifyContent: "center",
+      alignItems: "center",
+      color: '#E60965',
     },
-    iconStyle: {
-      width: 20,
-      height: 20,
+
+    sexSelectedTextStyle: {
+      fontSize: 13,
+      marginLeft: 10,
+      justifyContent: "center",
+      alignItems: "center",
+      color: '#E60965',
     },
+  
     inputSearchStyle: {
       height: 40,
       fontSize: 16,
     },
-
     flex_start: {
       flex: 1,
       // backgroundColor: "pink",
@@ -587,18 +832,6 @@ useEffect(() => {
         marginTop: "5%",
     },
 
-    BiginputField: {
-        borderWidth: 1,
-        borderRadius: 20,
-        borderColor: "#E60965",
-        paddingVertical: 5,
-        paddingHorizontal: 20,
-        width: "90%",
-        marginVertical: "1.5%",
-        color: "#E60965",
-        backgroundColor: "#FFFFFF",
-        elevation: 5
-    },
     ageInfantInputField: {
       borderWidth: 1,
       borderRadius: 20,
@@ -650,6 +883,20 @@ useEffect(() => {
       backgroundColor: "#FFFFFF",
       elevation: 5,
     },
+
+      BiginputField: {
+        borderWidth: 1,
+        borderRadius: 20,
+        borderColor: "#E60965",
+        paddingVertical: 7,
+        paddingHorizontal: 20,
+        width: "90%",
+        marginVertical: "1.5%",
+        color: "#E60965",
+        backgroundColor: "#FFFFFF",
+        elevation: 5
+    },
+
 
     SmallinputField: {
         borderWidth: 1,
