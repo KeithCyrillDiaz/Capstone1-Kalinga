@@ -32,7 +32,7 @@ export const checkEmail = async (req: express.Request, res: express.Response) =>
             return res.json({
                 messages: {
                     code: 1,
-                    message: "Email is already Existed"
+                    message: "Email is already existing"
                 }
             }).status(400)
         }

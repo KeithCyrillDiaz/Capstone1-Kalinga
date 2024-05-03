@@ -222,7 +222,7 @@ export default function App() {
         
         >
          
-          <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
+          <Stack.Navigator initialRouteName="TestMessages" screenOptions={{ headerShown: false }}>
           {/* <Stack.Navigator initialRouteName="Data Privacy Requestor" screenOptions={{ headerShown: false }}> */}
           
             {/*InitialScreen*/}
@@ -381,16 +381,6 @@ export default function App() {
              <Stack.Screen name="DonorUserVerification" component={DonorUserVerification} />
              <Stack.Screen name="RequestorUserVerification" component={RequestorUserVerification} />
              <Stack.Screen name="ImageViewer" component={ImageViewer} />
-
-
-
-
-
-
-
-
-            
-
 
 
             </Stack.Navigator>

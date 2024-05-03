@@ -9,7 +9,9 @@ import {
   StyleSheet,
   TextInput, 
   TouchableOpacity,
-  Alert
+  Alert,
+  Modal,
+  FlatList
 } from 'react-native';
 import { globalStyles } from "../../../../styles_kit/globalStyles.js";
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
@@ -22,6 +24,8 @@ import axios from "axios";
 import { BASED_URL } from "../../../../MyConstants.js";
 import phil from "philippine-location-json-for-geer";
 import ProvincesData from '../Provinces.json'
+import { GestationData, GestationExplanation, sexData, medicalConditionData } from "../ageofGestationData.js";
+
 const DonorScreeningForm = () => {
 
     const navigation = useNavigation();
@@ -89,12 +93,12 @@ const [isFormFilled, setIsFormFilled] = useState(false)
 const [value, setValue] = useState(null);
 
  //Dropdowns
+ const [openSexDropdown, setOpenSexDropdown] = useState(false)
  const [isRegionFocus, setIsRegionFocus] = useState(false);
  const [isMunicipalityFocus, setIsMunicipalityFocus] = useState(false);
  const [isProvincesFocus, setIsProvincesFocus] = useState(false);
  const [isBarangayFocus, setIsBarangayFocus] = useState(false);
- const [openSexDropdown, setOpenSexDropdown] = useState(false)
-
+ const [isGestationFocus, setIsGestationFocus] = useState(false)
  //Places
  const [listProvinces, setListProvinces] = useState(null)
  const [listCity, setListCity] = useState(null)
@@ -105,29 +109,19 @@ const [value, setValue] = useState(null);
  const [provinceCode, setProvinceCode] = useState("")
  const [municipalityCode, setMunicipalityCode] = useState("")
  const [barangayCode, setBarangayCode] = useState("")
+ const [gestationValue, setGestationValue] = useState("")
 
-//BirhtDay
+//BirthDay
  const [dateToday, setDateToday] = useState(new Date());
  const [dateSelected, setDateSelected] = useState(new Date())
  const [showDatePicker, setShowDatePicker] = useState(false);
  const [showDate1Picker, setShowDate1Picker] = useState(false);
  const [userBirthday, setUserBirthDay] = useState("")
 
-
-const sexData = [
-  { 
-    label: 'Female', 
-    value: '1' 
-  },
-
-  { 
-   label: 'Male',
-   value: '2' 
-  },
-]
+ //Modal
+ const [openGestationInfo, setOpenGestationInfo] = useState(false)
 
 const handledSaveSex = (value) => {
-  console.log("value: ", value)
   setScreeningFormData({
     ...screeningFormData,
     sex: value
@@ -277,7 +271,6 @@ const handleChangeText = (name, value) => {
       console.log("Email: ", value)
       checkEmail(value)
     }
-    checkForm()
     return
 };
 
@@ -286,6 +279,8 @@ const handleDateChange = (event, selectedDate, info) => {
     if(info !== "Personal"){
     setShowDate1Picker(false);
   } else setShowDatePicker(false);
+
+  if(selectedDate === dateToday)return
 
   if(selectedDate > dateToday){
     Alert.alert("Invalid Birthdate", "Please input your proper birthday")
@@ -297,7 +292,6 @@ const handleDateChange = (event, selectedDate, info) => {
   const birthDate =  formatBirthday(selectedDate)
   console.log("info: ", info)
   if(info === "infant") {
-    console.log("infant", info)
     setScreeningFormData({ 
       ...screeningFormData, 
       childAge: age,
@@ -315,7 +309,6 @@ setUserBirthDay(birthDate)
 };
 
 const formatBirthday = (date) => {
-  console.log("SelectedDate: ", date)
   const currentDatetoString = date.toISOString()
   const birthDateArray = currentDatetoString.split("T")
   const splitbirthDateArray = birthDateArray[0].split("-")
@@ -324,7 +317,6 @@ const formatBirthday = (date) => {
   let newDay = ""
   if(getDay.startsWith("0")){
     newDay = parseInt(getDay).toString();
-    console.log("newDay: ", newDay)
   } else newDay = getDay
 
   const FormmattedBirthday = Month + " " + newDay + ", " + splitbirthDateArray[0]
@@ -338,7 +330,6 @@ const calculateAge = (birthDay, currentDate) => {
 }
 
 const setMonth = (num) => {
-  console.log("num: ", num)
        if(num === "01") return "January"
   else if(num === "02") return "February"
   else if(num === "03") return "March"
@@ -354,11 +345,6 @@ const setMonth = (num) => {
   else "Invalid Month"
 
 }
-
-useEffect(() => {
-  console.log('Screening Form Data:', screeningFormData);
-}, [screeningFormData]);
-
 
   return (
     
@@ -503,8 +489,6 @@ useEffect(() => {
                             onBlur={() => setIsProvincesFocus(false)}
                             onChange={item => {
                               setProvinceCode(item.value);
-                              console.log(item.label)
-                              // console.log(phil.provinces)
                               fetchMunicipality(item.value)
                               setIsProvincesFocus(false);
                             }}
@@ -651,20 +635,85 @@ useEffect(() => {
                       />
                  
                     </View>
-                    <TextInput
-                        style={styles.BiginputField}
-                        placeholder="Age of Gestation (Months)"
-                        placeholderTextColor="#E60965"
-                        keyboardType="numeric"
-                        onChangeText={(value) => handleChangeText('ageOfGestation', value)}
-                    />
-                     <TextInput
-                        style={styles.BiginputField}
-                        placeholder="Medical Condition"
-                        placeholderTextColor="#E60965"
-                        onChangeText={(value) => handleChangeText('medicalCondition', value)}
-                    />
-                    
+                    <View 
+                      style = {{
+                        flex: 1,
+                        flexDirection: "row",
+                        borderWidth: 1,
+                        borderRadius: 20,
+                        borderColor: "#E60965",
+                        backgroundColor:"white",
+                        width: "91%",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        paddingRight: 15,
+                        paddingVertical: 4,
+                        elevation: 5
+                      }}
+                    >
+                        <View
+                        style={styles.ageOfGestationDropDown}
+                        >
+                           <Dropdown
+                            style={[ isGestationFocus && { borderColor: 'blue'}]}
+                            placeholderStyle={[styles.placeholderStyle, {marginLeft: 16}]}
+                            selectedTextStyle={[styles.selectedTextStyle, {marginTop: 20, paddingTop: 15}]}
+                            inputSearchStyle={styles.inputSearchStyle}
+                            data={GestationData}
+                            search
+                            maxHeight={300}
+                            labelField="label"
+                            valueField="value"
+                            subField="children"
+                            placeholder={'Age of Gestation'}
+                            searchPlaceholder="Search..."
+                            value={gestationValue}
+                            onFocus={() => setIsGestationFocus(true)}
+                            onBlur={() => setIsGestationFocus(false)}
+                            onChange={item => {
+                              setGestationValue
+                              handleChangeText('ageOfGestation', item.label)
+                              setIsGestationFocus(false);
+                            }}
+                          />
+
+                        </View>
+                      <TouchableOpacity
+                        onPress={() => setOpenGestationInfo(true)}
+                        style = {{zIndex: 10}}
+                      >
+                          <AntDesign
+                          name="questioncircle" 
+                          size={24} 
+                          color="#EB7AA9" 
+                          />
+                        </TouchableOpacity>
+              
+                    </View>
+                    <View style={styles.medicalConditionStyle} >
+                           <Dropdown
+                            style={[ isGestationFocus && { borderColor: 'blue'}]}
+                            placeholderStyle={[styles.placeholderStyle, {marginLeft: 16}]}
+                            selectedTextStyle={[styles.selectedTextStyle, {marginTop: 20, paddingTop: 15}]}
+                            inputSearchStyle={styles.inputSearchStyle}
+                            data={medicalConditionData}
+                            search
+                            maxHeight={300}
+                            labelField="label"
+                            valueField="value"
+                            subField="children"
+                            placeholder={'Medical Condition'}
+                            searchPlaceholder="Search..."
+                            value={gestationValue}
+                            onFocus={() => setIsGestationFocus(true)}
+                            onBlur={() => setIsGestationFocus(false)}
+                            onChange={item => {
+                              setGestationValue
+                              handleChangeText('medicalCondition', item.label)
+                              setIsGestationFocus(false);
+                            }}
+                          />
+                    </View>
               </View>
 
               <View style = {globalStyles.center}>
@@ -683,6 +732,60 @@ useEffect(() => {
             </View>
 
         </ScrollView>
+    <Modal 
+    transparent ={true}
+    animationType='slide'
+    visible = {openGestationInfo}
+    onRequestClose={() => setOpenGestationInfo(!openGestationInfo)}
+    >
+      <View style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      }}>
+        <View     
+          style = {{
+            backgroundColor: "white",
+            height: "60%",
+            width: "80%",
+            borderWidth: 1,
+            borderColor: "#E60965",
+            borderRadius: 17
+          }}>
+            <TouchableOpacity
+             onPress={() => setOpenGestationInfo(false)}
+             style = {{zIndex: 10}}
+            >
+              <AntDesign
+              style = {{
+                position: "absolute",
+                right: 10,
+                top: 10,
+                zIndex: 10
+              }}
+              name="closecircle" 
+              size={24} 
+              color="#E36A91" 
+              />
+            </TouchableOpacity>
+            
+           <FlatList
+           overScrollMode='never'
+            data={[{ key: '1' }]} // Dummy data, as FlatList requires data
+            renderItem={({ item }) => (
+              <View style={{ padding: 10, paddingRight: 20 }}>
+                <GestationExplanation/>
+              </View>
+            )}
+            keyExtractor={item => item.key}
+          />
+        </View>
+        
+
+      </View>
+        
+    </Modal>
 
            
             
@@ -717,15 +820,15 @@ useEffect(() => {
       fontSize: 14,
     },
     placeholderStyle: {
-      fontSize: 16,
-      marginLeft: 10,
+      fontSize: 14,
+      marginLeft: 20,
       color: "#E60965",
 
     },
   
     selectedTextStyle: {
-      fontSize: 13,
-      marginLeft: 20,
+      fontSize: 14,
+      marginLeft: 15,
       height: 70,
       justifyContent: "center",
       alignItems: "center",
@@ -883,6 +986,12 @@ useEffect(() => {
       backgroundColor: "#FFFFFF",
       elevation: 5,
     },
+      ageOfGestationDropDown: {
+        width: "90%",
+        color: "#E60965",
+        backgroundColor: "#FFFFFF",
+        borderRadius: 20,
+      },
 
       BiginputField: {
         borderWidth: 1,
@@ -895,6 +1004,18 @@ useEffect(() => {
         color: "#E60965",
         backgroundColor: "#FFFFFF",
         elevation: 5
+    },
+
+    medicalConditionStyle: {
+      borderWidth: 1,
+      borderRadius: 20,
+      borderColor: "#E60965",
+      backgroundColor:"white",
+      width: "90%",
+      paddingRight: 15,
+      paddingVertical: 4,
+      marginTop: 5,
+      elevation: 5
     },
 
 
