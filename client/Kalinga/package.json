@@ -37,6 +37,7 @@
     "expo-splash-screen": "^0.20.5",
     "expo-status-bar": "~1.6.0",
     "navigation": "^6.2.0",
+    "phil-reg-prov-mun-brgy": "^1.1.0",
     "philippines": "^1.0.0",
     "randomatic": "^3.1.1",
     "react": "18.2.0",
