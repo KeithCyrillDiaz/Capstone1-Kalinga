@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StatusBar, StyleSheet, TextInput, ScrollView, SafeAreaView, Alert} from 'react-native';
+import { View, Text, TouchableOpacity, StatusBar, StyleSheet, TextInput, ScrollView, SafeAreaView, Alert, Modal, FlatList} from 'react-native';
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { useNavigation } from '@react-navigation/native';
 import randomatic from 'randomatic';
@@ -10,7 +10,7 @@ import axios from 'axios';
 import { BASED_URL } from '../../../../MyConstants.js';
 import phil from "philippine-location-json-for-geer";
 import ProvincesData from '../Provinces.json'
-
+import {GestationData, GestationExplanation, sexData} from '../ageofGestationData.js'
 
 const ApplyAs_DonorISF = () => {
 
@@ -26,11 +26,12 @@ const ApplyAs_DonorISF = () => {
   const [isFormFilled, setIsFormFilled] = useState(false)
 
   //Dropdowns
+  const [openSexDropdown, setOpenSexDropdown] = useState(false)
   const [isRegionFocus, setIsRegionFocus] = useState(false);
   const [isMunicipalityFocus, setIsMunicipalityFocus] = useState(false);
   const [isProvincesFocus, setIsProvincesFocus] = useState(false);
   const [isBarangayFocus, setIsBarangayFocus] = useState(false);
-  const [openSexDropdown, setOpenSexDropdown] = useState(false)
+  const [isGestationFocus, setIsGestationFocus] = useState(false)
 
   //Places
   const [listProvinces, setListProvinces] = useState(null)
@@ -42,6 +43,10 @@ const ApplyAs_DonorISF = () => {
   const [provinceCode, setProvinceCode] = useState("")
   const [municipalityCode, setMunicipalityCode] = useState("")
   const [barangayCode, setBarangayCode] = useState("")
+  const [gestationValue, setGestationValue] = useState("")
+
+  //Modal
+  const [openGestationInfo, setOpenGestationInfo] = useState(false)
 
   const applicantId = randomatic('Aa0', 20);
   const [screeningFormData, setScreeningFormData] = useState({
@@ -198,18 +203,6 @@ const handleChangeText = (name, value) => {
 };
 
 
-
-const sexData = [
-  { 
-    label: 'Female', 
-    value: '1' 
-  },
-
-  { 
-   label: 'Male',
-   value: '2' 
-  },
-]
 const handledSaveSex = (value) => {
   setScreeningFormData({
     ...screeningFormData,
@@ -610,15 +603,64 @@ const formatCity = (city) => {
            
           </View>
         </View>
-
-        <View style={[styles.inputAgeOfGestationContainer, { elevation: 5 }]}>
-          <TextInput
-            placeholder="Age of Gestation"
-            style={styles.inputField}
-           
-            onChangeText={(value) => handleChangeText('ageOfGestation', value)}
-          />
+        <View style = {{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginTop: 15,
+          borderWidth: 0.5,
+          borderRadius: 18,
+          borderColor: '#E60965',
+          backgroundColor: '#FFFFFF',
+          elevation: 5,
+          width: "82%",
+          alignSelf: "center",
+          marginLeft: -10,
+          paddingRight: "5%"
+          }}>
+          <View style={styles.inputAgeOfGestationContainer}>
+            <Dropdown
+                style={[{marginTop: 5, marginRight: 10}, isGestationFocus && { borderColor: 'blue'}]}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={[styles.selectedTextStyle, {marginTop: 20, paddingTop: 15}]}
+                inputSearchStyle={styles.inputSearchStyle}
+                data={GestationData}
+                search
+                maxHeight={300}
+                labelField="label"
+                valueField="value"
+                subField="children"
+                placeholder={'Age of Gestation'}
+                searchPlaceholder="Search..."
+                value={gestationValue}
+                onFocus={() => setIsGestationFocus(true)}
+                onBlur={() => setIsGestationFocus(false)}
+                onChange={item => {
+                  setGestationValue
+                  handleChangeText('ageOfGestation', item.label)
+                  setIsGestationFocus(false);
+                }}
+              />
+            <TextInput
+              placeholder="Age of Gestation"
+              style={styles.inputField}
+                          onChangeText={(value) => handleChangeText('ageOfGestation', value)}
+            />
+          </View>
+          <TouchableOpacity
+             onPress={() => setOpenGestationInfo(true)}
+             style = {{zIndex: 10}}
+          >
+              <AntDesign
+              name="questioncircle" 
+              size={24} 
+              color="#EB7AA9" 
+              />
+            </TouchableOpacity>
+   
         </View>
+       
+        
 
         <View style={[styles.buttonContainer, { elevation: 5 }]}>
           <TouchableOpacity style={[
@@ -636,6 +678,61 @@ const formatCity = (city) => {
         </View>
       </SafeAreaView>
       </ScrollView>
+
+    <Modal 
+    transparent ={true}
+    animationType='slide'
+    visible = {openGestationInfo}
+    onRequestClose={() => setOpenGestationInfo(!openGestationInfo)}
+    >
+      <View style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      }}>
+        <View     
+          style = {{
+            backgroundColor: "white",
+            height: "60%",
+            width: "80%",
+            borderWidth: 1,
+            borderColor: "#E60965",
+            borderRadius: 17
+          }}>
+            <TouchableOpacity
+             onPress={() => setOpenGestationInfo(false)}
+             style = {{zIndex: 10}}
+            >
+              <AntDesign
+              style = {{
+                position: "absolute",
+                right: 10,
+                top: 10,
+                zIndex: 10
+              }}
+              name="closecircle" 
+              size={24} 
+              color="#E36A91" 
+              />
+            </TouchableOpacity>
+            
+           <FlatList
+           overScrollMode='never'
+            data={[{ key: '1' }]} // Dummy data, as FlatList requires data
+            renderItem={({ item }) => (
+              <View style={{ padding: 10, paddingRight: 20 }}>
+                <GestationExplanation/>
+              </View>
+            )}
+            keyExtractor={item => item.key}
+          />
+        </View>
+        
+
+      </View>
+        
+    </Modal>
     </View>
   
 
@@ -944,14 +1041,10 @@ inputBirthdateContainer1: {
   marginLeft: -15,
 },
   inputAgeOfGestationContainer: {
-  borderWidth: 0.5,
-  borderRadius: 18,
-  borderColor: '#E60965',
-  backgroundColor: '#FFFFFF',
-  width: '82%',
-  marginTop: 15,
+  width: '95%',
   height: 45, // Adjust height
-  marginLeft: 30,
+  backgroundColor: "white",
+  borderRadius: 18,
 },
 
 buttonContainer: {
