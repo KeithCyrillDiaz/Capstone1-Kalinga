@@ -89,6 +89,7 @@ const DonorScreeningForm = () => {
 
 const [isEmailExisted, setIsEmailExisted] = useState(false)
 const [isFormFilled, setIsFormFilled] = useState(false)
+const [textFocus, setTextFocus] = useState(false)
 
 const [value, setValue] = useState(null);
 
@@ -99,6 +100,7 @@ const [value, setValue] = useState(null);
  const [isProvincesFocus, setIsProvincesFocus] = useState(false);
  const [isBarangayFocus, setIsBarangayFocus] = useState(false);
  const [isGestationFocus, setIsGestationFocus] = useState(false)
+
  //Places
  const [listProvinces, setListProvinces] = useState(null)
  const [listCity, setListCity] = useState(null)
@@ -555,8 +557,14 @@ const setMonth = (num) => {
                           placeholder="Complete Home Address"
                           multiline={true}
                           placeholderTextColor="#E60965"
-                          onChangeText={(value) => handleChangeText('homeAddress', value)}
-                          value={screeningFormData.homeAddress}
+                          onChangeText={(value) => {
+                            handleChangeText('homeAddress', value),
+                            setTextFocus(false)
+                          }}
+                          value = {screeningFormData.homeAddress}
+                          onFocus={() => setTextFocus(true)}
+                          onBlur={() => setTextFocus(false)}
+                          selection={{ start: textFocus && (screeningFormData.homeAddress === (address.Barangay + " " + address.Municipality) ) ? 0 : -1}} // Set the cursor at the start
                         /> 
                     </View>
                    
