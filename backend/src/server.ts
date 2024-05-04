@@ -31,7 +31,7 @@ export const io = new Server(server);
 
 io.on('connection', handleConnection);
 
-const MongoDb_URL = process.env.MONGO_DB_URL;
+const MongoDb_URL = process.env.MONGO_DB_ATLAS_URL;
 
 if (!MongoDb_URL) {
     throw new Error("MongoDB URL is not defined");

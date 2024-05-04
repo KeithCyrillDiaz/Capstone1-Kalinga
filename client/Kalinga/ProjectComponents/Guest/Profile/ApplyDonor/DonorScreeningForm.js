@@ -32,7 +32,7 @@ const DonorScreeningForm = () => {
 
   const navigatePage = (Page, data) => {
     console.log("check Screening Form: ", screeningFormData)
-    if(!checkForm("ScreeningForm")) {
+    if(!isFormFilled) {
       Alert.alert("Invalid Form", "Please complete the form first")
       return
     }
@@ -247,6 +247,11 @@ useEffect(() => {
   }
 
 }, [address.Barangay, address.Municipality])
+
+useEffect(() => {
+  //checkForm
+  checkForm("Screening Form")
+}, [screeningFormData.medicalCondition])
 
 const uncapitalizedString = (string) => {
   const trimmedString = string.trim();
