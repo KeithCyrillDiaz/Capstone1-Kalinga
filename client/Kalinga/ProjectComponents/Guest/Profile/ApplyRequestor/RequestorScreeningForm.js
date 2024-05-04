@@ -24,6 +24,7 @@ const ApplyAs_DonorISF = () => {
   const [isEmailExisted, setIsEmailExisted] = useState(false)
   const [value, setValue] = useState(null);
   const [isFormFilled, setIsFormFilled] = useState(false)
+  const [textFocus, setTextFocus] = useState(false)
 
   //Dropdowns
   const [openSexDropdown, setOpenSexDropdown] = useState(false)
@@ -55,7 +56,7 @@ const ApplyAs_DonorISF = () => {
     fullName: '',
     Age: '',
     birthDate: '',
-    email: '',
+    email:  '',
     contactNumber: '',
     homeAddress: '',
     sex: '',
@@ -67,7 +68,7 @@ const ApplyAs_DonorISF = () => {
 });
 
 
-const checkForm = (value) => {
+const checkForm= (value) => {
   let keysToCheck = [
     'Applicant_ID',
     'userType',
@@ -77,13 +78,11 @@ const checkForm = (value) => {
     'email',
     'contactNumber',
     'homeAddress',
-    'childName',
     'childAge',
     'sex',
     'childBirthDate',
     'birthWeight',
     'ageOfGestation',
-    'medicalCondition'
     ];
 
     if(value === "Address") {
@@ -106,6 +105,12 @@ const checkForm = (value) => {
         setIsFormFilled(false)
     }
 }
+
+useEffect(() => {
+  //checkForm
+  checkForm("Screening Form")
+}, [screeningFormData.ageOfGestation])
+
    const handleDateChange = (event, selectedDate, info) => {
     if(info !== "Personal"){
       setShowDate1Picker(false);
@@ -188,14 +193,14 @@ const handleChangeText = (name, value) => {
     console.log("Email: ", value)
     checkEmail(value)
   }
-  // checkForm("ScreeningForm")
   return
 };
   const navigation = useNavigation();
 
   const navigatePage = (Page, Data) => {
     console.log("check Screening Form: ", screeningFormData)
-    if(!checkForm("ScreeningForm")) {
+    checkForm("ScreeningForm")
+    if(!isFormFilled) {
       Alert.alert("Invalid Form", "Please complete the form first")
       return
     }
@@ -518,12 +523,27 @@ const formatCity = (city) => {
               }}
             />
         </View>
+        <Text style = {{
+          marginTop: 15,
+          marginLeft: 40,
+          marginBottom: -10,
+          fontSize: 15,
+          fontFamily: "Open-Sans-SemiBold",
+          color: "#E60965"
+          }}>Complete Address </Text>
         <View style={[styles.inputHomeAddressContainer, { elevation: 5 }]}>
             <TextInput
             placeholder="Home Address"
             style={styles.inputHomeAddressField}
-            onChangeText={(value) => handleChangeText('homeAddress', value)}
+            multiline={true}
+            onChangeText={(value) => {
+              handleChangeText('homeAddress', value),
+              setTextFocus(false)
+            }}
             value = {screeningFormData.homeAddress}
+            onFocus={() => setTextFocus(true)}
+            onBlur={() => setTextFocus(false)}
+            selection={{ start: textFocus && (screeningFormData.homeAddress === (address.Barangay + " " + address.Municipality) ) ? 0 : -1}} // Set the cursor at the start
           />
         </View>
 
@@ -543,7 +563,7 @@ const formatCity = (city) => {
             <Dropdown
                 style={[styles.sexDropdown, openSexDropdown  && { borderColor: 'blue' }]}
                 placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.selectedTextStyle}
+                selectedTextStyle={[styles.selectedTextStyle, {marginTop: 45}]}
                 data={sexData}
                 labelField="label"
                 valueField="value"
