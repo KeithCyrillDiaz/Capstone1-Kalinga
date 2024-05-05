@@ -12,7 +12,7 @@ const updateCompleteStatus = async (req: Request, res: Response): Promise<void> 
       { new: true }
     );
 
-    console.log(' Requestor_ID ', Requestor_ID);
+    console.log('Requestor_ID', Requestor_ID);
     console.log('Request Status', RequestStatus);
 
     if (!request) {
