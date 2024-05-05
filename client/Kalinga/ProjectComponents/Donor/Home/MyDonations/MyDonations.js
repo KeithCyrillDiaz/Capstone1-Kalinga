@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import {NavigationContainer} from '@react-navigation/native';
 import { SafeAreaView, Text, View,ScrollView, StatusBar, StyleSheet, TouchableOpacity, ActivityIndicator} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import { MaterialIcons } from '@expo/vector-icons';
@@ -8,7 +6,6 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { BASED_URL } from '../../../../MyConstants.js';
 import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import { useNavigation } from '@react-navigation/native';
-import { PDFDocument, PDFText, PDFPage } from 'react-native-pdf-lib';
 
 
 

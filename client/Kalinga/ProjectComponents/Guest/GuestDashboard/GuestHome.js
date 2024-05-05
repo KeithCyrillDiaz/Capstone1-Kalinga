@@ -10,7 +10,7 @@ import Header from './GuestHeader';
 
 import { useNavigation } from '@react-navigation/native';
 
-export default function GuestHome({ onPress }) {
+export default function GuestHome() {
   const navigation = useNavigation();
   const navigatePage = (Page) => {
     navigation.navigate(Page); // Navigate to the Login screen
