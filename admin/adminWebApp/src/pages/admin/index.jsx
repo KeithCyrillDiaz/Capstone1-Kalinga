@@ -6,11 +6,12 @@ export default function () {
   return (
     <>
       <section className="w-full min-h-screen bg-neutral-variant">
+
         <div className="grid items-center justify-center grid-cols-[auto_1fr] gap-x-5 py-4 px-10">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="48"
-            height="48"
+            width="45"
+            height="45"
             viewBox="0 0 24 24"
           >
             <path
@@ -23,7 +24,7 @@ export default function () {
             />
           </svg>
 
-          <h1 className="text-4xl text-primary-default">Dashboard</h1>
+          <h1 className="text-3xl text-primary-default">Dashboard</h1>
         </div>
         <hr className="border-t-2 border-primary-default" />
 
