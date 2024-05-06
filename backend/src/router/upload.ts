@@ -4,7 +4,7 @@ import multer from 'multer';
 import { addMedicalRequirementsAsImage } from '../controllers/Donor/Apply_As_Donor/addMRImage'
 import { addMedicalRequirementsAsFile } from '../controllers/Donor/Apply_As_Donor/addMRFile'
 import { getImage } from '../controllers/Admin/getImageByID';
-import { getFile } from '../controllers/Admin//getFileByID';
+import { getFile } from '../controllers/Admin/getFileByID';
 import { addProfilePicture } from '../controllers/clientSettings/uploadDpImg';
 // import { addMedicalRequirementsAsImage } from '../../test/testImage'
 
