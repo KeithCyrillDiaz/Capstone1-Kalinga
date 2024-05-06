@@ -47,7 +47,7 @@ const bugReport = () => {
       >
         Solved
       </button>
-
+-
       <Modal
         isOpen={isModalOpen}
         message="Are you sure this bug has already been resolved?"
