@@ -89,10 +89,6 @@ export default function App() {
              <Stack.Screen name="AppointmentConfirm" component={AppointmentConfirm}/>
              <Stack.Screen name="AppointmentDecline" component={AppointmentDecline}/>
 
-
-
-
-
              <Stack.Screen name="RequestorRequestConfirmation" component={RequestorRequestConfirmation} />
              <Stack.Screen name="RequestorInitialScreeningFormPage1" component={RequestorInitialScreeningFormPage1} />
              <Stack.Screen name="RequestorUserVerification" component={RequestorUserVerification} />
@@ -101,11 +97,6 @@ export default function App() {
              <Stack.Screen name="MedicalHistory" component={MedicalHistory}/>
              <Stack.Screen name="RequestConfirm" component={RequestConfirm}/>
              <Stack.Screen name="RequestDecline" component={RequestDecline}/>
-
-
-
-      
-
 
             </Stack.Navigator>
         </NavigationContainer>

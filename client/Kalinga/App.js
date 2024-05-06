@@ -185,13 +185,6 @@ export default function App() {
     loadFonts();
   }, []);
 
-  const prefixes = Linking.createURL('https://kalinga.com');
-  const config ={
-    screens:{
-      SetPassword: "setPassword"
-    }
-  }
-
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
@@ -214,15 +207,9 @@ export default function App() {
     return (
       <>
         <UserLocationContext.Provider value={{ location, setLocation }}>
-        <NavigationContainer
-          linking={{
-            prefixes: [prefixes],
-            config: config
-          }}
-        
-        >
+        <NavigationContainer>
          
-          <Stack.Navigator initialRouteName="TestMessages" screenOptions={{ headerShown: false }}>
+          <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
           {/* <Stack.Navigator initialRouteName="Data Privacy Requestor" screenOptions={{ headerShown: false }}> */}
           
             {/*InitialScreen*/}
