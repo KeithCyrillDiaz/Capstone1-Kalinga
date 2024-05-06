@@ -5,7 +5,7 @@ import { globalHeader } from '../../../../styles_kit/globalHeader';
 import { TextInput } from 'react-native-gesture-handler';
 import { FontAwesome5 } from '@expo/vector-icons';
 
-const DonorMilkBank = () => {
+const GuestMilkBank = () => {
 
   const [search, setSearch] = useState('');
 
@@ -72,4 +72,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DonorMilkBank;
+export default GuestMilkBank;
