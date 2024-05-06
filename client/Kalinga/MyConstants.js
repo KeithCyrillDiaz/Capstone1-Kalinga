@@ -10,7 +10,7 @@
 // export const BASED_URL = "http://192.168.254.106:7000"
 
 //vercel
-// export const BASED_URL = "https://capstone1-kalinga.vercel.app/"
+export const BASED_URL = "https://capstone1-kalinga.vercel.app/"
 
 //Data
 // export const BASED_URL = "http://192.168.39.93:7000"
