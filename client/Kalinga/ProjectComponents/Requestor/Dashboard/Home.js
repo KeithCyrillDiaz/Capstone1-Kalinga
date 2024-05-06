@@ -106,7 +106,7 @@ export default function RequestorHome({route}) {
               </View>
               <View style = {styles.flex_Row}>
               
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("RequestorTabsExploreAndMilkBank")}>
+                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("ValidUserExplore")}>
                     <MaterialIcons name="location-pin" size={70} color="#E60965" />
                     <View style = {styles.LabelCenter}>
                       <Text style = {styles.Label}>Milk Bank Locator</Text>
