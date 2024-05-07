@@ -55,6 +55,10 @@ export default function SettingScreen({route}) {
             routes: [{ name: Page }],
         })
     );
+    if( Page === "ResetPassword"){
+      navigation.navigate('ResetPassword');
+      return
+    }
     return
     }
      navigation.navigate(Page, {userInformation: userInformation, userName: UserName}); // Navigate to the Login screen
@@ -139,7 +143,7 @@ export default function SettingScreen({route}) {
             </TouchableOpacity>
 
             {/* Change Password */}
-            <TouchableOpacity onPress={() => navigatePage("DonorChangePassword")} style={cardStyle.link}>
+            <TouchableOpacity onPress={() => navigatePage("ResetPassword")} style={cardStyle.link}>
               <Text style={cardStyle.linkTitle}>Change Password</Text>
               <Entypo name="chevron-right" size={24} color="#E60965" />
               </TouchableOpacity>

@@ -55,7 +55,7 @@ const LogIn = () => {
         }
    
         if (password.includes(' ')) {
-            Alert.alert('Invalid Password', 'Passwords cannot contain special characters and spaces');
+            Alert.alert('Invalid Password', 'Passwords cannot contain spaces');
             return;
         }
         // Check for email format validity
