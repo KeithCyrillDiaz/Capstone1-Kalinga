@@ -13,6 +13,7 @@ export const getDonorStats = async (req: Request, res: Response) => {
       {
         $match: {
             Donor_ID: Donor_ID,
+            DonationStatus: 'Complete',
         },
       },
       {

@@ -36,7 +36,7 @@ const DonorHome = ({route}) => {
     const navigation = useNavigation();
     
     const navigatePage = (Page) => {
-        navigation.navigate(Page, {data: userInformation}); // Navigate to the Login screen
+        navigation.navigate(Page, {data: userInformation, token: token}); // Navigate to the Login screen
         
 
     };

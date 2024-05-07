@@ -9,11 +9,13 @@ import { BASED_URL } from '../../../../MyConstants.js';
 
 const Tab = createBottomTabNavigator()
 
-const CompleteDonations = () => {
- 
+const CompleteDonations = ({route}) => {
+
+    const userInformation = route.params.userInformation
+    const token = route.params.token
+    const Donor_ID = userInformation.Donor_ID;
+    
   const navigation = useNavigation();
-  const route = useRoute();
-  const Donor_ID ='tSUnvRQj7m990c8CQcVQ';
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [formData, setFormData] = useState([]); 
@@ -62,6 +64,15 @@ const CompleteDonations = () => {
                 
                 >
             <View style={styles.columnContainer}>
+            {formData.length === 0 && (
+                <View style = {{
+                    justifyContent: "center",
+                    alignItems: "center"
+                }}>
+                    <Text>You Currently Dont Have any Completed Donations</Text>
+                </View>
+              
+            )}
             {formData.map((data, index) => (
                     <View key={index} style={styles.columnContainer}>
                         <View style={styles.boxColContainer}>
@@ -71,7 +82,7 @@ const CompleteDonations = () => {
                             </View>
                             <View style={styles.boxContentContainer}>
                                 <Text style={styles.boxContentBold}>Milk Bank:</Text>
-                                <Text style={[styles.boxContent, styles.limitText]}>{data.location}</Text>
+                                <Text style={[styles.boxContent, {width: "70%"}]}>{data.location}</Text>
                             </View>
                             <View style={styles.boxContentContainer}>
                                 <Text style={styles.boxContentBold}>Time and Date:</Text>
@@ -92,6 +103,9 @@ const CompleteDonations = () => {
 }
 
 const styles = StyleSheet.create ({
+    columnContainer: {
+        paddingBottom: 10,
+    },
   container: {
     flex: 1,
     backgroundColor: "#FFF8EB",
@@ -235,7 +249,8 @@ const styles = StyleSheet.create ({
 		marginTop: 15,
 		borderRadius: 18,
 		justifyContent: 'center',
-		elevation: 3,
+		elevation: 10,
+        paddingBottom: 7,
 	},
 
 	boxContentContainer: {
@@ -244,6 +259,7 @@ const styles = StyleSheet.create ({
 		marginLeft: 20,
 		marginTop: 3,
 		marginRight:5,
+        gap: 7,
 	},
 
 	boxContentBold: {
