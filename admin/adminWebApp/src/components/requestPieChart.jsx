@@ -3,32 +3,29 @@ import axios from "axios";
 import { WebHost } from '../../MyConstantAdmin'
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
-export default function ({ name }) {
-  const [totalCompleteDonations, setTotalCompleteDonations] = useState(0);
-  const [totalDeclinedDonations, setTotalDeclinedDonations] = useState(0);
+export default function RequestPieChart({ name }) {
+  const [totalCompleteRequests, setTotalCompleteRequests] = useState(0);
+  const [totalDeclinedRequests, setTotalDeclinedRequests] = useState(0);
 
   useEffect(() => {
-    const fetchDonationsData = async () => {
+    const fetchRequestsData = async () => {
       try {
-        const responseComplete = await axios.get(`${WebHost}/kalinga/getCompleteDonationsTotal`);
-        const responseDeclined = await axios.get(`${WebHost}/kalinga/getDeclinedDonationsTotal`);
+        const responseComplete = await axios.get(`${WebHost}/kalinga/getCompleteRequestsTotal`);
+        const responseDeclined = await axios.get(`${WebHost}/kalinga/getDeclinedRequestsTotal`);
 
-        setTotalCompleteDonations(responseComplete.data.totalCompleteDonations);
-        setTotalDeclinedDonations(responseDeclined.data.totalDeclinedDonations);
+        setTotalCompleteRequests(responseComplete.data.totalCompleteRequests);
+        setTotalDeclinedRequests(responseDeclined.data.totalDeclinedRequests);
       } catch (error) {
         console.error(error); // Log any errors
       }
     };
   
-    fetchDonationsData();
+    fetchRequestsData();
   }, []);
 
-  const totalSuccessful = totalCompleteDonations;
-  const totalUnsuccessful = totalDeclinedDonations;
-
   const chartData = [
-    { name: "Successful", value: totalSuccessful },
-    { name: "Unsuccessful", value: totalUnsuccessful },
+    { name: "Complete", value: totalCompleteRequests },
+    { name: "Decline", value: totalDeclinedRequests },
   ];
 
   const COLORS = ["#ED5077", "#67C5F8"];
@@ -54,20 +51,20 @@ export default function ({ name }) {
                 />
               ))}
             </Pie>
-            <Tooltip formatter={(value) => `${value}%`} />
+            <Tooltip formatter={(value) => `${value}`} />
           </PieChart>
         </ResponsiveContainer>
         <div className="grid items-center justify-center grid-flow-row-dense gap-y-6">
           <div className="px-6 py-2 bg-white border shadow-xl rounded-2xl border-primary-default">
-            <h1 className="text-4xl text-center text-primary-default">{totalCompleteDonations}</h1>
+            <h1 className="text-4xl text-center text-primary-default">{totalCompleteRequests}</h1>
             <p className="text-center 2xl:text-3xl xl:text-2xl text-primary-default">
-              Successful
+              Complete
             </p>
           </div>
           <div className="px-6 py-2 bg-white border shadow-xl rounded-2xl border-primary-default">
-            <h1 className="text-4xl text-center text-primary-default">{totalUnsuccessful}</h1>
+            <h1 className="text-4xl text-center text-primary-default">{totalDeclinedRequests}</h1>
             <p className="text-center 2xl:text-3xl xl:text-2xl text-primary-default">
-              Unsuccessful
+              Decline
             </p>
           </div>
         </div>

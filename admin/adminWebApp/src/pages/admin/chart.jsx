@@ -1,11 +1,11 @@
 import React from "react";
-import { PieChart, LoadPercentage, RequestpieChart } from "@components";
+import { PieChart, LoadPercentage } from "@components";
 
 export default function () {
   return (
     <>
       <section className="w-full min-h-screen bg-neutral-variant">
-        <div className="grid items-center justify-center grid-cols-[auto_1fr] gap-x-10 py-12 px-20">
+        {/* <div className="grid items-center justify-center grid-cols-[auto_1fr] gap-x-10 py-12 px-20">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="48"
@@ -20,7 +20,7 @@ export default function () {
             />
           </svg>
           <h1 className="text-5xl text-primary-default">Reports</h1>
-        </div>
+        </div> */}
         <hr className="border-t-2 border-primary-default" />
         <div className="px-8 py-4">
           <div className="flex flex-row items-center justify-center xl:gap-x-6 lg:gap-x-3">
@@ -61,9 +61,10 @@ export default function () {
               <PieChart name="Donations" />
             </span>
             <span className="lg:pt-4 lg:pb-8 xl:p-0">
-              <RequestpieChart name="Requests" />
+              <PieChart name="Requests" />
             </span>
           </div>
+          <LoadPercentage name="Lactating Mothers" />
         </div>
       </section>
     </>
