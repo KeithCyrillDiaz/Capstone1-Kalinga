@@ -53,8 +53,8 @@ const LogIn = () => {
             Alert.alert('Empty Fields', 'Please enter both email and password.');
             return;
         }
-        const specialCharacters = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
-        if (specialCharacters.test(password) || password.includes(' ')) {
+   
+        if (password.includes(' ')) {
             Alert.alert('Invalid Password', 'Passwords cannot contain special characters and spaces');
             return;
         }
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     guest: {
         textAlign: "center",
         marginTop: "2%",
-        color: '#E60965',
+        color: 'white',
         fontSize: 13,
         textDecorationLine: "underline"
 

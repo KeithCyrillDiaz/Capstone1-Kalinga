@@ -44,6 +44,7 @@ export default function RequestorProfile() {
       phoneNumber: '',
       emailAddress: '',
       homeAddress: '',
+      city: '',
       medicalCondition: '',
       milkAmount: '',
       BabyCategory: '',
@@ -51,11 +52,15 @@ export default function RequestorProfile() {
   });
   const handleInputChange = (field, value) => {
     if (field === 'BabyCategory') {
-      console.log("Baby Category Value:", value); // Log the BabyCategory value
-      setFormData({ ...formData, BabyCategory: value });
+      console.log("Baby Category Value:", value);
+      setFormData({ ...formData, BabyCategory: value }); // Update only BabyCategory
+    } else if (field === 'city') {
+      setFormData({ ...formData, city: value }); // Update only city
     } else {
       setFormData({ ...formData, [field]: value });
     }
+  
+  
   
     // Perform validation checks for required fields and show alerts if not valid
     if (field === 'fullName' && value.trim() === '') {
@@ -84,7 +89,14 @@ export default function RequestorProfile() {
       ...prevData,
       RequestStatus: 'Pending',
     }));
-    navigation.navigate('MakeRequestReceipt', { formData: formData, BabyCategory: formData.BabyCategory });
+    navigation.navigate('MakeRequestReceipt', { formData: formData, BabyCategory: formData.BabyCategory, city: formData.city});
+};
+
+const handleChange = (name, value) => {
+  setFormData(prevData => ({
+    ...prevData,
+    [name]: value,
+  }));
 };
 
 useEffect(() => {
@@ -145,7 +157,23 @@ useEffect(() => {
                     placeholder="Home Address *"
                     placeholderTextColor="#E60965"
                     onChangeText={(text) => handleInputChange('homeAddress', text)}
+
+                
                 />
+
+                  <View style={styles.dropdownContainer1}>
+                                  <Picker
+                                selectedValue={formData.city}
+                                style={{ height: 30, width: "100%", color: '#E60965'}}
+                                onValueChange={(text) => handleInputChange('city', text)} // Update BabyCategory state
+
+                              >
+                                <Picker.Item label="Select City" value="" />
+                                <Picker.Item label="Manila City" value="Manila City" />
+                                <Picker.Item label="Quezon City" value="Quezon City" />
+                              </Picker>
+                              </View>
+
                 <TextInput
                     style={styles.form1}
                     value={formData.medicalCondition}
@@ -347,6 +375,21 @@ const styles = StyleSheet.create({
         paddingBottom: 50
 
 },
+
+dropdownContainer1: {
+  borderWidth: 1,
+  borderColor: '#E60965',
+  borderRadius: 10,
+  paddingHorizontal: 10,
+  marginBottom: 5,
+  width: '90%',
+  alignSelf: 'center',
+  backgroundColor: '#fff',
+  height:10,
+  paddingBottom: 50
+
+},
+
 
 dropdown: {
   height: 10,

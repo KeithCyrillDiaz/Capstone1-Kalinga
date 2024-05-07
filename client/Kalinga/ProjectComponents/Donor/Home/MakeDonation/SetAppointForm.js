@@ -17,6 +17,8 @@ import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import SetDateTimeLocation from "./SetDateTimeLocation.js";
 import randomatic from 'randomatic';
+import { Picker } from '@react-native-picker/picker';
+
 
 
 const SetAppointment = () => {
@@ -32,11 +34,12 @@ const SetAppointment = () => {
     AppointmentDonorID: Appointment_DonorID,
     Donor_ID: Donor_ID,
     userType: "Donor",
-    DonationStatus: "Ongoing",
+    DonationStatus: "Pending",
     fullName: '',
     phoneNumber: '',
     emailAddress: '',
     homeAddress: '',
+    city: '',
     medicalCondition: '',
     milkAmount: '',
 
@@ -69,7 +72,7 @@ const SetAppointment = () => {
   const navigatePage = () => {
     setFormData(prevData => ({
       ...prevData,
-      DonationStatus: 'Ongoing',
+      DonationStatus: 'Pending',
     }));
     navigation.navigate('SetDateTimeLocation', { formData: formData });
   };
@@ -155,6 +158,19 @@ const SetAppointment = () => {
                       *
                     </Text>
                 </View>
+                <View style={styles.dropdownContainer}>
+                <Picker
+              selectedValue={formData.city}
+              style={{ height: 30, width: "100%", color: '#E60965'}}
+              onValueChange={(itemValue, itemIndex) =>
+                handleChange("city", itemValue)
+              }
+            >
+              <Picker.Item label="Select City" value="" />
+              <Picker.Item label="Manila City" value="Manila City" />
+              <Picker.Item label="Quezon City" value="Quezon City" />
+            </Picker>
+            </View>
                 <View style={styles.inputField}>
                   <View style={styles.spaceBetween}>
                     <TextInput
@@ -294,8 +310,27 @@ const SetAppointment = () => {
       fontFamily: "Open-Sans-SemiBold",
       fontSize: 17,
       marginBottom: 30,
-    }
+    },
 
+    dropdownContainer: {
+      padding: 10,
+      paddingLeft: 15,
+      width: "90%",
+      borderWidth: 1,
+      borderColor: "#E60965",
+      borderRadius: 20,
+      marginTop: 20,
+      flexDirection: "row",
+      alignItems: "center",
+      
+},
+dropdown: {
+  height: 10,
+  color: '#E60965',
+
+
+
+},
 
   })
 

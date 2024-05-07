@@ -82,6 +82,15 @@
                     value={`Home Address: ${formData.homeAddress || ''}`}
                     editable={false}
                   />
+
+                  <TextInput
+                    style={[styles.BiginputField, { color: '#E60965' }]}
+                    placeholder="City"
+                    placeholderTextColor="#E60965"
+                    value={`Home Address: ${formData.city || ''}`}
+                    editable={false}
+                  />
+
                   <TextInput
                     style={[styles.BiginputField, { color: '#E60965' }]}
                     placeholder="Medical Condition (If Applicable)"

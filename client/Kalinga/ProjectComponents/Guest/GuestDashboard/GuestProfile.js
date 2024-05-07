@@ -81,11 +81,10 @@ const getData = async () => {
             <View style={{ flex: 1 }}>
             <View style={styles.profileIcon}>
               <Ionicons name="person-circle-outline" size={150} color="#E60965"  />
-              <MaterialIcons name="verified" size={35} color="#EB7AA9" style={{position: 'absolute', top: 100, right: 100}}/>
+              <MaterialIcons name="verified" size={35} color="#E60965" style={{position: 'absolute', top: 110, right: 130}}/>
             </View>
             <View style={styles.profileText}>
               <Text style={styles.userText}>Guest User</Text>
-              <Text style={styles.statusText}>Requestor</Text>
             </View>
 
             <TouchableOpacity style={styles.menuContainer} onPress={() => navigatePage("ApplyAsRequestorStack")} >

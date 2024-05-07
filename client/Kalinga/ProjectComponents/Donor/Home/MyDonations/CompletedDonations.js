@@ -7,20 +7,7 @@ import axios from 'axios'; // Import axios for API requests
 import { format } from 'date-fns';
 import { BASED_URL } from '../../../../MyConstants.js';
 
-
-import { MaterialIcons } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
-
-import { globalHeader } from '../../../../styles_kit/globalHeader.js';
-import { globalStyles } from '../../../../styles_kit/globalStyles.js';
-
-import Tabs from './MyDonationsTabs.js';
-
-
-
 const Tab = createBottomTabNavigator()
-
-
 
 const CompleteDonations = () => {
  

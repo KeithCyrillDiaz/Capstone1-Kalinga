@@ -4,6 +4,8 @@ import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import axios from 'axios'; // Import axios
 import { BASED_URL } from '../../../../MyConstants.js';
+import { useNavigation, useRoute } from '@react-navigation/native'; // Import useRoute hook
+
 
 const RequestorRequestConfirmation = () => {
     const route = useRoute();
@@ -18,6 +20,7 @@ const RequestorRequestConfirmation = () => {
         phoneNumber: '',
         emailAddress: '',
         homeAddress: '',
+        city: '',
         medicalCondition: '',
         milkAmount: '',
         BabyCategory: '',
@@ -158,6 +161,13 @@ const RequestorRequestConfirmation = () => {
                     <View style={styles.boxContentContainer}>
                     <Text style={styles.boxLabel}>Home Address</Text>
                     <Text style={[styles.boxContent, styles.limitText]}>{formData.homeAddress}</Text>
+                    </View>
+                </View>
+
+                <View style={styles.boxContainer2}>
+                    <View style={styles.boxContentContainer}>
+                    <Text style={styles.boxLabel}>City</Text>
+                    <Text style={[styles.boxContent, styles.limitText]}>{formData.city}</Text>
                     </View>
                 </View>
 

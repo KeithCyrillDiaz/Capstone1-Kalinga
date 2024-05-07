@@ -10,11 +10,13 @@ export interface Request extends Document {
   phoneNumber: string;
   emailAddress: string;
   homeAddress: string;
+  city: string;
   medicalCondition?: string;
   milkAmount?: string;
   BabyCategory: string;
   ReasonForRequesting: string;
   RequestID: string;
+
 }
 
 // Define the Mongoose schema for the request
@@ -33,6 +35,7 @@ const RequestSchema: Schema = new Schema({
   },
   emailAddress: { type: String, required: true },
   homeAddress: { type: String, required: true },
+  city: { type: String, required: true },
   medicalCondition: String,
   milkAmount: {
     type: String,

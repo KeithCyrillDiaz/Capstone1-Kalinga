@@ -1,5 +1,5 @@
 import express from 'express'
-import { getDonorById, updateDonorDetails, updateRequestorDetails, createRequestor} from '../models/users'
+import { updateDonorDetails, updateRequestorDetails, createRequestor} from '../models/users'
 import moment from 'moment'
 export const updateUserDetails = async (req: express.Request, res: express.Response) => {
     try{

@@ -1,6 +1,41 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { WebHost } from '../../../MyConstantSuperAdmin'
+
 
 export default function () {
+  const [city, setCity] = useState(""); // State to hold the selected city
+  const [donationData, setDonationData] = useState({}); // State to hold donation data
+  const [requestData, setRequestData] = useState({}); // State to hold request data
+  const [error, setError] = useState(null); // State to hold error messages
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const donationResponse = await axios.get(`${WebHost}/kalinga/getDonationStatusTotal?city=${encodeURIComponent(city)}`);
+
+        setDonationData(donationResponse.data);
+
+        const requestResponse = await axios.get(`${WebHost}/kalinga/getRequestStatusTotal?city=${encodeURIComponent(city)}`);
+
+        setRequestData(requestResponse.data);
+
+        setError(null); // Clear any previous errors
+      } catch (error) {
+        setError("Error fetching data: " + error.message); // Set error state with descriptive message
+      }
+    };
+
+    if (city) {
+      fetchData();
+    }
+  }, [city]);
+
+
+  const handleCityChange = (event) => {
+    setCity(event.target.value);
+  };
+
   return (
     <>
       <section className="w-full min-h-screen bg-neutral-variant">
@@ -14,7 +49,7 @@ export default function () {
             <path
               fill="none"
               stroke="#E60965"
-              stroke-width="1.5"
+              strokeWidth="1.5"
               d="M9 21h6m-6 0v-5m0 5H3.6a.6.6 0 0 1-.6-.6v-3.8a.6.6 0 0 1 .6-.6H9m6 5V9m0 12h5.4a.6.6 0 0 0 .6-.6V3.6a.6.6 0 0 0-.6-.6h-4.8a.6.6 0 0 0-.6.6V9m0 0H9.6a.6.6 0 0 0-.6.6V16"
             />
           </svg>
@@ -26,78 +61,127 @@ export default function () {
             <h1 className="w-full text-3xl text-primary-default">
               Total Donations & Requests each City
             </h1>
-            <div className="flex flex-row items-center justify-center gap-x-3 px-4 bg-white border xl:w-1/2 lg:w-[60%] rounded-3xl border-primary-default">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
+            <div className="relative w-full lg:w-64 xl:w-80">
+              <select
+                className="block appearance-none w-full bg-transparent border border-primary-default text-xl text-primary-default py-4 px-5 pr-8 rounded-xl focus:outline-none"
+                value={city}
+                onChange={handleCityChange}
               >
-                <path
-                  fill="#E60965"
-                  d="M15 19.88c.04.3-.06.62-.29.83a.996.996 0 0 1-1.41 0L9.29 16.7a.99.99 0 0 1-.29-.83v-5.12L4.21 4.62a1 1 0 0 1 .17-1.4c.19-.14.4-.22.62-.22h14c.22 0 .43.08.62.22a1 1 0 0 1 .17 1.4L15 10.75zM7.04 5L11 10.06v5.52l2 2v-7.53L16.96 5z"
-                />
-              </svg>
-              <input
-                type="text"
-                className="w-full text-xl bg-transparent border-none outline-none focus:ring-0 placeholder:text-primary-default text-primary-default"
-                placeholder="Filter"
-              />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="48"
-                height="48"
-                viewBox="0 0 24 24"
-              >
-                <path fill="#E60965" d="m7 10l5 5l5-5z" />
-              </svg>
+                <option value="">Select City</option>
+                <option value="Manila City">Manila City</option>
+                <option value="Quezon City">Quezon City</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-primary-default">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
         </div>
-        <div className="xl:px-8 lg:px-2 flex items-center justify-center w-full h-[60%] 2xl:gap-x-32 xl:gap-x-20 lg:gap-x-8">
-          <div className="flex flex-col items-center justify-center gap-y-12">
-            <h1 className="text-4xl text-center text-primary-default">
-              Donations
-            </h1>
-            <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-24 lg:px-16 rounded-xl border-primary-default">
-              <h1 className="pb-4 text-6xl text-center text-primary-default">
-                10
+        {city === "Manila City" && (
+          <div className="xl:px-8 lg:px-2 flex items-center justify-center w-full h-[60%] 2xl:gap-x-32 xl:gap-x-20 lg:gap-x-8">
+            <div className="flex flex-col items-center justify-center gap-y-12">
+              <h1 className="text-4xl text-center text-primary-default">
+                Donations
               </h1>
-              <p className="text-2xl text-center text-primary-default">
-                Successful
-              </p>
+              <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-24 lg:px-16 rounded-xl border-primary-default">
+                <h1 className="pb-4 text-6xl text-center text-primary-default">
+                  {donationData.totalCompleteDonations}
+                </h1>
+                <p className="text-2xl text-center text-primary-default">
+                  Successful
+                </p>
+              </div>
+              <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-20 lg:px-12 rounded-xl border-primary-default">
+                <h1 className="pb-4 text-6xl text-center text-primary-default">
+                  {donationData.totalDeclinedDonations}
+                </h1>
+                <p className="text-2xl text-center text-primary-default">
+                  Unsuccessful
+                </p>
+              </div>
             </div>
-            <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-20 lg:px-12 rounded-xl border-primary-default">
-              <h1 className="pb-4 text-6xl text-center text-primary-default">
-                0
+            <div className="flex flex-col items-center justify-center gap-y-12">
+              <h1 className="text-4xl text-center text-primary-default">
+                Requests
               </h1>
-              <p className="text-2xl text-center text-primary-default">
-                Unsuccessful
-              </p>
+              <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-24 lg:px-16 rounded-xl border-primary-default">
+                <h1 className="pb-4 text-6xl text-center text-primary-default">
+                  {requestData.totalCompleteRequests}
+                </h1>
+                <p className="text-2xl text-center text-primary-default">
+                  Successful
+                </p>
+              </div>
+              <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-20 lg:px-12 rounded-xl border-primary-default">
+                <h1 className="pb-4 text-6xl text-center text-primary-default">
+                  {requestData.totalDeclinedRequests}
+                </h1>
+                <p className="text-2xl text-center text-primary-default">
+                  Unsuccessful
+                </p>
+              </div>
             </div>
           </div>
-          <div className="flex flex-col items-center justify-center gap-y-12">
-            <h1 className="text-4xl text-center text-primary-default">
-              Requests
-            </h1>
-            <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-24 lg:px-16 rounded-xl border-primary-default">
-              <h1 className="pb-4 text-6xl text-center text-primary-default">
-                10
+        )}
+        {city === "Quezon City" && (
+          <div className="xl:px-8 lg:px-2 flex items-center justify-center w-full h-[60%] 2xl:gap-x-32 xl:gap-x-20 lg:gap-x-8">
+            <div className="flex flex-col items-center justify-center gap-y-12">
+              <h1 className="text-4xl text-center text-primary-default">
+                Donations
               </h1>
-              <p className="text-2xl text-center text-primary-default">
-                Successful
-              </p>
+              <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-24 lg:px-16 rounded-xl border-primary-default">
+                <h1 className="pb-4 text-6xl text-center text-primary-default">
+                  {donationData.totalCompleteDonations}
+                </h1>
+                <p className="text-2xl text-center text-primary-default">
+                  Successful
+                </p>
+              </div>
+              <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-20 lg:px-12 rounded-xl border-primary-default">
+                <h1 className="pb-4 text-6xl text-center text-primary-default">
+                  {donationData.totalDeclinedDonations}
+                </h1>
+                <p className="text-2xl text-center text-primary-default">
+                  Unsuccessful
+                </p>
+              </div>
             </div>
-            <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-20 lg:px-12 rounded-xl border-primary-default">
-              <h1 className="pb-4 text-6xl text-center text-primary-default">
-                0
+            <div className="flex flex-col items-center justify-center gap-y-12">
+              <h1 className="text-4xl text-center text-primary-default">
+                Requests
               </h1>
-              <p className="text-2xl text-center text-primary-default">
-                Unsuccessful
-              </p>
+              <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-24 lg:px-16 rounded-xl border-primary-default">
+                <h1 className="pb-4 text-6xl text-center text-primary-default">
+                  {requestData.totalCompleteRequests}
+                </h1>
+                <p className="text-2xl text-center text-primary-default">
+                  Successful
+                </p>
+              </div>
+              <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-20 lg:px-12 rounded-xl border-primary-default">
+                <h1 className="pb-4 text-6xl text-center text-primary-default">
+                  {requestData.totalDeclinedRequests}
+                </h1>
+                <p className="text-2xl text-center text-primary-default">
+                  Unsuccessful
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </section>
     </>
   );
