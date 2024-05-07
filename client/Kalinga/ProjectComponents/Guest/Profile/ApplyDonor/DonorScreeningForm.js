@@ -444,7 +444,7 @@ const setMonth = (num) => {
                       style = {{
                         alignSelf: "flex-start",
                         marginLeft: "10%",
-                        color: "red"}}>Email is already existing!</Text>
+                        color: "red"}}>Email is already existing</Text>
                     )}
                      <TextInput
                         style={styles.BiginputField}

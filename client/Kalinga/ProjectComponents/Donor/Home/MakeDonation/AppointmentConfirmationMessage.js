@@ -50,10 +50,11 @@ const AppointmentConfirmationMessage = () => {
         })
     );
     }
-
+    useEffect(() => {
+      retrieveFromAsync();
+    }, [])
          
 useEffect(() => {
-  retrieveFromAsync();
   const backAction = () => {
     navigation.navigate('MainTabs', { userInformation: userInformation, token: token }); // Navigate to AdminMenu screen on back button press
     return true; // Prevent default back button behavior (e.g., app exit)

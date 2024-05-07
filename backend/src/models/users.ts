@@ -1,24 +1,5 @@
 import mongoose from 'mongoose';
 
-// const moment = require('moment');
-// const currentTime = moment();
-// const formattedTime = currentTime.format('YYYY-MM-DD HH:mm:ss');
-//console.log(formattedTime);
-
-
-// const DonorSchema = new mongoose.Schema({
-
-//     email: {type: String, required: true},
-//     password: {
-//             type: String,
-//             required: true,
-//         },
-//     fullName: {type: String},
-//     createdAt: {type: Date, default: Date.now},
-//     updatedAt: {type: Date, default: Date.now},
-
-// });
-
 const DonorSchema = new mongoose.Schema({
 
     Donor_ID: {type:  String},
@@ -70,6 +51,7 @@ const RequestorSchema = new mongoose.Schema({
     birthday: {type: String},
     mobileNumber: {type: String},
     homeAddress: {type: String},
+    RFR: {type: String},
     NumberPost: {type: String},
     Badge_ID: [{ type: String }],
     Community_ID: [{ type: String }],

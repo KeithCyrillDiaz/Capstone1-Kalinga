@@ -8,13 +8,14 @@ import {
 	StyleSheet, 
 	TouchableOpacity, 
 	TextInput,
-    Image,
-    Alert
+  Modal,
+  Dimensions,
+  Image,
+  TouchableHighlight,
+  Alert
 } from 'react-native';
 //import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import { useNavigation, useRoute } from '@react-navigation/native'; // Correct import
-
-
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -23,22 +24,54 @@ import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import { Picker } from '@react-native-picker/picker';
 import { BackHandler } from 'react-native';
 import { BASED_URL } from '../../../../MyConstants.js';
+import Spinner from 'react-native-loading-spinner-overlay';
+import ImageZoom from 'react-native-image-pan-zoom';
 
 
-const MakeRequestReceipt = ({ Requestor_ID }) => {
+const MakeRequestReceipt = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { formData, BabyCategory } = route.params;
-
+  const { formData, BabyCategory, selectedImage } = route.params;
 
   // State to track selected image and input value
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [inputValue, setInputValue] = useState('');
-
-  const handleImageUpload = async () => {
-      // Code for handling image upload
-  };
-
+  const [modalVisible, setModalVisible] = useState(false);
+  // const [scrollableHorizontal, setScrollableHorizontal] = useState(false)
+  const [selectedImageUrl, setSelectedImageUrl] = useState('');
+  const confirmation = (status) => {
+    if(status === "Confirm"){
+      Alert.alert(
+        'Confirm Appointment Creation',
+        'Are you sure you want to create this appointment?',
+        [
+          {
+            text: 'Yes',
+            onPress: () => handleRequestCreation()
+          },
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+        ]
+      );
+    } else {
+      Alert.alert(
+        'Cancel Appointment Creation',
+        'Are you sure you want to create this appointment?',
+        [
+          {
+            text: 'Yes',
+            onPress: () =>  navigatePage("MakeRequest")
+          },
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+         
+        ]
+      );
+    }
+  
+  }
     const handleRequestCreation = async () => {
       try {
         const response = await fetch(`${BASED_URL}/kalinga/createRequest`, {
@@ -60,20 +93,6 @@ const MakeRequestReceipt = ({ Requestor_ID }) => {
     }
   };
 
-      
-useEffect(() => {
-  const backAction = () => {
-    navigation.navigate('Requestor Tabs'); // Navigate to AdminMenu screen on back button press
-    return true; // Prevent default back button behavior (e.g., app exit)
-  };
-
-  const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
-
-  return () => backHandler.remove(); // Cleanup the event listener on component unmount
-}, []);
-
-
-  
     return (
 			<SafeAreaView style = {styles.container}>
 				<StatusBar barStyle="dark-content" translucent backgroundColor="white" />
@@ -95,35 +114,35 @@ useEffect(() => {
 							<View style={{marginTop: 15}}>
               <View style={styles.boxContainer}>
             <View style={styles.boxContentContainer}>
-              <Text style={styles.boxLabel}>Full Name</Text>
+              <Text style={styles.boxLabel}>Full Name:</Text>
               <Text style={[styles.boxContent, styles.limitText]}>{formData.fullName}</Text>
             </View>
           </View>
 
           <View style={styles.boxContainer}>
             <View style={styles.boxContentContainer}>
-              <Text style={styles.boxLabel}>Phone Number</Text>
+              <Text style={styles.boxLabel}>Phone Number:</Text>
               <Text style={[styles.boxContent, styles.limitText]}>{formData.phoneNumber}</Text>
             </View>
           </View>
 
-          <View style={styles.boxContainer}>
+          <View style={[styles.boxContainer, {height: 60}]}>
             <View style={styles.boxContentContainer}>
-              <Text style={styles.boxLabel}>Email Address</Text>
+              <Text style={styles.boxLabel}>Email Address:</Text>
               <Text style={[styles.boxContent, styles.limitText]}>{formData.emailAddress}</Text>
             </View>
           </View>
 
-          <View style={styles.boxContainer2}>
-            <View style={styles.boxContentContainer}>
-              <Text style={styles.boxLabel}>Home Address</Text>
+          <View style={[styles.boxContainer2, {height: 80}]}>
+            <View style={[styles.boxContentContainer]}>
+              <Text style={styles.boxLabel}>Home Address:</Text>
               <Text style={[styles.boxContent, styles.limitText]}>{formData.homeAddress}</Text>
             </View>
           </View>
 
           <View style={styles.boxContainer2}>
             <View style={styles.boxContentContainer}>
-              <Text style={styles.boxLabel}>City</Text>
+              <Text style={styles.boxLabel}>City: </Text>
               <Text style={[styles.boxContent, styles.limitText]}>{formData.city}</Text>
             </View>
           </View>
@@ -132,60 +151,92 @@ useEffect(() => {
 
           <View style={styles.boxContainer}>
             <View style={styles.boxContentContainer}>
-              <Text style={styles.boxLabel}>Medical Condition (if applicable)</Text>
+              <Text style={styles.boxLabel}>Medical Condition: </Text>
               <Text style={[styles.boxContent, styles.limitText]}>{formData.medicalCondition}</Text>
             </View>
           </View>
 
           <View style={styles.bodyForm1}>
-          <TextInput
-                style={[styles.form3, { color: '#E60965' }]}
-                value={ formData.milkAmount }               
-                 placeholder="Amount of milk to be requested (mL) *"
-                placeholderTextColor="#E60965"
-                editable={false}
-                />
+            <TextInput
+                  style={[styles.form3, { color: '#E60965', fontWeight: 'bold', }]}
+                  value={ "Amount of Milk: " + formData.milkAmount + " ml" }               
+                  placeholder="Amount of milk to be requested (mL) *"
+                  placeholderTextColor="#E60965"
+                  editable={false}
+                  />
 
-          <View style={styles.bodyForm2}>
-              <View style={styles.form4}>
-                  <Text style={styles.boxLabel}>Baby Category</Text>
-                  <Text style={[styles.boxContent, styles.limitText]}>{formData.BabyCategory}</Text>
-              </View>
-          </View>
+            <View style={styles.bodyForm2}>
+                <View style={[styles.form4, {flexDirection: "row"}]}>
+                    <Text style={styles.boxLabel}>Baby Category:</Text>
+                    <Text style={[styles.boxContent, styles.limitText]}>{formData.BabyCategory}</Text>
+                </View>
+            </View>
           </View>
 
           <View style={styles.boxContainer2}>
             <View style={styles.boxContentContainer}>
-              <Text style={styles.boxLabel}>Reason for Requesting</Text>
+              <Text style={styles.boxLabel}>Reason for Requesting: </Text>
               <Text style={[styles.boxContent, styles.limitText]}>{formData.ReasonForRequesting}</Text>
             </View>
           </View>
 
           <Text style={styles.bodyNote}>Note: Maximum of 3 images or files per field.</Text>
 
-          <View style={styles.attachmentContainer}>
-            <Text style={styles.labelPicture}>Prescription.jpg</Text>
-            <View style={styles.rowAlignment}>
-              <FontAwesome5 name="asterisk" size={12} color="#E60965" />
-              <TouchableOpacity onPress={handleImageUpload} style={styles.iconContainer}>
-                <AntDesign name="picture" size={27} color="#E60965" />
-                <Text style={styles.verticalLine}>|</Text>
-                <AntDesign name="file1" size={24} color="#E60965" />
-              </TouchableOpacity>
-            </View>
-          </View>
+          {Object.keys(selectedImage).length !== 0 && (
+                      <View  style = {{
+                        height: 150,
+                        marginBottom: 20,
+                        borderWidth: 1,
+                        backgroundColor: "white",
+                        paddingLeft: 10,
+                        paddingRight: 10,
+                        borderColor: "#E60965",
+                        borderRadius: 15,
+                        elevation: 5,
+                        marginTop: 20,
+                        marginHorizontal: "10%",
+                        alignItems: "center"
+                        }}>
+                        <ScrollView 
+                          showsHorizontalScrollIndicator={true}
+                          overScrollMode='never'
+                          horizontal={false}
+                        contentContainerStyle={{ flexDirection: 'row', }}
+                      >
+                          {Object.entries(selectedImage).map(([attachmentType, value]) => (
+                                    <TouchableOpacity
+                                        key={attachmentType}
+                                        onPress={() => {
+                                            setSelectedImageUrl(value.uri);
+                                            setModalVisible(true);
+                                        }}
+                                    >
+                                        <View style={{ marginHorizontal: 5 , alignItems: "center"}}>
+                                            <Text style ={{
+                                              textAlign: "center",
+                                              color: "#E60965",
+                                              marginTop: 7,
+                                          
+                                            }}>{attachmentType}</Text>
+                                            <Image
+                                                source={{ uri: value.uri }}
+                                                style={{ width: 100, height: 100, marginTop: 7, resizeMode: 'cover',}}
+                                            />
+                                        </View>
+                                    </TouchableOpacity>
+                                ))}
 
-          {selectedImage && (
-            <Image source={{ uri: selectedImage }} style={styles.uploadedImage} />
-          )}
+                        </ScrollView>
+                    </View>
+                )}
 
           <View style={styles.DonorButton}>
-            <TouchableOpacity onPress={handleRequestCreation}>
+            <TouchableOpacity onPress={() => confirmation("Confirm")}>
               <View style={styles.ConfirmbuttonContainer}>
                 <Text style={styles.label}>Approve</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigatePage("Requestor Tabs")}>
+            <TouchableOpacity onPress={() => confirmation("Decline")}>
               <View style={styles.CancelbuttonContainer}>
                 <Text style={styles.label}>Decline</Text>
               </View>
@@ -196,6 +247,40 @@ useEffect(() => {
         
 
       </ScrollView>
+
+      <Modal
+                  animationType="slide"
+                  transparent={true}
+                  visible={modalVisible}
+                  onRequestClose={() => {
+                      setModalVisible(!modalVisible);
+                  }}
+              >
+                  <View style={styles.modalContainer}>
+                  <ImageZoom
+                      cropWidth={Dimensions.get('window').width}
+                      cropHeight={Dimensions.get('window').height}
+                      imageWidth={Dimensions.get('window').width}
+                      imageHeight={Dimensions.get('window').height * 1} // Adjust the height as needed
+                      enableSwipeDown={true}
+                      onSwipeDown={() => setModalVisible(false)} // Close modal on swipe down
+                      style={{ backgroundColor: 'black' }} // Set background color to black to avoid seeing the underlying content
+                  >
+                      <Image
+                          source={{ uri: selectedImageUrl }}
+                          style={{ width: '100%', height: '100%' }}
+                      />
+                  </ImageZoom>
+                      <TouchableHighlight
+                          style={styles.closeButton}
+                          onPress={() => {
+                              setModalVisible(!modalVisible);
+                          }}
+                      >
+                          <AntDesign name="close" size={24} color="black" />
+                      </TouchableHighlight>
+                  </View>
+              </Modal>
     </SafeAreaView>
   );
 };
@@ -221,44 +306,44 @@ const styles = StyleSheet.create ({
 		borderBlockColor: "#FFACC7"
 	},
     bodyForm1:{
-        flexDirection: "row",
-        alignSelf:"center",
-        paddingLeft: 45
+      width: "90%",
+      alignSelf: "center",
+      paddingVertical: 3
 
       },
-      form3:{
-        height: 52,
-        fontFamily: "OpenSans-Regular",
-        borderColor: '#E60965', // Border color
-        borderWidth: 1, // Border width
-        borderRadius: 10, // Border radius
-        paddingHorizontal: 10,
-        marginBottom: 5,
-        width: '30%',
-        alignSelf: 'center', // Center the input horizontally
-        backgroundColor: '#fff',
-        justifyContent: "space-between"
-      },
+  form3:{
+    height: 52,
+    fontFamily: "OpenSans-Regular",
+    borderColor: '#E60965', // Border color
+    borderWidth: 1, // Border width
+    borderRadius: 10, // Border radius
+    paddingLeft: 25,
+    marginBottom: 5,
+    width: '98%',
+    alignSelf: 'center', // Center the input horizontally
+    backgroundColor: '#fff',
+  },
 
     
-      bodyForm2:{
-        flexDirection: "row",
-        alignSelf:"center",
-        paddingLeft: 55
-      },
-      form4:{
-        height: 52,
-        fontFamily: "OpenSans-Regular",
-        borderColor: '#E60965', // Border color
-        borderWidth: 1, // Border width
-        borderRadius: 10, // Border radius
-        paddingHorizontal: 10,
-        marginBottom: 5,
-        width: '80%',
-        alignSelf: 'center', // Center the input horizontally
-        backgroundColor: '#fff',
-        justifyContent: "space-between"
-      },
+  bodyForm2:{
+    width: "98%",
+    alignSelf: "center",
+    paddingVertical: 3,
+
+  },
+  form4:{
+    height: 52,
+    fontFamily: "OpenSans-Regular",
+    borderColor: '#E60965', // Border color
+    borderWidth: 1, // Border width
+    borderRadius: 10, // Border radius
+    paddingLeft: 25,
+    marginBottom: 5,
+    width: '100%',
+    alignSelf: 'center', // Center the input horizontally
+    backgroundColor: '#fff',
+    alignItems: "center",
+  },
 
 	button: {
 		borderWidth: 1,
@@ -421,7 +506,7 @@ const styles = StyleSheet.create ({
 DonorButton:{
     flexDirection: "row",
     justifyContent:"center",
-    marginTop: 20
+    marginBottom: 40
 },
 label: {
     color: 'white',

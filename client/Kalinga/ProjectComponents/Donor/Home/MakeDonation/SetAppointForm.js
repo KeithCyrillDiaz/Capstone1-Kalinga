@@ -34,7 +34,6 @@ const SetAppointment = ({route}) => {
       const addressArray = userInformation.homeAddress.split(" ")
       if( addressArray[addressArray.length - 1] === "City")
         city = addressArray[addressArray.length - 2] + " " + addressArray[addressArray.length - 1]
-      console.log(city)
     }
     return
   }
