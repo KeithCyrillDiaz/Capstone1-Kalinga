@@ -1,5 +1,5 @@
 //Guest EducLibrary
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   Text,
@@ -14,20 +14,34 @@ import {
 } from "react-native";
 import { globalStyles } from "../../../../styles_kit/globalStyles.js";
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
-import { useNavigation, useRoute } from '@react-navigation/native';
-import SetDateTimeLocation from "./SetDateTimeLocation.js";
+import { useNavigation } from '@react-navigation/native';
 import randomatic from 'randomatic';
 import { Picker } from '@react-native-picker/picker';
 
 
 
-const SetAppointment = () => {
-  const navigation = useNavigation();
-  const route = useRoute();
-  const { AppointmentDonorID } = route.params || {};
+const SetAppointment = ({route}) => {
 
+  const userInformation = route.params.data
   const Appointment_DonorID = randomatic('Aa0', 20);
-  const Donor_ID = randomatic('Aa0', 20);
+  const Donor_ID = route.params.data.Donor_ID 
+
+  const [isFormFilled, setIsFormFilled] = useState(false)
+  let city = ""
+  const getCity = () => {
+
+    if(userInformation.homeAddress.endsWith("City")){
+      const addressArray = userInformation.homeAddress.split(" ")
+      if( addressArray[addressArray.length - 1] === "City")
+        city = addressArray[addressArray.length - 2] + " " + addressArray[addressArray.length - 1]
+      console.log(city)
+    }
+    return
+  }
+
+  useEffect(() => {
+    getCity();
+  },[])
 
 
   const [formData, setFormData] = useState({
@@ -35,17 +49,38 @@ const SetAppointment = () => {
     Donor_ID: Donor_ID,
     userType: "Donor",
     DonationStatus: "Pending",
-    fullName: '',
-    phoneNumber: '',
-    emailAddress: '',
-    homeAddress: '',
-    city: '',
+    fullName: userInformation.fullName,
+    phoneNumber: userInformation.mobileNumber,
+    emailAddress: userInformation.email,
+    homeAddress: userInformation.homeAddress,
+    city: city,
     medicalCondition: '',
     milkAmount: '',
 
   });
 
+  const checkForm = (value) => {
+    let keysToCheck = [
+      'userType',
+      'fullName',
+      'emailAddress',
+      'phoneNumber',
+      'homeAddress',
+      'milkAmount'
+      ];
+
+      const isFormDataValid = keysToCheck.every(key => formData[key].trim() !== '');
   
+      if (isFormDataValid) {
+          console.log('All values until medical condition are valid');
+          setIsFormFilled(true)
+          
+      } else {
+          console.log('Some values until medical condition are empty');
+          setIsFormFilled(false)
+      }
+  }
+
   const validatePhoneNumber = (text) => {
     if (/^\d+$/.test(text)) {
       handleChange("phoneNumber", text);
@@ -69,14 +104,25 @@ const SetAppointment = () => {
       [name]: value,
     }));
   };
+
+  const navigation = useNavigation();
   const navigatePage = () => {
     setFormData(prevData => ({
       ...prevData,
       DonationStatus: 'Pending',
     }));
+    checkForm()
+    console.log(formData)
+    if(!isFormFilled){
+      Alert.alert("Form Must be Filled", "Please fill out the form first ")
+      return
+    }
     navigation.navigate('SetDateTimeLocation', { formData: formData });
   };
-
+  
+  useEffect(()=> {
+    checkForm()
+  },[formData.milkAmount])
   return (
     <SafeAreaView style={globalStyles.SafeArea}>
       <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
@@ -110,6 +156,7 @@ const SetAppointment = () => {
                 placeholder="Full Name"
                 placeholderTextColor="#E60965"
                 onChangeText={(text) => handleChange("fullName", text)}
+                value = {formData.fullName}
               />
             </View>
                     <Text style = {styles.asterix}>
@@ -123,6 +170,7 @@ const SetAppointment = () => {
                       placeholder="Phone Number"
                       placeholderTextColor="#E60965"
                       onChangeText={(text) => validatePhoneNumber(text)}
+                      value={formData.phoneNumber}
                       />
                   </View>
                       
@@ -137,6 +185,7 @@ const SetAppointment = () => {
                       placeholder="Email Address"
                       placeholderTextColor="#E60965"
                       onChangeText={(text) => handleChange("emailAddress", text)}
+                      value={formData.emailAddress}
                     />
                   </View>
                  
@@ -151,6 +200,7 @@ const SetAppointment = () => {
                       placeholder="Home Address"
                       placeholderTextColor="#E60965"
                       onChangeText={(text) => handleChange("homeAddress", text)}
+                      value = {formData.homeAddress}
                     />
                   </View>
                  
@@ -160,25 +210,30 @@ const SetAppointment = () => {
                 </View>
                 <View style={styles.dropdownContainer}>
                 <Picker
-              selectedValue={formData.city}
-              style={{ height: 30, width: "100%", color: '#E60965'}}
-              onValueChange={(itemValue, itemIndex) =>
-                handleChange("city", itemValue)
-              }
-            >
-              <Picker.Item label="Select City" value="" />
-              <Picker.Item label="Manila City" value="Manila City" />
-              <Picker.Item label="Quezon City" value="Quezon City" />
-            </Picker>
+                  selectedValue={formData.city}
+                  style={{ height: 30, width: "100%", color: '#E60965'}}
+                  onValueChange={(itemValue) =>
+                    handleChange("city", itemValue)
+                  }
+                >
+                  <Picker.Item label="Select City" value="" />
+                  <Picker.Item label="Manila City" value="Manila City" />
+                  <Picker.Item label="Quezon City" value="Quezon City" />
+                </Picker>
             </View>
                 <View style={styles.inputField}>
                   <View style={styles.spaceBetween}>
-                    <TextInput
-                      style={styles.placeholderDesign}
-                      placeholder="Medical Condition (If Applicable)"
-                      placeholderTextColor="#E60965"
-                      onChangeText={(text) => handleChange("medicalCondition", text)}
-                    />
+                    <Picker
+                    selectedValue={formData.medicalCondition}
+                    style={{ height: 30, width: "100%", color: '#E60965'}}
+                    onValueChange={(itemValue) =>
+                      handleChange("medicalCondition", itemValue)
+                    }
+                    >
+                    <Picker.Item label="Medical Condition" value="" />
+                    <Picker.Item label="Normal" value="Normal" />
+                    <Picker.Item label="Sick" value="Sick" />
+                  </Picker>
                   </View>
                  
                     <Text style = {styles.asterix}>
@@ -191,6 +246,7 @@ const SetAppointment = () => {
                       style={styles.placeholderDesign}
                       placeholder="Amount of milk to be donated (ml)"
                       placeholderTextColor="#E60965"
+                      keyboardType="numeric"
                       onChangeText={(text) => validateMilkAmount(text)}
                       />
                   </View>
