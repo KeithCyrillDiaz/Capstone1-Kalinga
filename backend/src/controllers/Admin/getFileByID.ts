@@ -5,21 +5,22 @@ export const getFile = async (req: express.Request, res: express.Response) => {
         // console.log(req.params.ownerID)
         const zipFile = await getMRFileZip(req.params.ownerID)
         if(!zipFile) {
-            return res.status(400).json({
+            return res.json({
                 messages: {
                     code: 1,
                     message: "None Existent Zip File"
                 }
-            })
+            }).status(400)
         }
 
-        return res.status(200).json({
+        return res.json({
             messages:{
                 code: 0,
                 message: "Retrieved Zip File"
             },
             zipFile
-        })
+        }).status(200)
+        
    }catch(error){
     return res.status(500).json({
         messages: {
