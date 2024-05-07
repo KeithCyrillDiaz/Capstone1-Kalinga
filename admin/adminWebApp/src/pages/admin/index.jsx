@@ -6,12 +6,11 @@ export default function () {
   return (
     <>
       <section className="w-full min-h-screen bg-neutral-variant">
-
-        <div className="grid items-center justify-center grid-cols-[auto_1fr] gap-x-5 py-4 px-10">
+        <div className="grid items-center justify-center grid-cols-[auto_1fr] gap-x-5 py-2 px-10">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="45"
-            height="45"
+            width="30"
+            height="30"
             viewBox="0 0 24 24"
           >
             <path
@@ -78,8 +77,6 @@ export default function () {
               </div>
             </div>
           </div>
-
-          
         </div>
 
         {/* <div className="flex items-center justify-center p-10 ">

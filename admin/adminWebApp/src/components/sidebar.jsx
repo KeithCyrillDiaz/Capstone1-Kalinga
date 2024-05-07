@@ -45,6 +45,8 @@ export default function () {
             </div>
           </div>
 
+          {/* DASHBOARD */}
+
           <div>
             <NavLink
               to="/admin"
@@ -72,6 +74,8 @@ export default function () {
               </svg>
               <h1 className="ml-4 text-2xl text-neutral-primary">Dashboard</h1>
             </NavLink>
+
+            {/* MILKBANKS */}
 
             <NavLink
               to="/admin/milkbanks"

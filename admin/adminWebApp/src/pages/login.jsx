@@ -24,7 +24,7 @@ export default function () {
                       Kalinga
                     </h1>
                     <h1 className="font-normal text-center xl:text-5xl lg:text-3xl text-primary-default">
-                      Super Admin
+                      Admin
                     </h1>
                   </div>
                 </div>
