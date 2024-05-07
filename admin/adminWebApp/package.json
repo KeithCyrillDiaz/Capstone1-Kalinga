@@ -11,10 +11,7 @@
   "dependencies": {
     "@tailwindcss/container-queries": "^0.1.1",
     "@tailwindcss/typography": "^0.5.9",
-<<<<<<< HEAD
-=======
     "axios": "^1.6.8",
->>>>>>> 4ddc0e78f3b7d40ab60ab7b209d71426f110c7b5
     "million": "^2.6.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
