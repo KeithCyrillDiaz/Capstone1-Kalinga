@@ -82,7 +82,7 @@ import SetDateTimeLocation from './ProjectComponents/Donor/Home/MakeDonation/Set
 import AppointmentConfirmation from './ProjectComponents/Donor/Home/MakeDonation/AppointmentConfirmation.js'
 import DonorHelpAndSupportMessage from './ProjectComponents/Donor/Profile/DonorSettngs/DonorHelpAndSupportMessage.js'
 import AppointmentConfirmationMessage from './ProjectComponents/Donor/Home/MakeDonation/AppointmentConfirmationMessage.js';
-
+import ValidUserExplore from './ProjectComponents/Donor/Dashboard/Explore/ExploreFinal.js'
 {/* Requestor */}
 import RequestorForum from './ProjectComponents/Requestor/Home/Forum/RequestorForumPage.js'
 import RequestorChatAssistance from './ProjectComponents/Requestor/Home/InstantMessaging/RequestorChatAssistance'
@@ -125,8 +125,7 @@ import GuestTabs from './routes/MainTabsGuest.js'
 import MainTabs from './routes/MainTabs.js'
 import SetPassword from './ProjectComponents/Guest/Profile/ApplyDonor/SetPasswordDonor.js';
 import GuestTabsExploreAndMilkBank from './routes/GuestTabsExploreAndMilkBank.js'
-import RequestorTabsExploreAndMilkBank from './routes/RequestorTabsExploreAndMilkBank.js'
-import DonorTabsExploreAndMilkBank from './routes/DonorTabsExploreAndMilkBank.js'
+
 
 //Admin
 import MedicalHistory from './screens/Admin/ScreeningForm/Donor/MedicalHistory.js'
@@ -185,13 +184,6 @@ export default function App() {
     loadFonts();
   }, []);
 
-  const prefixes = Linking.createURL('https://kalinga.com');
-  const config ={
-    screens:{
-      SetPassword: "setPassword"
-    }
-  }
-
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
@@ -214,15 +206,9 @@ export default function App() {
     return (
       <>
         <UserLocationContext.Provider value={{ location, setLocation }}>
-        <NavigationContainer
-          linking={{
-            prefixes: [prefixes],
-            config: config
-          }}
-        
-        >
+        <NavigationContainer>
          
-          <Stack.Navigator initialRouteName="TestMessages" screenOptions={{ headerShown: false }}>
+          <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
           {/* <Stack.Navigator initialRouteName="Data Privacy Requestor" screenOptions={{ headerShown: false }}> */}
           
             {/*InitialScreen*/}
@@ -234,8 +220,6 @@ export default function App() {
 
             {/*Routes*/}
             <Stack.Screen name="GuestTabsExploreAndMilkBank" component={GuestTabsExploreAndMilkBank} />
-            <Stack.Screen name="RequestorTabsExploreAndMilkBank" component={RequestorTabsExploreAndMilkBank} />
-            <Stack.Screen name="DonorTabsExploreAndMilkBank" component={RequestorTabsExploreAndMilkBank} />
             <Stack.Screen name="MainTabs" component = {MainTabs}/>
 
             <Stack.Screen name="SetPassword" component={SetPassword} />
@@ -303,6 +287,8 @@ export default function App() {
              <Stack.Screen name="DonorHelpAndSupportMessage" component={DonorHelpAndSupportMessage} />
              <Stack.Screen name="AppointmentConfirmationMessage" component={AppointmentConfirmationMessage} />
              <Stack.Screen name="MyDonationTabs" component={MyDonationTabs} />
+             <Stack.Screen name="ValidUserExplore" component={ValidUserExplore} />
+        
 
 
 

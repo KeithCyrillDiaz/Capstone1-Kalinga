@@ -121,6 +121,15 @@ useEffect(() => {
             </View>
           </View>
 
+          <View style={styles.boxContainer2}>
+            <View style={styles.boxContentContainer}>
+              <Text style={styles.boxLabel}>City</Text>
+              <Text style={[styles.boxContent, styles.limitText]}>{formData.city}</Text>
+            </View>
+          </View>
+
+          
+
           <View style={styles.boxContainer}>
             <View style={styles.boxContentContainer}>
               <Text style={styles.boxLabel}>Medical Condition (if applicable)</Text>

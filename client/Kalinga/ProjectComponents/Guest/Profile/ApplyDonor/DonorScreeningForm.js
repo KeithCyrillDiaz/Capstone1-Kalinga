@@ -32,7 +32,7 @@ const DonorScreeningForm = () => {
 
   const navigatePage = (Page, data) => {
     console.log("check Screening Form: ", screeningFormData)
-    if(!checkForm("ScreeningForm")) {
+    if(!isFormFilled) {
       Alert.alert("Invalid Form", "Please complete the form first")
       return
     }
@@ -89,6 +89,7 @@ const DonorScreeningForm = () => {
 
 const [isEmailExisted, setIsEmailExisted] = useState(false)
 const [isFormFilled, setIsFormFilled] = useState(false)
+const [textFocus, setTextFocus] = useState(false)
 
 const [value, setValue] = useState(null);
 
@@ -99,6 +100,7 @@ const [value, setValue] = useState(null);
  const [isProvincesFocus, setIsProvincesFocus] = useState(false);
  const [isBarangayFocus, setIsBarangayFocus] = useState(false);
  const [isGestationFocus, setIsGestationFocus] = useState(false)
+
  //Places
  const [listProvinces, setListProvinces] = useState(null)
  const [listCity, setListCity] = useState(null)
@@ -245,6 +247,11 @@ useEffect(() => {
   }
 
 }, [address.Barangay, address.Municipality])
+
+useEffect(() => {
+  //checkForm
+  checkForm("Screening Form")
+}, [screeningFormData.medicalCondition])
 
 const uncapitalizedString = (string) => {
   const trimmedString = string.trim();
@@ -555,8 +562,14 @@ const setMonth = (num) => {
                           placeholder="Complete Home Address"
                           multiline={true}
                           placeholderTextColor="#E60965"
-                          onChangeText={(value) => handleChangeText('homeAddress', value)}
-                          value={screeningFormData.homeAddress}
+                          onChangeText={(value) => {
+                            handleChangeText('homeAddress', value),
+                            setTextFocus(false)
+                          }}
+                          value = {screeningFormData.homeAddress}
+                          onFocus={() => setTextFocus(true)}
+                          onBlur={() => setTextFocus(false)}
+                          selection={{ start: textFocus && (screeningFormData.homeAddress === (address.Barangay + " " + address.Municipality) ) ? 0 : -1}} // Set the cursor at the start
                         /> 
                     </View>
                    
@@ -648,7 +661,8 @@ const setMonth = (num) => {
                         justifyContent: "space-between",
                         paddingRight: 15,
                         paddingVertical: 4,
-                        elevation: 5
+                        elevation: 5,
+                        marginTop: 7,
                       }}
                     >
                         <View
@@ -736,7 +750,7 @@ const setMonth = (num) => {
     transparent ={true}
     animationType='slide'
     visible = {openGestationInfo}
-    onRequestClose={() => setOpenGestationInfo(!openGestationInfo)}
+    onRequestClose={() => setOpenGestationInfo(false)}
     >
       <View style={{
         flex: 1,
@@ -1011,10 +1025,10 @@ const setMonth = (num) => {
       borderRadius: 20,
       borderColor: "#E60965",
       backgroundColor:"white",
-      width: "90%",
+      width: "91%",
       paddingRight: 15,
       paddingVertical: 4,
-      marginTop: 5,
+      marginTop: 10,
       elevation: 5
     },
 
