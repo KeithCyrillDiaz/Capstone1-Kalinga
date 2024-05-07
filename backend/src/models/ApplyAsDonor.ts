@@ -122,6 +122,7 @@ export const getScreeningFormByUserType = (userType: string) => screeningFormMod
 export const getScreeningFormByName = (fullName: string) => screeningFormModel.findOne({fullName})
 export const getScreeningFormByApplicantID = (Applicant_ID: string) => screeningFormModel.findOne({Applicant_ID})
 export const getScreeningFormByEmail = (email: string) => screeningFormModel.findOne({email})
+export const getEmailValidity = (email: string, status: string) => screeningFormModel.findOne({email, status})
 export const updateIsApprovedScreeningForm = (Applicant_ID: string, Status: string) => screeningFormModel.findOneAndUpdate({Applicant_ID}, {$set: {isApproved: Status}}, {new: true})
 export const isDeleteScreeningForm = (Applicant_ID: string, Status: string) => screeningFormModel.findOneAndUpdate({Applicant_ID}, {$set: {isDeleted: Status}}, { new: true } ).then((ScreeningForm) => ScreeningForm.toObject())
 export const getScreeningFormByMaxApplicantID = () => screeningFormModel.findOne({}).sort({ Applicant_ID: -1 }).limit(1).select('Applicant_ID');

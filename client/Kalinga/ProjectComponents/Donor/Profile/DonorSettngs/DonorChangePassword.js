@@ -11,7 +11,8 @@ import {
 } from "react-native";
 import Header from "./Header";
 
-export default function ChangePasswordScreen() {
+export default function ChangePasswordScreen({route}) {
+  console.log("route: ", route.params.userInformation)
   return (
     <SafeAreaView style={bodyStyle.main}>
       <ScrollView contentContainerStyle={bodyStyle.container}>

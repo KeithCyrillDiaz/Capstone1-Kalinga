@@ -32,6 +32,7 @@ import { getCompleteRequestsTotal } from '../controllers/SuperAdmin/getCompleted
 import { getDeclinedRequestsTotal } from '../controllers/SuperAdmin/getCompletedRequestTotal'
 import { getDonationStatusTotal } from '../controllers/SuperAdmin/getTotalCityUser'
 import { getRequestStatusTotal } from '../controllers/SuperAdmin/getTotalCityUser'
+import { updateOngoingDonation } from '../controllers/Admin/Appointment/updateOngoingDonation';
 
 
 
@@ -54,6 +55,7 @@ export default (router: express.Router) => {
    router.get('/kalinga/getAppointmentByUserType/:userType', getAppointmentByUsertype)
     router.put ('/kalinga/updateDonationStatus/:AppointmentDonorID', updateDonationStatus)
     router.get('/kalinga/getOngoingDonation/:Donor_ID', getOngoingDonation)
+    router.put('/kalinga/updateOngoingDonation/:AppointmentDonorID', updateOngoingDonation)
     router.put ('/kalinga/updateDonationComplete/:AppointmentDonorID', updateDonationComplete)
     router.get('/kalinga/getCompletedDonation/:Donor_ID', getCompletedDonation)
     router.get('/kalinga/getDonorStats/:Donor_ID', getDonorStats)
