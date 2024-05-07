@@ -9,7 +9,7 @@ import { globalStyles } from '../../../styles_kit/globalStyles.js';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
+import { BASED_URL } from '../../../MyConstants.js';
 
 
 export default function RequestorHome({route}) {
@@ -40,16 +40,16 @@ export default function RequestorHome({route}) {
 
     
     const navigatePage = (Page) => {
-        navigation.navigate(Page, {data: userInformation}); // Navigate to the Login screen
+        navigation.navigate(Page, {data: userInformation, token: token}); // Navigate to the Login screen
         
 
     };    
     useEffect(() => {
       const simulateFetchRequestStatus = async () => {
           try {
-              const response = await fetch('http://192.168.254.106:7000/kalinga/getRequestStatus');
+              const response = await fetch(`${BASED_URL}/kalinga/getRequestStatus`);
               if (!response.ok) {
-                  throw new Error('Network response was not ok');
+                  console.log('Network response was not ok');
               }
   
               const contentType = response.headers.get('content-type');
