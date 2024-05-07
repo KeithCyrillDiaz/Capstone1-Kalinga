@@ -220,7 +220,7 @@ export default function () {
                 {showAppointmentsDropdown && (
                   <div className="p-2 w-full bg-secondary-default rounded-b-2xl pb-2 mb-2">
                     <NavLink
-                      to="/admin/chart"
+                      to="/admin/donorAppointments"
                       className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-10/12 rounded-2xl py-2 mb-2 ml-6 ${
                         isActiveRoute("chart")
                           ? "bg-primary-default"
@@ -230,7 +230,7 @@ export default function () {
                       <h1 className="text-xl text-neutral-primary">Donor</h1>
                     </NavLink>
                     <NavLink
-                      to="/admin/city"
+                      to="/admin/requestorAppointments"
                       className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-10/12 rounded-2xl py-2 mb-2 ml-6 ${
                         isActiveRoute("city")
                           ? "bg-primary-default"
