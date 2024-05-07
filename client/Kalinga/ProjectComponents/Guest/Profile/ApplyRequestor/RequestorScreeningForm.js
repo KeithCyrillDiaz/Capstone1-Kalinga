@@ -410,7 +410,7 @@ const formatCity = (city) => {
             marginLeft: "10%", 
             marginTop: 5, 
             marginBottom: -10, 
-            color: "red"}}>Email is already existing!</Text>
+            color: "red"}}>Email is already existing</Text>
         )}
         <View style={[styles.inputPhoneNumberContainer, { elevation: 5 }]}>
           <TextInput
