@@ -1,5 +1,4 @@
 import React from "react";
-import { PieChart, LoadPercentage, RequestpieChart } from "@components";
 
 export default function () {
   return (
@@ -22,10 +21,10 @@ export default function () {
           <h1 className="text-5xl text-primary-default">Reports</h1>
         </div>
         <hr className="border-t-2 border-primary-default" />
-        <div className="px-8 py-4">
+        <div className="p-8">
           <div className="flex flex-row items-center justify-center xl:gap-x-6 lg:gap-x-3">
             <h1 className="w-full text-3xl text-primary-default">
-              Total Donations & Requests each Month
+              Total Donations & Requests each City
             </h1>
             <div className="flex flex-row items-center justify-center gap-x-3 px-4 bg-white border xl:w-1/2 lg:w-[60%] rounded-3xl border-primary-default">
               <svg
@@ -55,14 +54,48 @@ export default function () {
             </div>
           </div>
         </div>
-        <div>
-          <div className="grid grid-flow-row-dense px-4 xl:grid-cols-2 gap-x-4">
-            <span>
-              <PieChart name="Donations" />
-            </span>
-            <span className="lg:pt-4 lg:pb-8 xl:p-0">
-              <RequestpieChart name="Requests" />
-            </span>
+        <div className="xl:px-8 lg:px-2 flex items-center justify-center w-full h-[60%] 2xl:gap-x-32 xl:gap-x-20 lg:gap-x-8">
+          <div className="flex flex-col items-center justify-center gap-y-12">
+            <h1 className="text-4xl text-center text-primary-default">
+              Donations
+            </h1>
+            <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-24 lg:px-16 rounded-xl border-primary-default">
+              <h1 className="pb-4 text-6xl text-center text-primary-default">
+                10
+              </h1>
+              <p className="text-2xl text-center text-primary-default">
+                Successful
+              </p>
+            </div>
+            <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-20 lg:px-12 rounded-xl border-primary-default">
+              <h1 className="pb-4 text-6xl text-center text-primary-default">
+                0
+              </h1>
+              <p className="text-2xl text-center text-primary-default">
+                Unsuccessful
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-col items-center justify-center gap-y-12">
+            <h1 className="text-4xl text-center text-primary-default">
+              Requests
+            </h1>
+            <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-24 lg:px-16 rounded-xl border-primary-default">
+              <h1 className="pb-4 text-6xl text-center text-primary-default">
+                10
+              </h1>
+              <p className="text-2xl text-center text-primary-default">
+                Successful
+              </p>
+            </div>
+            <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-20 lg:px-12 rounded-xl border-primary-default">
+              <h1 className="pb-4 text-6xl text-center text-primary-default">
+                0
+              </h1>
+              <p className="text-2xl text-center text-primary-default">
+                Unsuccessful
+              </p>
+            </div>
           </div>
         </div>
       </section>
