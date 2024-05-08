@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView, Dimensions, StatusBar } from 'react-native'; // Added Dimensions
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView, Dimensions, StatusBar, Alert } from 'react-native'; // Added Dimensions
 import { useNavigation } from '@react-navigation/native';
 import { Octicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
@@ -30,6 +30,19 @@ const AdminMilkbanks = () => {
     }
 
     const screenWidth = Dimensions.get('window').width; // Get the screen width
+    useEffect(() => {
+        Alert.alert(
+          "Sorry, this feature is not yet available right now.",
+          "Rest assured, our team is hard at work developing new features to better serve our community. Your continued support means the world to us. Thank you for your patience!",
+          [
+            {
+              text: "Okay",
+              onPress: () => navigation.goBack("AdminMenu")
+            }
+          ]
+        );
+        return
+      }, [])
 
     return (
         <SafeAreaView style={styles.container}>
