@@ -55,9 +55,11 @@ export default function RequestorProfile({route}) {
       homeAddress: userInformation.homeAddress,
       city: '',
       medicalCondition: '',
+      milkBank: "",
       milkAmount: '',
       BabyCategory: '',
       ReasonForRequesting: userInformation.RFR,
+      
   });
 
   const getCity = () => {
@@ -83,9 +85,11 @@ export default function RequestorProfile({route}) {
       'homeAddress',
       'city',
       'medicalCondition',
+      'milkBank',
       'milkAmount',
       'BabyCategory',
       'ReasonForRequesting',
+ 
       ];
       const isFormDataValid = keysToCheck.every(key => formData[key].trim() !== '');
   
@@ -322,7 +326,33 @@ const handleImageUpload = async (attachmentType) => {
                       <Picker.Item label="Medically Fragile Baby" value="Medically Fragile" style={styles.dropdownItem} />
                       <Picker.Item label="Preterm Baby" value="Preterm " style={styles.dropdownItem} />
                     </Picker>
-                   </View>    
+                   </View> 
+
+                    <View
+                    style={{
+                      fontFamily: "OpenSans-Regular",
+                      borderColor: '#E60965', // Border color
+                      borderWidth: 1, // Border width
+                      borderRadius: 10, // Border radius
+                      paddingHorizontal: 10,
+                      marginBottom: 5,
+                      width: '90%',
+                      alignSelf: 'center', // Center the input horizontally
+                      backgroundColor: '#fff', // Background color
+                    }}
+                  >
+                      <Picker
+                        selectedValue={formData.milkBank}
+                        style ={{color: '#E60965',}}
+                        onValueChange={(itemValue) =>
+                          handleChange("milkBank", itemValue)
+                        }
+                        >
+                        <Picker.Item label="Choose Milk Bank" value="" />
+                        <Picker.Item label="Quezon City General Hospital - Human Milk Bank" value="Quezon City General Hospital - Human Milk Bank" />
+                    </Picker>
+                  </View>   
+                  
               <View style={styles.bodyForm1}>
                     <TextInput
                         style={styles.form3}
@@ -340,8 +370,6 @@ const handleImageUpload = async (attachmentType) => {
                         placeholderTextColor="#E60965"
                         onChangeText={(text) => handleInputChange('ReasonForRequesting', text)}
                         />   
-
-                    <Text style={styles.bodyNote}>Note: Maximum of 3 images or files per field.</Text>
 
                     <TouchableOpacity onPress={() => handleImageUpload("Prescription")} style = {styles.uploadContainer}>
                         <Text style = {styles.uploadContainerTitle}>Attach Prescription *</Text>

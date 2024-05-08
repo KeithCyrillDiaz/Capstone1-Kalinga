@@ -8,7 +8,7 @@ const updateRequestStatus = async (req: Request, res: Response): Promise<void> =
   try {
     const request = await RequestModel.findOneAndUpdate(
       { RequestID: RequestID }, 
-      { RequestStatus: RequestStatus }, 
+      { $set: {RequestStatus: RequestStatus}}, 
       { new: true }
     );
 

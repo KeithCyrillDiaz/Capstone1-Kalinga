@@ -13,6 +13,7 @@ export const getRequestStats = async (req: Request, res: Response) => {
       {
         $match: {
           Requestor_ID: Requestor_ID,
+          RequestStatus: 'Complete',
         },
       },
       {

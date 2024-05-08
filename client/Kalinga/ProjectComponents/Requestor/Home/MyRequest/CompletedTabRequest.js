@@ -6,70 +6,66 @@ import {
 	ScrollView, 
 	StatusBar, 
 	StyleSheet, 
-	TouchableOpacity, 
+	Alert
 } from 'react-native';
 //import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import axios from 'axios'; // Import axios for API requests
-import { MaterialIcons } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
-import { globalHeader } from '../../../../styles_kit/globalHeader.js';
-import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import { BASED_URL } from '../../../../MyConstants.js';
 
-const CompletedTabRequest = () => {
+const CompletedTabRequest = ({route}) => {
+	const userInformation = route.params.userInformation
+	const token = route.params.token
+	const Requestor_ID = userInformation.Requestor_ID;
     const navigation = useNavigation();
-    const route = useRoute();
-    const Requestor_ID ='LP8n21tQjcENorDCwFWl';
 	const [formDataList, setFormDataList] = useState([]);
-
     const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(false)
 
-    useEffect(() => {
-        fetchData();
-    }, []);
+    useFocusEffect(
+		React.useCallback(() => {
+			fetchData();	
+		}, [])
+	);
 
     const fetchData = async () => {
         try {
             const response = await axios.get(`${BASED_URL}/kalinga/getCompletedRequests/${Requestor_ID}`);
             const responseData = response.data;
+			console.log(responseData)
+			if(responseData.messages.success === false){
+				Alert.alert("No Completed Request", "You currently don't have any completed requests.");
+				setLoading(false); 
+				return
+			}
 
-            if ('RequestData' in responseData && responseData.RequestData.length > 0) {
-                const formattedData = responseData.RequestData.map(item => ({
-                    fullName: item.fullName,
-                    phoneNumber: item.phoneNumber,
-                    emailAddress: item.emailAddress,
-                    homeAddress: item.homeAddress,
-                    medicalCondition: item.medicalCondition,
-                    milkAmount: item.milkAmount,
-                    BabyCategory: item.BabyCategory,
-                    ReasonForRequesting: item.ReasonForRequesting,
-                }));
-
-                setFormDataList(formattedData);
-            } else {
-                console.log('No completed requests found for the specified Requestor_ID.');
-            }
+			setFormDataList(responseData.RequestData);
+            // if ('RequestData' in responseData && responseData.RequestData.length > 0) {
+            //     const formattedData = responseData.RequestData.map(item => ({
+            //         fullName: item.fullName,
+            //         phoneNumber: item.phoneNumber,
+            //         emailAddress: item.emailAddress,
+            //         homeAddress: item.homeAddress,
+            //         medicalCondition: item.medicalCondition,
+            //         milkAmount: item.milkAmount,
+            //         BabyCategory: item.BabyCategory,
+            //         ReasonForRequesting: item.ReasonForRequesting,
+            //     }));
+			// 	console.log(responseData.RequestData)
+			// 	setError(false)
+            //     setFormDataList(formattedData);
+				
+            // } else {
+            //     console.log('No completed requests found for the specified Requestor_ID.');
+            // }
 
             setLoading(false);
         } catch (error) {
-            console.log('Error fetching data:', error);
+			setError(true)
+            // console.log('Error fetching data:', error);
             setLoading(false);
         }
     };
-	
-		const handlePress = () => {
-			console.log('Button Pressed!');
-		};
-		
-		const handleBackPress = () => {
-			console.log("Back button pressed");
-		};
-
-		const handleInputChange = (text) => {
-			setInputValue(text); // Update the local inputValue
-		};
 
     return (
 			<SafeAreaView style = {styles.container}>
@@ -81,17 +77,25 @@ const CompletedTabRequest = () => {
 					nestedScrollEnabled={true} 
 					showsVerticalScrollIndicator={false}
 				>
-						<View style={styles.body}>
+				<View style={styles.body}>
 					{formDataList.map((formData, index) => (
-                    <View key={index} style={styles.columnContainer}>
+                    <View key={index} style={{paddingBottom: 17}}>
                         <View style={styles.boxColContainer}>
-                            <View style={styles.boxContentContainer}>
-                                <Text style={styles.boxContentBold}>Amount of milk requested:</Text>
-                                <Text style={[styles.boxContent, styles.limitText]}>{formData.milkAmount}</Text>
+							<View style={[styles.boxContentContainer, {gap: 4}]}>
+                                <Text style={styles.boxContentBold}>Milk Bank:</Text>
+                                <Text style={[styles.boxContent, styles.limitText, {marginTop: 2}]}>{formData.milkBank}</Text>
                             </View>
-                            <View style={styles.boxContentContainer}>
+                            <View style={[styles.boxContentContainer, {gap: 4}]}>
+                                <Text style={styles.boxContentBold}>Amount of milk requested: </Text>
+                                <Text style={[styles.boxContent, styles.limitText, {marginTop: 2}]}>{formData.milkAmount} ml</Text>
+                            </View>
+                            <View style={[styles.boxContentContainer, {gap: 4}]}>
                                 <Text style={styles.boxContentBold}>Baby Category:</Text>
-                                <Text style={[styles.boxContent, styles.limitText]}>{formData.BabyCategory}</Text>
+                                <Text style={[styles.boxContent, styles.limitText, {marginTop: 2}]}>{formData.BabyCategory}</Text>
+                            </View>
+							<View style={[styles.boxContentContainer, {gap: 4}]}>
+                                <Text style={styles.boxContentBold}>Date:</Text>
+                                <Text style={[styles.boxContent, styles.limitText, {marginTop: 2}]}>{formData.Date}</Text>
                             </View>
                         </View>
                     </View>
@@ -158,13 +162,13 @@ const styles = StyleSheet.create ({
 
 	boxColContainer: {
 		alignSelf:"center",
-		width: 350,
-		height: 130,
+		width: "90%",
 		backgroundColor: "#FFE5EC",
 		marginTop: 15,
 		borderRadius: 18,
 		justifyContent: 'center',
-		elevation: 3,
+		elevation: 10,
+		paddingVertical: 20,
 	},
 
 	boxContentContainer: {
