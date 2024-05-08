@@ -12,6 +12,12 @@ import {
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import Header from "./Header";
+import RogineImage from '../../../../assets/Developers/Rogine.jpg'
+import AliImage from '../../../../assets/Developers/Ali.png'
+import JeannahImage from '../../../../assets/Developers/Jana.jpg'
+import BeverlyImage from '../../../../assets/Developers/Beverly.jpg'
+import KeithImage1 from '../../../../assets/Developers/Keith1.jpg'
+import KeithImage2 from '../../../../assets/Developers/Keith2.jpg'
 
 export default function AboutUs() {
   return (
@@ -43,8 +49,8 @@ export default function AboutUs() {
               justifyContent: "center",
               alignItems: "center",
             }}>
-            <DeveloperProfile name={"Alisha Arafol"} role={"UI/UX Designer & Front-End Developer"} />
-            <DeveloperProfile name={"Rogine Cubelo"} role={"Group Leader & Full Stack Developer"} />
+            <DeveloperProfile name={"Alisha Arafol"} role={"UI/UX Designer & Front-End Developer"} image={AliImage} />
+            <DeveloperProfile name={"Rogine Cubelo"} role={"Group Leader & Full Stack Developer"} image={RogineImage}/>
           </View>
         </View>
 
@@ -53,12 +59,13 @@ export default function AboutUs() {
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
+            marginBottom: 20
           }}>
-          <DeveloperProfile name={"Beverly Somodio"} role={"Full Stack Developer"} />
-          <DeveloperProfile name={"Keith Diaz"} role={"Full Stack Developer"} />
+          <DeveloperProfile name={"Beverly Somodio"} role={"Full Stack Developer"} image={BeverlyImage}/>
+          <DeveloperProfile name={"Keith Diaz"} role={"Full Stack Developer"} image={KeithImage2}/>
         </View>
 
-        <DeveloperProfile name={"Jeannah Padasas"} role={"UI/UX Designer & Quality Assurance"} />
+        <DeveloperProfile name={"Jeannah Padasas"} role={"UI/UX Designer & Quality Assurance"} image={JeannahImage}/>
         <Text
           style={{
             marginVertical: 24,
