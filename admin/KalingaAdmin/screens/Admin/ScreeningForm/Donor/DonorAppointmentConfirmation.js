@@ -288,6 +288,7 @@ return (
                 </View>
                 <View style={styles.BiginputField}>
                 <TextInput
+                    multiline = {true}
                     style={{ flex: 1, color: '#E60965' }} // Set flex to 1 to allow TextInput to take up remaining space
                     placeholder="location"
                     placeholderTextColor="#E60965"
@@ -298,28 +299,28 @@ return (
                 </View>
 
                 {formData.DonationStatus === 'Pending' && (
-    <View style={styles.AdminButton}>
-        <TouchableOpacity onPress={() => handleApproveButtonPress(AppointmentDonorID)}>
-            <View style={styles.ApprovebuttonContainer}>
-                <Text style={styles.label}>Approve</Text>
-            </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleDeclineButtonPress(AppointmentDonorID)}>
-            <View style={styles.DeclinebuttonContainer}>
-                <Text style={styles.label}>Decline</Text>
-            </View>
-        </TouchableOpacity>
-    </View>
-)}
+                    <View style={[styles.AdminButton, {marginBottom: 70}]}>
+                        <TouchableOpacity onPress={() => handleApproveButtonPress(AppointmentDonorID)}>
+                            <View style={styles.ApprovebuttonContainer}>
+                                <Text style={styles.label}>Approve</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => handleDeclineButtonPress(AppointmentDonorID)}>
+                            <View style={styles.DeclinebuttonContainer}>
+                                <Text style={styles.label}>Decline</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                )}
 
-{formData.DonationStatus === 'Ongoing' && (
-    <TouchableOpacity onPress={() => handleCompleteButtonPress(AppointmentDonorID)}>
-        <View style={styles.CompleteButtonContainer}>
-            <Text style={styles.label}>Complete</Text>
-        </View>
-    </TouchableOpacity>
-)}
-                     </View>
+                {formData.DonationStatus === 'Ongoing' && (
+                    <TouchableOpacity onPress={() => handleCompleteButtonPress(AppointmentDonorID)}>
+                        <View style={[styles.CompleteButtonContainer, {marginBottom: 70}]}>
+                            <Text style={styles.label}>Complete</Text>
+                        </View>
+                    </TouchableOpacity>
+                )}
+                                    </View>
                  )}
             </ScrollView>
         </View>

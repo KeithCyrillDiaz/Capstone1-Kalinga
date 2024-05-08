@@ -15,6 +15,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { BASED_URL } from '../../../../MyConstants.js';
 import axios from 'axios'
+import { useFocusEffect } from '@react-navigation/native';
+
 
 const Tab = createBottomTabNavigator()
 
@@ -28,24 +30,25 @@ const MyDonation = ({route}) => {
   const [totalMilkRequested, setTotalMilkRequested] = useState(0);
   const [completedRequests, setCompletedRequests] = useState(0);
  
+  const fetchUserData = async () => {
+    try {
+      // Make an API call to fetch data from the backend
+      const response = await axios.get(`${BASED_URL}/kalinga/getDonorStats/${Donor_ID}`);
+      const { totalMilkRequested, completedRequestsCount } = response.data;
+      setTotalMilkRequested(totalMilkRequested);
+      setCompletedRequests(completedRequestsCount);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false); // Update loading state to false after data fetching
+    }
+  };
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        // Make an API call to fetch data from the backend
-        const response = await axios.get(`${BASED_URL}/kalinga/getDonorStats/${Donor_ID}`);
-        const { totalMilkRequested, completedRequestsCount } = response.data;
-        setTotalMilkRequested(totalMilkRequested);
-        setCompletedRequests(completedRequestsCount);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false); // Update loading state to false after data fetching
-      }
-    };
-
-    fetchUserData();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchUserData();
+    }, [])
+  );
 
   if (loading) {
     return (

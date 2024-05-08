@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import { SafeAreaView, Text, View,ScrollView, StatusBar, StyleSheet, TouchableOpacity, Image, ActivityIndicator, TextInput} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import axios from 'axios'; // Import axios for API requests
 import { format } from 'date-fns';
 import { BASED_URL } from '../../../../MyConstants.js';
@@ -22,9 +22,11 @@ const CompleteDonations = ({route}) => {
 
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  useFocusEffect(
+    React.useCallback(() => {
       fetchData();
-  }, []);
+    }, [])
+  )
 
   const fetchData = async () => {
     try {
@@ -78,7 +80,7 @@ const CompleteDonations = ({route}) => {
                         <View style={styles.boxColContainer}>
                             <View style={styles.boxContentContainer}>
                                 <Text style={styles.boxContentBold}>Amount of milk requested:</Text>
-                                <Text style={[styles.boxContent, styles.limitText]}>{data.milkAmount}</Text>
+                                <Text style={[styles.boxContent, styles.limitText]}>{data.milkAmount} ml</Text>
                             </View>
                             <View style={styles.boxContentContainer}>
                                 <Text style={styles.boxContentBold}>Milk Bank:</Text>

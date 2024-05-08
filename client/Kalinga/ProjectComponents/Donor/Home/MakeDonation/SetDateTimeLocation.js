@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, Text, View, StatusBar, StyleSheet, TouchableOpacity, TextInput, Button, Platform } from 'react-native';
+import { ScrollView, Text, View, StatusBar, StyleSheet, TouchableOpacity, TextInput, Alert, Platform } from 'react-native';
 import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import { useNavigation, useRoute} from '@react-navigation/native';
@@ -36,8 +36,18 @@ const SetDateTimeLocation = () => {
       setShowTimePicker(Platform.OS === 'ios');
       setSelectedTime(selectedTime || new Date());
     };
-  
+    
+    const checkForm = () => {
+        // console.log("Test", newForm.location)
+        if(newForm.location === undefined) {
+            console.log("Test", newForm.location)
+            Alert.alert("Invalid Milk Bank", "Please select a milk bank before proceeding.")
+            return
+        }
+        handleAppointmentCreation()
+    }
     const handleAppointmentCreation = async () => {
+      
         const appointmentData = {
           ...newForm,
           selectedDate: selectedDate.toISOString(),
@@ -145,7 +155,7 @@ const SetDateTimeLocation = () => {
                         <FontAwesome6 name="hospital" size={24} color="#E60965" style={styles.icon3} />
                     </View>
 
-                    <TouchableOpacity onPress={handleAppointmentCreation}>
+                    <TouchableOpacity onPress={() => checkForm()}>
                         <View style={styles.buttonContainer}>
                             <Text style={styles.label}>Next</Text>
                         </View>
