@@ -147,6 +147,7 @@ useEffect(() => {
 
 const saveDetails = async () => {
   try{
+    setIsloading(true)
     if(userData !== userInformation){
       const result = await axios.post(`${BASED_URL}/kalinga/updateUserInformation`,{
         userData: userData
@@ -156,14 +157,18 @@ const saveDetails = async () => {
         setUserData(result.data.result)
         const updatedData = result.data.result
         await AsyncStorage.setItem('userInformation', JSON.stringify(updatedData))
-      }
+      } else console.log("Error: ", result.data.messages.message)
     }
     uploadImage();
     return
   } catch(error) {
+    console.log("Error: ", error)
     if(error)Alert.alert('Network error', `Please check your internet connection`)
         else
         Alert.alert('Something went wrong', "Please try again later")
+  } finally {
+    Alert.alert('Image Save Successfully', "Thank you for waiting")
+    setIsloading(false)
   }
 
 }
@@ -207,14 +212,13 @@ const saveDetails = async () => {
         <StatusBar />
         <Header title="Personal Information" />
         
-        <Spinner 
-          visible = {isLoading}
-          textContent={'Processing...'}
-          textStyle={{ color: '#FFF' }}
-        />
-
-
-<View
+        <ScrollView
+         overScrollMode="false"
+         style = {{
+           flex: 1,
+         }}
+        >
+        <View
           style={{
             width: "100%",
             paddingHorizontal: 24,
@@ -342,7 +346,8 @@ const saveDetails = async () => {
         <View style={{ paddingHorizontal: 16 }}>
           <View style={inputStyle.container}>
             <Text style={inputStyle.label}>Address: </Text>
-            <TextInput style={inputStyle.primary} 
+            <TextInput style={[inputStyle.primary, {width: "80%"}]} 
+             multiline={true}
              value = {userData.homeAddress}
              onChangeText={(text) =>
               setUserData((prevUserData) => ({
@@ -369,6 +374,17 @@ const saveDetails = async () => {
             </View>
           </TouchableOpacity>
         </View>
+        </ScrollView>
+
+
+        <Spinner 
+          visible = {isLoading}
+          textContent={'Processing...'}
+          textStyle={{ color: '#FFF' }}
+        />
+
+
+        
       </ScrollView>
     </SafeAreaView>
   );
@@ -397,6 +413,10 @@ const inputStyle = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 16,
     borderRadius: 13,
+    backgroundColor: "white",
+    elevation: 5,
+    marginVertical: 7,
+
   },
 
   label: {

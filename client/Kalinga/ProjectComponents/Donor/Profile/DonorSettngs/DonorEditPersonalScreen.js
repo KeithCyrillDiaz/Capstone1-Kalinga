@@ -158,11 +158,12 @@ useEffect(() => {
             setUserData(result.data.result)
             const updatedData = result.data.result
             await AsyncStorage.setItem('userInformation', JSON.stringify(updatedData))
-          }
+          } else console.log("Error: ", result.data.messages.message)
         }
         uploadImage();
         return
       } catch(error) {
+        console.log("Error: ", error)
         if(error)Alert.alert('Network error', `Please check your internet connection`)
             else
             Alert.alert('Something went wrong', "Please try again later")
@@ -210,163 +211,176 @@ useEffect(() => {
         <Header title="Personal Information" />
 
 
+        <ScrollView
+        overScrollMode="false"
+        style = {{
+          flex: 1,
+        }}
+        >
+          <View
+            style={{
+              width: "100%",
+              paddingHorizontal: 24,
+              alignItems: "center",
+            }}>
+            <View style={{ position: "relative" }}>
+              <Image
+                source={!selectedImage.ProfilePicture && profilePic === "" ? require("../../../../assets/Profile_icon.png") : profilePic === "" ? require("../../../../assets/Profile_icon.png") : { uri: profilePic }}
+                style={{
+                  width: 127,
+                  height: 127,
+                  borderWidth: 1,
+                  borderRadius: 100,
+                  marginBottom: 16,
+                  borderColor: "#E60965",
+                }}
+              />
+              {!selectedImage.ProfilePicture && (
+                <TouchableOpacity onPress={()=> handleImageUpload()} >
+                  <MaterialIcons
+                  name="camera-alt"
+                  size={48}
+                  color="#E60965"
+                  style={{ position: "absolute", bottom: 16, right: -5 }}
+                  />
+                </TouchableOpacity>
+              
+              )}
+            
+            </View>
+
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: 12,
+              }}>
+              <Text style={fontStyle.header}>{userName}</Text>
+              <Text style={fontStyle.subHeader}>Donor</Text>
+            </View>
+          </View>
+
+          <View style={{ flexDirection: "row", paddingHorizontal: 16, gap: 16 }}>
+            <View
+              style={{
+                width: Dimensions.get("screen").width / 2.3,
+              }}>
+              <View style={inputStyle.container}>
+                <Text style={inputStyle.label}>Age:</Text>
+                <TextInput style={inputStyle.primary} 
+                value={userData.age}
+                onChangeText={(text) =>
+                  setUserData((prevUserData) => ({
+                    ...prevUserData,
+                    age: text,
+                  }))
+                }/>
+              </View>
+            </View>
+
+            <View
+              style={{
+                width: Dimensions.get("screen").width / 2.3,
+              }}>
+              <View style={inputStyle.container}>
+                <Text style={inputStyle.label}>Gender: </Text>
+                <TextInput style={inputStyle.primary} 
+                value={"Female"} 
+                onChangeText={(text) =>
+                  setUserData((prevUserData) => ({
+                    ...prevUserData,
+                    age: text,
+                  }))
+                }
+                editable={false}
+                />
+              </View>
+            </View>
+          </View>
+
+          <View style={{ paddingHorizontal: 16 }}>
+            <View style={inputStyle.container}>
+              <Text style={inputStyle.label}>Birthday: </Text>
+              <TextInput style={inputStyle.primary}
+              value={userData.birthDate}
+              onChangeText={(text) =>
+                setUserData((prevUserData) => ({
+                  ...prevUserData,
+                  birthDate: text,
+                }))
+              } />
+            </View>
+          </View>
+          <View style={{ paddingHorizontal: 16 }}>
+            <View style={inputStyle.container}>
+              <Text style={inputStyle.label}>Phone Number: </Text>
+              <TextInput style={inputStyle.primary}
+              value={userData.mobileNumber}
+              onChangeText={(text) =>
+                setUserData((prevUserData) => ({
+                  ...prevUserData,
+                  mobileNumber: text,
+                }))
+              } />
+            </View>
+          </View>
+          <View style={{ paddingHorizontal: 16 }}>
+            <View style={inputStyle.container}>
+              <Text style={inputStyle.label}>Email: </Text>
+              <TextInput style={inputStyle.primary} 
+              value={userData.email}
+              onChangeText={(text) =>
+                setUserData((prevUserData) => ({
+                  ...prevUserData,
+                  email: text,
+                }))
+              }
+              editable={false}
+              />
+            </View>
+          </View>
+          <View style={{ paddingHorizontal: 16 }}>
+            <View style={inputStyle.container}>
+              <Text style={inputStyle.label}>Address: </Text>
+              <TextInput style={[inputStyle.primary, {width: "80%"}]}
+              multiline = {true} 
+              value={userData.homeAddress}
+              onChangeText={(text) =>
+                setUserData((prevUserData) => ({
+                  ...prevUserData,
+                  homeAddress: text,
+                }))
+              }/>
+            </View>
+          </View>
+
+          <View
+            style={{
+              width: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}>
+            <TouchableOpacity onPress={() => confirmation()}>
+              <View style={buttonStyle.primary}>
+                <Text
+                  style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
+                  Save
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+
+
+
+
         <Spinner 
           visible = {isLoading}
           textContent={'Processing...'}
           textStyle={{ color: '#FFF' }}
         />
 
-        <View
-          style={{
-            width: "100%",
-            paddingHorizontal: 24,
-            alignItems: "center",
-          }}>
-          <View style={{ position: "relative" }}>
-            <Image
-              source={!selectedImage.ProfilePicture && profilePic === "" ? require("../../../../assets/Profile_icon.png") : profilePic === "" ? require("../../../../assets/Profile_icon.png") : { uri: profilePic }}
-              style={{
-                width: 127,
-                height: 127,
-                borderWidth: 1,
-                borderRadius: 100,
-                marginBottom: 16,
-                borderColor: "#E60965",
-              }}
-            />
-            {!selectedImage.ProfilePicture && (
-              <TouchableOpacity onPress={()=> handleImageUpload()} >
-                <MaterialIcons
-                name="camera-alt"
-                size={48}
-                color="#E60965"
-                style={{ position: "absolute", bottom: 16, right: -5 }}
-                />
-              </TouchableOpacity>
-            
-            )}
-           
-          </View>
-
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              marginBottom: 12,
-            }}>
-            <Text style={fontStyle.header}>{userName}</Text>
-            <Text style={fontStyle.subHeader}>Donor</Text>
-          </View>
-        </View>
-
-        <View style={{ flexDirection: "row", paddingHorizontal: 16, gap: 16 }}>
-          <View
-            style={{
-              width: Dimensions.get("screen").width / 2.3,
-            }}>
-            <View style={inputStyle.container}>
-              <Text style={inputStyle.label}>Age:</Text>
-              <TextInput style={inputStyle.primary} 
-               value={userData.age}
-               onChangeText={(text) =>
-                 setUserData((prevUserData) => ({
-                   ...prevUserData,
-                   age: text,
-                 }))
-               }/>
-            </View>
-          </View>
-
-          <View
-            style={{
-              width: Dimensions.get("screen").width / 2.3,
-            }}>
-            <View style={inputStyle.container}>
-              <Text style={inputStyle.label}>Gender: </Text>
-              <TextInput style={inputStyle.primary} 
-               value={"Female"} 
-               onChangeText={(text) =>
-                 setUserData((prevUserData) => ({
-                   ...prevUserData,
-                   age: text,
-                 }))
-               }
-               editable={false}
-               />
-            </View>
-          </View>
-        </View>
-
-        <View style={{ paddingHorizontal: 16 }}>
-          <View style={inputStyle.container}>
-            <Text style={inputStyle.label}>Birthday: </Text>
-            <TextInput style={inputStyle.primary}
-             value={userData.birthDate}
-             onChangeText={(text) =>
-               setUserData((prevUserData) => ({
-                 ...prevUserData,
-                 birthDate: text,
-               }))
-             } />
-          </View>
-        </View>
-        <View style={{ paddingHorizontal: 16 }}>
-          <View style={inputStyle.container}>
-            <Text style={inputStyle.label}>Phone Number: </Text>
-            <TextInput style={inputStyle.primary}
-             value={userData.mobileNumber}
-             onChangeText={(text) =>
-               setUserData((prevUserData) => ({
-                 ...prevUserData,
-                 mobileNumber: text,
-               }))
-             } />
-          </View>
-        </View>
-        <View style={{ paddingHorizontal: 16 }}>
-          <View style={inputStyle.container}>
-            <Text style={inputStyle.label}>Email: </Text>
-            <TextInput style={inputStyle.primary} 
-             value={userData.email}
-             onChangeText={(text) =>
-               setUserData((prevUserData) => ({
-                 ...prevUserData,
-                 email: text,
-               }))
-             }
-             editable={false}
-             />
-          </View>
-        </View>
-        <View style={{ paddingHorizontal: 16 }}>
-          <View style={inputStyle.container}>
-            <Text style={inputStyle.label}>Address: </Text>
-            <TextInput style={inputStyle.primary} 
-             value={userData.homeAddress}
-             onChangeText={(text) =>
-               setUserData((prevUserData) => ({
-                 ...prevUserData,
-                 homeAddress: text,
-               }))
-             }/>
-          </View>
-        </View>
-
-        <View
-          style={{
-            width: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-          }}>
-          <TouchableOpacity onPress={() => confirmation()}>
-            <View style={buttonStyle.primary}>
-              <Text
-                style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
-                Save
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+       
       </ScrollView>
     </SafeAreaView>
   );
@@ -395,6 +409,9 @@ const inputStyle = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 16,
     borderRadius: 13,
+    backgroundColor: "white",
+    elevation: 5,
+    marginVertical: 7,
   },
 
   label: {
