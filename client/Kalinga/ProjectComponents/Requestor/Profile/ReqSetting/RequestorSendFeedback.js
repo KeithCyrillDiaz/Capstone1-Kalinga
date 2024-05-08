@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,9 +8,11 @@ import {
   TouchableOpacity,
   ScrollView,
   TextInput,
+  Alert
 } from "react-native";
 import { Fontisto, FontAwesome6 } from "@expo/vector-icons";
 import Header from "./Header";
+import { useNavigation } from '@react-navigation/native';
 
 export default function SendFeedback({ rating }) {
   const [currentStar, setCurrentStar] = useState(rating);
@@ -34,6 +36,22 @@ export default function SendFeedback({ rating }) {
     }
     return stars;
   };
+
+  const navigate = useNavigation()
+    
+  useEffect(() => {
+    Alert.alert(
+      "Sorry, this feature is not yet available right now.",
+      "Rest assured, our team is hard at work developing new features to better serve our community. Your continued support means the world to us. Thank you for your patience!",
+      [
+        {
+          text: "Okay",
+          onPress: () => navigate.goBack("RequestorSettingScreen")
+        }
+      ]
+    );
+    return
+  }, [])
 
   return (
     <SafeAreaView style={bodyStyle.main}>

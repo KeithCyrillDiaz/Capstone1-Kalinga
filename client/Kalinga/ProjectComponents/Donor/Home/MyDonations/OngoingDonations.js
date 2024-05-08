@@ -26,6 +26,8 @@ const OngoingDonations = ({route}) => {
   const Donor_ID = userInformation.Donor_ID;
   const [formData, setFormData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
  
  const fetchData = async () => {
       try {
@@ -33,9 +35,12 @@ const OngoingDonations = ({route}) => {
           const response = await axios.get(`${BASED_URL}/kalinga/getOngoingDonation/${Donor_ID}`);
           if(response.data.messages.code === 1) {
             Alert.alert("No Ongoing Donation", "You currently don't have any ongoing donations.");
+            setFormData([])
+            return
           }
           const responseData = response.data;
           const formDataFromResponse = responseData.ongoingDonation;
+          getDateTime(formDataFromResponse)
 
           setFormData(formDataFromResponse);
 
@@ -51,9 +56,33 @@ const OngoingDonations = ({route}) => {
       return <ActivityIndicator size="large" color="#E60965" />;
   }
 
+  const getDateTime = (DateAndTime) => {
+    
+    const date = new Date(DateAndTime[0].selectedTime);
+    // Extract the date components
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // Months are 0-indexed, so add 1
+    const day = date.getDate();
+
+    // Extract the time components
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+
+    // Format the date and time components as desired
+    const formattedDate = `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
+    const formattedTime = `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+
+    setDate(formattedDate);
+    setTime(formattedTime);
+
+    console.log("Date:", formattedDate); 
+    console.log("Time:", formattedTime); 
+  }
+
   useFocusEffect(
     React.useCallback(() => {
-      fetchData();// Fetch profile picture whenever screen comes into focus
+      fetchData();
     }, [])
   );
     return (
@@ -65,7 +94,7 @@ const OngoingDonations = ({route}) => {
                  nestedScrollEnabled={true}
                 >
             
-           {formData.length !== 0 && formData.map((data, index) => (
+           {formData !== undefined && formData.map((data, index) => (
             <View key={index} style={styles.container}>
               <TextInput
                 style={[styles.BiginputField, { color: '#E60965' }]}
@@ -118,7 +147,7 @@ const OngoingDonations = ({route}) => {
                             placeholder="Date"
                             multiline={true}
                             placeholderTextColor="#E60965"
-                            value={data.selectedDate}
+                            value={date}
                             editable={false}
                         />
                         <FontAwesome5 name="calendar-alt" size={20} color="#E60965" style={styles.icon} />
@@ -133,7 +162,7 @@ const OngoingDonations = ({route}) => {
                             placeholder="Time"
                             multiline={true}
                             placeholderTextColor="#E60965"
-                            value={data.selectedTime}
+                            value={time}
 
                             editable={false}
                         />

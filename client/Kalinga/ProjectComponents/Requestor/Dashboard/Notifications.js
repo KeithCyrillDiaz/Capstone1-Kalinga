@@ -8,9 +8,11 @@ import {
   StatusBar,
   StyleSheet,
   Modal,
+  Alert
 } from 'react-native';
 import { globalHeader } from "../../../styles_kit/globalHeader.js";
 import { Octicons } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
 
 const RequestorNotification = () => {
   const [readNotifications, setReadNotifications] = useState([]);
@@ -34,6 +36,21 @@ const RequestorNotification = () => {
   const closeModal = () => {
     setModalVisible(false);
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      Alert.alert(
+        "Sorry, this feature is not yet available right now.",
+        "Rest assured, our team is hard at work developing new features to better serve our community. Your continued support means the world to us. Thank you for your patience!",
+        [
+          {
+            text: "Okay",
+          }
+        ]
+      );
+      return
+    }, [])
+  );
 
   return (
     <SafeAreaView style={styles.container}>

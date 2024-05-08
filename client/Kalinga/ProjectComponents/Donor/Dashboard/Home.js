@@ -78,7 +78,7 @@ const DonorHome = ({route}) => {
               </View>
 
               <View style = {styles.flex_Row}>
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("Instant Messages")}>
+                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("Chat Assistance")}>
                 <FontAwesome5 name="robot" size={70} color="#E60965"/>
                   <View style = {styles.LabelCenter}>
                     <Text style = {styles.Label}>Instant Messaging</Text>

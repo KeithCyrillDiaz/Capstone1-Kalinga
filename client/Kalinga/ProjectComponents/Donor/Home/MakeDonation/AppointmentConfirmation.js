@@ -191,7 +191,7 @@
                     />
                     <FontAwesome6 name="hospital" size={24} color="#E60965" style={styles.icon3} />
                     </View>
-             <View style={styles.AdminButton}>
+             <View style={[styles.AdminButton, {marginBottom: 40}]}>
               <TouchableOpacity onPress={() => confirmation("Confirm")}>
                       <View style={styles.ConfirmbuttonContainer}>
                           <Text style={styles.label}>Confirm</Text>
