@@ -199,6 +199,8 @@ const handleFileUpload = async (attachmentType) => {
   try {
     const result = await DocumentPicker.getDocumentAsync();
     if (!result.canceled && result.assets && result.assets.length > 0) {
+
+        let fileName
             if (
               result.assets[0].mimeType === "application/pdf" ||
               result.assets[0].mimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"

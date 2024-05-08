@@ -9,6 +9,8 @@ import {
   Login,
   AdminDashboard,
   City,
+  DonorVerifPendings,
+  DonorVerification,
   Chart,
   Forum,
   Approved,
@@ -17,7 +19,12 @@ import {
   BugReport,
   BugResolve,
   Feedback,
-  FeedbackReport
+  FeedbackReport,
+  DonorAppointments, 
+  RequestorAppointments,
+  DonorAppointmentConfirmation,
+  RequestorAppointmentConfirmation,
+  Milkbanks
 } from "@/pages";
 import { RootLayout, NotFound, MainLayout, AdminLayout } from "@/layouts";
 import { MobileChecker } from "@/components";
@@ -39,6 +46,8 @@ const router = createBrowserRouter(
       <Route path="admin" element={<AdminLayout />}>
         <Route index element={<AdminDashboard />} />
         <Route path="city" element={<City />} />
+        <Route path="DonorVerifPendings" element={<DonorVerifPendings />} />
+        <Route path="DonorVerification" element={<DonorVerification />} />
         <Route path="chart" element={<Chart />} />
         <Route path="forum" element={<Forum />} />
         <Route path="approved" element={<Approved />} />
@@ -48,10 +57,11 @@ const router = createBrowserRouter(
         <Route path="bugResolve" element={<BugResolve />} />
         <Route path="feedback" element={<Feedback />} />
         <Route path="feedbackReport" element={<FeedbackReport />} />
-
-
-
-
+        <Route path="donorAppointments" element={<DonorAppointments />} />
+        <Route path="requestorAppointments" element={<RequestorAppointments />} />
+        <Route path="donorAppointmentConfirmation/:AppointmentDonorID" element={<DonorAppointmentConfirmation />} />
+        <Route path="requestorAppointmentConfirmation/:RequestID" element={<RequestorAppointmentConfirmation />} />
+        <Route path="milkbanks" element={<Milkbanks />} />
       </Route>
 
       {/* 404 */}
