@@ -35,7 +35,7 @@ export default function AboutUs() {
           <Text style={{ fontWeight: "bold", fontSize: 32, color: "#E60965" }}>
             Meet the Developers.
           </Text>
-          <Text style={{ color: "#E60965", fontSize: 16 }}>
+          <Text style={{ color: "#E60965", fontSize: 16, }}>
             Welcome to the heart of Kalinga! Our dedicated team of developers is
             passionate about creating a positive impact on infant health through
             the Kalinga App. Get to know the minds behind the app:
@@ -73,7 +73,7 @@ export default function AboutUs() {
             fontSize: 16,
             color: "#E60965",
           }}>
-          Get in touch with us at KalingaApp@gmail.com
+          Get in touch with us at No.reply.kalingabreastmilkapp@gmail.com
         </Text>
       </ScrollView>
     </SafeAreaView>

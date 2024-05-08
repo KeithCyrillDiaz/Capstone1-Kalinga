@@ -6,11 +6,9 @@ import {
   SafeAreaView,
   Image,
   StatusBar,
-  TextInput,
-  TouchableOpacity,
+
   ScrollView,
 } from "react-native";
-import { Entypo } from "@expo/vector-icons";
 import Header from "./Header";
 import RogineImage from '../../../../assets/Developers/Rogine.jpg'
 import AliImage from '../../../../assets/Developers/Ali.png'
@@ -20,6 +18,7 @@ import KeithImage1 from '../../../../assets/Developers/Keith1.jpg'
 import KeithImage2 from '../../../../assets/Developers/Keith2.jpg'
 
 export default function AboutUs() {
+
   return (
     <SafeAreaView style={bodyStyle.main}>
       <ScrollView stickyHeaderIndices={[1]}>
@@ -115,7 +114,13 @@ const DeveloperProfile = ({ name, role, image }) => {
             justifyContent: "center",
             alignItems: "center",
           }}>
-          <Image source={require("../../../../assets/Profile_female.png")} />
+            <Image source={image} 
+            style = {{
+              height: 120,
+              width: 120,
+              borderRadius: 100
+            }}
+          />
         </View>
       </View>
 
