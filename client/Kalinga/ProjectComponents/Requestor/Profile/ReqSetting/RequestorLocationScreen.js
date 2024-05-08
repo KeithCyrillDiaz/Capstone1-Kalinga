@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,9 +10,44 @@ import {
 } from "react-native";
 import Header from "./Header";
 import { MaterialIcons } from "@expo/vector-icons";
+import * as Location from 'expo-location';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function LocationScreen() {
+
+
   const [locationEnabled, setLocationEnabled] = useState(false);
+
+  const getPermission = async () => {
+    const result = await AsyncStorage.getItem("LocationPermission")
+    console.log("result: ", result)
+    if(result === "true") setLocationEnabled(true)
+      return
+  }
+
+  const handlePermission = async () => {
+    if(locationEnabled === true){
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission to access location was denied');
+        return;
+      }
+      await AsyncStorage.setItem("LocationPermission", "true")
+      return
+    } else {
+      await AsyncStorage.setItem("LocationPermission", "false");
+      return
+    }
+    
+  }
+useEffect(() => {
+  getPermission()
+},[])
+
+useEffect(() => {
+  handlePermission()
+},[locationEnabled])
+
 
   return (
     <SafeAreaView style={bodyStyle.main}>

@@ -9,6 +9,7 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Alert
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import Header from "./Header";
@@ -18,13 +19,19 @@ import { useNavigation } from '@react-navigation/native';
 export default function HelpAndSupport() {
 
   const navigation = useNavigation();
-    
-
-
-  
-  const navigatePage = (Page) => {
-    navigation.navigate(Page); // Navigate to the specified screen
+  const handleSendMessage = () => {
+    Alert.alert(
+      "Sorry, this feature is not yet available right now.",
+      "Rest assured, our team is hard at work developing new features to better serve our community. Your continued support means the world to us. Thank you for your patience!",
+      [
+        {
+          text: "Okay",
+          onPress: () => navigation.goBack("DonorSettingScreen")
+        }
+      ]
+    );
   }
+
   return (
     <SafeAreaView style={bodyStyle.main}>
       <ScrollView stickyHeaderIndices={[1]}>
@@ -113,7 +120,7 @@ export default function HelpAndSupport() {
           <Text style={{ color: "#E60965" }}>
             Still need assistance? Help is a mail away
           </Text>
-          <TouchableOpacity onPress={() => navigatePage("DonorHelpAndSupportMessage")}>
+          <TouchableOpacity onPress={() => handleSendMessage()}>
             <View style={buttonStyle.primary}>
               <Text
                 style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
