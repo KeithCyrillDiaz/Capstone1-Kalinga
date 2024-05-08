@@ -8,7 +8,7 @@ const updateDonationStatus = async (req: Request, res: Response): Promise<void> 
   try {
     const donation = await AppointmentModel.findOneAndUpdate(
       { AppointmentDonorID: AppointmentDonorID }, 
-      { DonationStatus: DonationStatus }, 
+      { $set: {DonationStatus: DonationStatus} }, 
       { new: true }
     );
 

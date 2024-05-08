@@ -1,4 +1,4 @@
-import React, { useState, useEffect }from 'react';
+import React, { useState}from 'react';
 import { 
 	SafeAreaView, 
 	Text, 
@@ -11,53 +11,51 @@ import {
 	Alert
 } from 'react-native';
 //import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useFocusEffect} from '@react-navigation/native';
 import axios from 'axios'; // Import axios for API requests
-
-import { MaterialIcons } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
-import { globalHeader } from '../../../../styles_kit/globalHeader.js';
-import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import { BASED_URL } from '../../../../MyConstants.js';
  
 
-const ApprovedTabRequest = () => {
+const ApprovedTabRequest = ({route}) => {
+
+
+	const userInformation = route.params.userInformation
+	const token = route.params.token
+	const Requestor_ID = userInformation.Requestor_ID;
+
     const navigation = useNavigation();
-    const route = useRoute();
-    const Requestor_ID ='8sjcsUowtOsnxufxiwYE';
-    const [formData, setFormData] = useState({
-        fullName: '',
-        phoneNumber: '',
-        emailAddress: '',
-        homeAddress: '',
-        medicalCondition: '',
-        milkAmount: '',
-        BabyCategory: '',
-        ReasonForRequesting: '',
-    });
+    const [formData, setFormData] = useState({});
     const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(false)
 
-    useEffect(() => {
-        fetchData();
-    }, []);
-
+    useFocusEffect(
+		React.useCallback(() => {
+			fetchData();
+		}, [])
+	);
     const fetchData = async () => {
         try {
             const response = await axios.get(`${BASED_URL}/kalinga/getApprovedRequests/${Requestor_ID}`);
             const responseData = response.data;
-
-            const formDataFromResponse = responseData.RequestData[0];
+			if(responseData.messages.success === false){
+				console.log("No Approved Request")
+				Alert.alert("No Approved Request", "You currently don't have any approved requests.");
+				setLoading(false); 
+				return
+			}
+            const formDataFromResponse = responseData.RequestData;
+			console.log("formDataFromResponse: ", formDataFromResponse)
     
             setFormData(formDataFromResponse);
-
+			setError(false)
             setLoading(false); 
         } catch (error) {
-            console.log('Error fetching data:', error);
+			console.log("Error: ", error)
+			setError(true)
             setLoading(false); 
-        }
+        } 
     };
-	const handleReceivedButton = () => {
+	const handleReceivedButton = (RequestID) => {
 		Alert.alert(
 		  'Confirmation',
 		  'Are you certain that you have received the milk? Please note that this action cannot be undone.',
@@ -72,10 +70,11 @@ const ApprovedTabRequest = () => {
 			  onPress: async () => {
 				try {
 					
-					await axios.put(`${BASED_URL}/kalinga/updateCompleteStatus/${Requestor_ID}`, {
+					await axios.put(`${BASED_URL}/kalinga/updateCompleteStatus/${RequestID}`, {
 					RequestStatus: 'Complete',
 				  });
 				  Alert.alert('Success', 'Request status updated to Complete');
+				  setFormData({})
 				} catch (error) {
 				  console.log('Error updating request status:', error);
 				  Alert.alert('Error', 'Failed to update request status');
@@ -91,10 +90,6 @@ const ApprovedTabRequest = () => {
 		return <ActivityIndicator size="large" color="#E60965" />;
 	  }
 	
-	  const navigatePage = (Page) => {
-		navigation.navigate(Page);
-	  };
-	
     return (
 			<SafeAreaView style = {styles.container}>
 				<StatusBar barStyle="dark-content" translucent backgroundColor="white" />
@@ -105,46 +100,59 @@ const ApprovedTabRequest = () => {
 					nestedScrollEnabled={true} 
 					showsVerticalScrollIndicator={false}
 				>
-						
+					{Object.keys(formData).length !== 0 && (
+						<>
+							<View style ={styles.boxContainer}>
+								<View style={{marginTop: 10}}>
+									<View style={styles.boxContentContainer}>	
+										<Text style={styles.boxContentBold}>Fullname: </Text>
+										<Text style={[styles.boxContent, styles.limitText]}>{formData[0].fullName}</Text>
+									</View>
+								</View>
+								<View style={styles.boxContentContainer}>
+									<Text style={styles.boxContentBold}>Phone Number: </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>{formData[0].phoneNumber}</Text>
+								</View>
+								<View style={styles.boxContentContainer}>
+									<Text style={styles.boxContentBold}>Medical Condition: </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>{formData[0].medicalCondition}</Text>
+								</View>
+								<View style={styles.boxContentContainer}>
+									<Text style={styles.boxContentBold}>Amount of milk requested (mL): </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>{formData[0].milkAmount}</Text>
+								</View>
+								<View style={styles.boxContentContainer}>
+									<Text style={styles.boxContentBold}>Milk Bank: </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>{formData[0].milkBank}</Text>
+								</View>
+								<View style={styles.boxContentContainer}>
+									<Text style={styles.boxContentBold}>Baby Category: </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>{formData[0].BabyCategory}</Text>
+								</View>
+								
+								<View style={styles.boxContentContainer}>
+									<Text style={styles.boxContentBold}>Address: </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>{formData[0].homeAddress}</Text>
+								</View>
 
-						<View style ={styles.boxContainer}>
-							<View style={{marginTop: 10}}>
-								<View style={styles.boxContentContainer}>	
-									<Text style={styles.boxContentBold}>Fullname: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>{formData.fullName}</Text>
+								<View style={styles.boxContentContainer}>
+									<Text style={styles.boxContentBold}>Date: </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>{formData[0].Date}</Text>
 								</View>
+								
 							</View>
-							<View style={styles.boxContentContainer}>
-								<Text style={styles.boxContentBold}>Phone Number: </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>{formData.phoneNumber}</Text>
-							</View>
-							<View style={styles.boxContentContainer}>
-								<Text style={styles.boxContentBold}>Medical Condition: </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>{formData.medicalCondition}</Text>
-							</View>
-							<View style={styles.boxContentContainer}>
-								<Text style={styles.boxContentBold}>Amount of milk requested (mL): </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>{formData.milkAmount}</Text>
-							</View>
-							<View style={styles.boxContentContainer}>
-								<Text style={styles.boxContentBold}>Baby Category: </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>{formData.BabyCategory}</Text>
-							</View>
-							
-							<View style={styles.boxContentContainer}>
-								<Text style={styles.boxContentBold}>Address: </Text>
-								<Text style={[styles.boxContent, styles.limitText]}>{formData.homeAddress}</Text>
-							</View>
-							
 							<View style={styles.ApproveButton}>
-								<TouchableOpacity onPress={handleReceivedButton}>
-								<View style={styles.ConfirmbuttonContainer}>
-									<Text style={styles.label}>Received</Text>
-								</View>
+								<TouchableOpacity onPress={() => handleReceivedButton(formData[0].RequestID)}>
+									<View style={styles.ConfirmbuttonContainer}>
+										<Text style={styles.label}>Received</Text>
+									</View>
 								</TouchableOpacity>
 							</View>
-							</View>
-
+						</>
+					
+					)}
+					
+						
 				</ScrollView>
 
 		</SafeAreaView>
@@ -207,12 +215,13 @@ const styles = StyleSheet.create ({
 
 	boxContainer: {
 		alignSelf:"center",
-		width: 320,
-		height: 400,
+		width: "80%",
 		backgroundColor: "#FFE5EC",
 		marginTop: 30,
 		borderRadius: 18,
-		elevation: 3,
+		elevation: 10,
+		paddingBottom: 20,
+		marginBottom: 50
 	},
 
 	boxContentContainer: {
@@ -252,12 +261,15 @@ const styles = StyleSheet.create ({
     
 },
 
-
 ApproveButton:{
     flexDirection: "row",
     justifyContent:"center",
-    marginTop: 20
+    position: "absolute",
+	bottom: 0,
+	left: "30%",
 },
+
+
 label: {
     color: 'white',
     fontFamily: 'Open-Sans-Bold',

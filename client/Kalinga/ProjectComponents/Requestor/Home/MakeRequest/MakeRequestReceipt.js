@@ -147,12 +147,17 @@ const MakeRequestReceipt = () => {
             </View>
           </View>
 
-          
-
           <View style={styles.boxContainer}>
             <View style={styles.boxContentContainer}>
               <Text style={styles.boxLabel}>Medical Condition: </Text>
               <Text style={[styles.boxContent, styles.limitText]}>{formData.medicalCondition}</Text>
+            </View>
+          </View>
+
+          <View style={[styles.boxContainer, {height: 60}]}>
+            <View style={styles.boxContentContainer}>
+              <Text style={styles.boxLabel}>Milk Bank: </Text>
+              <Text style={[styles.boxContent, styles.limitText]}>{formData.milkBank}</Text>
             </View>
           </View>
 
@@ -179,8 +184,6 @@ const MakeRequestReceipt = () => {
               <Text style={[styles.boxContent, styles.limitText]}>{formData.ReasonForRequesting}</Text>
             </View>
           </View>
-
-          <Text style={styles.bodyNote}>Note: Maximum of 3 images or files per field.</Text>
 
           {Object.keys(selectedImage).length !== 0 && (
                       <View  style = {{

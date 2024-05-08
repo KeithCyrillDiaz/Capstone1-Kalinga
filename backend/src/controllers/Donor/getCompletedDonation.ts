@@ -10,14 +10,30 @@ export const getCompletedDonation = async (req: Request, res: Response) => {
       Donor_ID: Donor_ID // Assuming Requestor_ID is a valid field in your document
     });
 
+   
 
     if (!CompleteRequests || CompleteRequests.length === 0) {
-      return res.status(404).json({ success: false, error: 'No pending requests found' });
+      console.log("No Completed Request ")
+      return res.status(404).json({ 
+        messages: {
+          success: false, 
+        },
+        error: 'No pending requests found' });
     }
+    
+    console.log("Retrieved Completed Request ")
+    return res.status(200).json({ 
+      messages: {
+        success: true, 
+      },
+      DonorData: CompleteRequests });
 
-    res.status(200).json({ success: true, DonorData: CompleteRequests });
   } catch (error) {
     console.error('Error fetching pending requests:', error);
-    res.status(500).json({ success: false, error: 'Error fetching pending requests' });
+    return res.status(500).json({ 
+      messages: {
+        success: false,
+      },
+      error: 'Error fetching pending requests' });
   }
 };

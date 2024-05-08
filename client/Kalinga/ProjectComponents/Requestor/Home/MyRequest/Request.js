@@ -12,7 +12,11 @@ import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 
 const Tab = createMaterialTopTabNavigator();
 
-const RequestTab = () => {
+const RequestTab = ({route}) => {
+
+    const userInformation = route.params.data
+    const token = route.params.token
+
     return (
         <View style={{ flex: 1 }}>
             <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
@@ -46,6 +50,7 @@ const RequestTab = () => {
                     <Tab.Screen 
                         name="Overall"
                         component={MyRequestScreen} 
+                        initialParams={{ userInformation: userInformation, token: token }}
                         options={{
                             tabBarLabel: 'Overall' ,
                         }}
@@ -54,6 +59,7 @@ const RequestTab = () => {
                      <Tab.Screen 
                         name="Approved"
                         component={ApprovedTabRequest} 
+                        initialParams={{ userInformation: userInformation, token: token }}
                         options= {{
                             tabBarLabel: 'Approved',
                         }}
@@ -61,6 +67,7 @@ const RequestTab = () => {
                     <Tab.Screen
                         name="Completed"
                         component={CompletedTabRequest} 
+                        initialParams={{ userInformation: userInformation, token: token }}
                         options={{
                             tabBarLabel: "Completed",
                         }}

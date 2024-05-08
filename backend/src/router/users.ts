@@ -71,7 +71,7 @@ export default (router: express.Router) => {
     router.get('/kalinga/getPendingRequests/:Requestor_ID', getPendingRequests)
     router.get('/kalinga/getApprovedRequests/:Requestor_ID', getApprovedRequests)
     router.get('/kalinga/getRequestStatus', getRequestStatus)
-    router.put('/kalinga/updateCompleteStatus/:Requestor_ID',updateCompleteStatus)
+    router.put('/kalinga/updateCompleteStatus/:RequestID',updateCompleteStatus)
     router.get('/kalinga/getCompletedRequests/:Requestor_ID', getCompletedRequests)
     router.get('/kalinga/getRequestStats/:Requestor_ID', getRequestStats)
 
@@ -85,26 +85,10 @@ export default (router: express.Router) => {
     router.get('/kalinga/getDonationStatusTotal', getDonationStatusTotal);
     router.get('/kalinga/getRequestStatusTotal', getRequestStatusTotal);
 
-    
-
-
-
-
-    
-
-
-
-
-    
-
-
-
-
    router.put('/kalinga/updateRequestStatus/:RequestID',updateRequestStatus)
    router.get('/kalinga/getPendingRequests/:Requestor_ID', getPendingRequests)
    router.get('/kalinga/getApprovedRequests/:Requestor_ID', getApprovedRequests)
    router.get('/kalinga/getRequestStatus', getRequestStatus)
-   router.put('/kalinga/updateCompleteStatus/:Requestor_ID',updateCompleteStatus)
    router.get('/kalinga/getCompletedRequests/:Requestor_ID', getCompletedRequests)
    router.get('/kalinga/getRequestStats/:Requestor_ID', getRequestStats)
 
