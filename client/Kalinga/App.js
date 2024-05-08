@@ -248,11 +248,10 @@ export default function App() {
              <Stack.Screen name="DonorApproved" component={DonorApproved} />
              <Stack.Screen name="ApplyAsDonorStack" component={ApplyAsDonorStack} />
              <Stack.Screen name="ApplyAsRequestorStack" component={ApplyAsRequestorStack}/>
-             
+             <Stack.Screen name="Instant Messages" component={InstantMess} />
 
 
              {/*Donor*/}
-             <Stack.Screen name="Instant Messages" component={InstantMess} />
              <Stack.Screen name="DonorForum" component={DonorForum} />
              <Stack.Screen name="Chat Assistance" component={ChatAssistance} />
              <Stack.Screen name="Donor Educational Contents" component={DonorEducContents} />

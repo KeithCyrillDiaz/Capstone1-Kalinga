@@ -19,6 +19,7 @@ const Tab = createBottomTabNavigator()
 
 const MainTabs = ({route}) => {
    
+    console.log(route.params)
     const userInformation = route.params.userInformation;
     const token = route.params.token
     const userType = userInformation.userType
@@ -94,7 +95,7 @@ const MainTabs = ({route}) => {
                         userType === "Requestor" ? RequestorProfile  // If statement. It heavy relies on the value of usertype
                         : DonorProfile 
                     }
-                    initialParams={{ userInformation: userInformation }}
+                    initialParams={{ userInformation: userInformation, token: token }}
                     options={{
                         tabBarIcon: ({focused}) => (
                             <AntDesign 

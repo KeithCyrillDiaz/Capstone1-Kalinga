@@ -1,17 +1,17 @@
 //Guest Home
-import React from 'react';
-import { ScrollView,Text, View, StatusBar, StyleSheet, SafeAreaView, TouchableOpacity, TextInput} from 'react-native';
+import React, { useEffect } from 'react';
+import { ScrollView,Text, View, StatusBar, StyleSheet, SafeAreaView, TouchableOpacity, TextInput, Alert} from 'react-native';
 
 import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 
 import { MaterialIcons } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 
 
-
-const FavoriteArticles = () => {
+const FavoriteArticles = ({route}) => {
 
     const FirstParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
 
@@ -20,6 +20,26 @@ const FavoriteArticles = () => {
     const ThridParagraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed enim ut sem viverra aliquet eget sit amet. Laoreet suspendisse '
 
     const UserName = "Rogine"
+
+    const userInformation = route.params.userInformation;
+    const token = route.params.token
+  
+    const navigate = useNavigation()
+    
+    useEffect(() => {
+      Alert.alert(
+        "Sorry, this feature is not yet available right now.",
+        "Rest assured, our team is hard at work developing new features to better serve our community. Your continued support means the world to us. Thank you for your patience!",
+        [
+          {
+            text: "Okay",
+            onPress: () => navigate.goBack("MainTabs", { userInformation: userInformation, token: token })
+          }
+        ]
+      );
+      return
+    }, [])
+
 
     return (
         
