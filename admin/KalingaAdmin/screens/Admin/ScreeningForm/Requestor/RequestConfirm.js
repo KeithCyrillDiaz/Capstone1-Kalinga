@@ -73,7 +73,7 @@ const RequestConfirm = () => {
   const styles = StyleSheet.create ({
     SafeArea: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor:  "#FFF8EB",
         
         width: '100%',
         height: "100%"
