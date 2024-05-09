@@ -1,5 +1,5 @@
 import express from 'express'
-import { isAuthorized, tokenVerification } from '../middleware/middleware'
+import { isAuthorized, tokenVerification } from '../middleware/Authentication'
 import { getToken } from '../controllers/token'
 import { generateToken } from '../controllers/test'
 import { sendEmail, sendApprovedEmail, sendDeclinedEmail, sendCode } from '../controllers/Admin/sendEmail';
