@@ -1,7 +1,7 @@
 //Guest Home
 import React, { useState, useEffect }from 'react';
 import { ScrollView,Text, View, StatusBar, StyleSheet, TouchableOpacity, Alert} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect, CommonActions } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { globalHeader } from '../../../styles_kit/globalHeader.js';
@@ -10,20 +10,21 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BASED_URL } from '../../../MyConstants.js';
+import axios from 'axios';
 
 
 export default function RequestorHome({route}) {
 
-    const userInformation = route.params.userInformation
+
     const token = route.params.token
     
-   
+    const [userInformation, setUserInformation] = useState(route.params.userInformation)
+
     const storeInAsync = async () => {
       await AsyncStorage.setItem('userInformation', JSON.stringify(userInformation))
       await AsyncStorage.setItem('token', token)
     }
-    storeInAsync()
-   
+
      const nameArray =  userInformation.fullName.split(' ')
     let UserName;
 
@@ -44,31 +45,74 @@ export default function RequestorHome({route}) {
         
 
     };    
-    useEffect(() => {
-      const simulateFetchRequestStatus = async () => {
-          try {
-              const response = await fetch(`${BASED_URL}/kalinga/getRequestStatus`);
-              if (!response.ok) {
-                  console.log('Network response was not ok');
-              }
-  
-              const contentType = response.headers.get('content-type');
-              if (contentType && contentType.includes('application/json')) {
-                  const data = await response.json();
-                  console.log('Fetched Data:', data); // Log the fetched data
-                  setRequestStatus(data.RequestStatus);
-                  console.log('Updated Request Status:', data.RequestStatus); // Log the updated state
-              } else {
-                  throw new Error('Invalid content type received');
-              }
-          } catch (error) {
-              console.error('Error fetching request status:', error);
+
+    const fetchUpdateduserInfo = async () => {
+      console.log("Fetching Updated userInformation")
+      console.log(userInformation.Requestor_ID)
+      console.log(userInformation.userType)
+      try{
+
+        const response = await axios.post(`${BASED_URL}/kalinga/tokenLogin/${userInformation.Requestor_ID}`,
+          {userType: userInformation.userType },
+          { 
+            headers: {
+              Authorization: `Bearer ${token}`,
+            }
           }
-      };
-  
-      simulateFetchRequestStatus();
-  }, []);
-  
+        );
+        console.log(response.data.messages.message)
+        if(response.data.messages.message === "Unauthorized User"){
+          await AsyncStorage.multiRemove(['token', 'userInformation', 'DPLink', 'Image_ID']);
+          Alert.alert("Session Expired", "Your session has expired. Please log in again.", [
+            {
+              text: "OK",
+              onPress: () => navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: 'LogIn' }],
+                })
+              ),
+            },
+          ]);
+          return
+        }
+
+        setUserInformation(response.data.userInformation)
+        return
+      } catch(error){
+        console.log("Error fetching Data: ", error) 
+        return
+      }
+    }
+    const simulateFetchRequestStatus = async () => {
+      try {
+          const response = await fetch(`${BASED_URL}/kalinga/getRequestStatus`);
+          if (!response.ok) {
+              console.log('Network response was not ok');
+          }
+
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+              const data = await response.json();
+              console.log('Fetched Data:', data); // Log the fetched data
+              setRequestStatus(data.RequestStatus);
+              console.log('Updated Request Status:', data.RequestStatus); // Log the updated state
+          } else {
+              throw new Error('Invalid content type received');
+          }
+      } catch (error) {
+          console.error('Error fetching request status:', error);
+      }
+  };
+
+    useFocusEffect(
+      React.useCallback(() => {
+        fetchUpdateduserInfo()
+        storeInAsync()
+        simulateFetchRequestStatus();
+      }, [])
+  );
+ 
   const handleMakeRequest = () => {
       console.log('Current Request Status:', requestStatus);
   
