@@ -13,6 +13,7 @@ export interface Request extends Document {
   homeAddress: string;
   city: string;
   medicalCondition?: string;
+  milkBank: string;
   milkAmount?: string;
   BabyCategory: string;
   ReasonForRequesting: string;
@@ -55,5 +56,7 @@ const RequestSchema: Schema = new Schema({
 // Define and export the Mongoose model based on the schema
 const RequestModel = mongoose.model<Request>('Request', RequestSchema);
 // export const updateRequestStatus = (Request_ID: string, status: string) => RequestModel.findOneAndUpdate({Request_ID}, {$set: {RequestStatus: status}}, {new: true})
+
+export const getRequestByRequestID = (id: string) => RequestModel.findOne({RequestID: id})
 
 export default RequestModel;

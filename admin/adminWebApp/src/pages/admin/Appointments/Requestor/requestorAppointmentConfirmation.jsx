@@ -62,7 +62,7 @@ const requestorAppointmentConfirmation = () => {
     try {
       // Make a PUT request to update the RequestStatus to "Ongoing"
       await axios.put(`${WebHost}/kalinga/updateRequestStatus/${RequestID}`, {
-        RequestStatus: "Ongoing",
+        RequestStatus: "Approved",
       });
       
       // Optionally, you can reload the data or do any other action upon successful update
