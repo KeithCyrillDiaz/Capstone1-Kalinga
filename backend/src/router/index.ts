@@ -5,6 +5,7 @@ import authentication from './authentication'
 import upload from './upload';
 import forms from './forms';
 import forum from './forum'
+import settings from './settings';
 
 const router = express.Router();
 
@@ -16,5 +17,6 @@ export default(): express.Router => {
     users(router);
     forms(router);
     forum(router);
+    settings(router)
     return router;
 }

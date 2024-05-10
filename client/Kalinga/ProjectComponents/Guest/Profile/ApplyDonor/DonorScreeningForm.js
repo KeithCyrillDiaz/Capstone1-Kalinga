@@ -26,6 +26,7 @@ import phil from "philippine-location-json-for-geer";
 import ProvincesData from '../Provinces.json'
 import { GestationData, GestationExplanation, sexData, medicalConditionData } from "../ageofGestationData.js";
 
+
 const DonorScreeningForm = () => {
 
     const navigation = useNavigation();
@@ -39,10 +40,10 @@ const DonorScreeningForm = () => {
     navigation.navigate(Page, data);
   };
 
-  const applicantId = randomatic('Aa0', 20);
+  const applicantId = randomatic('Aa0', 20) + Date.now();
 
   const [screeningFormData, setScreeningFormData] = useState({
-    Applicant_ID: applicantId,
+    Applicant_ID: applicantId ,
     userType: "Donor",
     fullName: '',
     Age: '',
