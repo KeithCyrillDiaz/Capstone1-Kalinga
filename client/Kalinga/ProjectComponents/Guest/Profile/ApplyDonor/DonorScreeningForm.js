@@ -25,7 +25,6 @@ import { BASED_URL } from "../../../../MyConstants.js";
 import phil from "philippine-location-json-for-geer";
 import ProvincesData from '../Provinces.json'
 import { GestationData, GestationExplanation, sexData, medicalConditionData } from "../ageofGestationData.js";
-import moment from 'moment'
 
 
 const DonorScreeningForm = () => {
