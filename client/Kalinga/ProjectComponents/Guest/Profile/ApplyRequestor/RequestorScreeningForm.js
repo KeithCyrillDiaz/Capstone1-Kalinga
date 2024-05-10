@@ -49,7 +49,7 @@ const ApplyAs_DonorISF = () => {
   //Modal
   const [openGestationInfo, setOpenGestationInfo] = useState(false)
 
-  const applicantId = randomatic('Aa0', 20);
+  const applicantId = randomatic('Aa0', 20) + Date.now();
   const [screeningFormData, setScreeningFormData] = useState({
     Applicant_ID: applicantId,
     userType: "Requestor",
