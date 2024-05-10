@@ -16,7 +16,7 @@ import { useNavigation, CommonActions } from '@react-navigation/native';
 import axios from 'axios'
 import {BASED_URL} from '../../../../MyConstants'
 
-export default function DonorHelpAndSupportMessage({route}) {
+export default function RequestorHelpAndSupportMessage({route}) {
 
   const { userInformation, token, userName } = route.params
   const navigation = useNavigation();
@@ -71,7 +71,7 @@ export default function DonorHelpAndSupportMessage({route}) {
   const submit = async () => {
 
     try {
-      const id = userInformation.Donor_ID
+      const id = userInformation.Requestor_ID
       const { topic, description } = form;
 
       const response = await axios.post(`${BASED_URL}/kalinga/createHelpAndSupportReport/${id}`,
@@ -111,7 +111,7 @@ export default function DonorHelpAndSupportMessage({route}) {
         "Submission Successful",
         "Your help and support request has been successfully submitted. We will review it as soon as possible. Thank you for reaching out!"
       );
-      navigation.replace("DonorHelpAndSupportSuccess", {userInformation: userInformation, UserName: userName, token: token})
+      navigation.replace("RequestorHelpAndSupportSuccess", {userInformation: userInformation, UserName: userName, token: token})
       return
 
     } catch(error){
