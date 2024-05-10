@@ -91,6 +91,7 @@ const DonorScreeningForm = () => {
 const [isEmailExisted, setIsEmailExisted] = useState(false)
 const [isFormFilled, setIsFormFilled] = useState(false)
 const [textFocus, setTextFocus] = useState(false)
+const [isEmailValid, setIsEmailValid]= useState(false)
 
 const [value, setValue] = useState(null);
 
@@ -274,13 +275,23 @@ const formatCity = (city) => {
 
 
 const handleChangeText = (name, value) => {
-    setScreeningFormData({ ...screeningFormData, [name]: value });
+  setScreeningFormData({ ...screeningFormData, [name]: value });
     if(name === "email" && value.includes("@") && (value.endsWith("com") || value.endsWith("ph"))){
       console.log("Email: ", value)
+      setIsEmailValid(true)
       checkEmail(value)
     }
     return
 };
+
+useEffect(() => {
+  if(screeningFormData.email !== ""){
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!emailPattern.test(screeningFormData.email)){
+      setIsEmailValid(false)
+    } 
+  }
+},[screeningFormData.email])
 
 
 const handleDateChange = (event, selectedDate, info) => {
@@ -440,12 +451,19 @@ const setMonth = (num) => {
                         placeholderTextColor="#E60965"
                         onChangeText={(value) => handleChangeText('email', value)}
                     />
-                    {isEmailExisted && (
+                    {isEmailExisted && isEmailValid && (
                       <Text 
                       style = {{
                         alignSelf: "flex-start",
                         marginLeft: "10%",
                         color: "red"}}>Email is already existing</Text>
+                    )}
+                    {!isEmailValid && screeningFormData.email !=="" && (
+                      <Text 
+                      style = {{
+                        alignSelf: "flex-start",
+                        marginLeft: "10%",
+                        color: "red"}}>Please enter a valid email address </Text>
                     )}
                      <TextInput
                         style={styles.BiginputField}
