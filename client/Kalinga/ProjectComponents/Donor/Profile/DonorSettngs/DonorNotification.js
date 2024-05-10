@@ -28,7 +28,6 @@ export default function NotificationScreen() {
       [
         {
           text: "Okay",
-          onPress: () => navigate.goBack("DonorSettingScreen")
         }
       ]
     );
