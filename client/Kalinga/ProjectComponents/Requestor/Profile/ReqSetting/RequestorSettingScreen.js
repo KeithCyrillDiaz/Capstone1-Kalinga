@@ -21,6 +21,8 @@ export default function SettingScreen({route}) {
   
   const userInformation = route.params.userInformation
   const UserName = route.params.UserName
+  const token = route.params.token
+  
   const navigation = useNavigation(); 
   const deleteToken = async () => {
     const token = await AsyncStorage.getItem('token')
@@ -62,7 +64,8 @@ export default function SettingScreen({route}) {
     }
     return
     }
-    navigation.navigate(Page, {userInformation: userInformation, userName: UserName}); // Navigate to the Login screen
+
+    navigation.navigate(Page, {userInformation: userInformation, userName: UserName, token: token}); // Navigate to the Login screen
   }
 
   const [profilePic, setProfilePic] = useState("")
@@ -144,7 +147,7 @@ export default function SettingScreen({route}) {
             </TouchableOpacity>
 
             {/* Change Password */}
-            <TouchableOpacity onPress={() => navigatePage("ResetPassword")} style={cardStyle.link}>
+            <TouchableOpacity onPress={() => navigatePage("RequestorChangePassword")} style={cardStyle.link}>
               <Text style={cardStyle.linkTitle}>Change Password</Text>
               <Entypo name="chevron-right" size={24} color="#E60965" />
               </TouchableOpacity>
