@@ -13,13 +13,20 @@ import {
 import { Fontisto, FontAwesome6 } from "@expo/vector-icons";
 import Header from "./Header";
 import { useNavigation } from '@react-navigation/native';
+import axios from "axios";
+import { BASED_URL } from "../../../../MyConstants";
 
-export default function SendFeedback({ rating }) {
-  const [currentStar, setCurrentStar] = useState(rating);
+export default function SendFeedback({route}) {
+
+  const { userInformation, token, userName } = route.params
+
+  const [currentStar, setCurrentStar] = useState(0);
 
   const handleStarPress = (selectedStar) => {
     setCurrentStar(selectedStar);
   };
+
+  const [feedback, setFeedBack] = useState("")
 
   const renderStars = () => {
     const stars = [];
@@ -38,20 +45,84 @@ export default function SendFeedback({ rating }) {
   };
 
   const navigate = useNavigation()
-    
+  
   useEffect(() => {
+    console.log(currentStar)
+    console.log(feedback)
+  },[currentStar])
+
+  const confirmation = () => {
+    if(currentStar < 3 && feedback.length === 0 ){
+      Alert.alert(
+        "Please Provide Feedback",
+        "If you have suggestions or encounter issues, please let us know. Your feedback helps us improve the app."
+      )
+      return
+    }
+    if(currentStar < 3 && feedback.length < 20 ){
+      Alert.alert(
+        "Provide More Detailed Feedback",
+        "We value your input! To help us better understand your experience, please provide feedback with at least 20 characters."
+      );
+      return
+    }
+
     Alert.alert(
-      "Sorry, this feature is not yet available right now.",
-      "Rest assured, our team is hard at work developing new features to better serve our community. Your continued support means the world to us. Thank you for your patience!",
+      "Confirmation",
+      "Are you sure you want to submit your Feedback?",
       [
+  
+        { text: "Yes", onPress: () => submit()},
         {
-          text: "Okay",
-          onPress: () => navigate.goBack("DonorSettingScreen")
-        }
-      ]
+          text: "No",
+        },
+  
+      ],
+      { cancelable: false }
     );
-    return
-  }, [])
+  };
+
+  
+  const submit = async () => {
+    try {
+      const id = userInformation.Donor_ID
+      const response = await axios.post(`${BASED_URL}/kalinga/createFeedback/${id}`,
+      { 
+        stars: currentStar,
+        content: feedback,
+        userType: userInformation.userType
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+      )
+  
+      if(response.data.messages.code === 1){
+        console.log(response.data.messages.message)
+        return
+      }
+     
+  
+    } catch(error){
+      console.log("Error Uploading Bug Report", error)
+      Alert.alert(
+        "Something Went wrong",
+        "There was an issue submitting your bug report. Please try again later."
+      );
+    } finally {
+      if(currentStar < 3){
+        navigate.replace("DonorSendFeedbackFailed", {userInformation: userInformation, UserName: userName, token: token})
+        return
+      }
+      else {
+        navigate.replace("DonorSendFeedbackSuccess", {userInformation: userInformation, UserName: userName, token: token})
+        return
+      }
+    }
+  }
+  
 
   return (
     <SafeAreaView style={bodyStyle.main}>
@@ -111,6 +182,8 @@ export default function SendFeedback({ rating }) {
                 alignItems: "flex-start",
               }}
               placeholder="Enter your feedback"
+              onChangeText={(text) => setFeedBack(text)}
+              value = {feedback}
             />
           </View>
         </View>
@@ -122,7 +195,7 @@ export default function SendFeedback({ rating }) {
           alignItems: "center",
           marginBottom: 24,
         }}>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => confirmation()}>
           <View style={buttonStyle.primary}>
             <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
               Submit

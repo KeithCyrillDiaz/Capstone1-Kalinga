@@ -37,6 +37,7 @@ export const generateFeedback = async (req: express.Request, res: express.Respon
         if(userType === "Donor"){
             newFeedback = {
                 DonorOwnerID: existingUser._id,
+                name: existingUser.fullName,
                 content: content,
                 stars: parseInt(stars),
                 userType: userType,
@@ -44,6 +45,7 @@ export const generateFeedback = async (req: express.Request, res: express.Respon
         } else {
             newFeedback = {
                 RequestorOwnerID: existingUser._id,
+                name: existingUser.fullName,
                 content: content,
                 stars: parseInt(stars),
                 userType: userType,
@@ -64,7 +66,7 @@ export const generateFeedback = async (req: express.Request, res: express.Respon
 
         console.log("Successfully Created Feedback")
         return res.json({
-            messagse: {
+            messages: {
                 code: 0,
                 message: "Successfully Created Feedback"
             },
