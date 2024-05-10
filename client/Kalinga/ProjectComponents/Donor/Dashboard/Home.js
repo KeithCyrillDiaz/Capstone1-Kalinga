@@ -16,17 +16,16 @@ import { BASED_URL } from '../../../MyConstants.js';
 const DonorHome = ({route}) => {
 
     const token = route.params.token
-
+    // console.log("route.params.userInformation: ", route.params.userInformation.fullName)
     const [userInformation, setUserInformation] = useState(route.params.userInformation)
     const storeInAsync = async () => {
       await AsyncStorage.setItem('userInformation', JSON.stringify(userInformation))
       await AsyncStorage.setItem('token', token)
     }
-  
-    const nameArray =  userInformation.fullName.split(' ')
     
-    let UserName;
 
+    const nameArray = userInformation.fullName.split(' ')
+    
     if (nameArray[0].endsWith(',')) {
       UserName = nameArray[1];
     } else {
@@ -41,11 +40,9 @@ const DonorHome = ({route}) => {
     
     const fetchUpdateduserInfo = async () => {
       console.log("Fetching Updated userInformation")
-      console.log(userInformation.Requestor_ID)
-      console.log(userInformation.userType)
       try{
 
-        const response = await axios.post(`${BASED_URL}/kalinga/tokenLogin/${userInformation.Requestor_ID}`,
+        const response = await axios.post(`${BASED_URL}/kalinga/tokenLogin/${userInformation.Donor_ID}`,
           {userType: userInformation.userType },
           { 
             headers: {
