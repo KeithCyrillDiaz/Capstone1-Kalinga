@@ -9,6 +9,7 @@ import {
   Login,
   AdminDashboard,
   City,
+  Chart,
   DonorVerifPendings,
   DonorVerification,
   Forum,
@@ -16,8 +17,10 @@ import {
   Rejected,
   Milkbanks,
   DonorAppointments, 
+  DonorAppointments, 
   RequestorAppointments,
   DonorAppointmentConfirmation,
+  RequestorAppointmentConfirmation
   RequestorAppointmentConfirmation
 } from "@/pages";
 import { RootLayout, NotFound, MainLayout, AdminLayout } from "@/layouts";
@@ -40,6 +43,7 @@ const router = createBrowserRouter(
         <Route index element={<AdminDashboard />} />
         <Route path="milkbanks" element={<Milkbanks />} />
         <Route path="city" element={<City />} />
+        <Route path="chart" element={<Chart />} />
         <Route path="DonorVerifPendings" element={<DonorVerifPendings />} />
         <Route path="DonorVerification" element={<DonorVerification />} />
         <Route path="forum" element={<Forum />} />
