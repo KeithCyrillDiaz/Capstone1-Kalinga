@@ -1,11 +1,53 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
+import axios from 'axios'
+import { ClipLoader } from "react-spinners";
+import {VerificationModal} from '../../modal/Verification/VerificationModal'
+import { WebHost } from '../../../MyConstantAdmin'
 
 const DonorPages = ({ currentPage }) => {
   // Define content for each page here
+
+  
+  const Name = "Keith Diaz"
+  const [form, setForm] = useState({})
+  const [isLoading, setIsLoading] = useState(true)
+  const [modalOpen, setModalOpen] = useState(false)
+
+  const onFocusPage = async () => {
+    try{ 
+          //with token
+      // const response = await axios.get(`${WebHost}/kalinga/getScreeningFormsApplicant_ID/`,
+      // {
+
+      // },
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`
+      //   }
+      // }
+
+      // )
+
+  
+      
+    }catch(error){
+      console.log("error", error)
+    }
+  }
+
+ 
   const pageContents = {
+    
     1: (
       <div>
-        <div className="px-16 my-6 ">
+         <div className="px-16 my-6 ">
+           {/* Loader */}
+          {isLoading && (
+              <div className="absolute z-10 left-1/2 bottom-1/2 bg-[#F3A3BF] w-[50px] h-[50px] rounded-full p-2">
+                <ClipLoader color={"white"} loading={true} />
+              </div>
+          )}
+        
           <div className="flex font-sans font-bold justify-center text-3xl text-primary-default">
             Initial Screening Form
           </div>
@@ -13,7 +55,7 @@ const DonorPages = ({ currentPage }) => {
             Personal Information
           </div>
           <div className="relative border rounded-md border-primary-default bg-white px-3 py-2 my-4 font-sans text-primary-disabled">
-            Full Name
+            Full Name: {Name}  
           </div>
           <div className="flex gap-x-6 my-4">
             <div className="relative border rounded-md border-primary-default bg-white w-full px-3 py-2 font-sans text-primary-disabled">
@@ -33,7 +75,10 @@ const DonorPages = ({ currentPage }) => {
             Home Address
           </div>
         </div>
-
+        {modalOpen && (
+          <VerificationModal userType = {"Donor"} status={"approved"} name ={"Keith Diaz"} onClose={() => setModalOpen(false)} />
+        )}
+        
         <div className="px-16 my-6 ">
           <div className="flex font-bold text-2xl text-primary-default font-sans">
             Infant Information
