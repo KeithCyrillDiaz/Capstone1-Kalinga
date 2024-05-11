@@ -17,11 +17,10 @@ import {
   Rejected,
   Milkbanks,
   DonorAppointments, 
-  DonorAppointments, 
   RequestorAppointments,
   DonorAppointmentConfirmation,
   RequestorAppointmentConfirmation
-  RequestorAppointmentConfirmation
+
 } from "@/pages";
 import { RootLayout, NotFound, MainLayout, AdminLayout } from "@/layouts";
 import { MobileChecker } from "@/components";
