@@ -47,7 +47,7 @@ const DonorProfile = ({route}) => {
 
     const navigatePage = (Page) => {
       if(Page === "DonorSettingScreen"){
-        navigation.navigate(Page, {userInformation: userInformation, UserName: UserName})
+        navigation.navigate(Page, {userInformation: userInformation, UserName: UserName, token: token})
         return
       }
       navigation.navigate(Page, {userInformation: userInformation, token: token})

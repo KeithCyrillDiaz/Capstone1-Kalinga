@@ -16,17 +16,16 @@ import { MaterialIcons } from "@expo/vector-icons";
 import Header from "./Header";
 import { BASED_URL } from "../../../../MyConstants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
+import axios from "axios"; 
 import * as ImagePicker from 'expo-image-picker';
-import ImageZoom from 'react-native-image-pan-zoom';
 import Spinner from 'react-native-loading-spinner-overlay';
-
+import { useNavigation } from '@react-navigation/native';
 
 export default function EditPersonalScreen({route}) {
 
   const userInformation = route.params.userInformation
  const userName = route.params.userName
- 
+  const navigate = useNavigation()
  const [userData, setUserData] = useState(userInformation)
  const [selectedImage, setSelectedImage] = useState({});
  const [profilePic, setProfilePic] = useState("")
@@ -80,12 +79,13 @@ export default function EditPersonalScreen({route}) {
     console.log("error: ", error)
   } finally {
     fetchDP()
-    setIsloading(false)
   }
  }
  const handleImageUpload = async () => {
   try {
+      setIsloading(true)
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      setIsloading(false)
       if (status !== 'granted') {
           Alert.alert('Permission Denied', 'Sorry, we need camera roll permissions to make this work!');
           return;
@@ -118,6 +118,8 @@ export default function EditPersonalScreen({route}) {
     }
   } catch (error) {
       Alert.alert('Error', 'Failed to pick an image.');
+  } finally {
+ 
   }
 };
 
@@ -144,11 +146,13 @@ const fetchDP = async () => {
 
 useEffect(() => {
   fetchDP()
+  setIsloading(false)
 },[selectedImage])
 
 
  const saveDetails = async () => {
       try{
+          setIsloading(true)
         if(userData !== userInformation){
           const result = await axios.post(`${BASED_URL}/kalinga/updateUserInformation`,{
             userData: userData
@@ -161,12 +165,13 @@ useEffect(() => {
           } else console.log("Error: ", result.data.messages.message)
         }
         uploadImage();
-        return
       } catch(error) {
         console.log("Error: ", error)
         if(error)Alert.alert('Network error', `Please check your internet connection`)
             else
             Alert.alert('Something went wrong', "Please try again later")
+      } finally {
+        fetchDP()
       }
 
  }

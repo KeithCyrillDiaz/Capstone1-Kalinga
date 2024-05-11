@@ -16,7 +16,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios'
 import { BASED_URL } from '../../MyConstants';
-const ResetPassword = () => {
+const ResetPassword = ({route}) => {
+
+    const { token } = route.params
     const navigation = useNavigation(); 
 
     const handleBackButton = () => {
@@ -93,11 +95,13 @@ const ResetPassword = () => {
                                 value={Email}
                             />
                             </View>
-
+                        {!token && (
                             <View style= {{flexDirection: "row", alignItems: "center", bottom: "10%"}}>
                                 <Text style={styles.RememberPasswordText}>Remember password?</Text>
                                 <TouchableOpacity onPress={handleRememberPassword}><Text style = {[styles.RememberPasswordText, {marginLeft: 5, textDecorationLine: "underline"}]}>Login</Text></TouchableOpacity>
                             </View>
+                        )}
+                            
 
                             <TouchableOpacity style={styles.SubmitButton} onPress={handleSubmitButton}>
                                 <Text style={styles.SubmitButtonText}>Submit</Text>

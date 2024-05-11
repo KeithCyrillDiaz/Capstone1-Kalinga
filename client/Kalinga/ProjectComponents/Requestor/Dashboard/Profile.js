@@ -56,7 +56,7 @@ const RequestorProfile = ({route}) => {
 const navigatePage = (Page) => {
 
   if(Page === "RequestorSettingScreen"){
-    navigation.navigate(Page, {userInformation: userInformation, UserName: UserName})
+    navigation.navigate(Page, {userInformation: userInformation, UserName: UserName, token: token})
     return
   }
   navigation.navigate(Page, {userInformation: userInformation, token: token})

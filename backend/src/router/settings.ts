@@ -11,6 +11,8 @@ import {
 import { tokenVerification } from '../middleware/Authentication'
 import { changePassword } from '../controllers/clientSettings/changePassword'
 import { fetchFeedBackByUserType, generateFeedback } from '../controllers/clientSettings/sendFeedback'
+import { checkPassword } from '../middleware/checkPassword'
+import { generateHelpAndSupportReport } from '../controllers/clientSettings/helpAndSupport'
 
 export default (router: express.Router) => {
     
@@ -22,10 +24,14 @@ export default (router: express.Router) => {
     router.delete('/kalinga/deleteReport/:id', tokenVerification, deleteReport)
 
     //ChangePassword
-    router.patch('/kalinga/updatePassword/:id', tokenVerification, changePassword)
+    router.patch('/kalinga/updatePassword/:id', tokenVerification, checkPassword, changePassword)
   
     //FeedBack
     router.post('/kalinga/createFeedback/:id', tokenVerification, generateFeedback)
     router.get('/kalinga/getFeedbackByUserType/:userType', tokenVerification, fetchFeedBackByUserType)
     router.get('/kalinga/getFeedbackByUserType/:userType', tokenVerification, fetchFeedBackByUserType)
+    
+    //Help and Support
+    router.post('/kalinga/createHelpAndSupportReport/:id', tokenVerification, generateHelpAndSupportReport)
+
 }

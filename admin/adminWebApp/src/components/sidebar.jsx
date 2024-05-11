@@ -10,6 +10,8 @@ export default function () {
   const [verificationDropdownHeight, setVerificationDropdownHeight] =
     useState(0);
   const [showIssuesDropdown, setShowIssuesDropdown] = useState(false);
+  const [showReportsDropdown, setShowReportsDropdown] = useState(false);
+
 
   const isActiveRoute = (route) => {
     const currentPath = window.location.pathname;
@@ -74,7 +76,67 @@ export default function () {
               </svg>
               <h1 className="ml-4 text-2xl text-neutral-primary">Dashboard</h1>
             </NavLink>
+            <div>
+              <div className="relative">
+                <div
+                  onClick={() =>
+                    setShowReportsDropdown(!showReportsDropdown)
+                  }
+                  className={`flex items-center cursor-pointer w-full rounded-t-2xl pt-2 pb-2 ${
+                    showReportsDropdown ? "bg-secondary-default" : ""
+                  }`}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="45"
+                    height="45"
+                    viewBox="0 0 24 24"
+                    className="ml-8"
+                  >
+                    <g
+                      fill="none"
+                      stroke="#FFEECC"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
+                    >
+                      <path d="M9 21h6m-6 0v-5m0 5H3.6a.6.6 0 0 1-.6-.6v-3.8a.6.6 0 0 1 .6-.6H9m6 5V9m0 12h5.4a.6.6 0 0 0 .6-.6V3.6a.6.6 0 0 0-.6-.6h-4.8a.6.6 0 0 0-.6.6V9m0 0H9.6a.6.6 0 0 0-.6.6V16"></path>
+                    </g>
+                  </svg>
+                  <h1 className="ml-4 mr-4 text-2xl text-neutral-primary">
+                    Reports
+                  </h1>
 
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="43"
+                    height="43"
+                    viewBox="0 0 24 24"
+                    className={`transform transition-transform duration-300 ${
+                      showReportsDropdown ? "rotate-0" : "rotate-180"
+                    }`}
+                  >
+                    <path fill="#FFEECC" d="m7 10l5 5l5-5z" />
+                  </svg>
+                </div>
+
+                {showReportsDropdown && (
+                  <div className="p-2 w-full bg-secondary-default rounded-b-2xl pb-2 mb-2">
+                    <NavLink
+                    to="/admin/chart"
+                    className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-8 py-2 mb-5  ${
+                        isActiveRoute("chart")
+                          ? "bg-primary-default"
+                          : "bg-transparent hover:bg-primary-default"
+                      }`}
+                    >
+                      <h1 className="text-xl text-neutral-primary">Total Donations & Requests</h1>
+                    </NavLink>
+                    
+                  </div>
+                )}
+              </div>
+            </div>
             {/* MILKBANKS */}
 
             <NavLink
@@ -103,6 +165,33 @@ export default function () {
               </svg>
               <h1 className="ml-4 text-2xl text-neutral-primary">Milkbanks</h1>
             </NavLink>
+            <NavLink
+              to="/admin/forum"
+              className={`flex items-center cursor-pointer w-full rounded-2xl py-2 mb-2 ${
+                isActiveRoute("milkbanks")
+                  ? "bg-secondary-default"
+                  : "bg-transparent hover:bg-secondary-default"
+              }`}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="45"
+                height="45"
+                viewBox="0 0 24 24"
+                className="ml-8"
+              >
+                <path
+                  fill="none"
+                  stroke="#FFEECC"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                  d="M7.23 16.23q-.326 0-.547-.22q-.221-.222-.221-.548v-1h11.75l.634.634V6h1q.327 0 .548.221t.221.548v12.539l-3.077-3.077zm-3.845-.692V3.77q0-.327.22-.548T4.155 3h11.923q.327 0 .548.221t.221.548v7.923q0 .327-.221.548t-.548.222H6.462zm12.461-4.076V4H4.385v8.846l1.384-1.384zm-11.461 0V4z"
+                ></path>
+              </svg>
+              <h1 className="ml-4 text-2xl text-neutral-primary">Forum Moderation</h1>
+            </NavLink>
+            
 
             {/* VERIFICATION */}
 
@@ -246,7 +335,9 @@ export default function () {
               </div>
             </div>
           </div>
+          
         </div>
+        
 
         <div className="grid items-center justify-center grid-flow-col-dense mb-6 gap-x-4">
           <span>

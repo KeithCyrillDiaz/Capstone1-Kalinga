@@ -7,6 +7,7 @@ const feedBackSchema = new mongoose.Schema({
     feedBack_ID: {type: String, default: () => randomatic('A0', 7) + moment().format("YYYYMMDDHHmmss") },
     RequestorOwnerID: {type: mongoose.Schema.Types.ObjectId, ref: "Requestor"},
     DonorOwnerID: {type: mongoose.Schema.Types.ObjectId, ref: "Donor"},
+    name:{type: String},
     userType: {type: String, required: true},
     stars: {type: Number},
     content: {type: String},

@@ -19,13 +19,14 @@ import { BASED_URL } from "../../../../MyConstants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from 'react-native-loading-spinner-overlay';
 import * as ImagePicker from 'expo-image-picker';
-import ImageZoom from 'react-native-image-pan-zoom';
+import { useNavigation } from '@react-navigation/native';
 
 export default function EditPersonalScreen({route}) {
   
  const userInformation = route.params.userInformation
  const userName = route.params.userName
 
+ const navigate = useNavigation()
  const [userData, setUserData] = useState(userInformation)
  const [selectedImage, setSelectedImage] = useState({});
  const [profilePic, setProfilePic] = useState("")
@@ -71,6 +72,7 @@ export default function EditPersonalScreen({route}) {
                 console.log("link: ", result.data.link)
                 console.log("Image_ID: ", result.data.Image_ID)
                 setProfilePic(result.data.link)
+         
                 setSelectedImage({})
                 
                }
@@ -79,7 +81,6 @@ export default function EditPersonalScreen({route}) {
     console.log("error: ", error)
   } finally {
     fetchDP()
-    setIsloading(false)
   }
  }
  const handleImageUpload = async () => {
@@ -142,6 +143,7 @@ const fetchDP = async () => {
 
 useEffect(() => {
   fetchDP()
+  setIsloading(false)
 },[selectedImage])
 
 
@@ -160,25 +162,26 @@ const saveDetails = async () => {
       } else console.log("Error: ", result.data.messages.message)
     }
     uploadImage();
-    return
+
   } catch(error) {
     console.log("Error: ", error)
     if(error)Alert.alert('Network error', `Please check your internet connection`)
         else
         Alert.alert('Something went wrong', "Please try again later")
   } finally {
-    Alert.alert('Image Save Successfully', "Thank you for waiting")
-    setIsloading(false)
+    fetchDP()
   }
 
 }
 
  const fetchData = async () => {
+  setIsloading(true)
   const userInformationToString = await AsyncStorage.getItem('userInformation')
   if(userInformationToString !== null ) {
     const userInformation = JSON.parse(userInformationToString);
     setUserData(userInformation)
   }
+  setIsloading(false)
  }
 
  useEffect(()=>{

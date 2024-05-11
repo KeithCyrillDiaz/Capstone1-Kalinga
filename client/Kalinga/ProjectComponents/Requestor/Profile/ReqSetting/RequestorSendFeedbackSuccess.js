@@ -11,8 +11,15 @@ import {
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import Header from "./Header";
+import { useNavigation } from '@react-navigation/native';
+export default function SendFeedbackSuccess({ route }) {
 
-export default function SendFeedbackSuccess({ title, subtitle, description }) {
+  const {userInformation, UserName, token} = route.params
+  const navigate = useNavigation()
+ const buttonClick = () => {
+  navigate.goBack("RequestorSettingScreen", {userInformation: userInformation, UserName: UserName, token: token})
+ }
+
   return (
     <SafeAreaView style={bodyStyle.main}>
       <ScrollView stickyHeaderIndices={[1]}>
@@ -40,17 +47,7 @@ export default function SendFeedbackSuccess({ title, subtitle, description }) {
                 fontWeight: "bold",
                 textAlign: "center",
               }}>
-              {title}
-            </Text>
-            <Text
-              style={{
-                textAlign: "center",
-                paddingHorizontal: 52,
-                color: "#E60965",
-                fontSize: 20,
-                fontWeight: "600",
-              }}>
-              {subtitle}
+              Thank you!
             </Text>
           </View>
 
@@ -61,7 +58,7 @@ export default function SendFeedbackSuccess({ title, subtitle, description }) {
               color: "#E60965",
               fontSize: 18,
             }}>
-            {description}
+            We appreciate your feedback. Please provide us with further suggestions and requests in the future.
           </Text>
         </View>
       </ScrollView>
@@ -76,10 +73,10 @@ export default function SendFeedbackSuccess({ title, subtitle, description }) {
           alignItems: "center",
           marginBottom: 24,
         }}>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => buttonClick()}>
           <View style={buttonStyle.primary}>
             <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
-              Home
+              Done
             </Text>
           </View>
         </TouchableOpacity>

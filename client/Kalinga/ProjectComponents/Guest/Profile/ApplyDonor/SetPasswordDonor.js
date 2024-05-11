@@ -41,25 +41,28 @@ const SetPasswordDonor = ({route}) => {
       }
 
       const handleSubmitButton = async () => {
+   
         const invalidCharacters = /[^a-zA-Z0-9]/;
-        if(!Applicant_ID  && forgotPassEmail === null){
-            Alert.alert('Invalid Applicant ID', 'Please enter your Applicant ID.');
-            return;
-        }
-        if(!Applicant_ID && forgotPassEmail === null){
-            if(Applicant_ID.includes(' ') && forgotPassEmail === null){
-                console.log("test")
-                Alert.alert('Invalid Applicant ID', 'Applicant_ID cannot contain spaces.');
+        const token = await AsyncStorage.getItem("token")
+        const userInformationString = await AsyncStorage.getItem("userInformation");
+        const userInformation = JSON.parse(userInformationString);
+
+            if(!Applicant_ID  && forgotPassEmail === null){
+                Alert.alert('Invalid Applicant ID', 'Please enter your Applicant ID.');
                 return;
             }
-        }
-       
-        if(invalidCharacters.test(Applicant_ID) && forgotPassEmail === null){
-            Alert.alert('Invalid Applicant ID', 'Applicant ID must not contain special characters.');
-            return;
-        }
- 
-
+            if(!Applicant_ID && forgotPassEmail === null){
+                if(Applicant_ID.includes(' ') && forgotPassEmail === null){
+                    console.log("test")
+                    Alert.alert('Invalid Applicant ID', 'Applicant_ID cannot contain spaces.');
+                    return;
+                }
+            }
+           
+            if(invalidCharacters.test(Applicant_ID) && forgotPassEmail === null){
+                Alert.alert('Invalid Applicant ID', 'Applicant ID must not contain special characters.');
+                return;
+            }
 
         if(!Password){
             Alert.alert('Invalid Password', 'Please enter your password. Password cannot be empty.');
@@ -74,7 +77,6 @@ const SetPasswordDonor = ({route}) => {
             return;
         }
 
-        if(!passApplicant_ID)setApplicant_ID(passApplicant_ID) // for approved user who forgot their passwords
         const result = await axios.post(`${BASED_URL}/kalinga/setPassword`, {
             Applicant_ID: Applicant_ID,
             password: Password,
@@ -96,6 +98,17 @@ const SetPasswordDonor = ({route}) => {
                     await clearAsyncStorage('RequestorApplicant_ID')
                 }
             }
+            if(token){
+                console.log("existing token")
+                navigation.dispatch(
+                    CommonActions.reset({
+                        index: 0,
+                        routes: [{ name: 'Splash' }],
+                    })
+                );  
+                return
+            }
+            console.log("no token")
             navigation.dispatch(
                 CommonActions.reset({
                     index: 0,
@@ -157,6 +170,14 @@ const SetPasswordDonor = ({route}) => {
                             <MaterialIcons name={hidePassword ? 'visibility-off' : 'visibility'} size={24} color="#F94892" />
                         </TouchableOpacity>
                     </View>
+                    <Text style = {{
+                        marginTop: -40,
+                        marginBottom: 20,
+                        marginLeft:10,
+                        color: "#E60965",
+                        fontSize: 12,
+
+                    }}>Passwords must be at least 8 characters</Text>
                    
 
                     </View>

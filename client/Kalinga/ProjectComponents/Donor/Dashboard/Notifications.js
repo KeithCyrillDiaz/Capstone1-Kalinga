@@ -85,6 +85,7 @@ const DonorNotification = ({route}) => {
     })
 
     if(response.data.messages.message === "Unauthorized User"){
+      await AsyncStorage.multiRemove(['token', 'userInformation', 'DPLink', 'Image_ID']);
       Alert.alert("Session Expired", "Your session has expired. Please log in again.", [
         {
           text: "OK",

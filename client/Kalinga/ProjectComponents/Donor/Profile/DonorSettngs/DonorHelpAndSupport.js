@@ -16,20 +16,14 @@ import Header from "./Header";
 import { useNavigation } from '@react-navigation/native';
 
 
-export default function HelpAndSupport() {
+export default function HelpAndSupport({route}) {
+
+  const { userInformation, token, userName } = route.params
 
   const navigation = useNavigation();
   const handleSendMessage = () => {
-    Alert.alert(
-      "Sorry, this feature is not yet available right now.",
-      "Rest assured, our team is hard at work developing new features to better serve our community. Your continued support means the world to us. Thank you for your patience!",
-      [
-        {
-          text: "Okay",
-          onPress: () => navigation.goBack("DonorSettingScreen")
-        }
-      ]
-    );
+    navigation.navigate("DonorHelpAndSupportMessage", {userInformation: userInformation, UserName: userName, token: token})
+    return
   }
 
   return (

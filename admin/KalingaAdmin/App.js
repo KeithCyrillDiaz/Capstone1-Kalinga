@@ -13,16 +13,16 @@ import DonorInitialScreeningFormPage4 from './screens/Admin/ScreeningForm/Donor/
 import AdminApprovedDonor from './screens/Admin/ScreeningForm/Donor/AdminApprovedDonor.js'
 import AdminDeclinedDonor from './screens/Admin/ScreeningForm/Donor/AdminDeclinedDonor.js'
 
-import LoginAdmin from '../../admin/KalingaAdmin/screens/Admin/LoginAdmin.js';
-import AdminMenu from '../../admin/KalingaAdmin/screens/Admin/AdminMenu.js';
+import LoginAdmin from './screens/Admin/LoginAdmin.js';
+import AdminMenu from './screens/Admin/AdminMenu.js';
 //import Header from './screens/Admin/header';
-import AdminDashboard from '../../admin/KalingaAdmin/screens/Admin/AdminDashboard.js';
-import AdminUser from '../../admin/KalingaAdmin/screens/Admin/AdminUser.js';
+import AdminDashboard from './screens/Admin/AdminDashboard.js';
+import AdminUser from './screens/Admin/AdminUser.js';
 import AdminMilkbanks from './screens/Admin/AdminMilkbanks';
 import DonorUserVerification from './screens/Admin/ScreeningForm/Donor/DonorUserVerification.js'; 
 import DonorUploadAdmin from './screens/Admin/ScreeningForm/Donor/DonorUploadAdmin.js';   //<Stack.Screen name="RequestorVerification" component={RequestorVerification} />
 //import RequestorVerification from './screens/Admin/RequestorVerification'; 
-import DonorAppointmentConfirmation from '../../admin/KalingaAdmin/screens/Admin/ScreeningForm/Donor/DonorAppointmentConfirmation.js';
+import DonorAppointmentConfirmation from './screens/Admin/ScreeningForm/Donor/DonorAppointmentConfirmation.js';
 import RequestorRequestConfirmation from './screens/Admin/ScreeningForm/Requestor/RequestorRequestConfirmation.js'
 
 import RequestorInitialScreeningFormPage1 from './screens/Admin/ScreeningForm/Requestor/RequestorInitialScreeningFormPage1.js'

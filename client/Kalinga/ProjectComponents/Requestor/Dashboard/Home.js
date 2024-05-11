@@ -12,7 +12,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BASED_URL } from '../../../MyConstants.js';
 import axios from 'axios';
 
-
 export default function RequestorHome({route}) {
 
 
@@ -40,11 +39,35 @@ export default function RequestorHome({route}) {
     const [requestStatus, setRequestStatus] = useState('empty'); // State to hold request status
 
     
-    const navigatePage = (Page) => {
-        navigation.navigate(Page, {data: userInformation, token: token}); // Navigate to the Login screen
-        
+    const navigatePage = async (Page) => {
 
-    };    
+        if(Page === "ValidUserExplore"){
+          const result = await checkLocationPermission()
+          console.log("result: ", result)
+          if(!result)return
+        }
+        navigation.navigate(Page, {data: userInformation, token: token}); // Navigate to the Login screen
+    };   
+    
+    const checkLocationPermission = async () => {
+
+      const permission = await AsyncStorage.getItem("LocationPermission")
+      console.log("permission: ",permission)
+      if(!permission || permission === "false"){
+        Alert.alert(
+          "Location Access Denied",
+          "To use this feature, please grant permission to access your location."
+        );
+        if(userInformation.userType === "Donor"){
+          navigation.replace("DonorLocationScreen")
+          return
+        } else {
+          navigation.navigate("RequestorLocationScreen")
+          return
+        }
+        return false
+      } else return true
+    }
 
     const fetchUpdateduserInfo = async () => {
       console.log("Fetching Updated userInformation")

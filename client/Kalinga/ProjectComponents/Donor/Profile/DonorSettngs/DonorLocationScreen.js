@@ -7,46 +7,67 @@ import {
   StatusBar,
   ScrollView,
   Switch,
+  Alert
 } from "react-native";
 import Header from "./Header";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as Location from 'expo-location';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation, CommonActions } from '@react-navigation/native';
 
 export default function LocationScreen() {
 
 
   const [locationEnabled, setLocationEnabled] = useState(false);
+  const navigation = useNavigation()
 
   const getPermission = async () => {
     const result = await AsyncStorage.getItem("LocationPermission")
     console.log("result: ", result)
     if(result === "true") setLocationEnabled(true)
-      return
+    else setLocationEnabled(false)
+  
+    return
   }
 
-  const handlePermission = async () => {
-    if(locationEnabled === true){
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Permission to access location was denied');
-        return;
+  const handlePermission = async (value) => {
+    try{
+      console.log("value", value)
+      if(value === true){
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        console.log(status)
+        if (status !== 'granted') {
+          Alert.alert(
+            "Location Access Denied",
+            "To use this feature, please grant permission to access your location in your device settings."
+          );
+          await AsyncStorage.setItem("LocationPermission", "false")
+          setLocationEnabled(false)
+          return
+        } else {
+          Alert.alert(
+            "Permission Granted: Please Restart the App",
+            "Thank you for granting permission. Please restart the app to apply the changes."
+          );
+          await AsyncStorage.setItem("LocationPermission", "true")
+        }
       }
-      await AsyncStorage.setItem("LocationPermission", "true")
+      await AsyncStorage.setItem("LocationPermission", value.toString())
+      setLocationEnabled(value)
       return
-    } else {
-      await AsyncStorage.setItem("LocationPermission", "false");
-      return
+    } catch (error) {
+      Alert.alert(
+        "Location Permission Error",
+        "There was an issue while requesting location permission. Please try again."
+      );
     }
-    
-  }
+      
+    } 
+
+
 useEffect(() => {
   getPermission()
 },[])
-
-useEffect(() => {
-  handlePermission()
-},[locationEnabled])
 
 
   return (
@@ -93,7 +114,7 @@ useEffect(() => {
             <Switch
               thumbColor={"#E60965"}
               value={locationEnabled}
-              onValueChange={(newValue) => setLocationEnabled(newValue)}
+              onValueChange={(newValue) =>  handlePermission(newValue)}
             />
             <Text
               style={{

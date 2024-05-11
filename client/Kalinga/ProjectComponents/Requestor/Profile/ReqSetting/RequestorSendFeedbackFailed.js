@@ -7,12 +7,19 @@ import {
   StatusBar,
   TouchableOpacity,
   ScrollView,
-  TextInput,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Header from "./Header";
+import { useNavigation } from '@react-navigation/native';
 
-export default function SendFeedbackFailed() {
+export default function SendFeedbackFailed({route}) {
+
+  const {userInformation, UserName, token} = route.params
+  const navigate = useNavigation()
+ const buttonClick = () => {
+  navigate.goBack("RequestorSettingScreen", {userInformation: userInformation, UserName: UserName, token: token})
+ }
+
   return (
     <SafeAreaView style={bodyStyle.main}>
       <ScrollView stickyHeaderIndices={[1]}>
@@ -67,10 +74,10 @@ export default function SendFeedbackFailed() {
           alignItems: "center",
           marginBottom: 24,
         }}>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => buttonClick()}>
           <View style={buttonStyle.primary}>
             <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
-              Home
+              Done
             </Text>
           </View>
         </TouchableOpacity>
