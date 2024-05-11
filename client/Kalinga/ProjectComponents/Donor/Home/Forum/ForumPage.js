@@ -24,6 +24,7 @@ import { BASED_URL } from "../../../../MyConstants.js";
 import { useFocusEffect } from '@react-navigation/native'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from "react-native-loading-spinner-overlay";
+import { Platform } from 'react-native';
 
 const ForumPage = ({route}) => {
 
@@ -191,7 +192,7 @@ const ForumPage = ({route}) => {
 
   return (
         <View 
-            style={{ flex: 1}} 
+            style={{ flex: 1, backgroundColor: '#FFF8EB',}} 
             behavior={Platform.OS === "ios" ? "padding" : "height"} // Adjust behavior based on platform
             keyboardVerticalOffset={Platform.OS === "ios" ? 0 : -150} // Adjust vertical offset if needed
         >
@@ -563,7 +564,7 @@ const ForumPage = ({route}) => {
         height: 150
     },  
     container: {
-        //backgroundColor: '#FFE7DA',
+        backgroundColor: 'red',
         marginVertical: "5%"
      },
 

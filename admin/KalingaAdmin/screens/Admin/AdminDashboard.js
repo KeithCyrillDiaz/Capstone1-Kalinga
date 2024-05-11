@@ -1,7 +1,6 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, StatusBar } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text,  StyleSheet, SafeAreaView, StatusBar, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Octicons } from '@expo/vector-icons';
 import { Foundation } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -9,6 +8,20 @@ import { globalHeader } from '../../styles_kit/globalHeader';
 
 const AdminDashboard = () => {
     const navigation = useNavigation(); 
+
+    useEffect(() => {
+        Alert.alert(
+          "Sorry, this feature is not yet available right now.",
+          "Rest assured, our team is hard at work developing new features to better serve our community. Your continued support means the world to us. Thank you for your patience!",
+          [
+            {
+              text: "Okay",
+              onPress: () => navigation.goBack("AdminMenu")
+            }
+          ]
+        );
+        return
+      }, [])
 
     return (
         <SafeAreaView style={styles.container}>

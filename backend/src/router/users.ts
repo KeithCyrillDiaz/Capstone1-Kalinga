@@ -33,6 +33,9 @@ import { getDeclinedRequestsTotal } from '../controllers/SuperAdmin/getCompleted
 import { getDonationStatusTotal } from '../controllers/SuperAdmin/getTotalCityUser'
 import { getRequestStatusTotal } from '../controllers/SuperAdmin/getTotalCityUser'
 import { updateOngoingDonation } from '../controllers/Admin/Appointment/updateOngoingDonation';
+import { sendUpdateStatusAppointmentNotification } from '../controllers/Notification/appointment';
+import { sendRequestsNotification } from '../controllers/Notification/requests';
+
 
 
 
@@ -53,10 +56,10 @@ export default (router: express.Router) => {
    router.post('/kalinga/createAppointment', createAppointment);
    router.get('/kalinga/getAppointmentsByDonorID/:AppointmentDonorID', getAppointmentByDonorID);
    router.get('/kalinga/getAppointmentByUserType/:userType', getAppointmentByUsertype)
-    router.put ('/kalinga/updateDonationStatus/:AppointmentDonorID', updateDonationStatus)
+    router.put ('/kalinga/updateDonationStatus/:AppointmentDonorID', sendUpdateStatusAppointmentNotification, updateDonationStatus)
     router.get('/kalinga/getOngoingDonation/:Donor_ID', getOngoingDonation)
-    router.put('/kalinga/updateOngoingDonation/:AppointmentDonorID', updateOngoingDonation)
-    router.put ('/kalinga/updateDonationComplete/:AppointmentDonorID', updateDonationComplete)
+    router.put('/kalinga/updateOngoingDonation/:AppointmentDonorID', sendUpdateStatusAppointmentNotification, updateOngoingDonation)
+    router.put ('/kalinga/updateDonationComplete/:AppointmentDonorID', sendUpdateStatusAppointmentNotification, updateDonationComplete)
     router.get('/kalinga/getCompletedDonation/:Donor_ID', getCompletedDonation)
     router.get('/kalinga/getDonorStats/:Donor_ID', getDonorStats)
 
@@ -67,11 +70,11 @@ export default (router: express.Router) => {
    router.post('/kalinga/createRequest', createRequest)
    router.get ('/kalinga/getRequestByID/:RequestID', getRequestByID)
    router.get('/kalinga/getRequestByUserType/:userType', getRequestByUserType)
-    router.put('/kalinga/updateRequestStatus/:RequestID',updateRequestStatus)
+    router.put('/kalinga/updateRequestStatus/:RequestID', sendRequestsNotification, updateRequestStatus)
     router.get('/kalinga/getPendingRequests/:Requestor_ID', getPendingRequests)
     router.get('/kalinga/getApprovedRequests/:Requestor_ID', getApprovedRequests)
     router.get('/kalinga/getRequestStatus', getRequestStatus)
-    router.put('/kalinga/updateCompleteStatus/:Requestor_ID',updateCompleteStatus)
+    router.put('/kalinga/updateCompleteStatus/:RequestID', sendRequestsNotification, updateCompleteStatus)
     router.get('/kalinga/getCompletedRequests/:Requestor_ID', getCompletedRequests)
     router.get('/kalinga/getRequestStats/:Requestor_ID', getRequestStats)
 
@@ -84,29 +87,5 @@ export default (router: express.Router) => {
     router.get('/kalinga/getDeclinedRequestsTotal', getDeclinedRequestsTotal)
     router.get('/kalinga/getDonationStatusTotal', getDonationStatusTotal);
     router.get('/kalinga/getRequestStatusTotal', getRequestStatusTotal);
-
-    
-
-
-
-
-    
-
-
-
-
-    
-
-
-
-
-   router.put('/kalinga/updateRequestStatus/:RequestID',updateRequestStatus)
-   router.get('/kalinga/getPendingRequests/:Requestor_ID', getPendingRequests)
-   router.get('/kalinga/getApprovedRequests/:Requestor_ID', getApprovedRequests)
-   router.get('/kalinga/getRequestStatus', getRequestStatus)
-   router.put('/kalinga/updateCompleteStatus/:Requestor_ID',updateCompleteStatus)
-   router.get('/kalinga/getCompletedRequests/:Requestor_ID', getCompletedRequests)
-   router.get('/kalinga/getRequestStats/:Requestor_ID', getRequestStats)
-
 
 } 

@@ -9,22 +9,23 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Alert
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import Header from "./Header";
 import { useNavigation } from '@react-navigation/native';
 
 
-export default function HelpAndSupport() {
+export default function HelpAndSupport({route}) {
+
+  const { userInformation, token, userName } = route.params
 
   const navigation = useNavigation();
-    
-
-
-  
-  const navigatePage = (Page) => {
-    navigation.navigate(Page); // Navigate to the specified screen
+  const handleSendMessage = () => {
+    navigation.navigate("DonorHelpAndSupportMessage", {userInformation: userInformation, UserName: userName, token: token})
+    return
   }
+
   return (
     <SafeAreaView style={bodyStyle.main}>
       <ScrollView stickyHeaderIndices={[1]}>
@@ -113,7 +114,7 @@ export default function HelpAndSupport() {
           <Text style={{ color: "#E60965" }}>
             Still need assistance? Help is a mail away
           </Text>
-          <TouchableOpacity onPress={() => navigatePage("DonorHelpAndSupportMessage")}>
+          <TouchableOpacity onPress={() => handleSendMessage()}>
             <View style={buttonStyle.primary}>
               <Text
                 style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>

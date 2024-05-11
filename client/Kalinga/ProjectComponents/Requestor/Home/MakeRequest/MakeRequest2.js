@@ -15,25 +15,52 @@ import { globalStyles } from "../../../../styles_kit/globalStyles.js"
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { Octicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';  
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, CommonActions } from '@react-navigation/native';
 import { BackHandler } from 'react-native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MakeRequest2 = () => {
+
 
     const TitleParagraph = 'Thank You!'
 
     const FirstParagraph = 'We’ll confirm your milk request through your contact details.'
     const navigation = useNavigation();
 
+    let userInformation
+    let token
+
+    const retrieveFromAsync = async () => {
+      try {
+        const userInformationString = await AsyncStorage.getItem('userInformation');
+        token = await AsyncStorage.getItem('token');
+    
+        if (userInformationString && token) {
+          userInformation = JSON.parse(userInformationString);
+        } else {
+          console.log('User information or token not found in AsyncStorage.');
+        }
+      } catch (error) {
+        console.error('Error retrieving data from AsyncStorage:', error);
+      }
+    };
+    useEffect(() => {
+      retrieveFromAsync();
+    }, [])
+
     const navigatePage = (Page) => {
-      navigation.navigate(Page); // Navigate to the Login screen
-    }
+      navigation.dispatch(
+        CommonActions.reset({
+            index: 0,
+            routes: [{ name: Page, params: { userInformation: userInformation, token: token } }],
+        })
+    );
+  }
 
     
 useEffect(() => {
   const backAction = () => {
-    navigation.navigate('Requestor Tabs'); // Navigate to AdminMenu screen on back button press
+    navigation.navigate('MainTabs', { userInformation: userInformation, token: token });; // Navigate to AdminMenu screen on back button press
     return true; // Prevent default back button behavior (e.g., app exit)
   };
 
@@ -70,7 +97,7 @@ useEffect(() => {
 
               <View style = {globalStyles.center}>
                 <Pressable>
-                <TouchableOpacity style={[styles.AgreebuttonContainer]}onPress={() => navigatePage("Requestor Tabs")}>
+                <TouchableOpacity style={[styles.AgreebuttonContainer]}onPress={() => navigatePage("MainTabs")}>
                   <Text style={styles.label}>Done</Text>
                 </TouchableOpacity>
                 </Pressable>
@@ -89,7 +116,7 @@ useEffect(() => {
   const styles = StyleSheet.create ({
     SafeArea: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#FFF8EB',
         
         width: '100%',
         height: "100%"

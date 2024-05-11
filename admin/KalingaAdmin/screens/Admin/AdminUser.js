@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, ScrollView, StatusBar } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native'; // Import useRoute hook
+import { useNavigation, useFocusEffect} from '@react-navigation/native'; // Import useRoute hook
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { Feather } from '@expo/vector-icons';
 import { globalHeader } from '../../styles_kit/globalHeader';
@@ -29,7 +29,7 @@ const SearchBar = () => {
 const FirstScreen = ({}) => {
     const navigation = useNavigation();
 
-    const [appointments, setAppointments] = useState([]);
+    const [appointments, setAppointments] = useState({});
     const [isLoading, setIsLoading] = useState(false);
 
     const fetchDonorAppointments = async () => {
@@ -44,11 +44,11 @@ const FirstScreen = ({}) => {
         }
     };
 
-
-    useEffect(() => {
-        fetchDonorAppointments();
-    },{isLoading}); // Tr // Add isLoading to the dependency array so that the effect runs when isLoading changes
-    
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchDonorAppointments();
+        }, [])
+    );
 
     const handleViewPress = (appointment) => {
         navigation.navigate('DonorAppointmentConfirmation', { formData: appointment.AppointmentDonorID });
@@ -70,18 +70,17 @@ const FirstScreen = ({}) => {
                 <View style={styles.line} />
             </View>
 
-            {appointments.map((appointment, index) => (
+            {Object.keys(appointments).map((key, index) => (
                 <View key={index} style={styles.DonorSecondContainer}>
                     <View style={styles.donorInfoSecondContainer}>
-                        <Text>{appointment.fullName}</Text>
+                        <Text>{appointments[key].fullName}</Text>
                     </View>
                     <View style={styles.donorInfoSecondContainer}>
-                        <Text>{appointment.DonationStatus}</Text>
+                        <Text>{appointments[key].DonationStatus}</Text>
                     </View>
-                    <TouchableOpacity style={styles.logInButton} onPress={() => handleViewPress(appointment)}>
+                    <TouchableOpacity style={styles.logInButton} onPress={() => handleViewPress(appointments[key])}>
                         <Text style={styles.logInButtonText}>View</Text>
                     </TouchableOpacity>
-
                 </View>
             ))}
         </View>
@@ -93,7 +92,7 @@ const FirstScreen = ({}) => {
 const SecondScreen = () => {
     const navigation = useNavigation();
 
-    const [requests, setRequests] = useState([]);
+    const [requests, setRequests] = useState({});
     const [isLoading, setIsLoading] = useState(false);
 
     const fetchMakeRequest = async () => {
@@ -108,10 +107,11 @@ const SecondScreen = () => {
         }
     };
 
-   
-    useEffect(() => {
-        fetchMakeRequest();
-    },{isLoading});
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchMakeRequest();
+        }, [])
+    );
 
     const handleViewPress = (request) => {
         console.log("id", request.RequestID);
@@ -122,13 +122,13 @@ const SecondScreen = () => {
             <View style={styles.tabContent}>
                 <SearchBar />
                 <View style={styles.RequestorContainer}>
-                    <View style={styles.RequestorInfoContainer}>
+                    <View style={{position: "absolute", left: 50}}>
                         <Text>Name</Text>
                     </View>
-                    <View style={styles.RequestorInfoContainer}>
+                    <View style={{position: "absolute", right:"49%"}}>
                         <Text>Status</Text>
                     </View>
-                    <View style={styles.RequestorInfoContainer}>
+                    <View style={{position: "absolute", right: "25%"}}>
                         <Text>Category</Text>
                     </View>
                 </View>
@@ -137,23 +137,22 @@ const SecondScreen = () => {
                 </View>
 
 
-                {requests.map((request, index) => (
-                <View key={index} style={styles.RequestorSecondContainer}>
-                    <View style={styles.RequestorInfoSecondContainer}>
-                        <Text>{request.fullName}</Text>
+                {Object.keys(requests).map((key, index) => (
+                <View key={index} style={[styles.RequestorSecondContainer]}>
+                    <View style={{}}>
+                        <Text style ={{width: "100%"}}>{requests[key].fullName}</Text>
                     </View>
-                    <View style={styles.RequestorInfoSecondContainer}>
-                        <Text>{request.RequestStatus}</Text>
+                    <View style={{}}>
+                        <Text>{requests[key].RequestStatus}</Text>
                     </View>
-                    <View style={styles.RequestorInfoSecondContainer}>
-                        <Text>{request.BabyCategory}</Text>
+                    <View style={{}}>
+                        <Text>{requests[key].BabyCategory}</Text>
                     </View>
-                    <TouchableOpacity style={styles.logInButton} onPress={() => handleViewPress(request)}>
+                    <TouchableOpacity style={styles.logInButton} onPress={() => handleViewPress(requests[key])}>
                         <Text style={styles.logInButtonText}>View</Text>
                     </TouchableOpacity>
-
                 </View>
-            ))}
+                ))}
 
 
 
@@ -280,17 +279,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: 5,
-        marginRight: 5
+        paddingHorizontal: 5
     },
     donorInfoSecondContainer: {
         alignItems: 'center',
         flex: 1
     },
     RequestorContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        position: "relative",
         paddingVertical: 10,
-        marginRight: 50
+        width: "100%",
     },
     RequestorInfoContainer: {
         alignItems: 'center',
@@ -300,17 +298,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: 5,
-        marginRight: 5
-     
-
+        justifyContent: "space-between",
+        width:"95%"
     },
     RequestorInfoSecondContainer: {
         alignItems: 'center',
-        flex:1
-
-
-        
+        flex: 1
     },
+    
     logInButton: {
         backgroundColor: 'white',
         height: '90%',

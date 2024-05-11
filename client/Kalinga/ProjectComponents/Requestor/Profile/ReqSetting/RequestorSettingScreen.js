@@ -21,6 +21,8 @@ export default function SettingScreen({route}) {
   
   const userInformation = route.params.userInformation
   const UserName = route.params.UserName
+  const token = route.params.token
+  
   const navigation = useNavigation(); 
   const deleteToken = async () => {
     const token = await AsyncStorage.getItem('token')
@@ -56,9 +58,14 @@ export default function SettingScreen({route}) {
             routes: [{ name: Page }],
         })
     );
+    if( Page === "ResetPassword"){
+      navigation.navigate('ResetPassword');
+      return
+    }
     return
     }
-    navigation.navigate(Page, {userInformation: userInformation, userName: UserName}); // Navigate to the Login screen
+
+    navigation.navigate(Page, {userInformation: userInformation, userName: UserName, token: token}); // Navigate to the Login screen
   }
 
   const [profilePic, setProfilePic] = useState("")

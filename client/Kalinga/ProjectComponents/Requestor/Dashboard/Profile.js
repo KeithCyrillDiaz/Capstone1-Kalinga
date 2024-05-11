@@ -25,6 +25,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const RequestorProfile = ({route}) => {
 
   const userInformation = route.params.userInformation
+  const token = route.params.token
+
   let nameArray =  userInformation.fullName.split(' ').filter(name => name.trim() !== '')
   let UserName;
 
@@ -54,11 +56,10 @@ const RequestorProfile = ({route}) => {
 const navigatePage = (Page) => {
 
   if(Page === "RequestorSettingScreen"){
-    navigation.navigate(Page, {userInformation: userInformation, UserName: UserName})
+    navigation.navigate(Page, {userInformation: userInformation, UserName: UserName, token: token})
     return
   }
-    navigation.navigate(Page); // Navigate to the Login screen
-  
+  navigation.navigate(Page, {userInformation: userInformation, token: token})
 };
 
 const [profilePic, setProfilePic] = useState("")
@@ -149,7 +150,7 @@ const [profilePic, setProfilePic] = useState("")
                       </TouchableOpacity>
                        
                  
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={() => navigatePage("RequestorFavoriteArticles")}>
                       <View style = {styles.rowBox}>
                           <View style = {styles.rowMenu}>
                             <MaterialCommunityIcons style = {styles.iconBabyBottle} name="baby-bottle-outline" size={38} color="#E60965"/>

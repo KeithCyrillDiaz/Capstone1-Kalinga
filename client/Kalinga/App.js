@@ -3,10 +3,13 @@ import React, {useState, useEffect} from 'react';
 import * as Font from 'expo-font';
 import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import * as Linking from 'expo-linking'
 
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
 import { UserLocationContext } from './Context/UserLocationContext.js';
+
+
 
 //InitialScreenPages
 import SplashScreen from './ProjectComponents/InitialScreenPages/splashscreen';
@@ -68,6 +71,7 @@ import DonorAboutUs from './ProjectComponents/Donor/Profile/DonorSettngs/DonorAb
 import DonorChangePassword from './ProjectComponents/Donor/Profile/DonorSettngs/DonorChangePassword.js'
 import DonorEditPersonalScreen from './ProjectComponents/Donor/Profile/DonorSettngs/DonorEditPersonalScreen.js'
 import DonorHelpAndSupport from './ProjectComponents/Donor/Profile/DonorSettngs/DonorHelpAndSupport.js'
+import DonorHelpAndSupportSuccess from './ProjectComponents/Donor/Profile/DonorSettngs/DonorHelpAndSupportSuccess.js'
 import DonorLocationScreen from './ProjectComponents/Donor/Profile/DonorSettngs/DonorLocationScreen.js'
 import DonorNotification from './ProjectComponents/Donor/Profile/DonorSettngs/DonorNotification.js'
 import DonorPersonalInfoScreen from './ProjectComponents/Donor/Profile/DonorSettngs/DonorPersonalInfoScreen.js'
@@ -83,6 +87,8 @@ import AppointmentConfirmation from './ProjectComponents/Donor/Home/MakeDonation
 import DonorHelpAndSupportMessage from './ProjectComponents/Donor/Profile/DonorSettngs/DonorHelpAndSupportMessage.js'
 import AppointmentConfirmationMessage from './ProjectComponents/Donor/Home/MakeDonation/AppointmentConfirmationMessage.js';
 import ValidUserExplore from './ProjectComponents/Donor/Dashboard/Explore/ExploreFinal.js'
+
+
 {/* Requestor */}
 import RequestorForum from './ProjectComponents/Requestor/Home/Forum/RequestorForumPage.js'
 import RequestorChatAssistance from './ProjectComponents/Requestor/Home/InstantMessaging/RequestorChatAssistance'
@@ -95,6 +101,8 @@ import RequestorAboutUs from './ProjectComponents/Requestor/Profile/ReqSetting/R
 import RequestorChangePassword from './ProjectComponents/Requestor/Profile/ReqSetting/RequestorChangePassword'
 import RequestorEditPersonalScreen from './ProjectComponents/Requestor/Profile/ReqSetting/RequestorEditPersonalScreen.js'
 import RequestorHelpAndSupport from './ProjectComponents/Requestor/Profile/ReqSetting/RequestorHelpAndSupport.js'
+import RequestorHelpAndSupportMessage from './ProjectComponents/Requestor/Profile/ReqSetting/RequestorHelpAndSupportMessage.js'
+import RequestorHelpAndSupportSuccess from './ProjectComponents/Requestor/Profile/ReqSetting/RequestorHelpAndSupportSuccess.js'
 import RequestorLocationScreen from './ProjectComponents/Requestor/Profile/ReqSetting/RequestorLocationScreen.js'
 import RequestorNotification from './ProjectComponents/Requestor/Profile/ReqSetting/RequestorNotification.js'
 import RequestorPersonalInfoScreen from './ProjectComponents/Requestor/Profile/ReqSetting/RequestorPersonalInfoScreen.js'
@@ -152,6 +160,7 @@ import ForumPage from './ProjectComponents/Donor/Home/Forum/ForumPage.js';
 import ImageViewer from './screens/Admin/ScreeningForm/Donor/ImageViewer.js';
 
 
+
 const getFonts = async () => {
   await Font.loadAsync({
     'Open-Sans-Bold': require('./assets/Fonts/OpenSans_Condensed-Bold.ttf'),
@@ -187,18 +196,24 @@ export default function App() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
+  const checkPermission = async () => {
+    const permission = await AsyncStorage.getItem("LocationPermission")
+    console.log("permission: ",permission)
+    if(permission === "true"){
+      await AsyncStorage.setItem("LocationPermission", "true")
+      try{
+        let location = await Location.getCurrentPositionAsync({});
+        setLocation(location);
+      } catch (error) {
+        console.log("error Location permission", error)
+        await AsyncStorage.setItem("LocationPermission", "false")
       }
+     
+    }
+  }
 
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-
-    })();
+  useEffect(() => {
+    checkPermission()
   }, []);
 
   if (fontsLoaded) {
@@ -248,11 +263,10 @@ export default function App() {
              <Stack.Screen name="DonorApproved" component={DonorApproved} />
              <Stack.Screen name="ApplyAsDonorStack" component={ApplyAsDonorStack} />
              <Stack.Screen name="ApplyAsRequestorStack" component={ApplyAsRequestorStack}/>
-             
+             <Stack.Screen name="Instant Messages" component={InstantMess} />
 
 
              {/*Donor*/}
-             <Stack.Screen name="Instant Messages" component={InstantMess} />
              <Stack.Screen name="DonorForum" component={DonorForum} />
              <Stack.Screen name="Chat Assistance" component={ChatAssistance} />
              <Stack.Screen name="Donor Educational Contents" component={DonorEducContents} />
@@ -274,6 +288,7 @@ export default function App() {
              <Stack.Screen name="DonorChangePassword" component={DonorChangePassword} />
              <Stack.Screen name="DonorEditPersonalScreen" component={DonorEditPersonalScreen} />
              <Stack.Screen name="DonorHelpAndSupport" component={DonorHelpAndSupport} />
+             <Stack.Screen name="DonorHelpAndSupportSuccess" component={DonorHelpAndSupportSuccess} />
              <Stack.Screen name="DonorLocationScreen" component={DonorLocationScreen} />
              <Stack.Screen name="DonorNotification" component={DonorNotification} />
              <Stack.Screen name="DonorPersonalInfoScreen" component={DonorPersonalInfoScreen} />
@@ -288,6 +303,7 @@ export default function App() {
              <Stack.Screen name="AppointmentConfirmationMessage" component={AppointmentConfirmationMessage} />
              <Stack.Screen name="MyDonationTabs" component={MyDonationTabs} />
              <Stack.Screen name="ValidUserExplore" component={ValidUserExplore} />
+           
         
 
 
@@ -311,6 +327,8 @@ export default function App() {
              <Stack.Screen name="RequestorChangePassword" component={RequestorChangePassword} />
              <Stack.Screen name="RequestorEditPersonalScreen" component={RequestorEditPersonalScreen} />
              <Stack.Screen name="RequestorHelpAndSupport" component={RequestorHelpAndSupport} />
+             <Stack.Screen name="RequestorHelpAndSupportMessage" component={RequestorHelpAndSupportMessage} />
+             <Stack.Screen name="RequestorHelpAndSupportSuccess" component={RequestorHelpAndSupportSuccess} />
              <Stack.Screen name="RequestorLocationScreen" component={RequestorLocationScreen} />
              <Stack.Screen name="RequestorNotification" component={RequestorNotification} />
              <Stack.Screen name="RequestorPersonalInfoScreen" component={RequestorPersonalInfoScreen} />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,8 +7,10 @@ import {
   StatusBar,
   ScrollView,
   Switch,
+  Alert
 } from "react-native";
 import Header from "./Header";
+import { useNavigation } from '@react-navigation/native';
 
 export default function NotificationScreen() {
   const [newArticles, setNewArticles] = useState(false);
@@ -16,6 +18,20 @@ export default function NotificationScreen() {
   const [messageNotification, setMessageNotification] = useState(false);
   const [messageReminders, setMessageReminders] = useState(false);
   const [showInLockscreen, setShowInLockscreen] = useState(false);
+
+  const navigate = useNavigation()
+    
+  useEffect(() => {
+    Alert.alert(
+      "Sorry, this feature is not yet available right now.",
+      "Rest assured, our team is hard at work developing new features to better serve our community. Your continued support means the world to us. Thank you for your patience!",
+      [
+        {
+          text: "Okay",
+        }
+      ]
+    );
+  }, [])
 
   return (
     <SafeAreaView style={bodyStyle.main}>

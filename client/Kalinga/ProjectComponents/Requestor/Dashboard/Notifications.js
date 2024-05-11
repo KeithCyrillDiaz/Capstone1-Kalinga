@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
   ScrollView,
   TouchableOpacity, 
@@ -8,14 +8,27 @@ import {
   StatusBar,
   StyleSheet,
   Modal,
+  Alert
 } from 'react-native';
 import { globalHeader } from "../../../styles_kit/globalHeader.js";
 import { Octicons } from '@expo/vector-icons';
+import { useNavigation, CommonActions, useFocusEffect } from '@react-navigation/native';
+import axios from "axios"
+import { BASED_URL } from '../../../MyConstants.js'
 
-const RequestorNotification = () => {
+
+const RequestorNotification = ({route}) => {
+
+  const userInformation = route.params.userInformation
+  const token = route.params.token.trim()
+
+  const navigation = useNavigation()
+
   const [readNotifications, setReadNotifications] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedNotification, setSelectedNotification] = useState(null);
+  const [selectedNotification, setSelectedNotification] = useState({});
+  const [notifications, setNotification] = useState([])
+
 
   const toggleReadStatus = (index) => {
     setReadNotifications([...readNotifications, index]);
@@ -26,7 +39,14 @@ const RequestorNotification = () => {
   };
 
   const openModal = (index) => {
-    setSelectedNotification(index);
+    const createdAt = new Date(index.createdAt);
+    const formatDate = {
+      ...index,
+      createdAt: `${createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${createdAt.toLocaleDateString()}`
+    }
+
+    console.log("Date: ", formatDate.createdAt)
+    setSelectedNotification(formatDate);
     setModalVisible(true);
     toggleReadStatus(index);
   };
@@ -34,6 +54,62 @@ const RequestorNotification = () => {
   const closeModal = () => {
     setModalVisible(false);
   };
+
+  const fetchNotification = async () => {
+    console.log("Fetching Notifications")
+
+    const response = await axios.get(`${BASED_URL}/kalinga/fetchUnreadNotification/${userInformation.Requestor_ID}`,
+      { 
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      }
+    )
+      if(response.data.messages.code === 1) {
+        console.log("Error fetching Notification: ", response.data.messages.message)
+        Alert.alert("No Notifications", "You currently don't have any notifications.");
+        return
+      }
+      console.log(response.data.messages.message)
+      setNotification(response.data.notifications)
+      return
+  }
+
+  const updateStatus = async (id) => {
+  
+    const response  = await axios.patch(`${BASED_URL}/kalinga/updateStatus/${id}`, null,
+    {
+        headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    })
+
+    if(response.data.messages.message === "Unauthorized User"){
+      await AsyncStorage.multiRemove(['token', 'userInformation', 'DPLink', 'Image_ID']);
+      Alert.alert("Session Expired", "Your session has expired. Please log in again.", [
+        {
+          text: "OK",
+          onPress: () => navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: 'LogIn' }],
+            })
+          ),
+        },
+      ]);
+      return
+    }
+
+    const newNotificaiton = response.data.notification
+    setSelectedNotification(newNotificaiton)
+  }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchNotification()
+      return
+    }, [])
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -47,20 +123,23 @@ const RequestorNotification = () => {
         nestedScrollEnabled={true} 
         showsVerticalScrollIndicator={false}
       >
-        {[1, 2, 3, 4].map((index) => (
+        {notifications.length !== 0 && notifications.map((notification) => (
           <TouchableOpacity
-            key={index}
-            onPress={() => openModal(index)}
+            key={notification.notificationId}
+            onPress={() => {
+              updateStatus(notification.notificationId); 
+              openModal(notification);
+            }}
             style={[
               styles.notificationItem,
-              isRead(index) && styles.readNotificationItem,
+              isRead(notification) && styles.readNotificationItem,
             ]}
           >
-            {!isRead(index) && <View style={styles.dot}></View>}
+            {!isRead(notification) && notification.status === "Unread" && <View style={styles.dot}></View>}
             <View style={styles.notificationContent}>
-              <Text style={styles.notificationTitle}>Your Milk is now ready for Pickup!</Text>
+              <Text style={styles.notificationTitle}>{notification.title}</Text>
               <Text style={styles.notificationDescription}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                {notification.content}
               </Text>
             </View>
           </TouchableOpacity>
@@ -77,13 +156,13 @@ const RequestorNotification = () => {
               <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
                 <Octicons name="x" size={24} color="black" />
               </TouchableOpacity>
-              <Text style={styles.notificationTitle}>Your Milk is now ready for Pickup!</Text>
+              <Text style={styles.notificationTitle}>{selectedNotification.title}</Text>
               <Text style={styles.notificationDescription}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+               {selectedNotification.content}
               </Text>
               <View style={styles.notificationMeta}>
-                <Text style={styles.metaText}>Date and Time: XX:XX AM/PM - XX - XX - XXXX</Text>
-                <Text style={styles.metaText}>MilkBank Location: Lorem ipsum dolor sit amet</Text>
+                <Text style={styles.metaText}>Date and Time: {selectedNotification.createdAt}</Text>
+                <Text style={styles.metaText}>MilkBank Location: {selectedNotification.milkBank}</Text>
               </View>
             </View>
           </View>

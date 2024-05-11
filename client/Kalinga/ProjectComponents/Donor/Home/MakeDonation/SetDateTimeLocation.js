@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { ScrollView, Text, View, StatusBar, StyleSheet, TouchableOpacity, TextInput, Button, Platform } from 'react-native';
+import { ScrollView, Text, View, StatusBar, StyleSheet, TouchableOpacity, TextInput, Alert, Platform } from 'react-native';
 import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute} from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Feather } from '@expo/vector-icons'; // Import Feather icon from Expo
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -10,6 +10,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
 import randomatic from 'randomatic';
 import { format } from 'date-fns';
+import { Picker } from '@react-native-picker/picker';
 
 
 
@@ -22,6 +23,7 @@ const SetDateTimeLocation = () => {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
     const [location, setLocation] = useState('');
+    const [newForm, setNewForm ] = useState(formData)
     const { AppointmentDonorID } = route.params || {};
     const Appointment_DonorID = randomatic('Aa0', 20);
   
@@ -34,11 +36,20 @@ const SetDateTimeLocation = () => {
       setShowTimePicker(Platform.OS === 'ios');
       setSelectedTime(selectedTime || new Date());
     };
-  
+    
+    const checkForm = () => {
+        // console.log("Test", newForm.location)
+        if(newForm.location === undefined) {
+            console.log("Test", newForm.location)
+            Alert.alert("Invalid Milk Bank", "Please select a milk bank before proceeding.")
+            return
+        }
+        handleAppointmentCreation()
+    }
     const handleAppointmentCreation = async () => {
+      
         const appointmentData = {
-          ...formData,
-          location: location,
+          ...newForm,
           selectedDate: selectedDate.toISOString(),
           selectedTime: selectedTime.toISOString(),
         };
@@ -47,10 +58,20 @@ const SetDateTimeLocation = () => {
             // Simulate API call or any processing
             console.log('Appointment data:', appointmentData);
             navigation.navigate('AppointmentConfirmation', { formData: appointmentData });
+            return
           } catch (error) {
             console.error('Error creating appointment:', error);
           }
         };
+
+        const handleChange = (name, value) => {
+            const newData = {
+                ...newForm,
+                [name]: value
+              };
+              setNewForm(newData)
+          };
+        
     return (
         <View style={globalStyles.container}>
             <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
@@ -69,7 +90,7 @@ const SetDateTimeLocation = () => {
                     <TextInput
                     style={styles.inputText}
                     placeholder="MM/DD/YYYY"
-                     placeholderTextColor="#E60965"
+                    placeholderTextColor="#E60965"
                     value={format(selectedDate, 'MM/dd/yyyy')}
                     editable={false}
                      />
@@ -117,17 +138,24 @@ const SetDateTimeLocation = () => {
                     <View>
                         <Text style={styles.AdminMilkLocation}>Milk Bank Location</Text>
                     </View>
-                    <View style={styles.BiginputField}>
-                        <TextInput
-                            placeholder="Quezon City General Hospital - Human Milk Bank"
-                            placeholderTextColor="#E60965"
-                            onChangeText={(text) => setLocation(text)}
-                            value={location}
-                        />
+                    <View style={[styles.BiginputField, {paddingLeft: 0,}]}>
+                         <Picker
+                            selectedValue={newForm.location}
+                            style={{ height: 30, width: "90%", color: '#E60965'}}
+                            onValueChange={(itemValue) =>
+                            handleChange("location", itemValue)
+                            }
+                            >
+                            <Picker.Item label="Select Milk Bank" value="" />
+                            <Picker.Item 
+                                label="Quezon City General Hospital - Human Milk Bank" 
+                                value="Quezon City General Hospital - Human Milk Bank" 
+                            />
+                        </Picker>
                         <FontAwesome6 name="hospital" size={24} color="#E60965" style={styles.icon3} />
                     </View>
 
-                    <TouchableOpacity onPress={handleAppointmentCreation}>
+                    <TouchableOpacity onPress={() => checkForm()}>
                         <View style={styles.buttonContainer}>
                             <Text style={styles.label}>Next</Text>
                         </View>
@@ -144,6 +172,9 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    inputText: {
+        color: "black"
     },
     title: {
         textAlign: 'center',
@@ -210,10 +241,11 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 10,
         borderColor: '#E60965',
-        paddingVertical: 5,
+        paddingVertical: 7,
         paddingHorizontal: 20,
         width: 320,
-        marginBottom: 40
+        marginBottom: 40,
+        color: "black"
     },
     icon: {
         marginLeft: 180 // Adjust the margin right for the icon

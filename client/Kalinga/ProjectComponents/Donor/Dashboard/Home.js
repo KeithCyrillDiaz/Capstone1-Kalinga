@@ -1,8 +1,7 @@
 //Guest Home
-import React from 'react';
-import { ScrollView,Text, View, StatusBar, StyleSheet, TouchableOpacity} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { Entypo } from '@expo/vector-icons';
+import React, {useState } from 'react';
+import { ScrollView,Text, View, StatusBar, StyleSheet, TouchableOpacity, Alert} from 'react-native';
+import { useNavigation, useFocusEffect, CommonActions } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { globalHeader } from '../../../styles_kit/globalHeader.js';
@@ -10,23 +9,23 @@ import { globalStyles } from '../../../styles_kit/globalStyles.js';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
+import axios from 'axios';
+import { BASED_URL } from '../../../MyConstants.js';
 
 
 const DonorHome = ({route}) => {
 
-    const userInformation = route.params.userInformation
     const token = route.params.token
-
+    // console.log("route.params.userInformation: ", route.params.userInformation.fullName)
+    const [userInformation, setUserInformation] = useState(route.params.userInformation)
     const storeInAsync = async () => {
       await AsyncStorage.setItem('userInformation', JSON.stringify(userInformation))
       await AsyncStorage.setItem('token', token)
     }
-    storeInAsync()
-    const nameArray =  userInformation.fullName.split(' ')
     
-    let UserName;
 
+    const nameArray = userInformation.fullName.split(' ')
+    
     if (nameArray[0].endsWith(',')) {
       UserName = nameArray[1];
     } else {
@@ -35,11 +34,80 @@ const DonorHome = ({route}) => {
 
     const navigation = useNavigation();
     
-    const navigatePage = (Page) => {
-        navigation.navigate(Page, {data: userInformation}); // Navigate to the Login screen
-        
+    const navigatePage = async (Page) => {
 
-    };
+      if(Page === "ValidUserExplore"){
+        const result = await checkLocationPermission()
+        console.log("result: ", result)
+        if(!result)return
+      }
+      navigation.navigate(Page, {data: userInformation, token: token}); // Navigate to the Login screen
+  };   
+  
+  const checkLocationPermission = async () => {
+
+    const permission = await AsyncStorage.getItem("LocationPermission")
+    console.log("permission: ",permission)
+    if(!permission || permission === "false"){
+      Alert.alert(
+        "Location Access Denied",
+        "To use this feature, please grant permission to access your location."
+      );
+      if(userInformation.userType === "Donor"){
+        navigation.navigate("DonorLocationScreen")
+        return
+      } else {
+        navigation.navigate("RequestorLocationScreen")
+        return
+      }
+      return false
+    } else return true
+  }
+    
+    const fetchUpdateduserInfo = async () => {
+      console.log("Fetching Updated userInformation")
+      try{
+
+        const response = await axios.post(`${BASED_URL}/kalinga/tokenLogin/${userInformation.Donor_ID}`,
+          {userType: userInformation.userType },
+          { 
+            headers: {
+              Authorization: `Bearer ${token}`,
+            }
+          }
+        );
+        console.log(response.data.messages.message)
+        if(response.data.messages.message === "Unauthorized User"){
+          await AsyncStorage.multiRemove(['token', 'userInformation', 'DPLink', 'Image_ID']);
+          Alert.alert("Session Expired", "Your session has expired. Please log in again.", [
+            {
+              text: "OK",
+              onPress: () => navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: 'LogIn' }],
+                })
+              ),
+            },
+          ]);
+          return
+        }
+
+        setUserInformation(response.data.userInformation)
+        return
+      } catch(error){
+        console.log("Error fetching Data: ", error) 
+        return
+      }
+    }
+            
+    useFocusEffect(
+      React.useCallback(() => {
+        fetchUpdateduserInfo()
+        storeInAsync()
+      }, [])
+  );
+
     return (
       <View style={[globalStyles.container, {marginTop: "-5%"}]}>
         <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
@@ -78,7 +146,7 @@ const DonorHome = ({route}) => {
               </View>
 
               <View style = {styles.flex_Row}>
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("Instant Messages")}>
+                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("Chat Assistance")}>
                 <FontAwesome5 name="robot" size={70} color="#E60965"/>
                   <View style = {styles.LabelCenter}>
                     <Text style = {styles.Label}>Instant Messaging</Text>

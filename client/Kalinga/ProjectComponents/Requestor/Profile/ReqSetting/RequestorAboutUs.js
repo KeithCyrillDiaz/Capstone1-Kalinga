@@ -12,6 +12,12 @@ import {
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import Header from "./Header";
+import RogineImage from '../../../../assets/Developers/Rogine.jpg'
+import AliImage from '../../../../assets/Developers/Ali.png'
+import JeannahImage from '../../../../assets/Developers/Jana.jpg'
+import BeverlyImage from '../../../../assets/Developers/Beverly.jpg'
+import KeithImage1 from '../../../../assets/Developers/Keith1.jpg'
+import KeithImage2 from '../../../../assets/Developers/Keith2.jpg'
 
 export default function AboutUs() {
   return (
@@ -29,7 +35,7 @@ export default function AboutUs() {
           <Text style={{ fontWeight: "bold", fontSize: 32, color: "#E60965" }}>
             Meet the Developers.
           </Text>
-          <Text style={{ color: "#E60965", fontSize: 16 }}>
+          <Text style={{ color: "#E60965", fontSize: 16, }}>
             Welcome to the heart of Kalinga! Our dedicated team of developers is
             passionate about creating a positive impact on infant health through
             the Kalinga App. Get to know the minds behind the app:
@@ -43,8 +49,8 @@ export default function AboutUs() {
               justifyContent: "center",
               alignItems: "center",
             }}>
-            <DeveloperProfile name={"Alisha Arafol"} role={"Role"} />
-            <DeveloperProfile name={"Rogine Cubelo"} role={"Role"} />
+            <DeveloperProfile name={"Alisha Arafol"} role={"UI/UX Designer & Front-End Developer"}  image={AliImage}/>
+            <DeveloperProfile name={"Rogine Cubelo"} role={"Group Leader & Full Stack Developer"} image={RogineImage}/>
           </View>
         </View>
 
@@ -53,12 +59,13 @@ export default function AboutUs() {
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
+            marginBottom: 20
           }}>
-          <DeveloperProfile name={"Beverly Somodio"} role={"Role"} />
-          <DeveloperProfile name={"Keith Diaz"} role={"Role"} />
+          <DeveloperProfile name={"Beverly Somodio"}  role={"Full Stack Developer"} image={BeverlyImage} />
+          <DeveloperProfile name={"Keith Diaz"} role={"Full Stack Developer"} image={KeithImage2} />
         </View>
 
-        <DeveloperProfile name={"Jeannah Padasas"} role={"Role"} />
+        <DeveloperProfile name={"Jeannah Padasas"} role={"UI/UX Designer & Quality Assurance"} image={JeannahImage}/>
         <Text
           style={{
             marginVertical: 24,
@@ -66,7 +73,7 @@ export default function AboutUs() {
             fontSize: 16,
             color: "#E60965",
           }}>
-          Get in touch with us at KalingaApp@gmail.com
+          Get in touch with us at No.reply.kalingabreastmilkapp@gmail.com
         </Text>
       </ScrollView>
     </SafeAreaView>
@@ -108,7 +115,13 @@ const DeveloperProfile = ({ name, role, image }) => {
             justifyContent: "center",
             alignItems: "center",
           }}>
-          <Image source={require("../../../../assets/Profile_female.png")} />
+          <Image source={image} 
+            style = {{
+              height: 120,
+              width: 120,
+              borderRadius: 100
+            }}
+          />
         </View>
       </View>
 

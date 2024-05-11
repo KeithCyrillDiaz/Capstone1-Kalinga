@@ -1,42 +1,54 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, Text, View,ScrollView, StatusBar, StyleSheet, TouchableOpacity, ActivityIndicator} from 'react-native';
+import { 
+  SafeAreaView, 
+  Text, 
+  View,
+  ScrollView, 
+  StatusBar, 
+  StyleSheet, 
+  TouchableOpacity, 
+  ActivityIndicator,
+  Alert
+} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { BASED_URL } from '../../../../MyConstants.js';
-import { globalHeader } from '../../../../styles_kit/globalHeader.js';
-import { useNavigation } from '@react-navigation/native';
-
+import axios from 'axios'
+import { useFocusEffect } from '@react-navigation/native';
 
 
 const Tab = createBottomTabNavigator()
 
 
-const MyDonation = () => {
+const MyDonation = ({route}) => {
+  // console.log("route:", route.params)
+  const userInformation = route.params.userInformation
+  const token = route.params.token
+  const Donor_ID = userInformation.Donor_ID;
   const [loading, setLoading] = useState(true);
   const [totalMilkRequested, setTotalMilkRequested] = useState(0);
   const [completedRequests, setCompletedRequests] = useState(0);
-  const Donor_ID ='tSUnvRQj7m990c8CQcVQ';
-
-
  
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        // Make an API call to fetch data from the backend
-        const response = await axios.get(`${BASED_URL}/kalinga/getDonorStats/${Donor_ID}`);
-        const { totalMilkRequested, completedRequestsCount } = response.data;
-        setTotalMilkRequested(totalMilkRequested);
-        setCompletedRequests(completedRequestsCount);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false); // Update loading state to false after data fetching
-      }
-    };
+  const fetchUserData = async () => {
+    try {
+      // Make an API call to fetch data from the backend
+      const response = await axios.get(`${BASED_URL}/kalinga/getDonorStats/${Donor_ID}`);
+      const { totalMilkRequested, completedRequestsCount } = response.data;
+      setTotalMilkRequested(totalMilkRequested);
+      setCompletedRequests(completedRequestsCount);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false); // Update loading state to false after data fetching
+    }
+  };
 
-    fetchUserData();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchUserData();
+    }, [])
+  );
 
   if (loading) {
     return (
@@ -83,7 +95,7 @@ const MyDonation = () => {
 
           
           </View>
-          <TouchableOpacity style={styles.downloadButton}>
+          <TouchableOpacity onPress={() => Alert.alert("Sorry, this feature is not yet available right now. ", "Rest assured, our team is hard at work developing new features to better serve our community. Your continued support means the world to us. Thank you for your patience!")} style={styles.downloadButton}>
               <Text style={styles.buttonText}>Download as PDF</Text>
             </TouchableOpacity>
 

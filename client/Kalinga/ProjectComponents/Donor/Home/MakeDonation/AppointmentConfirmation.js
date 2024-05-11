@@ -1,28 +1,72 @@
     import React, { useState, useEffect} from 'react';
-    import { ScrollView, Text, View, StatusBar, StyleSheet, TouchableOpacity, TextInput, Button, Platform, ActivityIndicator  } from 'react-native';
+    import { 
+      ScrollView, 
+      Text, 
+      View, 
+      StatusBar, 
+      StyleSheet, 
+      TouchableOpacity, 
+      TextInput, 
+      Alert,
+    } from 'react-native';
     import { globalHeader } from '../../../../styles_kit/globalHeader.js';
     import { globalStyles } from '../../../../styles_kit/globalStyles.js';
     import { useNavigation, useRoute } from '@react-navigation/native'; // Correct import
-    import DateTimePicker from '@react-native-community/datetimepicker';
-    import { Feather } from '@expo/vector-icons'; // Import Feather icon from Expo
     import { FontAwesome5 } from '@expo/vector-icons';
     import { MaterialIcons } from '@expo/vector-icons';
     import { FontAwesome6 } from '@expo/vector-icons';
-    import randomatic from 'randomatic';
     import { format } from 'date-fns';
     import { BASED_URL } from '../../../../MyConstants.js';
 
 
     const AppointmentConfirmation = () => {
+
         const navigation = useNavigation();
         const route = useRoute();
         const { formData } = route.params || {};
         
         const navigatePage = (Page) => {
-          navigation.navigate(Page);
+          navigation.navigate(Page, {data: formData})
+          return
         };
       
+        const confirmation = (status) => {
+          if(status === "Confirm"){
+            Alert.alert(
+              'Confirm Appointment Creation',
+              'Are you sure you want to create this appointment?',
+              [
+                {
+                  text: 'Yes',
+                  onPress: () => handleAppointmentCreation()
+                },
+                {
+                  text: 'Cancel',
+                  style: 'cancel',
+                },
+              ]
+            );
+          } else {
+            Alert.alert(
+              'Cancel Appointment Creation',
+              'Are you sure you want to create this appointment?',
+              [
+                {
+                  text: 'Yes',
+                  onPress: () =>  navigatePage("SetAnAppointment")
+                },
+                {
+                  text: 'Cancel',
+                  style: 'cancel',
+                },
+               
+              ]
+            );
+          }
+        
+        }
         const handleAppointmentCreation = async () => {
+        
             try {
               const response = await fetch(`${BASED_URL}/kalinga/createAppointment`,
                {
@@ -69,8 +113,9 @@
                     editable={false}
                   />
                   <TextInput
-                    style={[styles.BiginputField, { color: '#E60965' }]}
+                    style={[styles.BiginputField, { color: '#E60965', paddingVertical: 10 }]}
                     placeholder="Email Address"
+                    multiline= {true}
                     placeholderTextColor="#E60965"
                     value={`Email Address: ${formData.emailAddress || ''}`}
                     editable={false}
@@ -87,7 +132,7 @@
                     style={[styles.BiginputField, { color: '#E60965' }]}
                     placeholder="City"
                     placeholderTextColor="#E60965"
-                    value={`Home Address: ${formData.city || ''}`}
+                    value={`City: ${formData.city || ''}`}
                     editable={false}
                   />
 
@@ -102,7 +147,7 @@
                     style={[styles.BiginputField, { color: '#E60965' }]}
                     placeholder="Amount of Milk to be Donated"
                     placeholderTextColor="#E60965"
-                    value={`Amount of Milk to be Donated: ${formData.milkAmount || ''}`}
+                    value={`Amount of Milk to be Donated: ${formData.milkAmount || ''}` + " ml"}
                     editable={false}
                   />
                   <View>
@@ -139,23 +184,24 @@
                     <TextInput
                         style={{ flex: 1, color: '#E60965' }} // Set flex to 1 to allow TextInput to take up remaining space
                         placeholder="Location"
+                        multiline={true}
                         placeholderTextColor="#E60965"
                         value={formData.location || ''}
                         editable={false}
                     />
                     <FontAwesome6 name="hospital" size={24} color="#E60965" style={styles.icon3} />
                     </View>
-             <View style={styles.AdminButton}>
-            <TouchableOpacity onPress={handleAppointmentCreation}>
-                    <View style={styles.ConfirmbuttonContainer}>
-                        <Text style={styles.label}>Confirm</Text>
-                    </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigatePage("SetAppointment")}>
-                    <View style={styles.CancelbuttonContainer}>
-                        <Text style={styles.label}>Cancel</Text>
-                    </View>
-            </TouchableOpacity>
+             <View style={[styles.AdminButton, {marginBottom: 40}]}>
+              <TouchableOpacity onPress={() => confirmation("Confirm")}>
+                      <View style={styles.ConfirmbuttonContainer}>
+                          <Text style={styles.label}>Confirm</Text>
+                      </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={() => confirmation("Cancel")}>
+                      <View style={styles.CancelbuttonContainer}>
+                          <Text style={styles.label}>Cancel</Text>
+                      </View>
+              </TouchableOpacity>
                 </View>
                 </View>
               )}

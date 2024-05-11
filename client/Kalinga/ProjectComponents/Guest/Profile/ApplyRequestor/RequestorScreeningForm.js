@@ -22,9 +22,11 @@ const ApplyAs_DonorISF = () => {
   const [userBirthday, setUserBirthDay] = useState("")
   const [userAge, setUserAge] = useState("")
   const [isEmailExisted, setIsEmailExisted] = useState(false)
+  const [isEmailValid, setIsEmailValid]= useState(false)
   const [value, setValue] = useState(null);
   const [isFormFilled, setIsFormFilled] = useState(false)
   const [textFocus, setTextFocus] = useState(false)
+  
 
   //Dropdowns
   const [openSexDropdown, setOpenSexDropdown] = useState(false)
@@ -49,7 +51,7 @@ const ApplyAs_DonorISF = () => {
   //Modal
   const [openGestationInfo, setOpenGestationInfo] = useState(false)
 
-  const applicantId = randomatic('Aa0', 20);
+  const applicantId = randomatic('Aa0', 20) + Date.now();
   const [screeningFormData, setScreeningFormData] = useState({
     Applicant_ID: applicantId,
     userType: "Requestor",
@@ -188,13 +190,25 @@ useEffect(() => {
 
 const handleChangeText = (name, value) => {
   setScreeningFormData({ ...screeningFormData, [name]: value });
-
-  if(name === "email" && value.includes("@") && (value.endsWith("com") || value.endsWith("ph"))){
-    console.log("Email: ", value)
-    checkEmail(value)
-  }
-  return
+    if(name === "email" && value.includes("@") && (value.endsWith("com") || value.endsWith("ph"))){
+      console.log("Email: ", value)
+      setIsEmailValid(true)
+      checkEmail(value)
+    }
+    return
 };
+
+useEffect(() => {
+  if(screeningFormData.email !== ""){
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!emailPattern.test(screeningFormData.email)){
+      setIsEmailValid(false)
+    } 
+  }
+},[screeningFormData.email])
+
+
+
   const navigation = useNavigation();
 
   const navigatePage = (Page, Data) => {
@@ -404,13 +418,22 @@ const formatCity = (city) => {
             keyboardType="email-address"
           />
         </View>
-        {isEmailExisted && (
+        {isEmailExisted && isEmailValid && (
           <Text 
           style = {{
             marginLeft: "10%", 
             marginTop: 5, 
             marginBottom: -10, 
-            color: "red"}}>Email is already existing!</Text>
+            color: "red"}}>Email is already existing</Text>
+        )}
+
+        {!isEmailValid && screeningFormData.email !=="" && (
+          <Text 
+          style = {{
+            marginLeft: "10%", 
+            marginTop: 5, 
+            marginBottom: -10, 
+            color: "red"}}>Please enter a valid email address </Text>
         )}
         <View style={[styles.inputPhoneNumberContainer, { elevation: 5 }]}>
           <TextInput

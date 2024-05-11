@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, Text, View,ScrollView, StatusBar, StyleSheet, TouchableOpacity, Image, ActivityIndicator, TextInput} from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { 
+  SafeAreaView, 
+  Text, 
+  View,
+  ScrollView, 
+  StatusBar,
+   StyleSheet, 
+  Alert,
+  ActivityIndicator, 
+  TextInput} from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios'; // Import axios for API requests
 import { format } from 'date-fns';
 import { BASED_URL } from '../../../../MyConstants.js';
@@ -10,43 +19,36 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
 
 
-const OngoingDonations = () => {
+const OngoingDonations = ({route}) => {
+
+  const userInformation = route.params.userInformation
+  const token = route.params.token
+  const Donor_ID = userInformation.Donor_ID;
+  const [formData, setFormData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
  
-  const navigation = useNavigation();
-  const route = useRoute();
-  const Donor_ID ='dHphY4FyVPlOCHAtCG3a';
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedTime, setSelectedTime] = useState(new Date());
-  const [formData, setFormData] = useState({
-    fullName: '',
-    phoneNumber: '',
-    emailAddress: '',
-    homeAddress: '',
-    medicalCondition: '',
-    milkAmount: '',
-    location: '',
-    selectedDate: selectedDate.toISOString(),
-    selectedTime: selectedTime.toISOString(),
-});
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-      fetchData();
-  }, []);
-
-  const fetchData = async () => {
+ const fetchData = async () => {
       try {
+        setLoading(false);    
           const response = await axios.get(`${BASED_URL}/kalinga/getOngoingDonation/${Donor_ID}`);
+          if(response.data.messages.code === 1) {
+            Alert.alert("No Ongoing Donation", "You currently don't have any ongoing donations.");
+            setFormData([])
+            return
+          }
           const responseData = response.data;
+          const formDataFromResponse = responseData.ongoingDonation;
+          getDateTime(formDataFromResponse)
 
-          const formDataFromResponse = responseData.DonationData[0];
-  
           setFormData(formDataFromResponse);
 
-          setLoading(false); 
       } catch (error) {
           console.log('Error fetching data:', error);
-          setLoading(false); 
+          
+      } finally {
+        setLoading(false); 
       }
   };
 
@@ -54,12 +56,35 @@ const OngoingDonations = () => {
       return <ActivityIndicator size="large" color="#E60965" />;
   }
 
-  const navigatePage = (Page) => {
-      navigation.navigate(Page); // Navigate to the Login screen
-  };
+  const getDateTime = (DateAndTime) => {
+    
+    const date = new Date(DateAndTime[0].selectedTime);
+    // Extract the date components
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // Months are 0-indexed, so add 1
+    const day = date.getDate();
 
+    // Extract the time components
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
 
+    // Format the date and time components as desired
+    const formattedDate = `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
+    const formattedTime = `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
 
+    setDate(formattedDate);
+    setTime(formattedTime);
+
+    console.log("Date:", formattedDate); 
+    console.log("Time:", formattedTime); 
+  }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchData();
+    }, [])
+  );
     return (
              <SafeAreaView style = {styles.container}>
                 <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
@@ -68,48 +93,49 @@ const OngoingDonations = () => {
                  overScrollMode='never'
                  nestedScrollEnabled={true}
                 >
-            {formData && (
-            <View style={styles.container}>
+            
+           {formData !== undefined && formData.map((data, index) => (
+            <View key={index} style={styles.container}>
               <TextInput
                 style={[styles.BiginputField, { color: '#E60965' }]}
                 placeholder="Full Name"
                 placeholderTextColor="#E60965"
-                value={`Full Name: ${formData.fullName || ''}`}
+                value={`Full Name: ${data.fullName}`}
                 editable={false}
               />
               <TextInput
                 style={[styles.BiginputField, { color: '#E60965' }]}
                 placeholder="Phone Number"
                 placeholderTextColor="#E60965"
-                value={`Phone Number: ${formData.phoneNumber || ''}`}
+                value={`Phone Number: ${data.phoneNumber || ''}`}
                 editable={false}
               />
               <TextInput
                 style={[styles.BiginputField, { color: '#E60965' }]}
                 placeholder="Email Address"
                 placeholderTextColor="#E60965"
-                value={`Email Address: ${formData.emailAddress || ''}`}
+                value={`Email Address: ${data.emailAddress || ''}`}
                 editable={false}
               />
               <TextInput
                 style={[styles.BiginputField, { color: '#E60965' }]}
                 placeholder="Home Address"
                 placeholderTextColor="#E60965"
-                value={`Home Address: ${formData.homeAddress || ''}`}
+                value={`Home Address: ${data.homeAddress || ''}`}
                 editable={false}
               />
               <TextInput
                 style={[styles.BiginputField, { color: '#E60965' }]}
                 placeholder="Medical Condition (If Applicable)"
                 placeholderTextColor="#E60965"
-                value={`Medical Condition (If Applicable): ${formData.medicalCondition || ''}`}
+                value={`Medical Condition (If Applicable): ${data.medicalCondition || ''}`}
                 editable={false}
               />
               <TextInput
                 style={[styles.BiginputField, { color: '#E60965' }]}
                 placeholder="Amount of Milk to be Donated"
                 placeholderTextColor="#E60965"
-                value={`Amount of Milk to be Donated: ${formData.milkAmount || ''}`}
+                value={`Amount of Milk to be Donated: ${data.milkAmount || ''}`}
                 editable={false}
               />
               <View>
@@ -117,10 +143,11 @@ const OngoingDonations = () => {
               </View>
               <View style={styles.BiginputField}>
                         <TextInput
-                            style={{ flex: 1, color: '#E60965' }}
+                            style={{color: '#E60965' }}
                             placeholder="Date"
+                            multiline={true}
                             placeholderTextColor="#E60965"
-                            value={format(formData.selectedDate, 'MM/dd/yyyy')}
+                            value={date}
                             editable={false}
                         />
                         <FontAwesome5 name="calendar-alt" size={20} color="#E60965" style={styles.icon} />
@@ -131,10 +158,11 @@ const OngoingDonations = () => {
                     </View>
                     <View style={styles.BiginputField}>
                         <TextInput
-                            style={{ flex: 1, color: '#E60965' }}
+                            style={{color: '#E60965' }}
                             placeholder="Time"
+                            multiline={true}
                             placeholderTextColor="#E60965"
-                            value={format(formData.selectedTime, 'HH:mm')}
+                            value={time}
 
                             editable={false}
                         />
@@ -145,16 +173,17 @@ const OngoingDonations = () => {
                 </View>
                 <View style={styles.BiginputField}>
                 <TextInput
-                    style={{ flex: 1, color: '#E60965' }} // Set flex to 1 to allow TextInput to take up remaining space
+                    style={{color: '#E60965', width: "90%" }} // Set flex to 1 to allow TextInput to take up remaining space
                     placeholder="location"
+                    multiline={true}
                     placeholderTextColor="#E60965"
-                    value={formData.location || ''}
+                    value={data.location || ''}
                     editable={false}
                 />
                 <FontAwesome6 name="hospital" size={24} color="#E60965" style={styles.icon3} />
                 </View>
                 </View>
-              )}
+              ))}
                       
                 </ScrollView>
         
