@@ -107,27 +107,27 @@ export default function () {
             <div className="p-2">
               <div className="px-32">
                 <div className="my-8">
-                  <div className="bg-white relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
+                  <div className="bg-white relative border rounded-md border-primary-default px-8 py-6 my-6">
                     <span className="flex justify-center font-sans text-primary-disabled text-xl font-bold">
                       Hepa B Test Result
                     </span>
                   </div>
-                  <div className="bg-white relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
+                  <div className="bg-white relative border rounded-md border-primary-defaultpx-8 py-6 my-6">
                     <span className="flex justify-center font-sans text-primary-disabled text-xl font-bold">
                       HIV 1 & 2 Test Result
                     </span>
                   </div>
-                  <div className="bg-white relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
+                  <div className="bg-white relative border rounded-md border-primary-default  px-8 py-6 my-6">
                     <span className="flex justify-center font-sans text-primary-disabled text-xl font-bold">
                       Syphilis Test Result
                     </span>
                   </div>
-                  <div className="bg-white relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
+                  <div className="bg-white relative border rounded-md border-primary-default  px-8 py-6 my-6">
                     <span className="flex justify-center font-sans text-primary-disabled text-xl font-bold">
                       Pregnancy Booklet
                     </span>
                   </div>
-                  <div className="bg-white relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
+                  <div className="bg-white relative border rounded-md border-primary-default  px-8 py-6 my-6">
                     <span className="flex justify-center font-sans text-primary-disabled text-xl font-bold">
                       Government ID
                     </span>

@@ -20,6 +20,7 @@ import {
   RequestorAppointments,
   DonorAppointmentConfirmation,
   RequestorAppointmentConfirmation
+
 } from "@/pages";
 import { RootLayout, NotFound, MainLayout, AdminLayout } from "@/layouts";
 import { MobileChecker } from "@/components";
@@ -51,6 +52,8 @@ const router = createBrowserRouter(
         <Route path="requestorAppointments" element={<RequestorAppointments />} />
         <Route path="donorAppointmentConfirmation/:AppointmentDonorID" element={<DonorAppointmentConfirmation />} />
         <Route path="requestorAppointmentConfirmation/:RequestID" element={<RequestorAppointmentConfirmation />} />
+        <Route path="requestorAppointmentConfirmation/:RequestID" element={<DonorVerifPendings />} />
+        <Route path="requestorAppointmentConfirmation/:RequestID" element={<DonorVerification />} />
       </Route>
 
       {/* 404 */}
