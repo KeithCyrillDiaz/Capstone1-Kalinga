@@ -2,10 +2,11 @@
 export const formatDate = (date) => {
   
   const monthArray = ["January","February","March","April","May","June","July","August","September","October","November","December",]
-    const newDate = new Date(date)
+    const newDate = new Date("Fri May 10 2024 15:17:42 GMT+0800 (Philippine Standard Time)")
 
     //get Date
     const monthInt = newDate.getMonth(); // Get the month (0-11)
+    console.log("month: ", monthInt)
     const month = monthArray[monthInt-1]
     const day = newDate.getDate()
     const year = newDate.getFullYear()

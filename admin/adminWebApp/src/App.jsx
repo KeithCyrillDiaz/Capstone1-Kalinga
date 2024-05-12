@@ -44,7 +44,7 @@ const router = createBrowserRouter(
         <Route path="city" element={<City />} />
         <Route path="chart" element={<Chart />} />
         <Route path="DonorVerifPendings" element={<DonorVerifPendings />} />
-        <Route path="DonorVerification" element={<DonorVerification />} />
+        <Route path="DonorVerification/:id" element={<DonorVerification />} />
         <Route path="forum" element={<Forum />} />
         <Route path="approved" element={<Approved />} />
         <Route path="rejected" element={<Rejected />} />

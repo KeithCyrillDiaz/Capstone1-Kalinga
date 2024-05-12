@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 
 import axios from 'axios'
 import { WebHost } from '../../../MyConstantAdmin'
-import { ClipLoader } from "react-spinners";
+import { Loader } from '../../components/loader'
+
 import { RenderDonorVerificationPending } from '../../components/Verification/RenderDonorVerificationPending'
 
 export default function () {
@@ -16,9 +17,11 @@ export default function () {
   }, []);
 
   const [forms, setForms] = useState([])
+  const [loading, setLoading] = useState(false)
   const userType = "Donor"
   const fetchData = async () => {
     try { 
+      setLoading(true)
       console.log("Fetching Data")
       const response = await axios.get(`${WebHost}/kalinga/getScreeningFormsUserType/${userType}`)
       console.log(response.data.screeningForms)
@@ -28,9 +31,10 @@ export default function () {
         setForms(response.data.screeningForms)
         console.log("Fetch Screening Forms Successfully")
       }
-    
     } catch(error) {
       console.log("Something went wrong", error)
+    } finally {
+      setLoading(false)
     }
   }
   console.log("forms: ",forms)
@@ -41,6 +45,7 @@ export default function () {
 
   return (
     <>
+      <Loader isLoading={loading}/>
       <section className="w-full min-h-screen bg-neutral-variant overflow-hidden">
         <div className="grid items-center justify-center grid-cols-[auto_1fr] gap-x-5 py-2 px-10">
           <svg
@@ -106,9 +111,20 @@ export default function () {
           style={{ maxHeight: "calc(100vh - 8rem)" }}
         >
          
-          <div className="p-8 overflow-y-auto bg-white">
+          <div className="p-8 overflow-y-auto">
+          {forms.length===0 && (
+              <div className="bg-white rounded-2xl p-8 mb-4 flex items-center justify-center border border-primary-default">
+                No Pending Donor Application at the moment
+              </div>
+          )}
           {forms.map((form, index) => (
-            <RenderDonorVerificationPending key={index} name={form.fullName} email={form.email} date={form.createdAt}/>
+            <RenderDonorVerificationPending 
+            key={index} 
+            name={form.fullName} 
+            email={form.email} 
+            date={form.createdAt} 
+            form={form}
+            />
           ))}
           
           </div>
