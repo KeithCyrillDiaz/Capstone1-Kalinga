@@ -25,7 +25,7 @@ const screeningFormSchema = new mongoose.Schema({
     ageOfGestation: {type: String},
     medicalCondition: {type: String},
 
-    TypeOfDonor:{type: String},
+    typeOfDonor:{type: String},
     QA: {type: String},
     QB: {type: String},
     Q1: {type: String},
