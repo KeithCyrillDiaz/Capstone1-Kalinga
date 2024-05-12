@@ -21,7 +21,7 @@ const RequestorRequestConfirmation = () => {
             const response = await axios.get(`${BASED_URL}/kalinga/getRequestByID/${RequestID.formData}`);
             const data = response.data.Request;
             
-            // Log fetched data and update formData state
+            // Log fetched data and up formData state
             // console.log('Fetched Data:', data);
             setFormData(data);
         } catch (error) {
