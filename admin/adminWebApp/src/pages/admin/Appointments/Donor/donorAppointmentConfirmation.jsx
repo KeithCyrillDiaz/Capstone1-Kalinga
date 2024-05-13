@@ -127,11 +127,9 @@ const donorAppointmentConfirmation = () => {
 
       const handleCompleteConfirm = async () => {
         try {
-          const response = await axios.put(`${WebHost}/kalinga/updateDonationComplete/${AppointmentDonorID}`);
-          
-          // Log the updated donation status from the response
-          console.log("Status", response.data.DonationStatus);
-          
+          const response = await axios.put(`${WebHost}/kalinga/updateDonationComplete/${AppointmentDonorID}`, {
+            DonationStatus: "Complete",
+          });
           // Handle success response
           console.log("Donation status updated successfully:", response.data);
           setIsCompleteModalOpen(false); // Close the modal

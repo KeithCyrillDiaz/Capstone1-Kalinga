@@ -19,7 +19,7 @@ export interface Appointment extends Document {
   homeAddress: string;
   medicalCondition?: string;
   milkAmount?: string; // Changed from String to { type: String, required: true, validate: numericValidator }
-  selectedDate: string;
+  selectedDate: string; 
   selectedTime: string;
   location: string;
 }
