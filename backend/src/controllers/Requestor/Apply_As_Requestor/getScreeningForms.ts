@@ -6,7 +6,7 @@ export const getScreeningFormsUserType = async (req: express.Request, res: expre
     try {
 
         const screeningForms = await getScreeningFormByUserType(req.params.userType)
-        res.status(200).json({
+        return res.status(200).json({
             messages: {
                 code: 0,
                 message: "Retrieve Sucessfully"

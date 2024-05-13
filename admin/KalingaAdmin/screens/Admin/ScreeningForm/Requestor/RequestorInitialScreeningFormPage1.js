@@ -321,13 +321,13 @@ export const SecondScreen = ({route}) => {
         console.log("ID: ", userID)
         if(status !== "Approved"){
             console.log("status: ", status)
-            const result = await axios.post(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`,{
+            const result = await axios.patch(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`,{
                 status: "Declined"
             })
             return
         }
         console.log("status: ", status)
-        const result = await axios.post(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
+        const result = await axios.patch(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
     }
 
     const approvedUser = (Page) => {

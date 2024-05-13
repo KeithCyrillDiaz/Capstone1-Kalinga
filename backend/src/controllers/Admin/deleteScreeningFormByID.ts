@@ -2,13 +2,12 @@ import express from 'express'
 import { isDeleteScreeningForm, updateIsApprovedScreeningForm  } from '../../models/ApplyAsDonor'
 
 export const deleteScreeningForm = async (req: express.Request, res: express.Response) => {
-    try{
+    try{    
 
-        console.log(req.params.Applicant_ID)
-        console.log(req.body.status)
+        const {status} = req.body
+        console.log("status: ", status)
 
         const body = req.body.status
-        console.log("body: ", body )
         let updateScreeningForm;
         if(body === "Declined"){
             updateScreeningForm = await updateIsApprovedScreeningForm (req.params.Applicant_ID, "No")
