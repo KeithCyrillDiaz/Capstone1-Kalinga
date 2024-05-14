@@ -15,6 +15,7 @@ const screeningFormSchema = new mongoose.Schema({
     email: {type: String},
     contactNumber: {type: String},
     homeAddress: {type: String},
+    Municipality:{type: String},
 
     //Infant Information
     childName: {type: String},
