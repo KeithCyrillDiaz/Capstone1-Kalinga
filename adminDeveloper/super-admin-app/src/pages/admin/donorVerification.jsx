@@ -43,7 +43,7 @@ export default function () {
   };
   return (
     <>
-      <section className="w-full min-h-screen bg-neutral-variant">
+      <section className="w-full h-screen bg-primary-body overflow-hidden">
         <div>
           <div className="flex justify-center m-6">
             <button

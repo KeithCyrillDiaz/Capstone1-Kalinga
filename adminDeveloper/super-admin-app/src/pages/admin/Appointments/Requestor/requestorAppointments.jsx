@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { WebHost } from '../../../../../MyConstantSuperAdmin'
-
+import { WebHost } from "../../../../../MyConstantSuperAdmin";
 
 const requestorAppointments = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -17,7 +16,9 @@ const requestorAppointments = () => {
   useEffect(() => {
     const fetchRequestData = async () => {
       try {
-        const response = await axios.get(`${WebHost}/kalinga/getRequestByUserType/Requestor`);
+        const response = await axios.get(
+          `${WebHost}/kalinga/getRequestByUserType/Requestor`
+        );
         const userData = response.data.request;
         setRequestData(userData);
       } catch (error) {
@@ -31,22 +32,26 @@ const requestorAppointments = () => {
 
   const filteredRequest = requestData
     ? requestData.filter((request) =>
-        request.fullName.toLowerCase().includes(searchQuery.trim().toLowerCase())
+        request.fullName
+          .toLowerCase()
+          .includes(searchQuery.trim().toLowerCase())
       )
     : [];
 
   const indexOfLastRequest = currentPage * requestPerPage;
   const indexOfFirstRequest = indexOfLastRequest - requestPerPage;
-  const currentRequest = filteredRequest.slice(indexOfFirstRequest, indexOfLastRequest);
+  const currentRequest = filteredRequest.slice(
+    indexOfFirstRequest,
+    indexOfLastRequest
+  );
   const totalPages = Math.ceil(filteredRequest.length / requestPerPage);
 
   const goToPage = (page) => {
     setCurrentPage(page);
   };
 
-
   return (
-    <section className="w-full min-h-screen bg-neutral-variant p-8">
+    <section className="w-full h-screen bg-primary-body overflow-hidden">
       <div className="flex justify-end mb-4">
         <div className="relative w-1/2">
           <span className="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -75,7 +80,9 @@ const requestorAppointments = () => {
 
       <div className="flex mb-4 mt-12 mr-8 ">
         <div className="w-1/4 pr-2 text-3xl">
-          <div className="text-pink-500 p-2 text-center rounded-lg font-bold">Name</div>
+          <div className="text-pink-500 p-2 text-center rounded-lg font-bold">
+            Name
+          </div>
         </div>
         <div className="w-1/4 pl-2 text-3xl">
           <div className="text-pink-500 p-2 text-center rounded-lg font-bold">
@@ -91,33 +98,50 @@ const requestorAppointments = () => {
 
       <div className="border-b border-pink-500 w-full my-4"></div>
       {currentRequest.map((request) => (
-            <div className="border-b border-pink-500 w-full my-4">
-        <div key={request._id} className="flex mb-4 mt-12 ml-16 ">
-
-          <div className="w-1/4 text-xl"> {/* Increased right margin */}
-            <div className="text-pink-500 p-2 text-center rounded-lg font-bold">{request.fullName}</div>
-          </div>
-          <div className="w-1/4 text-xl"> {/* Increased right margin */}
-            <div className="text-pink-500 p-2 text-center rounded-lg font-bold">{request.BabyCategory}</div>
-          </div>
-          <div className="w-1/4 pl-8 text-xl"> {/* Increased left and right margin */}
-            <div className="text-pink-500 p-2 text-center rounded-lg font-bold">
-              {request.RequestStatus}
+        <div className="border-b border-pink-500 w-full my-4">
+          <div key={request._id} className="flex mb-4 mt-12 ml-16 ">
+            <div className="w-1/4 text-xl">
+              {" "}
+              {/* Increased right margin */}
+              <div className="text-pink-500 p-2 text-center rounded-lg font-bold">
+                {request.fullName}
+              </div>
+            </div>
+            <div className="w-1/4 text-xl">
+              {" "}
+              {/* Increased right margin */}
+              <div className="text-pink-500 p-2 text-center rounded-lg font-bold">
+                {request.BabyCategory}
+              </div>
+            </div>
+            <div className="w-1/4 pl-8 text-xl">
+              {" "}
+              {/* Increased left and right margin */}
+              <div className="text-pink-500 p-2 text-center rounded-lg font-bold">
+                {request.RequestStatus}
+              </div>
+            </div>
+            <div className="w-1/4 pl-8 ml-36">
+              {" "}
+              {/* Increased left margin */}
+              <Link
+                to={`/admin/requestorAppointmentConfirmation/${request.RequestID}`}
+              >
+                <button className="bg-white text-pink-500 hover:bg-pink-500 hover:text-white py-2 px-4 rounded-lg border border-pink-500">
+                  View
+                </button>
+              </Link>
             </div>
           </div>
-          <div className="w-1/4 pl-8 ml-36"> {/* Increased left margin */}
-            <Link to={`/admin/requestorAppointmentConfirmation/${request.RequestID}`}>
-              <button className="bg-white text-pink-500 hover:bg-pink-500 hover:text-white py-2 px-4 rounded-lg border border-pink-500">View</button>
-            </Link>
-          </div>
-        </div>
         </div>
       ))}
 
-<div className="flex justify-center mt-8">
+      <div className="flex justify-center mt-8">
         <button
           className={`px-4 py-2 border border-pink-500 rounded-lg ${
-            currentPage === 1 ? "bg-pink-500 text-white" : "bg-white text-pink-500 hover:bg-pink-500 hover:text-white"
+            currentPage === 1
+              ? "bg-pink-500 text-white"
+              : "bg-white text-pink-500 hover:bg-pink-500 hover:text-white"
           }`}
           onClick={() => goToPage(currentPage - 1)}
           disabled={currentPage === 1}
@@ -127,7 +151,9 @@ const requestorAppointments = () => {
         <span className="px-4 py-2 text-pink-500">{`${currentPage}/${totalPages}`}</span>
         <button
           className={`px-4 py-2 border border-pink-500 rounded-lg ${
-            currentPage === totalPages ? "bg-pink-500 text-white" : "bg-white text-pink-500 hover:bg-pink-500 hover:text-white"
+            currentPage === totalPages
+              ? "bg-pink-500 text-white"
+              : "bg-white text-pink-500 hover:bg-pink-500 hover:text-white"
           }`}
           onClick={() => goToPage(currentPage + 1)}
           disabled={currentPage === totalPages}
@@ -135,13 +161,6 @@ const requestorAppointments = () => {
           {"Next >"}
         </button>
       </div>
-
-      
-
-
-
-
-
     </section>
   );
 };
