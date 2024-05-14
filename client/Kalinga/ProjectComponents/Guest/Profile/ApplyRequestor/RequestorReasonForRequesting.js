@@ -1,5 +1,5 @@
 //Guest EducLibrary
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
   ScrollView, 
   Text, 
@@ -18,247 +18,136 @@ import {
 import { globalStyles } from "../../../../styles_kit/globalStyles.js"
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { useNavigation } from '@react-navigation/native';
-import { AntDesign } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
-import * as ImagePicker from 'expo-image-picker';
-import * as DocumentPicker from 'expo-document-picker';
 import { CommonActions } from '@react-navigation/native';
-import Spinner from 'react-native-loading-spinner-overlay';
-import ImageZoom from 'react-native-image-pan-zoom';
 import axios from 'axios';
 import { BASED_URL } from "../../../../MyConstants.js";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { UploadImageOrFileToFirebase } from '../../../uploader/fireBaseUploader.js'
+import ImageZoom from 'react-native-image-pan-zoom';
+import { AntDesign } from '@expo/vector-icons';
+import { Uploading } from "../../../uploader/Uploading.js";
 
 const ReasonForRequesting = ({route}) => {
    
-    const { screeningFormData } = route.params;
-    const { input } = route.params;
-    const [selectedImage, setSelectedImage] = useState({});
-    const [selectedFile, setSelectedFile] = useState({});
-    // const [uploadedFiles, setUploadedFiles] = useState({});
+    const { screeningFormData, selectedImage, selectedFile } = route.params;
+
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedImageUrl, setSelectedImageUrl] = useState('');
-    const [fileContainer, setFileContainer] = useState(false)
-    const [scrollableHorizontal, setScrollableHorizontal] = useState(false)
-    const [imageContainer, setImageContainer] = useState(false)
-    const [isLoading, setIsLoading] = useState(false);
+
+    //validity
+    const [isRFRMissing, setIsRFRMissing] = useState(true)
+
+    //uploaderModal
+    const [progressBar, setProgressBar] = useState(0)
+    const [uploadingImage, setUploadingImage] = useState(false)
+    const [imageUri, setIMageUri] = useState("")
+    const [loaderLabel, setLoaderLabel] = useState("")
 
     const handleChangeText = (name, value) => {
       screeningFormData[name] = value
+      if(value === "")setIsRFRMissing(true)
+        else setIsRFRMissing(false)
   };
-    const expoIpAddress = "192.168.1.3"
+
+  const confirmation = () => {
+    const { RFR } = screeningFormData
+    console.log("RFR: ", RFR)
+    if(screeningFormData.RFR === ""){
+      Alert.alert( "Reason for Requesting Required",
+      "Please provide a reason for your request.")
+      return
+    } 
+    Alert.alert('Confirmation','Are you sure you want to submit your Application?',
+    [
+      {
+        text: 'No',
+      },
+      {
+        text: 'Yes',
+        onPress: () => navigatePage(),
+      },
+    ]
+  )
+    
+ }
+
+ useEffect(() => {
+    screeningFormData.RFR=""
+ },[])
+
+
+
     const navigation = useNavigation();
-    const navigatePage = async (Page, Data) => {
+    const navigatePage = async () => {
 
       try {
-      
-        setIsLoading(true);
+   
+        setUploadingImage(true)
         // Send POST request to the specified URL with the form data
         const postScreeningForm = await axios.post(`${BASED_URL}/kalinga/addScreeningForm`, 
           screeningFormData,
         );
         // Log successful response from the backend
-        // console.log('Data saved successfully:', postScreeningForm.data);
+        console.log('Data saved successfully:', postScreeningForm.data);
 
-        const response = await axios.post(`${BASED_URL}/req_MedAbstract`, input);
-  //   // Handle success response...
+        for (const key in selectedImage) {
+          const imageData = selectedImage[key];
           
-        const formData = new FormData();
-        formData.append('image', selectedImage);
-        if(Object.keys(selectedImage).length !== 0){
-            const uploadedImages = new FormData();
-
-            for (const key in selectedImage) {
-              const imageData = selectedImage[key];
-              const file = {
-                uri: imageData.uri,
-                type: 'image/jpeg', // Assuming all image types are JPEG
-                name: `${key}.png`,
-              };
-
-              uploadedImages.append('RequestorImages', file); // Append the file directly
-              uploadedImages.append(`userType`, "Requestor"); 
-              uploadedImages.append(`owner`, imageData.owner);// Append userType
-              uploadedImages.append(`ownerID`, imageData.ownerID);// Append userType
-            }
-    
-            // setUploadedFiles(uploadedImages)
-            const postImages = await axios.post(`${BASED_URL}/kalinga/addMRImageRequestor`, 
-              uploadedImages,
-              {
-                headers: {
-                  'Content-Type': 'multipart/form-data'
-                }
-              }
-            );
-            // console.log('Data saved successfully:', postImages.data);
+        await UploadImageOrFileToFirebase({
+          URI: imageData.uri, 
+          requirmentType: imageData.name,
+          purpose: "Application",
+          type: "Image",
+          userType: "Requestor", 
+          userId:screeningFormData.Applicant_ID,
+          nameOfUser: screeningFormData.fullName,
+          percent: setProgressBar, // for uploading with loader
+          setImage: setIMageUri, // for uploading with loader
+          setLabel: setLoaderLabel  // for uploading with loader
+        });
         }
-       
-          // Log successful response from the backend
-     
-            
-          if(Object.keys(selectedFile).length !== 0){
 
-              const uploadedFiles = new FormData();
 
-              for (const key in selectedFile) {
-                const imageData = selectedFile[key];
-                const file = {
-                  uri: imageData.uri,
-                  type: imageData.type, 
-                  name: imageData.name,
-                };
-                uploadedFiles.append('RequestorFiles', file); // Append the file directly
-                uploadedFiles.append(`userType`, "Requestor"); 
-                uploadedFiles.append(`owner`, imageData.owner);// Append userType
-                uploadedFiles.append(`ownerID`, imageData.ownerID);// Append userType
-                uploadedFiles.append(`requirementType`, imageData.requirementType); // Append owner
-              }
-      
-              // setUploadedFiles(uploadedFiles)
-      
-              const postFiles = await axios.post(`${BASED_URL}/kalinga/addMRFileRequestor`, 
-                uploadedFiles,
-                {
-                  headers: {
-                    'Content-Type': 'multipart/form-data'
-                  }
-                }
-              );
-              // console.log('Data saved successfully:', postFiles.data);
-          }
-          console.log("Data: ", Data)
-          console.log("ScreeningformData: ", screeningFormData)
+        for (const key in selectedFile) {
+          const fileData = selectedFile[key];
+          
+          await UploadImageOrFileToFirebase({
+            URI: fileData.uri, 
+            requirmentType: fileData.name,
+            purpose: "Application",
+            type: "File",
+            userType: "Requestor", 
+            userId:screeningFormData.Applicant_ID,
+            nameOfUser: screeningFormData.fullName,
+            percent: setProgressBar,// for uploading with loader
+            setImage: setIMageUri, // for uploading modal
+            setLabel: setLoaderLabel // for uploading with loader
+          });
+        }
+        
           await AsyncStorage.setItem('Pending', 'True')
           await AsyncStorage.setItem('RequestorApplicant_ID', screeningFormData.Applicant_ID)
-          const Pending = await AsyncStorage.getItem('Pending')
-          const RequestorApplicant_ID = await AsyncStorage.getItem('RequestorApplicant_ID')
-          console.log("Pending: ", Pending)
-          console.log("RequestorApplicant_ID: ", RequestorApplicant_ID)
+          setUploadingImage(false)
+          
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
-              routes: [{ name: Page, params: Data } ], 
+              routes: [{ name:"EmailVerification", params: screeningFormData } ], 
             })
           );
           return
     } catch (error) {
         // Handle error if the request fails
-        setIsLoading(false);
         Alert.alert('Something Went Wrong: Please Try Again');
         console.error('Error saving data:', error);
     } finally {
-      setIsLoading(false);
+
     }
-      navigation.navigate(Page); // Navigate to the Login screen
-    }
+}
 
-
-    const handleImageUpload = async (attachmentType) => {
-      try {
-          const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-          if (status !== 'granted') {
-              Alert.alert('Permission Denied', 'Sorry, we need camera roll permissions to make this work!');
-              return;
-          }
-  
-          const result = await ImagePicker.launchImageLibraryAsync({
-              mediaTypes: ImagePicker.MediaTypeOptions.Images,
-              allowsEditing: true,
-              aspect: [Dimensions.get('window').width, Dimensions.get('window').height],
-              quality: 1,
-              multiple: true, 
-          });
-  
-          if (!result.canceled && result.assets && result.assets.length > 0) {
-              let fileType = ''
-            result.assets.forEach(image => {
-  
-              if (image.type === 'image' || !image.type.includes('/')) {
-                        fileType = image.type + "/jpeg"
-  
-              } else {
-  
-                fileType = image.type
-  
-              }
-            });
-            
-            setSelectedImage(prevState => ({
-                ...prevState,
-              
-            
-                [attachmentType]: ({
-                  uri: result.assets[0].uri,
-                  name: attachmentType, 
-                  type: fileType,
-                  userType: "Requestor",
-                  owner: screeningFormData.fullName,
-                  ownerID: screeningFormData.Applicant_ID
-              
-                })
-                
-            }));
-  
-            const numberOfObjects = Object.keys(selectedImage).length;
-            if (numberOfObjects >= 3) setScrollableHorizontal(true);
-  
-            setImageContainer(true)
-        }
-            
-          
-      } catch (error) {
-          Alert.alert('Error', 'Failed to pick an image.');
-      }
-  
-      // console.log("selectedImage:", JSON.stringify(selectedImage, null, 2));
-  };
-  
-  const handleFileUpload = async (attachmentType) => {
-    try {
-      const result = await DocumentPicker.getDocumentAsync();
-      if (!result.canceled && result.assets && result.assets.length > 0) {
-              if (
-                result.assets[0].mimeType === "application/pdf" ||
-                result.assets[0].mimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            ) {
-                if (result.assets[0].mimeType === "application/pdf") {
-                    fileName = attachmentType + ".pdf";
-                    fileType = result.assets[0].mimeType;
-                } else {
-  
-                    fileType = "application/docx";
-                    fileName = attachmentType + ".docx";
-                }
-            } else {
-                fileName = attachmentType;
-            }
-          // Create a new object to hold the updated selected file state
-          const updatedSelectedFile = {
-              ...selectedFile,
-              [attachmentType]: {
-                  // name: screeningFormData.fullName + "_" + attachmentType + result.assets[0].type,
-                  name: result.assets[0].name,
-                  uri: result.assets[0].uri,
-                  type: fileType,
-                  userType: "Requestor",
-                  owner: screeningFormData.fullName,
-                  size: result.assets[0].size,
-                  requirementType: attachmentType,
-                  ownerID: screeningFormData.Applicant_ID
-              }
-          };
-          // Update the selectedFile state
-          setSelectedFile(updatedSelectedFile);
-          // console.log("updatedSelectedFile:", updatedSelectedFile)
-          setFileContainer(true)
-      }
-  }catch (error) {
-        Alert.alert('Error', 'Failed to pick a file.');
-      }
-    };
-
-
+// useEffect(() => {
+//   setUploadingImage(false)
+// },[])
     //DO NOT DELETE THIS FOR CHECKING
 
 // useEffect(() => {
@@ -289,6 +178,15 @@ const ReasonForRequesting = ({route}) => {
             showsVerticalScrollIndicator={false}
         
           >
+
+          {uploadingImage && (
+             <Uploading 
+             progress={progressBar} 
+             Image={imageUri}
+             label={loaderLabel}
+            //  onClose = {() => setUploadingImage(false)}
+            />
+          )}
               <View style = {styles.container}>
                 <View style = {globalStyles.flex_Row}>
                     <View style = {styles.pageIndicator}/>
@@ -309,49 +207,7 @@ const ReasonForRequesting = ({route}) => {
                     />         
               </View>
 
-
-              <View style = {styles.container}>
-                <Text style = {styles.MainTitle}>Upload Medical Requirements</Text>
-              </View>
-
-              <View style = {styles. attachmentContainer}>
-                <Text style={styles.newLabel}>
-                    Attach Prescription
-                </Text>
-                <View style={styles.rowAlignment}>
-                    <FontAwesome5 name="asterisk" size={12} color="#E60965" />
-                    <View style={styles.iconContainer}>
-                    <TouchableOpacity onPress={()=>handleImageUpload('Prescription')}>
-                        <AntDesign name="picture" size={27} color="#E60965" />
-                      </TouchableOpacity>
-                        <Text style={styles.verticalLine}>|</Text>
-                        <TouchableOpacity onPress={()=>handleFileUpload('Prescription')}>
-                        <AntDesign name="file1" size={24} color="#E60965" />
-                      </TouchableOpacity>
-                  </View>
-                </View>
-            </View>
-
-            <View style = {styles. attachmentContainer}>
-                <Text style={styles.newLabel}>
-                    Government ID
-                </Text>
-                  <View style={styles.rowAlignment}>
-                    <FontAwesome5 name="asterisk" size={12} color="#E60965" />
-                    <View style={styles.iconContainer}>
-                      <TouchableOpacity onPress={()=>handleImageUpload('Government_ID')}>
-                        <AntDesign name="picture" size={27} color="#E60965" />
-                      </TouchableOpacity>
-                        <Text style={styles.verticalLine}>|</Text>
-                        <TouchableOpacity onPress={()=>handleFileUpload('Government_ID')}>
-                        <AntDesign name="file1" size={24} color="#E60965" />
-                      </TouchableOpacity>
-                  </View>
-                    
-                </View>
-            </View>
-
-            {imageContainer && (
+              {Object.keys(selectedImage).length !==0 && (
                   <View  style = {{
                     height: 150,
                     marginBottom: 20,
@@ -363,13 +219,13 @@ const ReasonForRequesting = ({route}) => {
                     borderRadius: 15,
                     elevation: 5,
                     marginTop: 20,
-                    marginHorizontal: "10%",
+                    marginHorizontal: "5%",
                     alignItems: "center"
                     }}>
                     <ScrollView 
                       showsHorizontalScrollIndicator={true}
                       overScrollMode='never'
-                      horizontal={scrollableHorizontal}
+                      horizontal={Object.keys(selectedImage).length >= 2}
                     contentContainerStyle={{ flexDirection: 'row', }}
                   >
                       {Object.entries(selectedImage).map(([attachmentType, value]) => (
@@ -398,46 +254,39 @@ const ReasonForRequesting = ({route}) => {
                     </ScrollView>
                 </View>
             )}
-            
-           
 
-            {fileContainer && (
-                      <View  style={{ 
-                        paddingVertical: 20,
-                        borderColor: "#E60965",
-                        borderWidth: 1,
-                        backgroundColor: "white",
-                        width: "80%",
-                        borderRadius: 15,
-                        elevation: 5,
-                        alignSelf: "center",
-                        alignItems: "center",
-                     
-                        }}>
-                          {Object.entries(selectedFile).map(([attachmentType,  file]) => {
-                          if (attachmentType !== "uri" && attachmentType !== "type") {
-                          return (
-                              <View key={attachmentType} 
-                              style={{ 
-                                flexDirection: "row",      
-                                justifyContent: "center",
-                                width: "100%"
-                                }}>
-                               
+            {Object.keys(selectedFile).length !==0 && (
+            <View  style={{ 
+              paddingVertical: 20,
+              borderColor: "#E60965",
+              borderWidth: 1,
+              backgroundColor: "white",
+              width: "80%",
+              borderRadius: 15,
+              elevation: 5,
+              alignSelf: "center",
+              alignItems: "center",
+              }}>
+                {Object.entries(selectedFile).map(([attachmentType,  file]) => {
+                if (attachmentType !== "uri" && attachmentType !== "type") {
+                return (
+                  <View key={attachmentType} 
+                  style={{ 
+                    flexDirection: "row",      
+                    width: "90%",
+                    marginVertical: 10,
+                    gap: 10
+                    }}>
+                    <Text style = {{textAlign: "left", fontWeight: "bold", width: 100}}>{attachmentType} </Text>
+                    <Text style= {{flex: 1}}>{file.name}</Text>
 
-                                  <View style = {styles.fileType}>
-                                    <Text>{attachmentType}: </Text>
-                                  </View>
-                                  <View style = {styles.fileName}>
-                                    <Text style= {{width: 170}}>{file.name}</Text>
-                                  </View>
-                              </View>
-                          );
-                          }
-                          return null; // Return null for other entries
-                          })}
+                  </View>
+                );
+                }
+                return null; // Return null for other entries
+                })}
 
-                       </View>
+              </View>
             )}
 
                 <Modal
@@ -474,22 +323,16 @@ const ReasonForRequesting = ({route}) => {
                   </View>
               </Modal>
 
-              <Spinner
-              visible={isLoading}
-              textContent={'Loading...'}
-              textStyle={{ color: '#FFF' }}
-            />
-      
-           
-
-     
-
+            
               <View style = {globalStyles.center}>
                 <TouchableOpacity style={[
-                  styles.AgreebuttonContainer, { width: 150 },
-                  (Object.keys(selectedImage).length === 0 && Object.keys(selectedFile).length === 0) && { opacity: 0.5 } 
-                  ]} onPress={() => navigatePage("EmailVerification", screeningFormData)}
-                  disabled={Object.keys(selectedImage).length === 0 && Object.keys(selectedFile).length === 0}
+                  styles.AgreebuttonContainer, { 
+                    width: 150, 
+                    opacity: (Object.keys(selectedImage).length + Object.keys(selectedFile).length < 7) || isRFRMissing ? 0.5 : 1
+                  }, 
+                  
+                  ]} onPress={() => confirmation()}
+                  disabled={Object.keys(selectedImage).length + Object.keys(selectedFile).length < 7}
                   >
                   <Text style={styles.label}>Submit</Text>
                 </TouchableOpacity>
@@ -512,14 +355,6 @@ const ReasonForRequesting = ({route}) => {
       alignItems: "center",
       justifyContent: "space-between"
     },
-
-   
-    rowAlignment: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between"
-    },
-
     attachmentContainer: {
       // backgroundColor: "pink",
       flexDirection: "row",

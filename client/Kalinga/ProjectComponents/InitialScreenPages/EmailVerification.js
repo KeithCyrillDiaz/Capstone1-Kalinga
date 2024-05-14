@@ -11,7 +11,6 @@ import { BASED_URL } from '../../MyConstants';
 const EmailVerification = ({route}) => {
     
     const screeningForm = route.params
-    console.log("form: ", screeningForm)
     const navigation = useNavigation(); 
 
     const handleBackButton = () => {

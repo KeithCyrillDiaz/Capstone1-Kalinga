@@ -23,7 +23,7 @@ export default (router: express.Router) => {
 
     router.get('/kalinga/getMedicalRequirementImage/:ownerID', getImage)
     router.get('/kalinga/getMedicalRequirementFile/:ownerID', getFile)
-    router.post('/kalinga/uploadImageOrFileData/:id', uploadImageOrFileData)
+    router.post('/kalinga/uploadFileOrImageDataInDatabase/:id', uploadImageOrFileData)
 
 
 
