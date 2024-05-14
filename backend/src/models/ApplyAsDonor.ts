@@ -25,7 +25,7 @@ const screeningFormSchema = new mongoose.Schema({
     ageOfGestation: {type: String},
     medicalCondition: {type: String},
 
-    TypeOfDonor:{type: String},
+    typeOfDonor:{type: String},
     QA: {type: String},
     QB: {type: String},
     Q1: {type: String},
@@ -80,6 +80,7 @@ const imageSchema = new mongoose.Schema({
     userType: { type: String }, // Add userType field if needed
     owner: { type: String }, // Add owner field if needed
     ownerID: { type: String },
+    purpose: {type: String},
     createdAt: {type: Date, default: Date.now},
     updatedAt: {type: Date, default: Date.now},
 });
@@ -100,6 +101,7 @@ const fileSchema = new mongoose.Schema({
     userType: { type: String }, // Add userType field if needed
     owner: { type: String }, // Add owner field if needed
     ownerID: { type: String },
+    purpose: { type: String },
     createdAt: {type: Date, default: Date.now},
     updatedAt: {type: Date, default: Date.now},
 });

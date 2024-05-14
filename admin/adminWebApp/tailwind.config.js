@@ -51,7 +51,8 @@ module.exports = {
           default: "#E60965",
           variant: "#F94892",
           hover: "#ED78A9",
-          disabled: "#E36A91"
+          disabled: "#E36A91",
+          body: "#f5f5f5",
         },
         secondary: {
           default: "#eb90ac",

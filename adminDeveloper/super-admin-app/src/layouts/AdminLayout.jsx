@@ -1,5 +1,5 @@
 import React from "react";
-import { Sidebar } from "@/components";
+import { Sidebar, NavBar } from "@/components";
 import { Outlet } from "react-router-dom";
 import { block } from "million/react";
 
@@ -10,7 +10,10 @@ const AdminLayout = () => {
         <div className="z-[1000]">
           <Sidebar />
         </div>
-        <Outlet />
+        <div className="flex flex-col w-full">
+          <NavBar />
+          <Outlet />
+        </div>
       </main>
     </>
   );

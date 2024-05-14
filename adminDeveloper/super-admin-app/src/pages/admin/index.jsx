@@ -1,99 +1,279 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Human from "@assets/human.png";
-import { WebHost } from '../../../MyConstantSuperAdmin'
+import { WebHost } from "../../../MyConstantSuperAdmin";
 
 export default function Dashboard() {
   const [totalDonors, setTotalDonors] = useState(0);
   const [totalRequestors, setTotalRequestors] = useState(0);
 
   useEffect(() => {
-    console.log("Fetching data..."); 
+    console.log("Fetching data...");
     const fetchCounts = async () => {
-        try {
-          const responseDonors = await axios.get(`${WebHost}/kalinga/getTotalDonor`);
-          console.log("Donors Response:", responseDonors.data); // Log the response data
-          if (responseDonors.data && responseDonors.data.totalDonors) {
-            setTotalDonors(responseDonors.data.totalDonors);
-          } else {
-            console.error("Invalid response format for total donors");
-          }
-        } catch (error) {
-          console.error("Error fetching total donors:", error);
-          if (error.response) {
-            console.log("Response data:", error.response.data); // Log the response data if available
-          }
+      try {
+        const responseDonors = await axios.get(
+          `${WebHost}/kalinga/getTotalDonor`
+        );
+        console.log("Donors Response:", responseDonors.data); // Log the response data
+        if (responseDonors.data && responseDonors.data.totalDonors) {
+          setTotalDonors(responseDonors.data.totalDonors);
+        } else {
+          console.error("Invalid response format for total donors");
         }
-      
-        try {
-          const responseRequestors = await axios.get(`${WebHost}/kalinga/getTotalRequestor`);
-          console.log("Requestors Response:", responseRequestors.data); // Log the response data
-          setTotalRequestors(responseRequestors.data.totalRequestors);
-        } catch (error) {
-          console.error("Error fetching total requestors:", error);
-          if (error.response) {
-            console.log("Response data:", error.response.data); // Log the response data if available
-          }
+      } catch (error) {
+        console.error("Error fetching total donors:", error);
+        if (error.response) {
+          console.log("Response data:", error.response.data); // Log the response data if available
         }
-      };
+      }
+
+      try {
+        const responseRequestors = await axios.get(
+          `${WebHost}/kalinga/getTotalRequestor`
+        );
+        console.log("Requestors Response:", responseRequestors.data); // Log the response data
+        setTotalRequestors(responseRequestors.data.totalRequestors);
+      } catch (error) {
+        console.error("Error fetching total requestors:", error);
+        if (error.response) {
+          console.log("Response data:", error.response.data); // Log the response data if available
+        }
+      }
+    };
 
     fetchCounts();
   }, []);
 
   return (
     <>
-      <section className="w-full min-h-screen bg-neutral-variant">
-        <div className="grid items-center justify-center grid-cols-[auto_1fr] gap-x-10 py-12 px-20">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="48"
-            height="48"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill="none"
-              stroke="#E60965"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              d="M8.557 2.75H4.682A1.932 1.932 0 0 0 2.75 4.682v3.875a1.942 1.942 0 0 0 1.932 1.942h3.875a1.942 1.942 0 0 0 1.942-1.942V4.682A1.942 1.942 0 0 0 8.557 2.75m10.761 0h-3.875a1.942 1.942 0 0 0-1.942 1.932v3.875a1.943 1.943 0 0 0 1.942 1.942h3.875a1.942 1.942 0 0 0 1.932-1.942V4.682a1.932 1.932 0 0 0-1.932-1.932M8.557 13.5H4.682a1.943 1.943 0 0 0-1.932 1.943v3.875a1.932 1.932 0 0 0 1.932 1.932h3.875a1.942 1.942 0 0 0 1.942-1.932v-3.875a1.942 1.942 0 0 0-1.942-1.942m8.818-.001a3.875 3.875 0 1 0 0 7.75a3.875 3.875 0 0 0 0-7.75"
-            />
-          </svg>
-
-          <h1 className="text-5xl text-primary-default">Dashboard</h1>
-        </div>
-        <hr className="border-t-2 border-primary-default" />
-
-        <div className="flex items-center justify-center p-10 my-32">
-          <div className="grid grid-cols-2 gap-12">
-            <div className="px-16 py-8 bg-white rounded-lg shadow-xl">
-              <div className="grid items-center justify-center grid-cols-[40%_1fr]">
-                <img src={Human} alt="Human" />
-                <h2 className="text-4xl text-primary-default">Donors</h2>
-              </div>
-              <div className="grid items-center justify-center py-8">
-                <h1 className="text-center text-[6rem] font-semibold text-primary-default">
-                {totalDonors}
-
-                </h1>
-                <p className="text-4xl font-medium text-center text-primary-default">
-                  Total Donors
-                </p>
+      <section className="w-full h-screen bg-primary-body overflow-hidden">
+        <div className="p-10 pt-2">
+          <div>
+            <h1 className="text-3xl text-primary-default font-bold font-sans py-4 pb-6">
+              Dashboard
+            </h1>
+          </div>
+          <div className="grid grid-cols-4 gap-6">
+            <div className="px-2 py-4 bg-white rounded-lg shadow-md flex justify-center items-center">
+              <div class="grid grid-rows-3 grid-flow-col gap-2">
+                <div class="row-span-3 mt-4">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="80"
+                    height="80"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="none"
+                      stroke="#E60965"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
+                      d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0-8 0M6 21v-2a4 4 0 0 1 4-4h.5m7.5 7l3.35-3.284a2.143 2.143 0 0 0 .005-3.071a2.24 2.24 0 0 0-3.129-.006l-.224.22l-.223-.22a2.24 2.24 0 0 0-3.128-.006a2.143 2.143 0 0 0-.006 3.071z"
+                    ></path>
+                  </svg>
+                </div>
+                <div class="col-span-2">
+                  <span className="text-2xl text-primary-default mt-4">
+                    Total Donor Users
+                  </span>
+                </div>
+                <div class="row-span-2 col-span-2 ">
+                  <span className="text-center text-5xl font-semibold text-primary-default flex justify-center">
+                    456
+                  </span>
+                </div>
               </div>
             </div>
-            <div className="px-16 py-8 bg-white rounded-lg shadow-xl">
-              <div className="grid items-center justify-center grid-cols-[40%_1fr]">
-                <img src={Human} alt="Human" />
-                <h2 className="text-4xl text-primary-default">Requestors</h2>
-              </div>
-              <div className="grid items-center justify-center py-8">
-                <h1 className="text-center text-[6rem] font-semibold text-primary-default">
-                {totalRequestors}
 
-                </h1>
-                <p className="text-4xl font-medium text-center text-primary-default">
-                  Total Requestors
-                </p>
+            <div className="px-2 py-4 bg-white rounded-lg shadow-md flex justify-center items-center">
+              <div class="grid grid-rows-3 grid-flow-col gap-2">
+                <div class="row-span-3 mt-4">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="80"
+                    height="80"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="none"
+                      stroke="#E60965"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
+                      d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0-8 0M6 21v-2a4 4 0 0 1 4-4h3m3 7l5-5m0 4.5V17h-4.5"
+                    ></path>
+                  </svg>
+                </div>
+                <div class="col-span-2">
+                  <span className="text-2xl text-primary-default mt-4">
+                    Total Requestor Users
+                  </span>
+                </div>
+                <div class="row-span-2 col-span-2 ">
+                  <span className="text-center text-5xl font-semibold text-primary-default flex justify-center">
+                    456
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="px-2 py-4 bg-white rounded-lg shadow-md flex justify-center items-center">
+              <div class="grid grid-rows-3 grid-flow-col gap-2">
+                <div class="row-span-3 mt-4">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="80"
+                    height="80"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="none"
+                      stroke="#E60965"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
+                      d="M18 18.72a9.1 9.1 0 0 0 3.741-.479q.01-.12.01-.241a3 3 0 0 0-4.692-2.478m.94 3.197l.001.031q0 .337-.037.666A11.94 11.94 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6 6 0 0 1 6 18.719m12 0a5.97 5.97 0 0 0-.941-3.197m0 0A6 6 0 0 0 12 12.75a6 6 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72a9 9 0 0 0 3.74.477m.94-3.197a5.97 5.97 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0a3 3 0 0 1 6 0m6 3a2.25 2.25 0 1 1-4.5 0a2.25 2.25 0 0 1 4.5 0m-13.5 0a2.25 2.25 0 1 1-4.5 0a2.25 2.25 0 0 1 4.5 0"
+                    ></path>
+                  </svg>
+                </div>
+                <div class="col-span-2">
+                  <span className="text-2xl text-primary-default mt-4 ml-4">
+                    Total App Users
+                  </span>
+                </div>
+                <div class="row-span-2 col-span-2 ">
+                  <span className="text-center text-5xl font-semibold text-primary-default flex justify-center">
+                    456
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="px-2 py-4 bg-white rounded-lg shadow-md flex justify-center items-center">
+              <div class="grid grid-rows-3 grid-flow-col gap-2">
+                <div class="row-span-3 mt-4">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="80"
+                    height="80"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="none"
+                      stroke="#E60965"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1"
+                      d="M11.42 15.17L17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14q.19.017.384.017a4.5 4.5 0 0 0 4.102-6.352l-3.276 3.276a3 3 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008z"
+                    ></path>
+                  </svg>
+                </div>
+                <div class="col-span-2">
+                  <span className="text-2xl text-primary-default mt-4">
+                    Pending Bug Fixes
+                  </span>
+                </div>
+                <div class="row-span-2 col-span-2 ">
+                  <span className="text-center text-5xl font-semibold text-primary-default flex justify-center">
+                    456
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="px-2 py-4 bg-white rounded-lg shadow-md flex justify-center items-center">
+              <div className="flex flex-col px-6 pt-2">
+                <h2 className="text-2xl text-primary-default ">
+                  App Users per Milkbank
+                </h2>
+                <span className="text-md text-primary-default font-sans ">
+                  basta pie chart dito comparing ung total users ng milkbanks
+                </span>
+              </div>
+            </div>
+
+            <div className="col-span-3 row-span-3 px-16 bg-white rounded-lg shadow-md ">
+              dito po ay bar graph req and donor per city???
+            </div>
+
+            <div className="row-span-2 bg-white rounded-lg shadow-md px-6">
+              <h2 className="text-2xl text-primary-default mt-6 ">
+                Other Milkbank Stats
+              </h2>
+              <span className="text-md text-primary-default font-sans ">
+                Total Milkbanks: 3
+              </span>
+              <div class="grid grid-flow-row-dense grid-cols-3 grid-rows-3 gap-x-2 mt-6">
+                <div class="col-span-3">
+                  <span className="text-lg text-primary-default font-bold mt-6">
+                    QCGH Human Milk Bank
+                  </span>
+                </div>
+                <div class="col-span-2">
+                  <span className="text-md text-primary-default font-sans">
+                    Requestor
+                  </span>
+                </div>
+                <div class="col-span-2">
+                  <span className="text-md text-primary-default font-sans">
+                    Donor
+                  </span>
+                </div>
+                <div className="text-md text-primary-default font-sans text-right">
+                  10
+                </div>
+                <div className="text-md text-primary-default font-sans text-right">
+                  5
+                </div>
+              </div>
+
+              <div class="grid grid-flow-row-dense grid-cols-3 grid-rows-3 gap-x-2 mt-6">
+                <div class="col-span-3">
+                  <span className="text-lg text-primary-default font-bold mt-6">
+                    Manila Human Milk Bank
+                  </span>
+                </div>
+                <div class="col-span-2">
+                  <span className="text-md text-primary-default font-sans">
+                    Requestor
+                  </span>
+                </div>
+                <div class="col-span-2">
+                  <span className="text-md text-primary-default font-sans">
+                    Donor
+                  </span>
+                </div>
+                <div className="text-md text-primary-default font-sans text-right">
+                  10
+                </div>
+                <div className="text-md text-primary-default font-sans text-right">
+                  5
+                </div>
+              </div>
+
+              <div class="grid grid-flow-row-dense grid-cols-3 grid-rows-3 gap-x-2 mt-6 mb-8">
+                <div class="col-span-3">
+                  <span className="text-lg text-primary-default font-bold mt-6">
+                    Makati Milk Bank
+                  </span>
+                </div>
+                <div class="col-span-2">
+                  <span className="text-md text-primary-default font-sans">
+                    Requestor
+                  </span>
+                </div>
+                <div class="col-span-2">
+                  <span className="text-md text-primary-default font-sans">
+                    Donor
+                  </span>
+                </div>
+                <div className="text-md text-primary-default font-sans text-right">
+                  10
+                </div>
+                <div className="text-md text-primary-default font-sans text-right">
+                  5
+                </div>
               </div>
             </div>
           </div>

@@ -45,7 +45,7 @@ const DonorUploadMedicalRequirements = ({route}) => {
         // Log successful response from the backend
         console.log('Data saved successfully:', postScreeningForm.data);
 
-             
+        setIsLoading(false);
 
         const formData = new FormData();
         formData.append('image', selectedImage);

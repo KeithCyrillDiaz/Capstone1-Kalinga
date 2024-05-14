@@ -21,7 +21,7 @@ export default (router: express.Router) => {
     router.get('/kalinga/getMedicalAbstractByID/:Applicant_ID', getMedicalAbstract)
 
 
-    router.post('/kalinga/deleteScreeningFormByID/:Applicant_ID', deleteScreeningForm)
+    router.patch('/kalinga/deleteScreeningFormByID/:Applicant_ID', deleteScreeningForm)
     router.get('/kalinga/retrieveApplicantForm/:Applicant_ID', retrieveSoftDeletedForm)
     
 
