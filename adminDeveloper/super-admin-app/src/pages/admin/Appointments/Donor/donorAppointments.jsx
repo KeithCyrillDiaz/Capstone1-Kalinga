@@ -36,7 +36,9 @@ const DonorAppointments = () => {
   );
 
   // Calculate total pages based on filtered appointments
-  const totalPages = Math.ceil(filteredAppointments.length / appointmentsPerPage);
+  const totalPages = Math.ceil(
+    filteredAppointments.length / appointmentsPerPage
+  );
 
   // Array to hold page numbers for the page indicator
   const pageNumbers = [];
@@ -50,7 +52,7 @@ const DonorAppointments = () => {
   };
 
   return (
-    <section className="w-full min-h-screen bg-neutral-variant p-8">
+    <section className="w-full h-screen bg-primary-body overflow-hidden">
       <div className="flex justify-end mb-4">
         <div className="relative w-1/2">
           <span className="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -79,7 +81,9 @@ const DonorAppointments = () => {
 
       <div className="flex mb-4 mt-12 ">
         <div className="w-1/4 pr-2 text-3xl">
-          <div className="text-pink-500 p-2 text-center rounded-lg font-bold">Name</div>
+          <div className="text-pink-500 p-2 text-center rounded-lg font-bold">
+            Name
+          </div>
         </div>
         <div className="w-1/4 pl-2 text-3xl">
           <div className="text-pink-500 p-2 text-center rounded-lg font-bold">
@@ -114,7 +118,7 @@ const DonorAppointments = () => {
         </div>
       ))}
 
-<div className="flex justify-center mt-8 ">
+      <div className="flex justify-center mt-8 ">
         <button
           className=" py-2 px-4 "
           onClick={() => goToPage(currentPage - 1)}
