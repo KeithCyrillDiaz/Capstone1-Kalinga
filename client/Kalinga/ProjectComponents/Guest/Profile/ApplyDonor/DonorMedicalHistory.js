@@ -1,6 +1,13 @@
 //Guest Home
-import React, { useState } from 'react';
-import { ScrollView,Text, View, StatusBar, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ScrollView,
+  Text, 
+  View, 
+  StatusBar, 
+  StyleSheet, 
+  TouchableOpacity,
+  Alert, 
+  TextInput} from 'react-native';
 import { globalStyles } from "../../../../styles_kit/globalStyles.js";
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { AntDesign } from '@expo/vector-icons';
@@ -12,14 +19,81 @@ const DonorMedicalHistory = ({route}) => {
   // console.log(screeningFormData)
 
   const [formData, setFormData] = useState(screeningFormData);
+  const [isFormFilled, setIsFormFilled] = useState(false)
+  const [medicalAnsweredQuestions, setMedicalAnsweredQuestions] = useState([]);
   const navigation = useNavigation();
 
   const navigatePage = (Page, data) => {
-    // Navigate to the next screen by route name
-    // console.log(data)
+    if(formData.MH2 === "No"){
+      console.log(formData.MH2)
+      console.log(formData.MH2_Reason)
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        MH2_Reason: '',
+      }))
+    }
+
+    if(formData.MH8 === "No"){
+      console.log(formData.MH8)
+      console.log("formData.MH8_Reason:", formData.MH8_Reason)
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        MH8_Reason: '',
+      }))
+    }
+
+    if(formData.MH2 === "Yes" && formData.MH2_Reason === ""){
+      Alert.alert(
+        "Reason Required",
+        "Please provide a reason for selecting 'Yes' at question number 2."
+      )
+      setIsFormFilled(false)
+      return
+    }
+
+    if(formData.MH8 === "Yes" && formData.MH8_Reason === ""){
+      Alert.alert(
+        "Reason Required",
+        "Please provide a reason for selecting 'Yes' at question number 8."
+      )
+      setIsFormFilled(false)
+      return
+    }
+
+    checkForm("Screening Form")
+    if(!isFormFilled) {
+      Alert.alert("Invalid Form", "Please complete the form first")
+      return
+    }
     navigation.navigate(Page, data);
   };
 
+  
+useEffect(() => {
+  checkForm()
+}, [formData.MH12])
+
+useEffect(() => {
+  console.log("formData.MH2_Reason: ", formData.MH2_Reason)
+  console.log("formData.MH8_Reason: ", formData.MH8_Reason)
+  if(formData.MH2 === "No"){
+    setFormData({
+      ...formData,
+      MH2_Reason: ""
+    })
+  }
+
+  if(formData.MH8 === "No"){
+    setFormData({
+      ...formData,
+      MH8_Reason: ""
+    })
+  }
+}, [formData.MH2_Reason, formData.MH8_Reason, formData.MH2, formData.MH8])
+
+// useEffect(() => {
+//   console.log("formData.MH8_Reason: ", formData.MH8_Reason)
+// }, [formData.MH8_Reason])
 
   const handleChangeText = (name, value) => {
     setFormData(prevData => ({...prevData, 
@@ -28,8 +102,35 @@ const DonorMedicalHistory = ({route}) => {
     }))
     // setScreeningFormData({ ...screeningFormData, [name]: value });
 };
+const checkForm = (value) => {
+  let keysToCheck = [
+    'MH1',
+    'MH2',
+    'MH3',
+    'MH4',
+    'MH5',
+    'MH6',
+    'MH7',
+    'MH8',
+    'MH9',
+    'MH10',
+    'MH11',
+    'MH12'
+    ];
 
-    const [medicalAnsweredQuestions, setMedicalAnsweredQuestions] = useState([]);
+    const isFormDataValid = keysToCheck.every(key => formData[key].trim() !== '');
+
+    if (isFormDataValid) {
+        console.log('All values until medical condition are valid');
+        setIsFormFilled(true)
+    } else {
+        console.log('Some values until medical condition are empty');
+        setIsFormFilled(false)
+    }
+}
+
+
+   
 
     const pressOption = (questionId, answer, questionType) => {
  
@@ -70,6 +171,7 @@ const DonorMedicalHistory = ({route}) => {
                   borderBottomColor: "#E60965",
                   borderBottomWidth: 1,
                   width: "80%",
+                  maxWidth:210,
                   marginLeft: 20,
                   color: "black",
                   paddingBottom: 2
@@ -78,6 +180,7 @@ const DonorMedicalHistory = ({route}) => {
                 textAlignVertical="bottom" // Align text to the top vertically
                 onChangeText={isChecked === 'Yes' ? (value) => handleChangeText(`${questionId}_Reason`, value) : undefined}
                 editable={isChecked === 'Yes'}
+                value={formData[`MH${questionId}_Reason`]}
               /> 
               )} 
 
@@ -140,9 +243,12 @@ const DonorMedicalHistory = ({route}) => {
                     <View style = {styles.space}></View>
             </ScrollView>
                                   {/*MedicalHistory2.js*/}
-                    <TouchableOpacity style={styles.button} onPress={() => navigatePage("DonorMedicalHistory2", { screeningFormData: formData })}>
-                        <Text style={styles.buttonTitle}>Next</Text>
-                    </TouchableOpacity>
+                      <TouchableOpacity style = {[styles.button,
+                        {opacity: !isFormFilled ? 0.5 : 1}
+                        ]}  
+                      onPress={() => navigatePage("DonorMedicalHistory2", { screeningFormData: formData })}>
+                            <Text style = {styles.buttonTitle}>Next</Text>
+                      </TouchableOpacity>
         </ScrollView>
 
 

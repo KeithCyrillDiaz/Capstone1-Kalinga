@@ -33,6 +33,9 @@ const DonorScreeningForm = () => {
 
   const navigatePage = (Page, data) => {
     console.log("check Screening Form: ", screeningFormData)
+    if(!checkName)return
+    if(!checkAgeValidity()) return
+    checkForm("Screening Form")
     if(!isFormFilled) {
       Alert.alert("Invalid Form", "Please complete the form first")
       return
@@ -45,6 +48,7 @@ const DonorScreeningForm = () => {
   const [screeningFormData, setScreeningFormData] = useState({
     Applicant_ID: applicantId ,
     userType: "Donor",
+    Municipality: '',
     fullName: '',
     Age: '',
     birthDate: '',
@@ -87,13 +91,15 @@ const DonorScreeningForm = () => {
 });
 
 // Handler to update the state with the entered values
+const [value, setValue] = useState(null);
+const [textFocus, setTextFocus] = useState(false)
 
+//validity
 const [isEmailExisted, setIsEmailExisted] = useState(false)
 const [isFormFilled, setIsFormFilled] = useState(false)
-const [textFocus, setTextFocus] = useState(false)
 const [isEmailValid, setIsEmailValid]= useState(false)
-
-const [value, setValue] = useState(null);
+const [isAgeValid, setIsAgeValid] = useState(true)
+const [isChildAgeValid, setIsChildAgeValid] = useState(true)
 
  //Dropdowns
  const [openSexDropdown, setOpenSexDropdown] = useState(false)
@@ -136,6 +142,7 @@ const checkForm = (value) => {
   let keysToCheck = [
     'Applicant_ID',
     'userType',
+    'Municipality',
     'fullName',
     'Age',
     'birthDate',
@@ -222,12 +229,18 @@ const updateAddress = (label, name) => {
   let data = label;
 
   if (label.toLowerCase().includes("city")) {
-    data = formatCity(label);
+    data = formatCity(label); // format City
   }
 
   const result = uncapitalizedString(data);
   // console.log("result: ", result);
-
+  if(name === "Municipality"){
+    console.log("City: ", result)
+    setScreeningFormData(prevFormData => ({
+      ...prevFormData,
+      [name]: result
+    }))
+  }
   setAddress(prevAddress => {
     const updatedAddress = {
       ...prevAddress,
@@ -237,23 +250,6 @@ const updateAddress = (label, name) => {
   });
 };
 
-
-//update screening form after address data changes
-useEffect(() => {
-  // console.log("check Address after function: ", address)
-  if (checkForm("Address")) {
-    setScreeningFormData(prevData => ({
-      ...prevData,
-      homeAddress: address.Barangay + " " + address.Municipality
-    }));
-  }
-
-}, [address.Barangay, address.Municipality])
-
-useEffect(() => {
-  //checkForm
-  checkForm("Screening Form")
-}, [screeningFormData.medicalCondition])
 
 const uncapitalizedString = (string) => {
   const trimmedString = string.trim();
@@ -284,15 +280,73 @@ const handleChangeText = (name, value) => {
     return
 };
 
-useEffect(() => {
-  if(screeningFormData.email !== ""){
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(!emailPattern.test(screeningFormData.email)){
-      setIsEmailValid(false)
-    } 
-  }
-},[screeningFormData.email])
 
+const checkAgeValidity = () => {
+  const {Age, childAge} = screeningFormData
+  if(childAge.includes("days") || childAge.includes("months"))return
+  const motherAge = parseInt(Age)
+  const infantAge = parseInt(childAge)
+  if(motherAge < 13) {
+    Alert.alert("Invalid Mother Age"," Please input your proper birthday")
+    setIsAgeValid(false)
+    return
+  }
+
+  if(motherAge <= infantAge && Age !== "" && childAge !== ""){
+    Alert.alert("Invalid Ages"," Please input the proper birthday")
+    setIsAgeValid(false)
+    setIsChildAgeValid(false)
+    return false
+  }
+
+  if(motherAge - infantAge <= 12){
+    Alert.alert("Invalid Infant Age","The age difference between the infant and the mother should be at least 13 years.")
+      setIsAgeValid(false)
+      setIsChildAgeValid(false)
+      return false
+  }
+
+ 
+  setIsAgeValid(true)
+  setIsChildAgeValid(true)
+  return true
+}
+
+// const checkChildAgeValidty = (selectedDate, currentDate) => {
+//   const childDate = new Date(selectedDate)
+//   const dateToday = new Date(currentDate)
+//   const yearOfChild = childDate.getFullYear()
+//   const yearToday = dateToday.getFullYear()
+
+//   if(yearOfChild !== yearToday) {
+//     setIsChildAgeValid(false)
+//     return
+//   }
+
+//   // const monthToday = dateToday.getMonth()
+//   // const childMonth = childDate.getMonth()
+
+//   // const result = parseInt(monthToday) - childMonth()
+//   // console.log("result, ", result)
+//   // if(result > 6){
+//   //   Alert.alert("Sorry", "This milkbank only accepts New born Babies up to 5 month old Babies")
+//   //   setIsChildAgeValid(false)
+//   //   return
+//   // }
+// }
+
+const checkName = () => {
+  const { fullName } = screeningFormData
+  console.log(fullName)
+  if(fullName === "") return false
+  
+  const nameRegex = /^[a-zA-Z\s'-]+$/;
+  if(!nameRegex.test(fullName)) {
+    Alert.alert("Invalid Full Name","Please Input your proper name")
+    return false
+  }
+  return true
+}
 
 const handleDateChange = (event, selectedDate, info) => {
     if(info !== "Personal"){
@@ -301,15 +355,18 @@ const handleDateChange = (event, selectedDate, info) => {
 
   if(selectedDate === dateToday)return
 
+  // if(info === "infant")checkChildAgeValidty(selectedDate, dateToday)
+
   if(selectedDate > dateToday){
     Alert.alert("Invalid Birthdate", "Please input your proper birthday")
     return
   }
+  
   setDateSelected(selectedDate)
   
-  const age = calculateAge(selectedDate, dateToday)
+  const age = calculateAge(selectedDate, dateToday, info)
   const birthDate =  formatBirthday(selectedDate)
-  console.log("info: ", info)
+
   if(info === "infant") {
     setScreeningFormData({ 
       ...screeningFormData, 
@@ -342,10 +399,41 @@ const formatBirthday = (date) => {
   return FormmattedBirthday
 }
 
-const calculateAge = (birthDay, currentDate) => {
-  const differenceMs = currentDate - birthDay;
-  const age = Math.floor(differenceMs / (1000 * 60 * 60 * 24 * 365.25));
-  return age.toString()
+const calculateAge = (birthDay, currentDate, info) => {
+  const differences = currentDate - birthDay;
+  console.log("differences: ", differences)
+  const age = Math.floor(differences / (1000 * 60 * 60 * 24 * 365.25));
+  let finalAge = age.toString()
+
+  if(finalAge === "0" && info === "infant") {
+
+    finalAge  = parseInt(age.toString()) > 1
+    ? age.toString() + " yrs old" 
+    : age.toString() + " yr old"
+
+    const childYear = birthDay.getFullYear();
+    const yearToday = currentDate.getFullYear();
+    const childMonth= birthDay.getMonth();
+    const monthToday = currentDate.getMonth();
+    const childDay = birthDay.getDate();
+    const dayToday = currentDate.getDate();
+
+      const result = childYear === yearToday 
+      ? monthToday - childMonth
+      : (monthToday + 12) - childMonth
+
+      finalAge = result > 1 ? result + " months" : result + " month" 
+
+      if(result === 0 ){
+        const childAge = dayToday - childDay
+
+        if( childAge === 0) return finalAge = "New Born"
+        else return finalAge = childAge + " days"
+      }
+  
+  }
+    
+  return finalAge
 }
 
 const setMonth = (num) => {
@@ -364,6 +452,36 @@ const setMonth = (num) => {
   else "Invalid Month"
 
 }
+
+useEffect(() => {
+  if(screeningFormData.email !== ""){
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!emailPattern.test(screeningFormData.email)){
+      setIsEmailValid(false)
+    } 
+  }
+},[screeningFormData.email])
+
+useEffect(() => {
+  checkAgeValidity()
+},[screeningFormData.birthDate, screeningFormData.childBirthDate])
+
+
+//update screening form after address data changes
+useEffect(() => {
+  // console.log("check Address after function: ", address)
+  if (checkForm("Address")) {
+    setScreeningFormData(prevData => ({
+      ...prevData,
+      homeAddress: address.Barangay + " " + address.Municipality
+    }));
+  }
+}, [address.Barangay, address.Municipality])
+
+useEffect(() => {
+  //checkForm
+  checkForm("Screening Form")
+}, [screeningFormData.medicalCondition])
 
   return (
     
@@ -404,6 +522,7 @@ const setMonth = (num) => {
                     <View style = {{
                       flexDirection: "row",
                       marginHorizontal: "4%",
+
                     }}>
                     <TextInput
                         style={styles.ageInputField}
@@ -443,8 +562,14 @@ const setMonth = (num) => {
                       color="#E60965" 
                       />
                     </View>
-                   
                     </View>
+                             {!isAgeValid && screeningFormData.birthDate !=="" && (
+                             <Text 
+                                style = {{
+                                alignSelf: "flex-end",
+                                marginRight: "20%",
+                                color: "red"}}>Please enter a valid Birthday</Text>
+                            )}
                     <TextInput
                         style={styles.BiginputField}
                         placeholder="Email Address"
@@ -635,12 +760,20 @@ const setMonth = (num) => {
                      </View>
                     </View>
 
-                    <View style = {globalStyles.flex_Row}>
+                    <View style = {
+                      { 
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      width: "92%",
+                     
+                      }}>
                     <TextInput
                         style={styles.ageInfantInputField}
                         placeholder="Age:"
                         placeholderTextColor="#E60965"
                         value={screeningFormData.childAge}
+                        editable={false}
                         
                     />
                     {showDate1Picker && (
@@ -653,7 +786,12 @@ const setMonth = (num) => {
                       />
                     )}
                     <TextInput
-                        style={styles.birthDayInputField}
+                        style={[styles.birthDayInputField,
+                          {
+                            marginHorizontal: 0,
+                            width: "70%"
+                          }
+                        ]}
                         placeholder="Birth Date: MM/DD/YY"
                         placeholderTextColor="#E60965"
                         editable={false}
@@ -667,6 +805,13 @@ const setMonth = (num) => {
                       />
                  
                     </View>
+                            {!isChildAgeValid && screeningFormData.childBirthDate !=="" && (
+                             <Text 
+                                style = {{
+                                alignSelf: "flex-end",
+                                marginRight: "20%",
+                                color: "red"}}>Please enter a valid Birthday</Text>
+                            )}
                     <View 
                       style = {{
                         flex: 1,
@@ -754,15 +899,15 @@ const setMonth = (num) => {
                     <TouchableOpacity 
                       style={[
                         styles.AgreebuttonContainer,
-                        {opacity: isEmailExisted || !isFormFilled ? 0.5 : 1}
+                        {opacity: isEmailExisted || !isFormFilled || !isEmailValid ? 0.5 : 1}
                       ]}
-                      disabled = {isEmailExisted || screeningFormData.email === ""} 
+                      disabled = {isEmailExisted || screeningFormData.email === "" || !isEmailValid} 
                       onPress={() => navigatePage("DonorScreeningForm2", { screeningFormData: screeningFormData })}
                     >
                       <Text style={styles.label}>Next</Text>
                     </TouchableOpacity>
              
-            </View>
+              </View>
 
         </ScrollView>
     <Modal 
@@ -973,10 +1118,8 @@ const setMonth = (num) => {
       borderRadius: 20,
       borderColor: "#E60965",
       paddingVertical: 5,
-      paddingHorizontal: 20,
-      width: "25%",
-      marginVertical: "1.5%",
-      marginHorizontal: "3%",
+      paddingLeft:20,
+      width: "27%",
       color: "#E60965",
       backgroundColor: "#FFFFFF",
       elevation: 5,
