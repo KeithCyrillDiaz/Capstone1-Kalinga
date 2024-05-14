@@ -1,6 +1,6 @@
 //Guest Home
-import React from 'react';
-import { ScrollView,Text, View, StatusBar, StyleSheet, SafeAreaView, TouchableOpacity, TextInput} from 'react-native';
+import React, {useEffect} from 'react';
+import { ScrollView,Text, View, StatusBar, StyleSheet, SafeAreaView, TouchableOpacity, TextInput, Alert} from 'react-native';
 
 import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
@@ -13,7 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 
 
 
-const SavedArticles = () => {
+const SavedArticles = ({route}) => {
 
     const FirstParagraph = 'Empowering Mothers: The Definitive Resource for Kalinga Breastfeeding Accomplishment.'
 
@@ -29,6 +29,24 @@ const SavedArticles = () => {
       navigation.navigate(Page); // Navigate to the Login screen
     }
 
+    const userInformation = route.params.userInformation;
+    const token = route.params.token
+  
+    const navigate = useNavigation()
+    
+    useEffect(() => {
+      Alert.alert(
+        "Sorry, this feature is not yet available right now.",
+        "Rest assured, our team is hard at work developing new features to better serve our community. Your continued support means the world to us. Thank you for your patience!",
+        [
+          {
+            text: "Okay",
+            onPress: () => navigate.goBack("MainTabs", { userInformation: userInformation, token: token })
+          }
+        ]
+      );
+      return
+    }, [])
 
     return (
         

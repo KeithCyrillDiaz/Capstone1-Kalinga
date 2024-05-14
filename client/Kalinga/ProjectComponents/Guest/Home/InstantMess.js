@@ -13,9 +13,11 @@ import {
     StyleSheet, 
     TouchableOpacity,
     TextInput,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    Alert
 } from 'react-native';
 
+import { useNavigation } from '@react-navigation/native';
 
 
 const InstantMess = () => {
@@ -42,6 +44,22 @@ const InstantMess = () => {
     };
 
     ScrolltoEnd();
+  
+    const navigate = useNavigation()
+    
+    useEffect(() => {
+      Alert.alert(
+        "Sorry, this feature is not yet available right now.",
+        "Rest assured, our team is hard at work developing new features to better serve our community. Your continued support means the world to us. Thank you for your patience!",
+        [
+          {
+            text: "Okay",
+            onPress: () => navigate.goBack("GuestTabs")
+          }
+        ]
+      );
+      return
+    }, [])
 
     return (
         <SafeAreaView style={styles.SafeArea}>

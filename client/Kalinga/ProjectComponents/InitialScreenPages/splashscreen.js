@@ -6,6 +6,7 @@ import KalingaSplashScreen from './../../assets/KalingaSplashScreen.png'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios'
 import { BASED_URL } from '../../MyConstants'
+import {CommonActions } from'@react-navigation/native';
 const SplashScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchData = async () => {
@@ -48,17 +49,54 @@ const SplashScreen = ({ navigation }) => {
                   [{text: 'Ok', onPress: () => navigation.replace('SetPassword', {email: null, Applicant_ID: null, userType: result.data.userType})}])
                 } else{
                   console.log(result.data.messages.message)
-                  navigation.replace('LogIn');
+                  checkToken()
                 }
               }catch (error) {
-                navigation.replace('LogIn');
+                checkToken()
               }
           } else {
-            navigation.replace('LogIn');
+            checkToken()
           }
         }
     };
 
+    const checkToken = async () => {
+      const token = await AsyncStorage.getItem("token")
+      if(!token) {
+        await AsyncStorage.multiRemove(['token', 'userInformation', 'DPLink', 'Image_ID']);
+        navigation.dispatch(
+          CommonActions.reset({
+              index: 0,
+              routes: [{ name: 'LogIn'}],
+          })
+        );
+        return
+      }
+      else {
+        console.log("token: ", token)
+          const userInformationString = await AsyncStorage.getItem('userInformation');
+          if(userInformationString === null){
+            await AsyncStorage.multiRemove(['token', 'DPLink', 'Image_ID']);
+            navigation.dispatch(
+              CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: 'LogIn'}],
+              })
+            );
+            return
+          } 
+          const userInformation = JSON.parse(userInformationString)
+          console.log("test", userInformation)
+          navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'MainTabs', params: { userInformation: userInformation, token: token } }],
+            })
+          );
+        return
+      }
+      
+    }
     // Call fetchData function after 2000ms (2 seconds)
     const timer = setTimeout(fetchData, 2000);
 

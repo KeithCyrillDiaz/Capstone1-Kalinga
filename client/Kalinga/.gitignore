@@ -2,6 +2,7 @@
 
 # dependencies
 node_modules/
+package-lock.json
 
 # Expo
 .expo/
@@ -34,5 +35,6 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-#package-lock.json
-package-lock.json
+android/
+.expo/
+Recycle_Bin/

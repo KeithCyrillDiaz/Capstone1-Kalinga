@@ -4,52 +4,109 @@ import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import * as Font from 'expo-font';
 import { 
-  ScrollView, 
-  Button,
   Text, 
   View, 
-  Image,
   SafeAreaView, 
   StatusBar, 
   StyleSheet, 
   TouchableOpacity,
   TextInput,
   Alert,
-  KeyboardAvoidingView
+  Modal,
+  Dimensions,
+  Image,
+  ScrollView,
+  TouchableHighlight,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native'; // Correct import
-
-import { Ionicons } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
+import Spinner from 'react-native-loading-spinner-overlay';
+import ImageZoom from 'react-native-image-pan-zoom';
 import { Picker } from '@react-native-picker/picker';
-import randomatic from 'randomatic';
-import { BackHandler } from 'react-native';
 
 
 
 
-export default function RequestorProfile() {
+export default function RequestorProfile({route}) {
 
-  const Requestor_ID = randomatic('Aa0', 20);
+  const userInformation = route.params.data
+  const Requestor_ID = route.params.data.Requestor_ID
+
+  const [isFormFilled, setIsFormFilled] = useState(false)
+  const [selectedImage, setSelectedImage] = useState({});
+  const [modalVisible, setModalVisible] = useState(false);
+  const [scrollableHorizontal, setScrollableHorizontal] = useState(false)
+  const [imageContainer, setImageContainer] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedImageUrl, setSelectedImageUrl] = useState('');
+
+
+  let city
 
   const [formData, setFormData] = useState({
     Requestor_ID: Requestor_ID,
     userType: "Requestor",
     RequestStatus: "Pending",
-      fullName: '',
-      phoneNumber: '',
-      emailAddress: '',
-      homeAddress: '',
+      fullName: userInformation.fullName,
+      fullName: userInformation.fullName,
+      phoneNumber: userInformation.mobileNumber,
+      emailAddress: userInformation.email,
+      homeAddress: userInformation.homeAddress,
       city: '',
       medicalCondition: '',
+      milkBank: "",
       milkAmount: '',
       BabyCategory: '',
-      ReasonForRequesting: '',
+      ReasonForRequesting: userInformation.RFR,
+      
   });
+
+  const getCity = () => {
+
+    if(userInformation.homeAddress.endsWith("City")){
+      const addressArray = userInformation.homeAddress.split(" ")
+      if( addressArray[addressArray.length - 1] === "City")
+        city = addressArray[addressArray.length - 2] + " " + addressArray[addressArray.length - 1]
+    }
+    return
+  }
+
+  useEffect(() => {
+    getCity();
+  },[])
+
+
+  const checkForm = () => {
+    let keysToCheck = [
+      'fullName',
+      'phoneNumber',
+      'emailAddress',
+      'homeAddress',
+      'city',
+      'medicalCondition',
+      'milkBank',
+      'milkAmount',
+      'BabyCategory',
+      'ReasonForRequesting',
+ 
+      ];
+      const isFormDataValid = keysToCheck.every(key => formData[key].trim() !== '');
+  
+      if (isFormDataValid) {
+          console.log('All values until medical condition are valid');
+          setIsFormFilled(true)
+          
+      } else {
+          console.log('Some values until medical condition are empty');
+          setIsFormFilled(false)
+      }
+  }
+
+  useEffect(()=> {
+    checkForm()
+  },[formData.ReasonForRequesting, selectedImage])
+
   const handleInputChange = (field, value) => {
     if (field === 'BabyCategory') {
       console.log("Baby Category Value:", value);
@@ -89,7 +146,16 @@ export default function RequestorProfile() {
       ...prevData,
       RequestStatus: 'Pending',
     }));
-    navigation.navigate('MakeRequestReceipt', { formData: formData, BabyCategory: formData.BabyCategory, city: formData.city});
+    checkForm()
+    console.log(formData)
+    if(!isFormFilled ||  Object.keys(selectedImage).length === 0){
+      if(!isFormFilled)
+        Alert.alert("Form Incomplete", "Please complete all required fields.");
+      else
+        Alert.alert("Image Required", "Please upload your prescription.");
+      return
+    }
+    navigation.navigate('MakeRequestReceipt', { selectedImage: selectedImage, formData: formData});
 };
 
 const handleChange = (name, value) => {
@@ -99,16 +165,65 @@ const handleChange = (name, value) => {
   }));
 };
 
-useEffect(() => {
-  const backAction = () => {
-    navigation.navigate('Requestor Tabs'); // Navigate to AdminMenu screen on back button press
-    return true; // Prevent default back button behavior (e.g., app exit)
-  };
 
-  const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+const handleImageUpload = async (attachmentType) => {
+  try {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+          Alert.alert('Permission Denied', 'Sorry, we need camera roll permissions to make this work!');
+          return;
+      }
 
-  return () => backHandler.remove(); // Cleanup the event listener on component unmount
-}, []);
+      const result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [Dimensions.get('window').width, Dimensions.get('window').height],
+          quality: 1,
+          multiple: true, 
+      });
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+          let fileType = ''
+        result.assets.forEach(image => {
+
+          if (image.type === 'image' || !image.type.includes('/')) {
+                    fileType = image.type + "/jpeg"
+
+          } else {
+
+            fileType = image.type
+
+          }
+        });
+        
+        setSelectedImage(prevState => ({
+            ...prevState,
+          
+        
+            [attachmentType]: ({
+              uri: result.assets[0].uri,
+              name: `${attachmentType}.png`, 
+              type: fileType,
+              userType: "Requestor",
+              owner: userInformation.fullName,
+              ownerID: userInformation.Requestor_ID
+          
+            })
+            
+        }));
+
+        const numberOfObjects = Object.keys(selectedImage).length;
+        if (numberOfObjects >= 3) setScrollableHorizontal(true);
+
+        setImageContainer(true)
+    }
+        
+      
+  } catch (error) {
+      Alert.alert('Error', 'Failed to pick an image.');
+  }
+
+}
 
     return (
       <SafeAreaView style={globalStyles.container}>
@@ -154,6 +269,7 @@ useEffect(() => {
                 <TextInput
                     style={styles.form2}
                     value={formData.homeAddress}
+                    multiline={true}
                     placeholder="Home Address *"
                     placeholderTextColor="#E60965"
                     onChangeText={(text) => handleInputChange('homeAddress', text)}
@@ -173,39 +289,80 @@ useEffect(() => {
                                 <Picker.Item label="Quezon City" value="Quezon City" />
                               </Picker>
                               </View>
+                  <View
+                    style={{
+                      fontFamily: "OpenSans-Regular",
+                      borderColor: '#E60965', // Border color
+                      borderWidth: 1, // Border width
+                      borderRadius: 10, // Border radius
+                      paddingHorizontal: 10,
+                      marginBottom: 5,
+                      width: '90%',
+                      alignSelf: 'center', // Center the input horizontally
+                      backgroundColor: '#fff', // Background color
+                    }}
+                  >
+                      <Picker
+                        selectedValue={formData.medicalCondition}
+                        style ={{color: '#E60965',}}
+                        onValueChange={(itemValue) =>
+                          handleChange("medicalCondition", itemValue)
+                        }
+                        >
+                        <Picker.Item label="Medical Condition" value="" />
+                        <Picker.Item label="Normal" value="Normal" />
+                        <Picker.Item label="Sick" value="Sick" />
+                    </Picker>
+                  </View>
+                  <View style={styles.dropdownContainer}>
+                    <Picker
+                      selectedValue={formData.BabyCategory} // Use formData.BabyCategory as the selected value
+                      onValueChange={(text) => handleInputChange('BabyCategory', text)} // Update BabyCategory state
+                      style={styles.dropdown}
+                    >
+                      <Picker.Item label="Baby Category" value="Baby Category" />
+                      <Picker.Item label="Healthy Baby" value="Healthy " style={styles.dropdownItem} />
+                      <Picker.Item label="Sick Baby" value="Sick " style={styles.dropdownItem} />
+                      <Picker.Item label="Medically Fragile Baby" value="Medically Fragile" style={styles.dropdownItem} />
+                      <Picker.Item label="Preterm Baby" value="Preterm " style={styles.dropdownItem} />
+                    </Picker>
+                   </View> 
 
-                <TextInput
-                    style={styles.form1}
-                    value={formData.medicalCondition}
-                    placeholder="Medical Condition (if applicable)"
-                    placeholderTextColor="#E60965"
-                    onChangeText={(text) => handleInputChange('medicalCondition', text)}
-                />
-            <View style={styles.bodyForm1}>
+                    <View
+                    style={{
+                      fontFamily: "OpenSans-Regular",
+                      borderColor: '#E60965', // Border color
+                      borderWidth: 1, // Border width
+                      borderRadius: 10, // Border radius
+                      paddingHorizontal: 10,
+                      marginBottom: 5,
+                      width: '90%',
+                      alignSelf: 'center', // Center the input horizontally
+                      backgroundColor: '#fff', // Background color
+                    }}
+                  >
+                      <Picker
+                        selectedValue={formData.milkBank}
+                        style ={{color: '#E60965',}}
+                        onValueChange={(itemValue) =>
+                          handleChange("milkBank", itemValue)
+                        }
+                        >
+                        <Picker.Item label="Choose Milk Bank" value="" />
+                        <Picker.Item label="Quezon City General Hospital - Human Milk Bank" value="Quezon City General Hospital - Human Milk Bank" />
+                    </Picker>
+                  </View>   
+                  
+              <View style={styles.bodyForm1}>
                     <TextInput
                         style={styles.form3}
                         value={formData.milkAmount}
+                        keyboardType='numeric'
                         placeholder="Amount of milk to be requested (mL) *"
                         placeholderTextColor="#E60965"
                         onChangeText={(text) => handleInputChange('milkAmount', text)}
-                    />
-              
-                  <View style={styles.dropdownContainer}>
-                  <Picker
-                    selectedValue={formData.BabyCategory} // Use formData.BabyCategory as the selected value
-                    onValueChange={(text) => handleInputChange('BabyCategory', text)} // Update BabyCategory state
-                    style={styles.dropdown}
-                  >
-                    <Picker.Item label="Baby Category" value="Baby Category" />
-                    <Picker.Item label="Healthy Baby" value="Healthy " style={styles.dropdownItem} />
-                    <Picker.Item label="Sick Baby" value="Sick " style={styles.dropdownItem} />
-                    <Picker.Item label="Medically Fragile Baby" value="Medically Fragile" style={styles.dropdownItem} />
-                    <Picker.Item label="Preterm Baby" value="Preterm " style={styles.dropdownItem} />
-                  </Picker>
-                </View>
+                    />                 
               </View>
-          
-
                     <TextInput
                         style={styles.form2}
                         value={formData.ReasonForRequesting}
@@ -214,11 +371,58 @@ useEffect(() => {
                         onChangeText={(text) => handleInputChange('ReasonForRequesting', text)}
                         />   
 
-                    <Text style={styles.bodyNote}>Note: Maximum of 3 images or files per field.</Text>
-
-                    <View style = {styles.uploadContainer}>
+                    <TouchableOpacity onPress={() => handleImageUpload("Prescription")} style = {styles.uploadContainer}>
                         <Text style = {styles.uploadContainerTitle}>Attach Prescription *</Text>
+                    </TouchableOpacity>
+
+                    {imageContainer && (
+                      <View  style = {{
+                        height: 150,
+                        marginBottom: 20,
+                        borderWidth: 1,
+                        backgroundColor: "white",
+                        paddingLeft: 10,
+                        paddingRight: 10,
+                        borderColor: "#E60965",
+                        borderRadius: 15,
+                        elevation: 5,
+                        marginTop: 20,
+                        marginHorizontal: "10%",
+                        alignItems: "center"
+                        }}>
+                        <ScrollView 
+                          showsHorizontalScrollIndicator={true}
+                          overScrollMode='never'
+                          horizontal={scrollableHorizontal}
+                        contentContainerStyle={{ flexDirection: 'row', }}
+                      >
+                          {Object.entries(selectedImage).map(([attachmentType, value]) => (
+                                    <TouchableOpacity
+                                        key={attachmentType}
+                                        onPress={() => {
+                                            setSelectedImageUrl(value.uri);
+                                            setModalVisible(true);
+                                        }}
+                                    >
+                                        <View style={{ marginHorizontal: 5 , alignItems: "center"}}>
+                                            <Text style ={{
+                                              textAlign: "center",
+                                              color: "#E60965",
+                                              marginTop: 7,
+                                          
+                                            }}>{attachmentType}</Text>
+                                            <Image
+                                                source={{ uri: value.uri }}
+                                                style={{ width: 100, height: 100, marginTop: 7, resizeMode: 'cover',}}
+                                            />
+                                        </View>
+                                    </TouchableOpacity>
+                                ))}
+
+                        </ScrollView>
                     </View>
+                )}
+            
                             
                 </View>
                 <TouchableOpacity style={styles.reqButton} onPress={() => navigatePage("MakeRequestReceipt")}>
@@ -226,6 +430,47 @@ useEffect(() => {
                 </TouchableOpacity>
             </View>
         </ScrollView>
+
+        <Modal
+                  animationType="slide"
+                  transparent={true}
+                  visible={modalVisible}
+                  onRequestClose={() => {
+                      setModalVisible(!modalVisible);
+                  }}
+              >
+                  <View style={styles.modalContainer}>
+                  <ImageZoom
+                      cropWidth={Dimensions.get('window').width}
+                      cropHeight={Dimensions.get('window').height}
+                      imageWidth={Dimensions.get('window').width}
+                      imageHeight={Dimensions.get('window').height * 1} // Adjust the height as needed
+                      enableSwipeDown={true}
+                      onSwipeDown={() => setModalVisible(false)} // Close modal on swipe down
+                      style={{ backgroundColor: 'black' }} // Set background color to black to avoid seeing the underlying content
+                  >
+                      <Image
+                          source={{ uri: selectedImageUrl }}
+                          style={{ width: '100%', height: '100%' }}
+                      />
+                  </ImageZoom>
+                      <TouchableHighlight
+                          style={styles.closeButton}
+                          onPress={() => {
+                              setModalVisible(!modalVisible);
+                          }}
+                      >
+                          <AntDesign name="close" size={24} color="black" />
+                      </TouchableHighlight>
+                  </View>
+              </Modal>
+
+              <Spinner
+              visible={isLoading}
+              textContent={'Loading...'}
+              textStyle={{ color: '#FFF' }}
+            />
+      
 
             
             
@@ -284,8 +529,9 @@ const styles = StyleSheet.create({
   },
 
   bodyForm1:{
-    flexDirection: "row",
-    alignSelf:"center",
+    width: "90%",
+    alignSelf: "center",
+    paddingVertical: 3
   },
 
  
@@ -323,30 +569,26 @@ const styles = StyleSheet.create({
     borderRadius: 10, // Border radius
     paddingHorizontal: 10,
     marginBottom: 5,
-    width: '30%',
+    width: '100%',
     alignSelf: 'center', // Center the input horizontally
     backgroundColor: '#fff',
-    justifyContent: "space-between"
   },
   
   uploadContainer: {
-    height: 45,
     fontFamily: "OpenSans-Regular",
     borderColor: '#E60965', // Border color
     borderWidth: 1, // Border width
     borderRadius: 10, // Border radius
-    paddingHorizontal: 10,
     marginBottom: 5,
     width: '70%',
     alignSelf: 'center', // Center the input horizontally
     backgroundColor: '#fff', // Background color
-    
+    padding: 10
   },
 
   uploadContainerTitle: {
     color: '#E60965',
-    margin: 15,
-    marginLeft: 2,
+    textAlign: "center",
   },
 
   reqButton: {
@@ -367,11 +609,10 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         paddingHorizontal: 10,
         marginBottom: 5,
-        width: '55%',
+        width: '90%',
         alignSelf: 'center',
         backgroundColor: '#fff',
         height:10,
-        marginLeft: 20,
         paddingBottom: 50
 
 },

@@ -11,8 +11,16 @@ import {
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import Header from "./Header";
+import { useNavigation } from '@react-navigation/native';
 
-export default function ReportBugSuccess() {
+export default function ReportBugSuccess({route}) {
+
+ const {userInformation, UserName, token} = route.params
+  const navigate = useNavigation()
+ const buttonClick = () => {
+  navigate.goBack("DonorSettingScreen", {userInformation: userInformation, UserName: UserName, token: token})
+ }
+
   return (
     <SafeAreaView style={bodyStyle.main}>
       <ScrollView stickyHeaderIndices={[1]}>
@@ -63,10 +71,10 @@ export default function ReportBugSuccess() {
           alignItems: "center",
           marginBottom: 24,
         }}>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => buttonClick()}>
           <View style={buttonStyle.primary}>
             <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
-              Submit
+              Done
             </Text>
           </View>
         </TouchableOpacity>

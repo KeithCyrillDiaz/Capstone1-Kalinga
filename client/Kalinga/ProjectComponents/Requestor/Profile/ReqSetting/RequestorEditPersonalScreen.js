@@ -19,13 +19,14 @@ import { BASED_URL } from "../../../../MyConstants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from 'react-native-loading-spinner-overlay';
 import * as ImagePicker from 'expo-image-picker';
-import ImageZoom from 'react-native-image-pan-zoom';
+import { useNavigation } from '@react-navigation/native';
 
 export default function EditPersonalScreen({route}) {
   
  const userInformation = route.params.userInformation
  const userName = route.params.userName
 
+ const navigate = useNavigation()
  const [userData, setUserData] = useState(userInformation)
  const [selectedImage, setSelectedImage] = useState({});
  const [profilePic, setProfilePic] = useState("")
@@ -71,6 +72,7 @@ export default function EditPersonalScreen({route}) {
                 console.log("link: ", result.data.link)
                 console.log("Image_ID: ", result.data.Image_ID)
                 setProfilePic(result.data.link)
+         
                 setSelectedImage({})
                 
                }
@@ -79,7 +81,6 @@ export default function EditPersonalScreen({route}) {
     console.log("error: ", error)
   } finally {
     fetchDP()
-    setIsloading(false)
   }
  }
  const handleImageUpload = async () => {
@@ -142,11 +143,13 @@ const fetchDP = async () => {
 
 useEffect(() => {
   fetchDP()
+  setIsloading(false)
 },[selectedImage])
 
 
 const saveDetails = async () => {
   try{
+    setIsloading(true)
     if(userData !== userInformation){
       const result = await axios.post(`${BASED_URL}/kalinga/updateUserInformation`,{
         userData: userData
@@ -156,24 +159,29 @@ const saveDetails = async () => {
         setUserData(result.data.result)
         const updatedData = result.data.result
         await AsyncStorage.setItem('userInformation', JSON.stringify(updatedData))
-      }
+      } else console.log("Error: ", result.data.messages.message)
     }
     uploadImage();
-    return
+
   } catch(error) {
+    console.log("Error: ", error)
     if(error)Alert.alert('Network error', `Please check your internet connection`)
         else
         Alert.alert('Something went wrong', "Please try again later")
+  } finally {
+    fetchDP()
   }
 
 }
 
  const fetchData = async () => {
+  setIsloading(true)
   const userInformationToString = await AsyncStorage.getItem('userInformation')
   if(userInformationToString !== null ) {
     const userInformation = JSON.parse(userInformationToString);
     setUserData(userInformation)
   }
+  setIsloading(false)
  }
 
  useEffect(()=>{
@@ -207,14 +215,13 @@ const saveDetails = async () => {
         <StatusBar />
         <Header title="Personal Information" />
         
-        <Spinner 
-          visible = {isLoading}
-          textContent={'Processing...'}
-          textStyle={{ color: '#FFF' }}
-        />
-
-
-<View
+        <ScrollView
+         overScrollMode="false"
+         style = {{
+           flex: 1,
+         }}
+        >
+        <View
           style={{
             width: "100%",
             paddingHorizontal: 24,
@@ -342,7 +349,8 @@ const saveDetails = async () => {
         <View style={{ paddingHorizontal: 16 }}>
           <View style={inputStyle.container}>
             <Text style={inputStyle.label}>Address: </Text>
-            <TextInput style={inputStyle.primary} 
+            <TextInput style={[inputStyle.primary, {width: "80%"}]} 
+             multiline={true}
              value = {userData.homeAddress}
              onChangeText={(text) =>
               setUserData((prevUserData) => ({
@@ -369,6 +377,17 @@ const saveDetails = async () => {
             </View>
           </TouchableOpacity>
         </View>
+        </ScrollView>
+
+
+        <Spinner 
+          visible = {isLoading}
+          textContent={'Processing...'}
+          textStyle={{ color: '#FFF' }}
+        />
+
+
+        
       </ScrollView>
     </SafeAreaView>
   );
@@ -397,6 +416,10 @@ const inputStyle = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 16,
     borderRadius: 13,
+    backgroundColor: "white",
+    elevation: 5,
+    marginVertical: 7,
+
   },
 
   label: {

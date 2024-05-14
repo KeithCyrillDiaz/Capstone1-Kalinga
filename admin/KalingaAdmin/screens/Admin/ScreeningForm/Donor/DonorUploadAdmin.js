@@ -28,7 +28,7 @@ const DonorUploadAdmin = ({ route }) => {
   const [images, setImages] = useState({});
   const [zip, setZip] = useState({})
   const [url, setUrl] = useState("");
-  const [owner, setOwner] = useState("")
+  const [owner, setOwner] = useState(" the User")
 
   const navigation = useNavigation();
 
@@ -98,27 +98,37 @@ const DonorUploadAdmin = ({ route }) => {
       console.log("ID: ", userID)
       if(status !== "Approved"){
           console.log("status: ", status)
-          const result = await axios.post(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`,{
+          const result = await axios.patch(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`,{
               status: "Declined"
           })
           return
       }
       console.log("status: ", status)
-      const result = await axios.post(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
+      const result = await axios.patch(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
     }
 
     const fetchData = async () => {
       try {
 
           const response = await axios.get(`${BASED_URL}/kalinga/getMedicalRequirementImage/${Applicant_ID}`);
-          const result = response.data.image
-          // console.log('result: ', result)
-          setImages(result)
-          setOwner(result[0].owner)
+          if(response.data.messages.code === 1){
+            console.log("No image uploaded")
+        } else{
+            const result = response.data.image
+            setImages(result)
+            if(result[0].owner !== undefined){
+                setOwner(result[0].owner)
+                console.log("owner: ")
+            }
+         
+        }
 
           const zipFile = await axios.get(`${BASED_URL}/kalinga/getMedicalRequirementFile/${Applicant_ID}`)
-          setZip(zipFile.data.zipFile)
-          // console.log("zipFile: ", zipFile.data.zipFile.link)
+          if(zipFile.data.messages.code === 1) console.log( "File Result: ", zipFile.data.messages.message)
+            else {
+                console.log( "File Result: ", zipFile.data.messages.message)
+                setZip(zipFile.data.zipFile)
+            }
           
          
       } catch (error) {
@@ -134,13 +144,55 @@ const DonorUploadAdmin = ({ route }) => {
 
  
   const handleImage = (imageName) => {
-    images.forEach(image => {
-      if(image.originalname === imageName) {
-        setUrl(`${image.link}`)
-      }// Print the originalname property of each image object
-      setModalVisible(true)
-  });
-  }
+    if (!Array.isArray(images)) {
+        console.log( "Images are not Iteratable")
+        console.log("Images: ", images)
+        if(images.originalname === imageName) {
+            console.log("imageName: ", imageName)
+            if(!images.link) {
+                console.log("Missing Link")
+                Alert.alert("No Image uploaded","User Did not upload an Image for this")
+                return
+            }
+            setUrl(`${images.link}`)
+            setModalVisible(true)
+            }// Print the originalname property of each image object
+    } else {
+        const foundImage = images.find(image => image.originalname === imageName);
+        if (!foundImage) {
+            console.log(`No image found for ${imageName.replace('.png', '')}`);
+            if(imageName === "Government_ID.png"){
+              Alert.alert("No Image uploaded", `User Did not upload an Image for Government ID `);
+              return
+            }
+            if(imageName === "HepaB.png"){
+              Alert.alert("No Image uploaded", `User Did not upload an Image for Hepa B`);
+              return
+            }
+             
+            Alert.alert("No Image uploaded", `User Did not upload an Image for ${imageName.replace('.png', '')}`);
+            return;
+        }
+      try{
+        images.forEach(image => {
+            if(image.originalname === imageName) {
+              if(image.link === null) {
+                  console.log("Missing Link")
+                  Alert.alert("No Image uploaded", `User Did not upload an Image for ${imageName.replace('.png', '')}`)
+                  return
+              }
+              setUrl(`${image.link}`)
+              setModalVisible(true)
+            } 
+          });
+        } catch (error) {
+            console.log(error)
+            Alert.alert("No Image uploaded","User Did not upload an Image")
+            return
+        }
+     
+    }  
+}
 
   const handleDownload = async () => {
     const downloadLink = `${zip.link}`; // Replace with your generated download link
@@ -165,7 +217,9 @@ const DonorUploadAdmin = ({ route }) => {
         showsVerticalScrollIndicator={false}
         >
                <View style ={styles.UploadContainer}>
-                    <TouchableOpacity
+               {Object.keys(images).length !== 0 && (
+                <>
+                   <TouchableOpacity
                     style={styles.Uploadbutton}
                     onPress={() =>handleImage('HepaB.png')}
                     >
@@ -197,15 +251,22 @@ const DonorUploadAdmin = ({ route }) => {
                   >
                     <Text style={styles.UploadbuttonTitle}>View Government ID Result</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.Uploadbutton}
-                    onPress={() =>handleDownload()}
-                  >
-                    <Text style={styles.UploadbuttonTitle}>Download Documents as Zip</Text>
-                  </TouchableOpacity>
+                  
+                </>
+               )}
+                   
+                  {Object.keys(zip).length !== 0 && (
+                    <TouchableOpacity
+                      style={styles.Uploadbutton}
+                      onPress={() =>handleDownload()}
+                    >
+                      <Text style={styles.UploadbuttonTitle}>Download Documents as Zip</Text>
+                    </TouchableOpacity>
+                  )}
+                
                </View>
 
-            <View style ={styles.ButtonContainer}>
+            <View style ={[styles.ButtonContainer, {gap: 50}]}>
                     <TouchableOpacity style={styles.Approvedbutton} onPress={() => approvedUser("AdminApprovedDonor")}>
                         <Text style={styles.ApprovedbuttonTitle}>Approved</Text>
                      </TouchableOpacity>

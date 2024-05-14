@@ -1,29 +1,11 @@
 import mongoose from 'mongoose';
 
-// const moment = require('moment');
-// const currentTime = moment();
-// const formattedTime = currentTime.format('YYYY-MM-DD HH:mm:ss');
-//console.log(formattedTime);
-
-
-// const DonorSchema = new mongoose.Schema({
-
-//     email: {type: String, required: true},
-//     password: {
-//             type: String,
-//             required: true,
-//         },
-//     fullName: {type: String},
-//     createdAt: {type: Date, default: Date.now},
-//     updatedAt: {type: Date, default: Date.now},
-
-// });
-
 const DonorSchema = new mongoose.Schema({
 
     Donor_ID: {type:  String},
     DPLink:  {type: String},
     Image_ID: {type: String},
+    Blocked: {type: String, default: "No"},
     userName: {type: String},
     MilkAmountDonated: {type: Number},
     fullName: {type: String},
@@ -56,6 +38,7 @@ const RequestorSchema = new mongoose.Schema({
     DPLink:  {type: String},
     Image_ID: {type: String},
     userName: {type: String},
+    Blocked: {type: String, default: "No"},
     MilkAmountReceived: {type: Number},
     fullName: {type: String},
     birthDate: {type: String},
@@ -70,6 +53,7 @@ const RequestorSchema = new mongoose.Schema({
     birthday: {type: String},
     mobileNumber: {type: String},
     homeAddress: {type: String},
+    RFR: {type: String},
     NumberPost: {type: String},
     Badge_ID: [{ type: String }],
     Community_ID: [{ type: String }],
@@ -88,19 +72,22 @@ export const getDonor = () => DonorModel.find()
 export const getDonorByEmail = (email: string) => DonorModel.findOne({email})
 export const getDonorById = (Donor_ID: string) => DonorModel.findOne({Donor_ID})
 export const createDonor = (values: Record<string, any>) => new DonorModel(values).save().then((donor) => donor.toObject())
-export const updateDonorPassword = (Donor_ID: string, Password: string, salt: string) => DonorModel.findOneAndUpdate({Donor_ID}, { $set: { password: Password, salt: salt } }, { new: true })
+export const updateDonorPassword = (Donor_ID: string, Password: string, salt: string) => DonorModel.findOneAndUpdate({Donor_ID}, { $set: { password: Password, salt: salt, updatedAt: Date.now()} }, { new: true })
 export const updateDonorDetails = (Donor_ID: string, userDetails: any) => DonorModel.findOneAndUpdate({Donor_ID}, { $set: userDetails }, { new: true })
 export const updateDonorProfilePic = (Donor_ID: string, link: string, id: string) => DonorModel.findOneAndUpdate({Donor_ID}, { $set: {DPLink: link, Image_ID: id} }, { new: true })
+export const BlockedDonor = (Donor_ID: string) => DonorModel.findOneAndUpdate({Donor_ID}, {$set: {Blocked: "Yes"}}, {new: true})
+export const getBlockedDonors = () => DonorModel.find({Blocked: "Yes"})
 
 
 export const getRequestor = () => RequestorModel.find()
 export const updateRequestorPassword=(Requestor_ID: string, Password: string, salt: string) => RequestorModel.findOneAndUpdate({Requestor_ID}, { $set: { password: Password, salt: salt } }, { new: true })
 export const updateRequestorDetails=(Requestor_ID: string, userDetails: any) => RequestorModel.findOneAndUpdate({Requestor_ID}, { $set: userDetails }, { new: true })
 export const updateRequestorProfilePic = (Requestor_ID: string, link: string, id: string) => RequestorModel.findOneAndUpdate({Requestor_ID}, { $set: {DPLink: link, Image_ID: id} }, { new: true })
-
 export const getRequestorByEmail = (email: string) => RequestorModel.findOne({email})
 export const getRequestorById = (Requestor_ID: string) => RequestorModel.findOne({Requestor_ID})
 export const createRequestor = (values: Record<string, any>) => new RequestorModel(values).save().then((donor) => donor.toObject())
+export const getBlockedRequestors = () => RequestorModel.find({Blocked: "Yes"})
+export const BlockedRequestor = (Requestor_ID: string) => RequestorModel.findOneAndUpdate({Requestor_ID}, {$set: {Blocked: "Yes"}}, {new: true})
 
 //export const deleteUserById = (id: string) => userModel.findOneAndDelete({_id: id})
 

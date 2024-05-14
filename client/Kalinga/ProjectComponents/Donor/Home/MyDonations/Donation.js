@@ -10,7 +10,9 @@ import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 
 const Tab = createMaterialTopTabNavigator();
 
-const MyDonationTabs = () => {
+const MyDonationTabs = ({route}) => {
+    const userInformation = route.params.data
+    const token = route.params.token
     return (
         <View style={{ flex: 1 }}>
             <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
@@ -44,6 +46,7 @@ const MyDonationTabs = () => {
                     <Tab.Screen 
                         name="Overall"
                         component={DonationHome} 
+                        initialParams={{ userInformation: userInformation, token: token }}
                         options={{
                             tabBarLabel: 'Overall' ,
                         }}
@@ -51,6 +54,7 @@ const MyDonationTabs = () => {
                     <Tab.Screen 
                         name="Pending"
                         component={Ongoing} 
+                        initialParams={{ userInformation: userInformation, token: token }}
                         options= {{
                             tabBarLabel: 'Ongoing',
                         }}
@@ -58,6 +62,7 @@ const MyDonationTabs = () => {
                     <Tab.Screen
                         name="Completed"
                         component={Completed} 
+                        initialParams={{ userInformation: userInformation, token: token }}
                         options={{
                             tabBarLabel: "Completed",
                         }}

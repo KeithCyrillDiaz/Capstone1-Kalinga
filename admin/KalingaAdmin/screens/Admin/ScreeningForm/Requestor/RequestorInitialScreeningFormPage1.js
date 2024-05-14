@@ -110,6 +110,7 @@ export const FirstScreen = ({route}) => {
                     <TextInput
                         style={styles.BiginputField}
                         placeholder="Home Address"
+                        multiline={true}
                         placeholderTextColor="#E60965"
                         value={"Address: " + screeningFormID.homeAddress}
                         editable={false}
@@ -184,7 +185,8 @@ export const SecondScreen = ({route}) => {
 
     const [medicalAbstractForm, setMedicalAbstractForm] = useState({})
     const [modalVisible, setModalVisible] = useState(false);
-    const [images, setImages] = useState({})
+    const [images, setImages] = useState({});
+    const [oneImage, setOneImage] = useState({})
     const [zip, setZip] = useState({})
     const [url, setUrl] = useState("")
     const [owner, setOwner] = useState("")
@@ -193,31 +195,82 @@ export const SecondScreen = ({route}) => {
         try {
   
             const response = await axios.get(`${BASED_URL}/kalinga/getMedicalRequirementImage/${Applicant_ID}`);
-            const result = response.data.image
-            console.log('result: ', result)
-            setImages(result)
-            setOwner(result[0].owner)
-            console.log("owner: ",result[0].owner)
+            if(response.data.messages.code === 1){
+                console.log("No image uploaded")
+      
+            } else{
+                const result = response.data.image
+                setImages(result)
+                if(result[0].owner !== undefined){
+                    setOwner(result[0].owner)
+                    console.log("owner: ")
+                }
+             
+            }
+           
 
             const zipFile = await axios.get(`${BASED_URL}/kalinga/getMedicalRequirementFile/${Applicant_ID}`)
-            setZip(zipFile.data.zipFile)
+            if(zipFile.data.messages.code === 1) console.log( "File Result: ", zipFile.data.messages.message)
+            else {
+                console.log( "File Result: ", zipFile.data.messages.message)
+                setZip(zipFile.data.zipFile)
+            }
+           
             
            
-        } catch (error) {
+        } catch (error) {   
           console.error('Error fetching data:', error);
+          if(error)Alert.alert("Network Error", "Please check your internet Connection")
+            return
         }
       };
 
     const handleImage = (imageName) => {
-        images.forEach(image => {
-          if(image.originalname === imageName) {
-            setUrl(`${image.link}`)
-          }// Print the originalname property of each image object
-          setModalVisible(true)
-      });
-      }
+        if (!Array.isArray(images)) {
+            console.log( "Images are not Iteratable")
+            console.log("Images: ", images)
+            if(images.originalname === imageName) {
+                console.log("imageName: ", imageName)
+                if(!images.link) {
+                    console.log("Missing Link")
+                    Alert.alert("No Image uploaded","User Did not upload an Image for this")
+                    return
+                }
+                setUrl(`${images.link}`)
+                setModalVisible(true)
+                }// Print the originalname property of each image object
+        } else {
+            const foundImage = images.find(image => image.originalname === imageName);
+            if (!foundImage) {
+                console.log(`No image found for ${imageName.replace('.png', '')}`);
+                Alert.alert("No Image uploaded", `User Did not upload an Image for ${imageName.replace('.png', '')}`);
+                return;
+            }
+            images.forEach(image => {
+                if(image.originalname === imageName) {
+                    if(!image.link) {
+                        console.log("Missing Link")
+                        Alert.alert("No Image uploaded","User Did not upload an Image for this")
+                        return
+                    }
+                    setUrl(`${image.link}`)
+                    setModalVisible(true)
+                } else{
+                    if(imageName === "Government_ID.png")
+                    Alert.alert("No Image uploaded","User Did not upload an Image for Government ID")
+                    else
+                    Alert.alert("No Image uploaded","User Did not upload an Image for Prescription")
+                    return
+                }
+            });
+        }  
+    }
 
       const handleDownload = async () => {
+        if (Object.keys(zip).length === 0){
+            console.log("Zip is empty")
+            return
+        }
         const downloadLink = `${zip.link}`; // Replace with your generated download link
         try {
             const supported = await Linking.canOpenURL(downloadLink);
@@ -268,13 +321,13 @@ export const SecondScreen = ({route}) => {
         console.log("ID: ", userID)
         if(status !== "Approved"){
             console.log("status: ", status)
-            const result = await axios.post(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`,{
+            const result = await axios.patch(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`,{
                 status: "Declined"
             })
             return
         }
         console.log("status: ", status)
-        const result = await axios.post(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
+        const result = await axios.patch(`${BASED_URL}/kalinga/deleteScreeningFormByID/${userID}`)
     }
 
     const approvedUser = (Page) => {
@@ -372,25 +425,31 @@ export const SecondScreen = ({route}) => {
                             editable={false}
                         />         
                 <View style ={styles.UploadContainer}>
-                        <TouchableOpacity
-                        style={styles.Uploadbutton}
-                        onPress={() =>handleImage('Government_ID.png')}
-                        >
-                        <Text style={styles.UploadbuttonTitle}>View Government ID</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.Uploadbutton}
-                        onPress={() => handleImage('Prescription.png')}
-                    >
-                        <Text style={styles.UploadbuttonTitle}>View Prescription</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                    style={styles.Uploadbutton}
-                    onPress={() =>handleDownload()}
-                  >
-                    <Text style={styles.UploadbuttonTitle}>Download Documents as Zip</Text>
-                  </TouchableOpacity>
-
+                    {Object.keys(images).length !== 0 && (
+                        <>
+                         <TouchableOpacity
+                               style={styles.Uploadbutton}
+                               onPress={() =>handleImage('Government_ID.png')}
+                               >
+                               <Text style={styles.UploadbuttonTitle}>View Government ID</Text>
+                           </TouchableOpacity>
+                           <TouchableOpacity
+                               style={styles.Uploadbutton}
+                               onPress={() => handleImage('Prescription.png')}
+                           >
+                               <Text style={styles.UploadbuttonTitle}>View Prescription</Text>
+                           </TouchableOpacity>
+                        </>  
+                    )}
+             
+                    {Object.keys(zip).length !== 0 && (
+                         <TouchableOpacity
+                         style={styles.Uploadbutton}
+                         onPress={() =>handleDownload()}
+                       >
+                         <Text style={styles.UploadbuttonTitle}>Download Documents as Zip</Text>
+                       </TouchableOpacity>
+                    )}
                 </View>
                
 

@@ -1,10 +1,9 @@
 import React, { useState, useEffect} from 'react';
 import { ScrollView, Text, View, StatusBar, StyleSheet, TouchableOpacity, Image, Alert, TextInput, SafeAreaView } from 'react-native';
 import { globalHeader } from '../../../../styles_kit/globalHeader.js';
-import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import axios from 'axios'; // Import axios
 import { BASED_URL } from '../../../../MyConstants.js';
-import { useNavigation, useRoute } from '@react-navigation/native'; // Import useRoute hook
+import { useNavigation, useRoute, useFocusEffect} from '@react-navigation/native'; // Import useRoute hook
 
 
 const RequestorRequestConfirmation = () => {
@@ -15,25 +14,15 @@ const RequestorRequestConfirmation = () => {
 
 
 
-    const [formData, setFormData] = useState({
-        fullName: '',
-        phoneNumber: '',
-        emailAddress: '',
-        homeAddress: '',
-        city: '',
-        medicalCondition: '',
-        milkAmount: '',
-        BabyCategory: '',
-        ReasonForRequesting: '',
-    });
+    const [formData, setFormData] = useState({});
 
     const fetchData = async () => {
         try {
             const response = await axios.get(`${BASED_URL}/kalinga/getRequestByID/${RequestID.formData}`);
             const data = response.data.Request;
             
-            // Log fetched data and update formData state
-            console.log('Fetched Data:', data);
+            // Log fetched data and up formData state
+            // console.log('Fetched Data:', data);
             setFormData(data);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -106,12 +95,16 @@ const RequestorRequestConfirmation = () => {
         { cancelable: false },
         
     );
-};
-    
+}; 
 
-    useEffect(() => {
+useFocusEffect(
+    React.useCallback(() => {
         fetchData();
-    }, []);
+    }, [])
+)
+    // useEffect(() => {
+    //     fetchData();
+    // }, []);
 
     console.log('FormData:', formData); // Log formData state
 
@@ -137,7 +130,7 @@ const RequestorRequestConfirmation = () => {
                         <View style={{marginTop: 15}}>
           <View style={styles.boxContainer}>
                             <View style={styles.boxContentContainer}>
-                                <Text style={styles.boxLabel}>Full Name</Text>
+                                <Text style={styles.boxLabel}>Full Name: </Text>
                                 <Text style={[styles.boxContent, styles.limitText]}>{formData.fullName}</Text>
                             </View>
                         </View>
@@ -145,60 +138,63 @@ const RequestorRequestConfirmation = () => {
 
                 <View style={styles.boxContainer}>
                     <View style={styles.boxContentContainer}>
-                    <Text style={styles.boxLabel}>Phone Number</Text>
+                    <Text style={styles.boxLabel}>Phone Number: </Text>
                     <Text style={[styles.boxContent, styles.limitText]}>{formData.phoneNumber}</Text>
                     </View>
                 </View>
 
-                <View style={styles.boxContainer}>
+                <View style={[styles.boxContainer, {height: 60}]}>
                     <View style={styles.boxContentContainer}>
-                    <Text style={styles.boxLabel}>Email Address</Text>
+                    <Text style={styles.boxLabel}>Email Address: </Text>
                     <Text style={[styles.boxContent, styles.limitText]}>{formData.emailAddress}</Text>
                     </View>
                 </View>
 
-                <View style={styles.boxContainer2}>
+                <View style={[styles.boxContainer2, {height: 80}]}>
                     <View style={styles.boxContentContainer}>
-                    <Text style={styles.boxLabel}>Home Address</Text>
+                    <Text style={styles.boxLabel}>Home Address: </Text>
                     <Text style={[styles.boxContent, styles.limitText]}>{formData.homeAddress}</Text>
                     </View>
                 </View>
 
-                <View style={styles.boxContainer2}>
+                <View style={[styles.boxContainer2, {height: 50}]}>
                     <View style={styles.boxContentContainer}>
-                    <Text style={styles.boxLabel}>City</Text>
+                    <Text style={styles.boxLabel}>City: </Text>
                     <Text style={[styles.boxContent, styles.limitText]}>{formData.city}</Text>
                     </View>
                 </View>
 
                 <View style={styles.boxContainer}>
                     <View style={styles.boxContentContainer}>
-                    <Text style={styles.boxLabel}>Medical Condition (if applicable)</Text>
+                    <Text style={styles.boxLabel}>Medical Condition: </Text>
                     <Text style={[styles.boxContent, styles.limitText]}>{formData.medicalCondition}</Text>
                     </View>
                 </View>
 
-                <View style={styles.bodyForm1}>
-                <TextInput
-                        style={[styles.form3, { color: '#E60965' }]}
-                        value={ formData.milkAmount }               
-                        placeholder="Amount of milk to be requested (mL) *"
+                <View style={[styles.bodyForm1, {width: "100%", paddingHorizontal: "6%"}]}>
+                    <TextInput
+                        style={[styles.form3, { color: '#E60965', width: "100%", fontWeight: "bold", paddingLeft: 20,}]}
+                        value={"Amount of milk to be requested: " + formData.milkAmount + " ml" }               
                         placeholderTextColor="#E60965"
                         editable={false}
-                        />
+                    />
+                </View>
+                <View style={styles.form4}>
+                    <Text style={styles.boxLabel}>Baby Category: </Text>
+                    <Text style={[styles.boxContent, styles.limitText]}>{formData.BabyCategory}</Text>
+                </View>
+             
 
-                <View style={styles.bodyForm2}>
-                    <View style={styles.form4}>
-                        <Text style={styles.boxLabel}>Baby Category</Text>
-                        <Text style={[styles.boxContent, styles.limitText]}>{formData.BabyCategory}</Text>
+                <View style={[styles.boxContainer2, {marginVertical: 10, width: "90%"}]}>
+                    <View style={styles.boxContentContainer}>
+                    <Text style={styles.boxLabel}>Reason for Requesting: </Text>
+                    <Text style={[styles.boxContent, styles.limitText]}>{formData.ReasonForRequesting}</Text>
                     </View>
                 </View>
-                </View>
-
-                <View style={styles.boxContainer2}>
+                <View style={[styles.boxContainer2, {marginVertical: 10, width: "90%", height: 100}]}>
                     <View style={styles.boxContentContainer}>
-                    <Text style={styles.boxLabel}>Reason for Requesting</Text>
-                    <Text style={[styles.boxContent, styles.limitText]}>{formData.ReasonForRequesting}</Text>
+                    <Text style={styles.boxLabel}>Submission Date: </Text>
+                    <Text style={[styles.boxContent, styles.limitText,]}>{formData.Date}</Text>
                     </View>
                 </View>
 
@@ -220,7 +216,7 @@ const RequestorRequestConfirmation = () => {
                     <Image source={{ uri: selectedImage }} style={styles.uploadedImage} />
                 )} */}
                              {formData.RequestStatus === 'Pending' && ( // Only render buttons if DonationStatus is 'Pending'
-                        <View style={styles.AdminButton}>
+                        <View style={[styles.AdminButton, {marginBottom: 40}]}>
                             <TouchableOpacity onPress={() => handleApproveButtonPress(RequestID)}>
                                 <View style={styles.ApprovebuttonContainer}>
                                     <Text style={styles.label}>Approve</Text>
@@ -262,9 +258,7 @@ headerButton: {
 },
 bodyForm1:{
     flexDirection: "row",
-    alignSelf:"center",
-    paddingLeft: 45
-
+    alignSelf:"center"
   },
   form3:{
     height: 52,
@@ -287,17 +281,20 @@ bodyForm1:{
     paddingLeft: 55
   },
   form4:{
-    height: 52,
+    height: 40,
+    paddingTop: 4,
     fontFamily: "OpenSans-Regular",
     borderColor: '#E60965', // Border color
     borderWidth: 1, // Border width
     borderRadius: 10, // Border radius
     paddingHorizontal: 10,
     marginBottom: 5,
-    width: '80%',
+    width: '89%',
     alignSelf: 'center', // Center the input horizontally
     backgroundColor: '#fff',
-    justifyContent: "space-between"
+    flexDirection: "row",
+    paddingLeft: 25,
+    marginVertical: 10
   },
 
 button: {

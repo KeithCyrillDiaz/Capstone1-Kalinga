@@ -8,7 +8,7 @@ const requestorAppointments = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [requestData, setRequestData] = useState(null); // State to store user data
   const [currentPage, setCurrentPage] = useState(1);
-  const requestPerPage = 5; // Adjust as needed
+  const requestPerPage = 10; // Adjust as needed
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);

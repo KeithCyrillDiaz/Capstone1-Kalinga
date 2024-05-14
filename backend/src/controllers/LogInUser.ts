@@ -20,13 +20,23 @@ export const logInUser = async (req: express.Request, res: express.Response) => 
         let salt: string; 
         let userType: string;
 
-        const specialCharacters = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 
-    if (req.body.password.includes(' ') || specialCharacters.test(req.body.password)) {
-        return res.status(400).json({ messages: {code: 1, message: 'Password cannot contain spaces and special characters' }})
+    if (req.body.password.includes(' ')) {
+        return res.json({ 
+            messages: {
+                code: 1, 
+                message: 'Password cannot contain spaces and special characters' 
+            }
+        }).status(400)
     }
     if (req.body.email.includes(' ')) {
-        return res.status(400).json({ messages: {code: 1, message: 'Email cannot contain spaces' }})
+        return res.json({ 
+            messages: {
+                code: 1, 
+                message: 
+                'Email cannot contain spaces' 
+            }
+        }).status(400)
     }
     
         let userInformation = {}

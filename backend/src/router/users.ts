@@ -33,6 +33,16 @@ import { getDeclinedRequestsTotal } from '../controllers/SuperAdmin/getCompleted
 import { getDonationStatusTotal } from '../controllers/SuperAdmin/getTotalCityUser'
 import { getRequestStatusTotal } from '../controllers/SuperAdmin/getTotalCityUser'
 import { updateOngoingDonation } from '../controllers/Admin/Appointment/updateOngoingDonation';
+import { sendUpdateStatusAppointmentNotification } from '../controllers/Notification/appointment';
+import { sendRequestsNotification } from '../controllers/Notification/requests';
+import { getTotalCompleteDonationPerMonth} from '../controllers/Admin/Reports/getTotalCompleteDonationPerMonth';
+import { getTotalDeclineDonationPerMonth } from '../controllers/Admin/Reports/getTotalDeclineDonationPerMonth';
+import { getTotalCompleteRequestPerMonth } from '../controllers/Admin/Reports/getTotalCompleteRequest';
+import { getTotalDeclineRequestPerMonth } from '../controllers/Admin/Reports/getTotalDeclineRequest';
+import { getTotalCompleteDonationsAllMonths } from '../controllers/Admin/Reports/getTotalCompleteDonationAllMonths';
+import { getTotalDeclineDonationsAllMonths } from '../controllers/Admin/Reports/getTotalDeclineDonationAllMonths';
+import { getTotalCompleteRequestAllMonths } from '../controllers/Admin/Reports/getTotalCompleteRequestAllMonths';
+import { getTotalDeclineRequestAllMonths } from '../controllers/Admin/Reports/getTotalDeclineRequestAllMonths';
 
 
 
@@ -53,29 +63,27 @@ export default (router: express.Router) => {
    router.post('/kalinga/createAppointment', createAppointment);
    router.get('/kalinga/getAppointmentsByDonorID/:AppointmentDonorID', getAppointmentByDonorID);
    router.get('/kalinga/getAppointmentByUserType/:userType', getAppointmentByUsertype)
-    router.put ('/kalinga/updateDonationStatus/:AppointmentDonorID', updateDonationStatus)
+    router.put ('/kalinga/updateDonationStatus/:AppointmentDonorID', sendUpdateStatusAppointmentNotification, updateDonationStatus)
     router.get('/kalinga/getOngoingDonation/:Donor_ID', getOngoingDonation)
-    router.put('/kalinga/updateOngoingDonation/:AppointmentDonorID', updateOngoingDonation)
-    router.put ('/kalinga/updateDonationComplete/:AppointmentDonorID', updateDonationComplete)
+    router.put('/kalinga/updateOngoingDonation/:AppointmentDonorID', sendUpdateStatusAppointmentNotification, updateOngoingDonation)
+    router.put ('/kalinga/updateDonationComplete/:AppointmentDonorID', sendUpdateStatusAppointmentNotification, updateDonationComplete)
     router.get('/kalinga/getCompletedDonation/:Donor_ID', getCompletedDonation)
     router.get('/kalinga/getDonorStats/:Donor_ID', getDonorStats)
-
-
 
 
    //Requestor
    router.post('/kalinga/createRequest', createRequest)
    router.get ('/kalinga/getRequestByID/:RequestID', getRequestByID)
    router.get('/kalinga/getRequestByUserType/:userType', getRequestByUserType)
-    router.put('/kalinga/updateRequestStatus/:RequestID',updateRequestStatus)
+    router.put('/kalinga/updateRequestStatus/:RequestID', sendRequestsNotification, updateRequestStatus)
     router.get('/kalinga/getPendingRequests/:Requestor_ID', getPendingRequests)
     router.get('/kalinga/getApprovedRequests/:Requestor_ID', getApprovedRequests)
     router.get('/kalinga/getRequestStatus', getRequestStatus)
-    router.put('/kalinga/updateCompleteStatus/:Requestor_ID',updateCompleteStatus)
+    router.put('/kalinga/updateCompleteStatus/:RequestID', sendRequestsNotification, updateCompleteStatus)
     router.get('/kalinga/getCompletedRequests/:Requestor_ID', getCompletedRequests)
     router.get('/kalinga/getRequestStats/:Requestor_ID', getRequestStats)
 
-    //SuperAdmin
+    //SuperAdmin // Admin
     router.get('/kalinga/getTotalDonor',getTotalDonor )
     router.get('/kalinga/getTotalRequestor', getTotalRequestor)
     router.get('/kalinga/getCompleteDonationsTotal', getCompleteDonationsTotal)
@@ -84,29 +92,15 @@ export default (router: express.Router) => {
     router.get('/kalinga/getDeclinedRequestsTotal', getDeclinedRequestsTotal)
     router.get('/kalinga/getDonationStatusTotal', getDonationStatusTotal);
     router.get('/kalinga/getRequestStatusTotal', getRequestStatusTotal);
+    router.get('/kalinga/getTotalCompleteDonationPerMonth', getTotalCompleteDonationPerMonth)
+    router.get('/kalinga/getTotalDeclineDonationPerMonth', getTotalDeclineDonationPerMonth)
+    router.get('/kalinga/getTotalCompleteRequestPerMonth', getTotalCompleteRequestPerMonth)
+    router.get('/kalinga/getTotalDeclineRequestPerMonth', getTotalDeclineRequestPerMonth)
+    router.get('/kalinga/getTotalCompleteDonationsAllMonths', getTotalCompleteDonationsAllMonths )
+    router.get('/kalinga/getTotalDeclineDonationsAllMonths', getTotalDeclineDonationsAllMonths )
+    router.get('/kalinga/getTotalCompleteRequestAllMonths',getTotalCompleteRequestAllMonths)
+    router.get('/kalinga/getTotalDeclineRequestAllMonths',getTotalDeclineRequestAllMonths)
 
-    
-
-
-
-
-    
-
-
-
-
-    
-
-
-
-
-   router.put('/kalinga/updateRequestStatus/:RequestID',updateRequestStatus)
-   router.get('/kalinga/getPendingRequests/:Requestor_ID', getPendingRequests)
-   router.get('/kalinga/getApprovedRequests/:Requestor_ID', getApprovedRequests)
-   router.get('/kalinga/getRequestStatus', getRequestStatus)
-   router.put('/kalinga/updateCompleteStatus/:Requestor_ID',updateCompleteStatus)
-   router.get('/kalinga/getCompletedRequests/:Requestor_ID', getCompletedRequests)
-   router.get('/kalinga/getRequestStats/:Requestor_ID', getRequestStats)
 
 
 } 

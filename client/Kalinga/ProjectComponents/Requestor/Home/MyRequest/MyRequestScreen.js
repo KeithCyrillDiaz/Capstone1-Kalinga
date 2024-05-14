@@ -1,43 +1,55 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {NavigationContainer} from '@react-navigation/native';
-import { SafeAreaView, Text, View,ScrollView, StatusBar, StyleSheet, TouchableOpacity} from 'react-native';
+import { 
+  SafeAreaView,
+   Text, 
+   View,
+   ScrollView, 
+   StatusBar, 
+   StyleSheet, 
+   TouchableOpacity,
+   Alert
+  } from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { globalHeader } from '../../../../styles_kit/globalHeader.js';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import { BASED_URL } from '../../../../MyConstants.js';
-
-
 
 
 const Tab = createBottomTabNavigator()
 
 
-const MyRequestScreen = () => {
+const MyRequestScreen = ({route}) => {
+
+  const userInformation = route.params.userInformation
+  const token = route.params.token
+  const Requestor_ID = userInformation.Requestor_ID;
   const [totalMilkRequested, setTotalMilkRequested] = useState(0);
   const [completedRequests, setCompletedRequests] = useState(0);
-  const Requestor_ID ='LP8n21tQjcENorDCwFWl';
 
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        // Make an API call to fetch data from the backend
-        const response = await axios.get(`${BASED_URL}/kalinga/getRequestStats/${Requestor_ID}`);
-        const { totalMilkRequested, completedRequestsCount } = response.data;
-        setTotalMilkRequested(totalMilkRequested);
-        setCompletedRequests(completedRequestsCount);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+  const fetchUserData = async () => {
+    try {
+      // Make an API call to fetch data from the backend
+      const response = await axios.get(`${BASED_URL}/kalinga/getRequestStats/${Requestor_ID}`);
+      const { totalMilkRequested, completedRequestsCount } = response.data;
+      console.log("totalMilkRequested: ", totalMilkRequested)
+      console.log("completedRequestsCount: ", completedRequestsCount)
+      setTotalMilkRequested(totalMilkRequested);
+      setCompletedRequests(completedRequestsCount);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
-    fetchUserData();
-  }, []);
-
-  
+  useFocusEffect(
+		React.useCallback(() => {
+			
+      fetchUserData();
+		}, [])
+	);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
@@ -54,8 +66,8 @@ const MyRequestScreen = () => {
             <View style={styles.row}>
               <MaterialIcons name="local-drink" size={150} color="#E60965" />
               <View style={styles.textContainer}>
-                <Text style={styles.upperText}>You Have Requested a total of</Text>
-                <Text style={styles.lowerText}>{totalMilkRequested} mL</Text>
+                <Text style={[styles.upperText, {width: "70%"}]}>You Have Requested a total of</Text>
+                <Text style={[styles.lowerText, {textAlign: "center", width: "70%"}]}>{totalMilkRequested} mL</Text>
               </View>
             </View>
           </View>
@@ -65,14 +77,14 @@ const MyRequestScreen = () => {
               <FontAwesome5 name="hand-holding-water" size={100} color="#E60965" />
               <View style={styles.textContainer}>
                 <Text style={styles.upperText}>You have completed</Text>
-                <Text style={styles.lowerText}>{completedRequests}</Text>
+                <Text style={[styles.lowerText, {textAlign: "center", width: "100%"}]}>{completedRequests}</Text>
                 <Text style={styles.upperText}>Requests</Text>
               </View>
             </View>
 
           
           </View>
-          <TouchableOpacity style={styles.downloadButton}>
+          <TouchableOpacity onPress={() => Alert.alert("Sorry, this feature is not yet available right now. ", "Rest assured, our team is hard at work developing new features to better serve our community. Your continued support means the world to us. Thank you for your patience!")}  style={styles.downloadButton}>
               <Text style={styles.buttonText}>Download as PDF</Text>
             </TouchableOpacity>
 
@@ -161,24 +173,21 @@ const styles = StyleSheet.create({
   },
 
   textContainer: {
-    marginLeft: 20,
+    marginLeft: 10,
   },
 
   upperText: {
     fontFamily: "Open-Sans-Bold",
     fontSize: 18,
     color: "#E60965",
-    marginRight: 130
-
+    textAlign: "center"
   },
 
   lowerText: {
     fontFamily: "Open-Sans-Bold",
     fontSize: 35,
     color: "#E60965",
-    textAlign: "center",
-    marginRight: 130
-
+    textAlign: "left",
   },
 
   downloadButton: {

@@ -12,12 +12,24 @@ export const getCompletedRequests = async (req: Request, res: Response) => {
 
 
     if (!CompleteRequests || CompleteRequests.length === 0) {
-      return res.status(404).json({ success: false, error: 'No pending requests found' });
+      return res.status(404).json({ 
+        messages: {
+          success: false, 
+        },
+        error: 'No pending requests found' });
     }
 
-    res.status(200).json({ success: true, RequestData: CompleteRequests });
+    return res.status(200).json({ 
+      messages: {
+        success: true
+      },
+      RequestData: CompleteRequests });
   } catch (error) {
     console.error('Error fetching pending requests:', error);
-    res.status(500).json({ success: false, error: 'Error fetching pending requests' });
+    return res.status(500).json({ 
+      messages: {
+        success: false,
+      },
+         error: 'Error fetching pending requests' });
   }
 };

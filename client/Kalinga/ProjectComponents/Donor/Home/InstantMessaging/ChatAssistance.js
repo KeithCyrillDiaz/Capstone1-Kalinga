@@ -13,12 +13,13 @@ import {
     StyleSheet, 
     TouchableOpacity,
     TextInput,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    Alert
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 
-
-const ChatAssistance = () => {
+const ChatAssistance = ({route}) => {
     const [message, setMessage] = useState('');
     const [chatMessages, setChatMessages] = useState([]);
     const scrollViewRef = useRef();
@@ -42,6 +43,25 @@ const ChatAssistance = () => {
     };
 
     ScrolltoEnd();
+
+    const userInformation = route.params.data;
+    const token = route.params.token
+  
+    const navigate = useNavigation()
+    
+    useEffect(() => {
+      Alert.alert(
+        "Sorry, this feature is not yet available right now.",
+        "Rest assured, our team is hard at work developing new features to better serve our community. Your continued support means the world to us. Thank you for your patience!",
+        [
+          {
+            text: "Okay",
+            onPress: () => navigate.goBack("MainTabs", { userInformation: userInformation, token: token })
+          }
+        ]
+      );
+      return
+    }, [])
 
     return (
         <SafeAreaView style={styles.SafeArea}>
