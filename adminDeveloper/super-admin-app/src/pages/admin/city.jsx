@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { WebHost } from '../../../MyConstantSuperAdmin'
-
+import { WebHost } from "../../../MyConstantSuperAdmin";
 
 export default function () {
   const [city, setCity] = useState(""); // State to hold the selected city
@@ -12,11 +11,19 @@ export default function () {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const donationResponse = await axios.get(`${WebHost}/kalinga/getDonationStatusTotal?city=${encodeURIComponent(city)}`);
+        const donationResponse = await axios.get(
+          `${WebHost}/kalinga/getDonationStatusTotal?city=${encodeURIComponent(
+            city
+          )}`
+        );
 
         setDonationData(donationResponse.data);
 
-        const requestResponse = await axios.get(`${WebHost}/kalinga/getRequestStatusTotal?city=${encodeURIComponent(city)}`);
+        const requestResponse = await axios.get(
+          `${WebHost}/kalinga/getRequestStatusTotal?city=${encodeURIComponent(
+            city
+          )}`
+        );
 
         setRequestData(requestResponse.data);
 
@@ -31,14 +38,13 @@ export default function () {
     }
   }, [city]);
 
-
   const handleCityChange = (event) => {
     setCity(event.target.value);
   };
 
   return (
     <>
-      <section className="w-full min-h-screen bg-neutral-variant">
+      <section className="w-full h-screen bg-primary-body overflow-hidden">
         <div className="grid items-center justify-center grid-cols-[auto_1fr] gap-x-10 py-12 px-20">
           <svg
             xmlns="http://www.w3.org/2000/svg"

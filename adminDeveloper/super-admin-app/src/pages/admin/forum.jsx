@@ -18,7 +18,7 @@ export default function () {
 
   return (
     <>
-      <section className="w-full min-h-screen bg-neutral-variant">
+      <section className="w-full h-screen bg-primary-body overflow-hidden">
         <div className="grid items-center justify-center grid-cols-[auto_1fr] gap-x-10 py-12 px-20">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -38,9 +38,10 @@ export default function () {
           <div className="px-4 py-2 bg-white border border-primary-default rounded-2xl">
             <div className="grid xl:grid-cols-[75%_auto] lg:grid-cols-[70%_auto] gap-x-6 py-4 items-center justify-center">
               <div className="text-3xl text-justify text-primary-default ">
-              Sorry, this feature is not yet available right now. 
-              Rest assured, our team is hard at work developing new features to better serve our community. 
-              Your continued support means the world to us. Thank you for your patience!
+                Sorry, this feature is not yet available right now. Rest
+                assured, our team is hard at work developing new features to
+                better serve our community. Your continued support means the
+                world to us. Thank you for your patience!
               </div>
             </div>
           </div>

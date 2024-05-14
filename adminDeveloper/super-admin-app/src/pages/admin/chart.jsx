@@ -43,7 +43,7 @@ export default function () {
 
   return (
     <>
-      <section className="w-full min-h-screen bg-neutral-variant">
+      <section className="w-full h-screen bg-primary-body overflow-hidden">
         <div className="grid items-center justify-center grid-cols-[auto_1fr] gap-x-10 py-12 px-20">
           <svg
             xmlns="http://www.w3.org/2000/svg"
