@@ -104,7 +104,7 @@ export default function () {
           </div>
         </div>
         <div
-          className="overflow-hidden flex flex-col gap-y-4 mt-4 pb-10"
+          className="overflow-hidden flex flex-col gap-y-4 mt-4"
           style={{ maxHeight: "calc(100vh - 8rem)" }}
         >
           <div className="p-8 overflow-y-auto">

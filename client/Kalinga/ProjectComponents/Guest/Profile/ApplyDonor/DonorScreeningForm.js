@@ -1157,19 +1157,6 @@ useEffect(() => {
         elevation: 5
     },
 
-    medicalConditionStyle: {
-      borderWidth: 1,
-      borderRadius: 20,
-      borderColor: "#E60965",
-      backgroundColor:"white",
-      width: "91%",
-      paddingRight: 15,
-      paddingVertical: 4,
-      marginTop: 10,
-      elevation: 5
-    },
-
-
     SmallinputField: {
         borderWidth: 1,
         borderRadius: 20,
