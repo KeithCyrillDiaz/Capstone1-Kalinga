@@ -246,7 +246,7 @@ export default function () {
                     <h1 className="text-xl text-neutral-primary">Donor</h1>
                   </NavLink>
                   <NavLink
-                    to="/admin/city"
+                    to="/admin/requestorVerifPendings"
                     className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-10/12 rounded-2xl py-2 mb-2 ml-6 ${
                       isActiveRoute("feedback")
                         ? "bg-secondary-default"

@@ -10,37 +10,37 @@ const RequestorPages = ({ currentPage }) => {
             <div className="flex font-sans font-bold justify-center text-3xl text-primary-default">
               Medical Abstract of an Infant
             </div>
-            <div className="bg-white relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
+            <div className="relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
               <span className="flex justify-center font-sans text-primary-disabled text-xl font-bold">
                 Clinical History
               </span>
             </div>
-            <div className="bg-white relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
+            <div className="relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
               <span className="flex justify-center font-sans text-primary-disabled text-xl font-bold">
                 Presenting Complaint
               </span>
             </div>
-            <div className="bg-white relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
+            <div className="relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
               <span className="flex justify-center font-sans text-primary-disabled text-xl font-bold">
                 Clinical Findings
               </span>
             </div>
-            <div className="bg-white relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
+            <div className="relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
               <span className="flex justify-center font-sans text-primary-disabled text-xl font-bold">
                 Diagnosis
               </span>
             </div>
-            <div className="bg-white relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
+            <div className="relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
               <span className="flex justify-center font-sans text-primary-disabled text-xl font-bold">
                 Treatment and Interventions
               </span>
             </div>
-            <div className="bg-white relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
+            <div className=" relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
               <span className="flex justify-center font-sans text-primary-disabled text-xl font-bold">
                 Prescription
               </span>
             </div>
-            <div className="bg-white relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
+            <div className=" relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
               <span className="flex justify-center font-sans text-primary-disabled text-xl font-bold">
                 Government ID
               </span>
@@ -55,7 +55,7 @@ const RequestorPages = ({ currentPage }) => {
           <div className="flex font-sans font-bold justify-center text-3xl text-primary-default ">
             Reason for Requesting
           </div>
-          <div className="bg-white relative border rounded-md border-primary-default bg-white px-8 py-52 my-6"></div>
+          <div className=" relative border rounded-md border-primary-default bg-white px-8 py-52 my-6"></div>
         </div>
       </div>
       <div className="flex flex-col">
