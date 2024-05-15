@@ -67,10 +67,12 @@ const ApplyAs_DonorISF = () => {
     contactNumber: '',
     homeAddress: '',
     sex: '',
+    childName: '',
     childAge: '',
     childBirthDate: '',
     birthWeight: '',
     ageOfGestation: '',
+    medicalCondition:'',
     RFR: '',
 });
 
@@ -86,10 +88,12 @@ const checkForm= (value) => {
     'email',
     'contactNumber',
     'homeAddress',
+    'childName',
     'childAge',
     'sex',
     'childBirthDate',
     'birthWeight',
+    'medicalCondition',
     'ageOfGestation',
     ];
 
@@ -672,6 +676,14 @@ useEffect(() => {
         </View>
 
         <Text style={styles.infantinfoText}>Infant Information</Text>
+
+        <View style={[styles.inputPhoneNumberContainer, { elevation: 5 }]}>
+          <TextInput
+            placeholder="Name of Child"
+            style={styles.inputField}
+            onChangeText={(value) => handleChangeText('childName', value)}
+          />
+        </View>
         <View style={styles.inputRowContainer1}>
          
             <View style={[styles.inputBirthWeightContainer, { elevation: 5 }]}>
@@ -809,6 +821,14 @@ useEffect(() => {
               />
             </TouchableOpacity>
    
+        </View>
+
+        <View style={[styles.inputPhoneNumberContainer, { elevation: 5 }]}>
+          <TextInput
+            placeholder="Medical Condition"
+            style={styles.inputField}
+            onChangeText={(value) => handleChangeText('medicalCondition', value)}
+          />
         </View>
        
         
