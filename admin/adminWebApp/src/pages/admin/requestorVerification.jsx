@@ -57,58 +57,58 @@ export default function App() {
                                     <div className="flex font-sans font-bold justify-center text-3xl text-primary-default">
                                         Initial Screening Form
                                     </div>
-                                    <div className="flex font-sans font-bold text-2xl text-primary-default font-sans">
+                                    <div className="flex  font-bold text-2xl text-primary-default font-sans">
                                         Personal Information
                                     </div>
-                                    <div className="bg-white relative border rounded-md border-primary-default bg-white px-3 py-2 my-4 font-sans text-primary-disabled">
+                                    <div className="relative border rounded-md border-primary-default bg-white px-3 py-2 my-4 font-sans text-primary-disabled">
                                         Full Name
                                     </div>
                                     <div className="flex gap-x-6 my-4">
-                                        <div className="bg-white relative border rounded-md border-primary-default bg-white w-full px-3 py-2 font-sans text-primary-disabled">
+                                        <div className="relative border rounded-md border-primary-default bg-white w-full px-3 py-2 font-sans text-primary-disabled">
                                             Age
                                         </div>
-                                        <div className="bg-white relative border rounded-md border-primary-default bg-white w-full px-3 py-2 font-sans text-primary-disabled">
+                                        <div className=" relative border rounded-md border-primary-default bg-white w-full px-3 py-2 font-sans text-primary-disabled">
                                             Birthdate
                                         </div>
                                     </div>
-                                    <div className="bg-white relative border rounded-md border-primary-default bg-white px-3 py-2 my-4 font-sans text-primary-disabled">
+                                    <div className=" relative border rounded-md border-primary-default bg-white px-3 py-2 my-4 font-sans text-primary-disabled">
                                         Email Address
                                     </div>
-                                    <div className="bg-white relative border rounded-md border-primary-default bg-white px-3 py-2 my-4 font-sans text-primary-disabled">
+                                    <div className=" relative border rounded-md border-primary-default bg-white px-3 py-2 my-4 font-sans text-primary-disabled">
                                         Phone Number
                                     </div>
-                                    <div className="bg-white relative border rounded-md border-primary-default bg-white px-3 py-2 my-4 h-24 font-sans text-primary-disabled">
+                                    <div className=" relative border rounded-md border-primary-default bg-white px-3 py-2 my-4 h-24 font-sans text-primary-disabled">
                                         Home Address
                                     </div>
                                 </div>
 
                                 <div className="px-16 my-6 ">
-                                    <div className="flex font-sans font-bold text-2xl text-primary-default font-sans">
+                                    <div className="flex font-bold text-2xl text-primary-default font-sans">
                                         Infant Information
                                     </div>
-                                    <div className="bg-white relative border rounded-md border-primary-default bg-white px-3 py-2 my-4 font-sans text-primary-disabled">
+                                    <div className="relative border rounded-md border-primary-default bg-white px-3 py-2 my-4 font-sans text-primary-disabled">
                                         Name of Child
                                     </div>
                                     <div className="flex gap-x-6 my-4">
-                                        <div className="bg-white relative border rounded-md border-primary-default bg-white w-full px-3 py-2 font-sans text-primary-disabled">
+                                        <div className=" relative border rounded-md border-primary-default bg-white w-full px-3 py-2 font-sans text-primary-disabled">
                                             Age
                                         </div>
-                                        <div className="bg-white relative border rounded-md border-primary-default bg-white w-full px-3 py-2 font-sans text-primary-disabled">
+                                        <div className=" relative border rounded-md border-primary-default bg-white w-full px-3 py-2 font-sans text-primary-disabled">
                                             Sex
                                         </div>
                                     </div>
                                     <div className="flex gap-x-6 my-4">
-                                        <div className="bg-white relative border rounded-md border-primary-default bg-white w-full px-3 py-2 font-sans text-primary-disabled">
+                                        <div className=" relative border rounded-md border-primary-default bg-white w-full px-3 py-2 font-sans text-primary-disabled">
                                             Birthdate
                                         </div>
-                                        <div className="bg-white relative border rounded-md border-primary-default bg-white w-full px-3 py-2 font-sans text-primary-disabled">
+                                        <div className=" relative border rounded-md border-primary-default bg-white w-full px-3 py-2 font-sans text-primary-disabled">
                                             Birth Weight (kg)
                                         </div>
                                     </div>
-                                    <div className="bg-white relative border rounded-md border-primary-default bg-white px-3 py-2 my-4 font-sans text-primary-disabled">
+                                    <div className=" relative border rounded-md border-primary-default bg-white px-3 py-2 my-4 font-sans text-primary-disabled">
                                         Age of Gestation
                                     </div>
-                                    <div className="bg-white relative border rounded-md border-primary-default bg-white px-3 py-2 my-4 font-sans text-primary-disabled">
+                                    <div className=" relative border rounded-md border-primary-default bg-white px-3 py-2 my-4 font-sans text-primary-disabled">
                                         Medical Condition
                                     </div>
                                 </div>

@@ -8,10 +8,13 @@ import Rejected from "./admin/rejected";
 import Milkbanks from "./admin/milkbanks";
 import DonorVerifPendings from './admin/donorVerifPending'
 import DonorVerification from './admin/donorVerification'
+import RequestorVerifPendings from './admin/requestorVerifPendings'
+import RequestorVerification from './admin/requestorVerification'
 import DonorAppointments from "./admin/Appointments/Donor/donorAppointments";
 import RequestorAppointments from "./admin/Appointments/Requestor/requestorAppointments";
 import DonorAppointmentConfirmation from "./admin/Appointments/Donor/donorAppointmentConfirmation"
 import RequestorAppointmentConfirmation from "./admin/Appointments/Requestor/requestorAppointmentConfirmation";
+
 
 export { Login,
          AdminDashboard, 
@@ -23,6 +26,8 @@ export { Login,
          Milkbanks, 
          DonorVerifPendings,
          DonorVerification ,
+         RequestorVerification,
+         RequestorVerifPendings,
          DonorAppointments, 
          RequestorAppointments,
          DonorAppointmentConfirmation,
