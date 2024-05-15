@@ -10,7 +10,7 @@ import axios from 'axios';
 import { BASED_URL } from '../../../../MyConstants.js';
 import phil from "philippine-location-json-for-geer";
 import ProvincesData from '../Provinces.json'
-import {GestationData, GestationExplanation, sexData} from '../ageofGestationData.js'
+import {GestationData, GestationExplanation, sexData, medicalConditionData} from '../ageofGestationData.js'
 
 const ApplyAs_DonorISF = () => {
 
@@ -771,7 +771,6 @@ useEffect(() => {
           alignItems: "center",
           justifyContent: "space-between",
           marginTop: 15,
-          borderWidth: 0.5,
           borderRadius: 18,
           borderColor: '#E60965',
           backgroundColor: '#FFFFFF',
@@ -779,7 +778,9 @@ useEffect(() => {
           width: "82%",
           alignSelf: "center",
           marginLeft: -10,
-          paddingRight: "5%"
+          paddingRight: "5%",
+          borderWidth: 1,
+          elevation:5
           }}>
           <View style={styles.inputAgeOfGestationContainer}>
             <Dropdown
@@ -823,13 +824,30 @@ useEffect(() => {
    
         </View>
 
-        <View style={[styles.inputPhoneNumberContainer, { elevation: 5 }]}>
-          <TextInput
-            placeholder="Medical Condition"
-            style={styles.inputField}
-            onChangeText={(value) => handleChangeText('medicalCondition', value)}
-          />
-        </View>
+        <View style={styles.medicalConditionStyle} >
+                           <Dropdown
+                            style={[ isGestationFocus && { borderColor: 'blue'}]}
+                            placeholderStyle={[styles.placeholderStyle, {marginLeft: 16}]}
+                            selectedTextStyle={[styles.selectedTextStyle, {marginTop: 20, paddingTop: 15}]}
+                            inputSearchStyle={styles.inputSearchStyle}
+                            data={medicalConditionData}
+                            search
+                            maxHeight={300}
+                            labelField="label"
+                            valueField="value"
+                            subField="children"
+                            placeholder={'Medical Condition'}
+                            searchPlaceholder="Search..."
+                            value={gestationValue}
+                            onFocus={() => setIsGestationFocus(true)}
+                            onBlur={() => setIsGestationFocus(false)}
+                            onChange={item => {
+                              setGestationValue
+                              handleChangeText('medicalCondition', item.label)
+                              setIsGestationFocus(false);
+                            }}
+                          />
+                    </View>
        
         
 
@@ -841,7 +859,7 @@ useEffect(() => {
                 opacity: isEmailExisted || !isFormFilled || isChildTooOld ? 0.5 : 1
               }
             ]}
-            disabled = {isEmailExisted || screeningFormData.email === "" || isChildTooOld }
+            // disabled = {isEmailExisted || screeningFormData.email === "" || isChildTooOld }
             onPress={() => navigatePage("RequestorMedicalAbstract", {screeningFormData: screeningFormData})}>
             <Text style={styles.nextButtonText}>Next</Text>
           </TouchableOpacity>
@@ -919,6 +937,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
+  medicalConditionStyle: {
+    borderWidth: 1,
+    borderRadius: 20,
+    borderColor: "#E60965",
+    backgroundColor:"white",
+    width: "82%",
+    paddingRight: 15,
+    paddingVertical: 4,
+    marginTop: 10,
+    elevation: 5,
+    alignSelf: "center",
+    marginLeft: -10
+  },
+
+
   sexDropdown: {
     marginHorizontal: 10
   },
@@ -930,7 +963,7 @@ const styles = StyleSheet.create({
     marginTop: "5%",
     flex: 1,
     paddingVertical: 10,
-    borderWidth: 0.5,
+    borderWidth: 1,
     borderRadius: 18,
     borderColor: '#E60965',
     elevation: 5,
@@ -1082,7 +1115,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top', // Position the text at the top of the input field
   },
   inputFullNameContainer: {
-    borderWidth: 0.5, // Border width
+    borderWidth: 1, // Border width
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
@@ -1090,6 +1123,7 @@ const styles = StyleSheet.create({
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 45, // Adjust height
     marginLeft: 30, // Move the input field to the right
+    elevation:5
   },
   inputRowContainer: {
     flexDirection: 'row',
@@ -1098,7 +1132,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   inputAgeContainer: {
-    borderWidth: 0.5, // Border width
+    borderWidth: 1, // Border width
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
@@ -1106,12 +1140,13 @@ const styles = StyleSheet.create({
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 45, // Adjust height
     marginLeft: -15, // Move the input field to the right
+    elevation:5
   },
   inputBirthdayContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 0.5, // Border width
+    borderWidth: 1, // Border width
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
@@ -1119,9 +1154,10 @@ const styles = StyleSheet.create({
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 45, // Adjust height
     marginLeft: 15, // Move the input field to the right
+    elevation:5
   },
   inputEmailAddressContainer: {
-    borderWidth: 0.5, // Border width
+    borderWidth: 1, // Border width
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
@@ -1129,9 +1165,10 @@ const styles = StyleSheet.create({
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 45, // Adjust height
     marginLeft: 30, // Move the input field to the right
+    elevation:5
   },
   inputPhoneNumberContainer: {
-    borderWidth: 0.5, // Border width
+    borderWidth: 1, // Border width
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
@@ -1139,9 +1176,10 @@ const styles = StyleSheet.create({
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 45, // Adjust height
     marginLeft: 30, // Move the input field to the right
+    elevation:5
   },
   inputHomeAddressContainer: {
-    borderWidth: 0.5, // Border width
+    borderWidth: 1, // Border width
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
@@ -1149,6 +1187,7 @@ const styles = StyleSheet.create({
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 90, // Adjust height
     marginLeft: 30, // Move the input field to the right
+    elevation:5
   },
   infantinfoText:{
     textAlign: 'left', // Center align the text
@@ -1165,7 +1204,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
 inputAgeContainer1: {
-    borderWidth: 0.5, // Border width
+    borderWidth: 1, // Border width
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
@@ -1173,9 +1212,10 @@ inputAgeContainer1: {
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 45, // Adjust height
     marginLeft: 20, // Move the input field to the right
+    elevation:5
   },
 inputSexContainer: {
-  borderWidth: 0.5, // Border width
+  borderWidth: 1, // Border width
   borderRadius: 18, // Border radius
   borderColor: '#E60965', // Border color
   backgroundColor: '#FFFFFF', // Background color
@@ -1183,7 +1223,8 @@ inputSexContainer: {
   marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
   height: 45, // Adjust height
   marginLeft: 20, // Move the input field to the right
-  justifyContent: "center"
+  justifyContent: "center",
+  elevation:5
 },
 inputRowContainer2: {
   flexDirection: 'row',
@@ -1192,7 +1233,7 @@ inputRowContainer2: {
   marginTop: 5,
 },
 inputBirthdateContainer1: {
-  borderWidth: 0.5,
+  borderWidth: 1,
   borderRadius: 18,
   borderColor: '#E60965',
   backgroundColor: '#FFFFFF',
@@ -1200,9 +1241,10 @@ inputBirthdateContainer1: {
   marginTop: 15,
   height: 45, // Adjust height
   marginLeft: -15,
+  elevation:5
 },
   inputBirthWeightContainer: {
-  borderWidth: 0.5,
+  borderWidth: 1,
   borderRadius: 18,
   borderColor: '#E60965',
   backgroundColor: '#FFFFFF',
@@ -1210,12 +1252,14 @@ inputBirthdateContainer1: {
   marginTop: 15,
   height: 45, // Adjust height,
   marginLeft: -15,
+  elevation:5
 },
   inputAgeOfGestationContainer: {
   width: '95%',
   height: 45, // Adjust height
   backgroundColor: "white",
   borderRadius: 18,
+
 },
 
 buttonContainer: {
