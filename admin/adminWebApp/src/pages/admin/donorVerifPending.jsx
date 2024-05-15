@@ -4,7 +4,7 @@ import axios from 'axios'
 import { WebHost } from '../../../MyConstantAdmin'
 import { Loader } from '../../components/loader'
 
-import { RenderDonorVerificationPending } from '../../components/Verification/RenderDonorVerificationPending'
+import { RenderPendingVerification } from '../../components/Verification/RenderPendingVerification'
 
 export default function () {
   useEffect(() => {
@@ -118,7 +118,7 @@ export default function () {
               </div>
           )}
           {forms.map((form, index) => (
-            <RenderDonorVerificationPending 
+            <RenderPendingVerification 
             key={index} 
             name={form.fullName} 
             email={form.email} 

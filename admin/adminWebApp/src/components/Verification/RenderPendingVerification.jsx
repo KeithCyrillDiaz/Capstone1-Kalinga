@@ -6,7 +6,7 @@ import { WebHost } from '../../../MyConstantAdmin'
 import axios from 'axios'
 import { DeleteScreeningFormModal } from "../../modal/Verification/DeleteScreeningFormModal";
 
-export const RenderDonorVerificationPending = ({
+export const RenderPendingVerification = ({
   name,
   email,
   date,
