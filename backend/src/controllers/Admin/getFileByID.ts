@@ -1,9 +1,9 @@
 import express from 'express'
-import { getMRFileZip } from '../../models/ApplyAsDonor'
+import { getMRFile } from '../../models/ApplyAsDonor'
 export const getFile = async (req: express.Request, res: express.Response) => {
    try{
         // console.log(req.params.ownerID)
-        const zipFile = await getMRFileZip(req.params.ownerID)
+        const zipFile = await getMRFile(req.params.ownerID)
         if(!zipFile) {
             return res.json({
                 messages: {
