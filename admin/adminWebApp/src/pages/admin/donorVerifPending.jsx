@@ -124,6 +124,7 @@ export default function () {
             email={form.email} 
             date={form.createdAt} 
             form={form}
+            userType={form.userType}//Donor
             />
           ))}
           

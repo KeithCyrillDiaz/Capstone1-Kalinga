@@ -1,6 +1,6 @@
 import React from "react";
 
-const RequestorPages = ({ currentPage }) => {
+const RequestorPages = ({ currentPage })  => {
   // Define content for each page here
   const pageContents = {
     1: (
@@ -55,30 +55,7 @@ const RequestorPages = ({ currentPage }) => {
           <div className="flex font-sans font-bold justify-center text-3xl text-primary-default ">
             Reason for Requesting
           </div>
-          <div className=" relative border rounded-md border-primary-default bg-white px-8 py-52 my-6"></div>
-        </div>
-      </div>
-      <div className="flex flex-col">
-        <div>
-          <button
-            className="hover:bg-primary-default hover:text-white fixed bg-neutral-default text-primary-default font-bold w-32 p-2 border border-primary-default rounded-full right-40"
-            onClick={() => handleConfirmationClick(true)}
-          >
-            <span className="flex justify-center items-center font-sans">
-              Approve
-            </span>
-          </button>
-        </div>
-
-        <div>
-          <button
-            className="hover:bg-primary-default hover:text-white fixed bg-neutral-default text-primary-default font-bold w-32 p-2 border border-primary-default rounded-full right-40 mt-12"
-            onClick={() => handleConfirmationClick(false)}
-          >
-            <span className="flex justify-center items-center font-sans">
-              Reject
-            </span>
-          </button>
+          <div className=" relative border rounded-md border-primary-default bg-white px-8 2xl:py-52 md:py-36 my-6"></div>
         </div>
       </div>
     </div>

@@ -9,7 +9,6 @@ import { WebHost } from "../../../MyConstantAdmin";
 export default function () {
 
   
-  const { id } = useParams()
 
   const [loading, setLoading] = useState(false)
   const [activeTab, setActiveTab] = useState("screening");
@@ -18,6 +17,8 @@ export default function () {
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [status, setStatus] = useState("");
 
+  
+  const { id } = useParams()
   const [form, setForm] = useState({})
   //const [isRejectConfirmed, setIsRejectConfirmed] = useState(false);
 
