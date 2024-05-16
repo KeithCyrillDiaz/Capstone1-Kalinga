@@ -113,7 +113,7 @@ const ReasonForRequesting = ({route}) => {
           
           await UploadImageOrFileToFirebase({
             URI: fileData.uri, 
-            requirmentType: fileData.name,
+            requirmentType: fileData.requirmentType,
             purpose: "Application",
             type: "File",
             userType: "Requestor", 

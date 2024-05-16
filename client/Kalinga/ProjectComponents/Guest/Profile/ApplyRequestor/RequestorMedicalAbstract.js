@@ -132,7 +132,7 @@ const handleFileUpload = async (attachmentType) => {
             ...selectedFile,
             [attachmentType]: {
                 // name: screeningFormData.fullName + "_" + attachmentType + result.assets[0].type,
-                name: attachmentType,
+                name: result.assets[0].name,
                 uri: result.assets[0].uri,
                 type: fileType,
                 userType: "Requestor",
@@ -198,16 +198,16 @@ const handleFileUpload = async (attachmentType) => {
 
             <View style = {styles. attachmentContainer}>
                 <Text style={styles.newLabel}>
-                   Presending Complaint
+                  Presenting Complaint
                 </Text>
                   <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                      <TouchableOpacity onPress={()=>handleImageUpload('Presending Complaint')}>
+                      <TouchableOpacity onPress={()=>handleImageUpload('Presenting Complaint')}>
                         <AntDesign name="picture" size={27} color="#E60965" />
                       </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>
-                        <TouchableOpacity onPress={()=>handleFileUpload('Presending Complaint')}>
+                        <TouchableOpacity onPress={()=>handleFileUpload('Presenting Complaint')}>
                         <AntDesign name="file1" size={24} color="#E60965" />
                       </TouchableOpacity>
                   </View>
