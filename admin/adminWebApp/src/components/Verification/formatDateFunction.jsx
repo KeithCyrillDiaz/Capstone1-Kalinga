@@ -16,10 +16,9 @@ export const formatDate = (date) => {
     const dateArray = date.split("T")
     const extractTime = dateArray[1].split('.')
     const timeArray = extractTime[0].split(':');
-    console.log("timeArray: ", timeArray)
+    
     //convert to Philippine time
      const philippineHours = parseInt(timeArray[0]) + 8
-     console.log("philippineHours: ", philippineHours)
      const convertHours = philippineHours > 12 && philippineHours < 25 ? philippineHours - 12 : philippineHours > 24 ? philippineHours - 24 : philippineHours
      const formattedTime = philippineHours > 12 && philippineHours < 24 ? convertHours + ":" + timeArray[1] + " pm" : convertHours + ":" + timeArray[1] + " am"
     //  console.log("formattedTime: ", formattedTime)

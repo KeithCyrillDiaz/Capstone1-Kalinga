@@ -82,13 +82,14 @@ const RequestorPages = ({
         setFileName(requirement)
       }
     } 
-    console.log("File: ", files)
+    // console.log("File: ", files)
     if(file[0]) {
       const { link } = file[0]// 0 index since isang file lang kinukuha sa array of files variable
       console.log(`${requirement} link: `, link)
       if(!link) {
         console.log("Error: File link is Missing")
       } else {
+        console.log("Opening Link", link)
         window.open(link, '_blank');
       }
     } else {
@@ -137,7 +138,7 @@ const RequestorPages = ({
                   </span>
                 </div>
                 <div 
-                onClick={() => getImageUri("Presending Complaint")}
+                onClick={() => getImageUri("Presenting Complaint")}
                 className="relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
                   <span className="flex justify-center font-sans text-primary-disabled text-xl font-bold">
                     Presenting Complaint

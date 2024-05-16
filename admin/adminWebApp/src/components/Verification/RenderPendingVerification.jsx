@@ -23,9 +23,7 @@ export const RenderPendingVerification = ({
       console.log("Date undefined")
       return
     }
-    console.log("Date: ", date)
     const newDate = formatDate(date) // import { formatDate } from "./formatDateFunction"
-    console.log("newDate: ", newDate)
     setFinalDate(newDate)
   }
 
