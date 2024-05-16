@@ -20,11 +20,14 @@ import {
   BugResolve,
   Feedback,
   FeedbackReport,
-  DonorAppointments, 
+  DonorAppointments,
   RequestorAppointments,
   DonorAppointmentConfirmation,
   RequestorAppointmentConfirmation,
-  Milkbanks
+  Milkbanks,
+  Users,
+  DonorAccounts,
+  DonorAppointManage,
 } from "@/pages";
 import { RootLayout, NotFound, MainLayout, AdminLayout } from "@/layouts";
 import { MobileChecker } from "@/components";
@@ -42,7 +45,7 @@ const router = createBrowserRouter(
       </Route>
 
       {/* Private Routes */}
-      
+
       <Route path="admin" element={<AdminLayout />}>
         <Route index element={<AdminDashboard />} />
         <Route path="city" element={<City />} />
@@ -58,10 +61,22 @@ const router = createBrowserRouter(
         <Route path="feedback" element={<Feedback />} />
         <Route path="feedbackReport" element={<FeedbackReport />} />
         <Route path="donorAppointments" element={<DonorAppointments />} />
-        <Route path="requestorAppointments" element={<RequestorAppointments />} />
-        <Route path="donorAppointmentConfirmation/:AppointmentDonorID" element={<DonorAppointmentConfirmation />} />
-        <Route path="requestorAppointmentConfirmation/:RequestID" element={<RequestorAppointmentConfirmation />} />
+        <Route
+          path="requestorAppointments"
+          element={<RequestorAppointments />}
+        />
+        <Route
+          path="donorAppointmentConfirmation/:AppointmentDonorID"
+          element={<DonorAppointmentConfirmation />}
+        />
+        <Route
+          path="requestorAppointmentConfirmation/:RequestID"
+          element={<RequestorAppointmentConfirmation />}
+        />
         <Route path="milkbanks" element={<Milkbanks />} />
+        <Route path="users" element={<Users />} />
+        <Route path="DonorAccounts" element={<DonorAccounts />} />
+        <Route path="DonorAppointManage" element={<DonorAppointManage />} />
       </Route>
 
       {/* 404 */}
