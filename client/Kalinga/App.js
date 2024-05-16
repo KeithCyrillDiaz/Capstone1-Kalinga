@@ -121,6 +121,7 @@ import MyRequestScreen from './ProjectComponents/Requestor/Home/MyRequest/MyRequ
 import CompletedTabRequest from './ProjectComponents/Requestor/Home/MyRequest/CompletedTabRequest.js';
 import PendingTabRequest from './ProjectComponents/Requestor/Home/MyRequest/PendingTabRequest.js';
 import RequestTab from './ProjectComponents/Requestor/Home/MyRequest/Request.js'
+import MakeRequestUploadMedicalAbstract from './ProjectComponents/Requestor/Home/MakeRequest/MakeRequestUploadMedicalAbstract.js'
 
 
 //Requestor DUPLICATE THE DONOR PAGES
@@ -346,7 +347,8 @@ export default function App() {
              <Stack.Screen name="CompletedTabRequest" component={CompletedTabRequest} />
              <Stack.Screen name="PendingTabRequest" component={PendingTabRequest} />
              <Stack.Screen name="RequestTab" component={RequestTab} />
-
+             <Stack.Screen name="MakeRequestUploadMedicalAbstract" component={MakeRequestUploadMedicalAbstract} />
+          
 
 
 

@@ -22,25 +22,114 @@ const SetDateTimeLocation = () => {
     const [selectedTime, setSelectedTime] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
+
+    //validity
+    const [invalidTime, setInvalidTime] = useState(false)
+    const [invalidDate, setInvalidDate] = useState(false)
+
     const [location, setLocation] = useState('');
     const [newForm, setNewForm ] = useState(formData)
     const { AppointmentDonorID } = route.params || {};
     const Appointment_DonorID = randomatic('Aa0', 20);
   
+
+    const checkTime = (time) => {
+
+        const timeNow = new Date()
+        const dateNow = timeNow.getDate()
+        console.log(time)
+        console.log(timeNow)
+        if(time < timeNow && dateNow >= selectedDate.getDate()) {
+        
+            console.log("Invalid Time")
+            Alert.alert(
+                "Invalid Time",
+                "Please choose a proper time for your appointment")
+                setInvalidTime(true)
+            return
+        }
+        const startingWorkingHours = new Date();
+        startingWorkingHours.setHours(8, 0, 0, 0) // set working Time to 8am
+        const endingWorkingHours = new Date()
+        endingWorkingHours.setHours(17, 0, 0, 0)// set working Time to 5pm
+
+        const checkTimeNow = timeNow.getTime()// for checking current time
+        const chosenTime = time.getTime()
+        const startingTime = startingWorkingHours.getTime()
+        const endingTime = endingWorkingHours.getTime()
+
+        const result = checkTimeNow - endingTime
+        console.log("result: ", result)
+
+        // const day = time.getDate()
+        // console.log("day: ",day )
+
+        if(chosenTime < startingTime || chosenTime > endingTime ){
+            console.log("Milk Banks are not available outside working hours")
+            Alert.alert(
+                "Milk Banks Availability",
+                "Milk Banks are only available during working hours from 8:00 AM to 5:00 PM.")
+            setInvalidTime(true)
+            return false
+        }
+        setInvalidTime(false)
+        return true
+    }
+    const checkDate = (date) => {
+    
+        if (date) {
+            const day = date.getDate()
+            const dayToday = new Date().getDate()
+            if(day < dayToday){
+                console.log("Invalid Date")
+                Alert.alert(
+                    "Invalid Date",
+                    "Please choose a proper date for your appointment")
+                setInvalidDate(true)
+                return
+            }
+            const dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+            if (dayOfWeek === 0 || dayOfWeek === 6) {
+                console.log("Milk Banks are not available during weekends")
+                Alert.alert(
+                    "Milk Banks Availability",
+                    "Milk Banks are only available during weekdays")
+                setInvalidDate(true)
+                return false
+            }   
+            setInvalidDate(false)
+            return true
+        }
+    }
     const handleDateChange = (event, selectedDate) => {
       setShowDatePicker(Platform.OS === 'ios');
-      setSelectedDate(selectedDate || new Date());
+      checkDate(selectedDate)
+      setSelectedDate(selectedDate);
     };
   
     const handleTimeChange = (event, selectedTime) => {
-      setShowTimePicker(Platform.OS === 'ios');
-      setSelectedTime(selectedTime || new Date());
+        setShowTimePicker(Platform.OS === 'ios');
+        checkTime(selectedTime)
+        setSelectedTime(selectedTime);
     };
     
     const checkForm = () => {
-        // console.log("Test", newForm.location)
+        // console.log("Test", newForm.location
+        if(!checkTime(selectedTime)) return
+        if(!checkDate(selectedDate)) return
+        if(invalidDate) {
+            Alert.alert(
+                "Milk Banks Availability",
+                "Milk Banks are only available during weekdays")
+            return
+        }
+        if(invalidTime){
+            Alert.alert(
+                "Milk Banks Availability",
+                "Milk Banks are only available during working hours from 8:00 AM to 5:00 PM.")
+            return
+        }
         if(newForm.location === undefined) {
-            console.log("Test", newForm.location)
             Alert.alert("Invalid Milk Bank", "Please select a milk bank before proceeding.")
             return
         }
@@ -128,7 +217,7 @@ const SetDateTimeLocation = () => {
 
                     {showTimePicker && (
                         <DateTimePicker
-                            value={selectedTime}
+                            value={selectedTime || new Date()}
                             mode="time"
                             display="default"
                             onChange={handleTimeChange}
