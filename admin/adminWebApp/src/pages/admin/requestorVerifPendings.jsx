@@ -1,6 +1,8 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
-
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { WebHost } from '../../../MyConstantAdmin'
+import { Loader } from '../../components/loader'
+import { RenderPendingVerification } from '../../components/Verification/RenderPendingVerification'
 export default function () {
   useEffect(() => {
     // Prevent scrolling of the entire page
@@ -11,8 +13,36 @@ export default function () {
     };
   }, []);
 
+
+  const [forms, setForms] = useState([])
+  const [loading, setLoading] = useState(false)
+  const userType = "Requestor"
+  const fetchData = async () => {
+    try { 
+      setLoading(true)
+      console.log("Fetching Data")
+      const response = await axios.get(`${WebHost}/kalinga/getScreeningFormsUserType/${userType}`)
+      console.log(response.data.screeningForms)
+      if(!response.data.screeningForms){
+        console.log("Error fetching Screening Forms")
+      } else {
+        setForms(response.data.screeningForms)
+        console.log("Fetch Screening Forms Successfully")
+      }
+    } catch(error) {
+      console.log("Something went wrong", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+  console.log("forms: ",forms)
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <>
+      <Loader isLoading={loading}/>
       <section className="w-full min-h-screen bg-neutral-variant overflow-hidden">
         <div className="grid items-center justify-center grid-cols-[auto_1fr] gap-x-5 py-2 px-10">
           <svg
@@ -35,7 +65,7 @@ export default function () {
         </div>
         <hr className="border-t-2 border-primary-default" />
 
-        <div className="p-8">
+        <div className="p-8" >
           <div className="flex flex-row items-center justify-between xl:gap-x-6 lg:gap-x-3">
             <div className="mt-8 ml-4 mb-1 text-4xl font-bold text-primary-default">
               Pendings
@@ -78,264 +108,24 @@ export default function () {
           style={{ maxHeight: "calc(100vh - 8rem)" }}
         >
           <div className="p-8 overflow-y-auto">
-            <div className="bg-white rounded-2xl p-8 mb-4 flex items-center border border-primary-default">
-              <div className="mr-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="10em"
-                  height="10em"
-                  viewBox="0 0 24 24"
-                  className="text-primary-default"
-                >
-                  <g fill="none" fillRule="evenodd">
-                    <path fill="none" d="M0 0h24v24H0z" />
-                    <path
-                      fill="currentColor"
-                      d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10s10-4.477 10-10S17.523 2 12 2M8.5 9.5a3.5 3.5 0 1 1 7 0a3.5 3.5 0 0 1-7 0m9.758 7.484A7.985 7.985 0 0 1 12 20a7.985 7.985 0 0 1-6.258-3.016C7.363 15.821 9.575 15 12 15s4.637.821 6.258 1.984"
-                    />
-                  </g>
-                </svg>
-              </div>
+            <div className="flex flex-col">
               {/* Details */}
-              <div className="flex-grow ml-10">
-                <div>
-                  <h3 className="text-3xl font-bold text-primary-default mb-6">
-                    Jeannah Padasas
-                  </h3>
-                  <p className="text-2xl text-primary-default mb-6">
-                    pdsjanna@gmail.com
-                  </p>
-                  <p className="text-2xl text-primary-default mb-6">
-                    July 04, 2024 | 10:00 pm
-                  </p>
+              {forms.length === 0 && (
+                <div className="bg-white rounded-2xl p-8 mb-4 flex items-center justify-center border border-primary-default">
+                  No Pending Requestor Application at the moment
                 </div>
-              </div>
-              {/* Button */}
-              <div className="flex flex-col gap-y-4 mr-20">
-                <Link to="/admin/requestorVerification">
-                  <button className="w-full h-10 px-16 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default">
-                    View
-                  </button>
-                </Link>
-                <Link to="/admin/bugResolve">
-                  <button className="w-full h-10 px-16 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default">
-                    Block
-                  </button>
-                </Link>
-                <Link to="/admin/bugResolve">
-                  <button className="w-full h-10 px-16 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default">
-                    Delete
-                  </button>
-                </Link>
-              </div>
-            </div>
+              )}
+            {forms.map((form, index) => (
+              <RenderPendingVerification 
+              key={index} 
+              name={form.fullName} 
+              email={form.email} 
+              date={form.createdAt} 
+              form={form}
+              userType={form.userType}//Requestor
+              />
+            ))}
 
-            <div className="bg-white rounded-2xl p-8 mb-4 flex items-center border border-primary-default">
-              <div className="mr-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="10em"
-                  height="10em"
-                  viewBox="0 0 24 24"
-                  className="text-primary-default"
-                >
-                  <g fill="none" fillRule="evenodd">
-                    <path fill="none" d="M0 0h24v24H0z" />
-                    <path
-                      fill="currentColor"
-                      d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10s10-4.477 10-10S17.523 2 12 2M8.5 9.5a3.5 3.5 0 1 1 7 0a3.5 3.5 0 0 1-7 0m9.758 7.484A7.985 7.985 0 0 1 12 20a7.985 7.985 0 0 1-6.258-3.016C7.363 15.821 9.575 15 12 15s4.637.821 6.258 1.984"
-                    />
-                  </g>
-                </svg>
-              </div>
-              {/* Details */}
-              <div className="flex-grow ml-10">
-                <div>
-                  <h3 className="text-3xl font-bold text-primary-default mb-6">
-                    Rogine Cubelo
-                  </h3>
-                  <p className="text-2xl text-primary-default mb-6">
-                    cubelorogine@gmail.com
-                  </p>
-                  <p className="text-2xl text-primary-default mb-6">
-                    July 04, 2024 | 10:00 pm
-                  </p>
-                </div>
-              </div>
-              {/* Button */}
-              <div className="flex flex-col gap-y-4 mr-20">
-                <Link to="/admin/bugResolve">
-                  <button className="w-full h-10 px-16 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default">
-                    View
-                  </button>
-                </Link>
-                <Link to="/admin/bugResolve">
-                  <button className="w-full h-10 px-16 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default">
-                    Block
-                  </button>
-                </Link>
-                <Link to="/admin/bugResolve">
-                  <button className="w-full h-10 px-16 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default">
-                    Delete
-                  </button>
-                </Link>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl p-8 mb-4 flex items-center border border-primary-default">
-              <div className="mr-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="10em"
-                  height="10em"
-                  viewBox="0 0 24 24"
-                  className="text-primary-default"
-                >
-                  <g fill="none" fillRule="evenodd">
-                    <path fill="none" d="M0 0h24v24H0z" />
-                    <path
-                      fill="currentColor"
-                      d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10s10-4.477 10-10S17.523 2 12 2M8.5 9.5a3.5 3.5 0 1 1 7 0a3.5 3.5 0 0 1-7 0m9.758 7.484A7.985 7.985 0 0 1 12 20a7.985 7.985 0 0 1-6.258-3.016C7.363 15.821 9.575 15 12 15s4.637.821 6.258 1.984"
-                    />
-                  </g>
-                </svg>
-              </div>
-              {/* Details */}
-              <div className="flex-grow ml-10">
-                <div>
-                  <h3 className="text-3xl font-bold text-primary-default mb-6">
-                    Beverly Somodio
-                  </h3>
-                  <p className="text-2xl text-primary-default mb-6">
-                    somodioberverly@gmail.com
-                  </p>
-                  <p className="text-2xl text-primary-default mb-6">
-                    July 04, 2024 | 10:00 pm
-                  </p>
-                </div>
-              </div>
-              {/* Button */}
-              <div className="flex flex-col gap-y-4 mr-20">
-                <Link to="/admin/bugResolve">
-                  <button className="w-full h-10 px-16 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default">
-                    View
-                  </button>
-                </Link>
-                <Link to="/admin/bugResolve">
-                  <button className="w-full h-10 px-16 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default">
-                    Block
-                  </button>
-                </Link>
-                <Link to="/admin/bugResolve">
-                  <button className="w-full h-10 px-16 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default">
-                    Delete
-                  </button>
-                </Link>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl p-8 mb-4 flex items-center border border-primary-default">
-              <div className="mr-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="10em"
-                  height="10em"
-                  viewBox="0 0 24 24"
-                  className="text-primary-default"
-                >
-                  <g fill="none" fillRule="evenodd">
-                    <path fill="none" d="M0 0h24v24H0z" />
-                    <path
-                      fill="currentColor"
-                      d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10s10-4.477 10-10S17.523 2 12 2M8.5 9.5a3.5 3.5 0 1 1 7 0a3.5 3.5 0 0 1-7 0m9.758 7.484A7.985 7.985 0 0 1 12 20a7.985 7.985 0 0 1-6.258-3.016C7.363 15.821 9.575 15 12 15s4.637.821 6.258 1.984"
-                    />
-                  </g>
-                </svg>
-              </div>
-              {/* Details */}
-              <div className="flex-grow ml-10">
-                <div>
-                  <h3 className="text-3xl font-bold text-primary-default mb-6">
-                    Keith Diaz
-                  </h3>
-                  <p className="text-2xl text-primary-default mb-6">
-                    diazkeith@gmail.com
-                  </p>
-                  <p className="text-2xl text-primary-default mb-6">
-                    July 04, 2024 | 10:00 pm
-                  </p>
-                </div>
-              </div>
-              {/* Button */}
-              <div className="flex flex-col gap-y-4 mr-20">
-                <Link to="/admin/bugResolve">
-                  <button className="w-full h-10 px-16 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default">
-                    View
-                  </button>
-                </Link>
-                <Link to="/admin/bugResolve">
-                  <button className="w-full h-10 px-16 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default">
-                    Block
-                  </button>
-                </Link>
-                <Link to="/admin/bugResolve">
-                  <button className="w-full h-10 px-16 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default">
-                    Delete
-                  </button>
-                </Link>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl p-8 mb-4 flex items-center border border-primary-default">
-              <div className="mr-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="10em"
-                  height="10em"
-                  viewBox="0 0 24 24"
-                  className="text-primary-default"
-                >
-                  <g fill="none" fillRule="evenodd">
-                    <path fill="none" d="M0 0h24v24H0z" />
-                    <path
-                      fill="currentColor"
-                      d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10s10-4.477 10-10S17.523 2 12 2M8.5 9.5a3.5 3.5 0 1 1 7 0a3.5 3.5 0 0 1-7 0m9.758 7.484A7.985 7.985 0 0 1 12 20a7.985 7.985 0 0 1-6.258-3.016C7.363 15.821 9.575 15 12 15s4.637.821 6.258 1.984"
-                    />
-                  </g>
-                </svg>
-              </div>
-              {/* Details */}
-              <div className="flex-grow ml-10">
-                <div>
-                  <h3 className="text-3xl font-bold text-primary-default mb-6">
-                    Alisha Arafol
-                  </h3>
-                  <p className="text-2xl text-primary-default mb-6">
-                    aragolalisha@gmail.com
-                  </p>
-                  <p className="text-2xl text-primary-default mb-6">
-                    July 04, 2024 | 10:00 pm
-                  </p>
-                </div>
-              </div>
-              {/* Button */}
-              <div className="flex flex-col gap-y-4 mr-20">
-                <Link to="/admin/bugResolve">
-                  <button className="w-full h-10 px-16 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default">
-                    View
-                  </button>
-                </Link>
-                <Link to="/admin/bugResolve">
-                  <button className="w-full h-10 px-16 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default">
-                    Block
-                  </button>
-                </Link>
-                <Link to="/admin/bugResolve">
-                  <button className="w-full h-10 px-16 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default">
-                    Delete
-                  </button>
-                </Link>
-              </div>
             </div>
           </div>
         </div>

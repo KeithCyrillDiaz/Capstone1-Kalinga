@@ -24,7 +24,7 @@ import axios from "axios";
 import { BASED_URL } from "../../../../MyConstants.js";
 import phil from "philippine-location-json-for-geer";
 import ProvincesData from '../Provinces.json'
-import { GestationData, GestationExplanation, sexData, medicalConditionData } from "../ageofGestationData.js";
+import { GestationData, GestationExplanation, sexData} from "../ageofGestationData.js";
 
 
 const DonorScreeningForm = () => {
@@ -61,7 +61,6 @@ const DonorScreeningForm = () => {
     childBirthDate: '',
     birthWeight: '',
     ageOfGestation: '',
-    medicalCondition: '',
     typeOfDonor: '',
     QA: '',
     QB: '',
@@ -155,7 +154,6 @@ const checkForm = (value) => {
     'childBirthDate',
     'birthWeight',
     'ageOfGestation',
-    'medicalCondition'
     ];
 
     if(value === "Address") {
@@ -171,10 +169,10 @@ const checkForm = (value) => {
     const isFormDataValid = keysToCheck.every(key => screeningFormData[key].trim() !== '');
 
     if (isFormDataValid) {
-        console.log('All values until medical condition are valid');
+        console.log('All values values of forms are valid');
         setIsFormFilled(true)
     } else {
-        console.log('Some values until medical condition are empty');
+        console.log('Some values until are empty');
         setIsFormFilled(false)
     }
 }
@@ -481,7 +479,7 @@ useEffect(() => {
 useEffect(() => {
   //checkForm
   checkForm("Screening Form")
-}, [screeningFormData.medicalCondition])
+}, [screeningFormData.ageOfGestation])
 
   return (
     
@@ -868,30 +866,7 @@ useEffect(() => {
                         </TouchableOpacity>
               
                     </View>
-                    <View style={styles.medicalConditionStyle} >
-                           <Dropdown
-                            style={[ isGestationFocus && { borderColor: 'blue'}]}
-                            placeholderStyle={[styles.placeholderStyle, {marginLeft: 16}]}
-                            selectedTextStyle={[styles.selectedTextStyle, {marginTop: 20, paddingTop: 15}]}
-                            inputSearchStyle={styles.inputSearchStyle}
-                            data={medicalConditionData}
-                            search
-                            maxHeight={300}
-                            labelField="label"
-                            valueField="value"
-                            subField="children"
-                            placeholder={'Medical Condition'}
-                            searchPlaceholder="Search..."
-                            value={gestationValue}
-                            onFocus={() => setIsGestationFocus(true)}
-                            onBlur={() => setIsGestationFocus(false)}
-                            onChange={item => {
-                              setGestationValue
-                              handleChangeText('medicalCondition', item.label)
-                              setIsGestationFocus(false);
-                            }}
-                          />
-                    </View>
+                    
               </View>
 
               <View style = {globalStyles.center}>
@@ -1181,19 +1156,6 @@ useEffect(() => {
         backgroundColor: "#FFFFFF",
         elevation: 5
     },
-
-    medicalConditionStyle: {
-      borderWidth: 1,
-      borderRadius: 20,
-      borderColor: "#E60965",
-      backgroundColor:"white",
-      width: "91%",
-      paddingRight: 15,
-      paddingVertical: 4,
-      marginTop: 10,
-      elevation: 5
-    },
-
 
     SmallinputField: {
         borderWidth: 1,

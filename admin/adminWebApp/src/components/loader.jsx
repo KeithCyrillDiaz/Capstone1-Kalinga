@@ -1,6 +1,5 @@
 import { ClipLoader } from "react-spinners";
 export const Loader = ({isLoading}) => {
-    console.log("isLoading: ", isLoading)
     return (
         <>
             {/* Loader */}

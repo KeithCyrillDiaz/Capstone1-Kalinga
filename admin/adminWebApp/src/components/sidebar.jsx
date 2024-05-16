@@ -339,7 +339,7 @@ export default function () {
         </div>
         
 
-        <div className="grid items-center justify-center grid-flow-col-dense mb-6 gap-x-4">
+        <div className="grid items-center justify-center grid-flow-col-dense mb-20 gap-x-4">
           <span>
             <svg
               xmlns="http://www.w3.org/2000/svg"

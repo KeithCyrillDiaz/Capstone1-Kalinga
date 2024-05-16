@@ -6,13 +6,14 @@ import { WebHost } from '../../../MyConstantAdmin'
 import axios from 'axios'
 import { DeleteScreeningFormModal } from "../../modal/Verification/DeleteScreeningFormModal";
 
-export const RenderDonorVerificationPending = ({
+export const RenderPendingVerification = ({
   name,
   email,
   date,
-  form
+  form,
+  userType
 }) => {
-  
+
   const [finalDate, setFinalDate] = useState("")
   const [deleteModal, setDeleteModal] = useState(false)
 
@@ -86,7 +87,7 @@ export const RenderDonorVerificationPending = ({
       {/* Button */}
       <div className="flex flex-col gap-y-4 mr-20">
         <Link 
-        to={{pathname: `/admin/DonorVerification/${form.Applicant_ID}`}}
+        to={{pathname: userType === "Donor" ? `/admin/DonorVerification/${form.Applicant_ID}` : `/admin/requestorVerification/${form.Applicant_ID}`}}
         > 
 
           <button className="w-full h-10 px-16 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default">

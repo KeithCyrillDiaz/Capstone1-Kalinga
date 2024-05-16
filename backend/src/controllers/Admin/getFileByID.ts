@@ -1,16 +1,27 @@
 import express from 'express'
-import { getMRFileZip } from '../../models/ApplyAsDonor'
+import { getMRFile } from '../../models/ApplyAsDonor'
 export const getFile = async (req: express.Request, res: express.Response) => {
    try{
         // console.log(req.params.ownerID)
-        const zipFile = await getMRFileZip(req.params.ownerID)
-        if(!zipFile) {
+        const { ownerID } = req.params
+        if(!ownerID) {
+            console.log("Bad Request")
             return res.json({
                 messages: {
                     code: 1,
-                    message: "None Existent Zip File"
+                    message: "Bad Request"
                 }
             }).status(400)
+        }
+        const files = await getMRFile(ownerID)
+        if(!files) {
+            console.log("Non Existent Zip File")
+            return res.json({
+                messages: {
+                    code: 1,
+                    message: "Non Existent Zip File"
+                }
+            }).status(404)
         }
 
         return res.json({
@@ -18,7 +29,7 @@ export const getFile = async (req: express.Request, res: express.Response) => {
                 code: 0,
                 message: "Retrieved Zip File"
             },
-            zipFile
+            files
         }).status(200)
         
    }catch(error){

@@ -4,7 +4,7 @@ import axios from 'axios'
 import { WebHost } from '../../../MyConstantAdmin'
 import { Loader } from '../../components/loader'
 
-import { RenderDonorVerificationPending } from '../../components/Verification/RenderDonorVerificationPending'
+import { RenderPendingVerification } from '../../components/Verification/RenderPendingVerification'
 
 export default function () {
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function () {
       setLoading(true)
       console.log("Fetching Data")
       const response = await axios.get(`${WebHost}/kalinga/getScreeningFormsUserType/${userType}`)
-      console.log(response.data.screeningForms)
+      // console.log("response: ", response.data.screeningForms)
       if(!response.data.screeningForms){
         console.log("Error fetching Screening Forms")
       } else {
@@ -37,7 +37,7 @@ export default function () {
       setLoading(false)
     }
   }
-  console.log("forms: ",forms)
+  // console.log("forms: ",forms)
   useEffect(() => {
     fetchData();
   }, []);
@@ -118,12 +118,13 @@ export default function () {
               </div>
           )}
           {forms.map((form, index) => (
-            <RenderDonorVerificationPending 
+            <RenderPendingVerification 
             key={index} 
             name={form.fullName} 
             email={form.email} 
             date={form.createdAt} 
             form={form}
+            userType={form.userType}//Donor
             />
           ))}
           
