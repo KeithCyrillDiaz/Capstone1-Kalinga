@@ -14,7 +14,7 @@ try {
         email,
         contactNumber,
         homeAddress,
-    
+        Municipality,
         //Infant Information
         childName,
         birthWeight,
@@ -94,7 +94,8 @@ try {
         email,
         contactNumber,
         homeAddress,
-
+        Municipality,
+        
         //Infant Information
         childName,
         birthWeight,

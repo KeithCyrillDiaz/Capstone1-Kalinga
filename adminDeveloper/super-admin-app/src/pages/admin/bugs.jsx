@@ -48,7 +48,9 @@ const Bugs = () => {
         <button
           onClick={() => handleTabChange("report")}
           className={`px-24 py-3 text-lg font-medium ${
-            activeTab === "report" ? "bg-pink-500 text-white rounded-tl-lg rounded-bl-lg" : "text-red-500 bg-white border border-red-500"
+            activeTab === "report"
+              ? "bg-pink-500 text-white rounded-tl-lg rounded-bl-lg"
+              : "text-red-500 bg-white border border-red-500"
           } focus:outline-none focus:ring-2 focus:ring-red-500`}
         >
           Report Bugs
@@ -56,7 +58,9 @@ const Bugs = () => {
         <button
           onClick={() => handleTabChange("resolved")}
           className={`px-24 py-3 text-lg font-medium ${
-            activeTab === "resolved" ? "bg-pink-500 text-white rounded-tr-lg rounded-br-lg" : "text-red-500 bg-white border border-red-500"
+            activeTab === "resolved"
+              ? "bg-pink-500 text-white rounded-tr-lg rounded-br-lg"
+              : "text-red-500 bg-white border border-red-500"
           } focus:outline-none focus:ring-2 focus:ring-red-500`}
         >
           Resolved Bugs

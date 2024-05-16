@@ -12,6 +12,8 @@ import {
   Chart,
   DonorVerifPendings,
   DonorVerification,
+  RequestorVerification,
+  RequestorVerifPendings,
   Forum,
   Approved,
   Rejected,
@@ -45,6 +47,8 @@ const router = createBrowserRouter(
         <Route path="chart" element={<Chart />} />
         <Route path="DonorVerifPendings" element={<DonorVerifPendings />} />
         <Route path="DonorVerification/:id" element={<DonorVerification />} />
+        <Route path="requestorVerifPendings" element={<RequestorVerifPendings/>} />
+        <Route path="requestorVerification/:id" element={<RequestorVerification/>} />
         <Route path="forum" element={<Forum />} />
         <Route path="approved" element={<Approved />} />
         <Route path="rejected" element={<Rejected />} />

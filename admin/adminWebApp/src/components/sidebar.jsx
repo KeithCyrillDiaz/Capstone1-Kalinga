@@ -246,7 +246,7 @@ export default function () {
                     <h1 className="text-xl text-neutral-primary">Donor</h1>
                   </NavLink>
                   <NavLink
-                    to="/admin/city"
+                    to="/admin/requestorVerifPendings"
                     className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-10/12 rounded-2xl py-2 mb-2 ml-6 ${
                       isActiveRoute("feedback")
                         ? "bg-secondary-default"
@@ -339,7 +339,7 @@ export default function () {
         </div>
         
 
-        <div className="grid items-center justify-center grid-flow-col-dense mb-6 gap-x-4">
+        <div className="grid items-center justify-center grid-flow-col-dense mb-20 gap-x-4">
           <span>
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -10,7 +10,7 @@ import axios from 'axios';
 import { BASED_URL } from '../../../../MyConstants.js';
 import phil from "philippine-location-json-for-geer";
 import ProvincesData from '../Provinces.json'
-import {GestationData, GestationExplanation, sexData} from '../ageofGestationData.js'
+import {GestationData, GestationExplanation, sexData, medicalConditionData} from '../ageofGestationData.js'
 
 const ApplyAs_DonorISF = () => {
 
@@ -21,12 +21,16 @@ const ApplyAs_DonorISF = () => {
   const [showDate1Picker, setShowDate1Picker] = useState(false);
   const [userBirthday, setUserBirthDay] = useState("")
   const [userAge, setUserAge] = useState("")
-  const [isEmailExisted, setIsEmailExisted] = useState(false)
-  const [isEmailValid, setIsEmailValid]= useState(false)
   const [value, setValue] = useState(null);
-  const [isFormFilled, setIsFormFilled] = useState(false)
   const [textFocus, setTextFocus] = useState(false)
   
+  //validation
+  const [isAgeValid, setIsAgeValid] = useState(true)
+  const [isChildAgeValid, setIsChildAgeValid] = useState(true)
+  const [isEmailExisted, setIsEmailExisted] = useState(false)
+  const [isEmailValid, setIsEmailValid]= useState(false)
+  const [isFormFilled, setIsFormFilled] = useState(false)
+  const [isChildTooOld, setChildIsTooOld] = useState(false)
 
   //Dropdowns
   const [openSexDropdown, setOpenSexDropdown] = useState(false)
@@ -56,16 +60,19 @@ const ApplyAs_DonorISF = () => {
     Applicant_ID: applicantId,
     userType: "Requestor",
     fullName: '',
+    Municipality: '',
     Age: '',
     birthDate: '',
     email:  '',
     contactNumber: '',
     homeAddress: '',
     sex: '',
+    childName: '',
     childAge: '',
     childBirthDate: '',
     birthWeight: '',
     ageOfGestation: '',
+    medicalCondition:'',
     RFR: '',
 });
 
@@ -74,16 +81,19 @@ const checkForm= (value) => {
   let keysToCheck = [
     'Applicant_ID',
     'userType',
+    'Municipality',
     'fullName',
     'Age',
     'birthDate',
     'email',
     'contactNumber',
     'homeAddress',
+    'childName',
     'childAge',
     'sex',
     'childBirthDate',
     'birthWeight',
+    'medicalCondition',
     'ageOfGestation',
     ];
 
@@ -108,10 +118,6 @@ const checkForm= (value) => {
     }
 }
 
-useEffect(() => {
-  //checkForm
-  checkForm("Screening Form")
-}, [screeningFormData.ageOfGestation])
 
    const handleDateChange = (event, selectedDate, info) => {
     if(info !== "Personal"){
@@ -125,8 +131,10 @@ useEffect(() => {
 
   
     setDateSelected(selectedDate)
-    const age = calculateAge(selectedDate, dateToday)
+
+    const age = calculateAge(selectedDate, dateToday, info)
     const birthDate =  formatBirthday(selectedDate)
+
     if(info === "infant") {
       setScreeningFormData({ 
         ...screeningFormData, 
@@ -159,11 +167,61 @@ useEffect(() => {
     return FormmattedBirthday
   }
 
-  const calculateAge = (birthDay, currentDate) => {
-    const differenceMs = currentDate - birthDay;
-    const age = Math.floor(differenceMs / (1000 * 60 * 60 * 24 * 365.25));
-    setUserAge(age.toString())
-    return age.toString()
+  const calculateAge = (birthDay, currentDate, info) => {
+    const differences = currentDate - birthDay;
+    console.log("differences: ", differences)
+    const age = Math.floor(differences / (1000 * 60 * 60 * 24 * 365.25));
+    let finalAge = age.toString()
+    if (parseInt(finalAge) > 1 && info === "infant") {
+      Alert.alert(
+        "Age Restriction Notice",
+        "We're sorry, but milk banks only accept infants up to 1 year old. Your baby exceeds this age limit."
+      );
+      setChildIsTooOld(true)
+    }
+
+    if(parseInt(finalAge) === 1 && info === "infant") {
+      Alert.alert(
+        "Take Note",
+        "Some milk banks will only accept infants who are newborn up to 5 months old."
+      );
+      setChildIsTooOld(false)
+    }
+    if(finalAge === "0" && info === "infant") {
+  
+      finalAge  = parseInt(age.toString()) > 1
+      ? age.toString() + " yrs old" 
+      : age.toString() + " yr old"
+  
+      const childYear = birthDay.getFullYear();
+      const yearToday = currentDate.getFullYear();
+      const childMonth= birthDay.getMonth();
+      const monthToday = currentDate.getMonth();
+      const childDay = birthDay.getDate();
+      const dayToday = currentDate.getDate();
+  
+        const result = childYear === yearToday 
+        ? monthToday - childMonth
+        : (monthToday + 12) - childMonth
+  
+        finalAge = result > 1 ? result + " months" : result + " month" 
+  
+        if(result > 5 && info === "infant") {
+          Alert.alert(
+            "Take Note",
+            "Some milk banks will only accept infants who are newborn up to 5 months old."
+          );
+        }
+        if(result === 0 ){
+          const childAge = dayToday - childDay
+  
+          if( childAge === 0) return finalAge = "New Born"
+          else return finalAge = childAge + " days"
+        }
+        setChildIsTooOld(false)
+    }
+      
+    return finalAge
   }
 
   const setMonth = (num) => {
@@ -198,14 +256,7 @@ const handleChangeText = (name, value) => {
     return
 };
 
-useEffect(() => {
-  if(screeningFormData.email !== ""){
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(!emailPattern.test(screeningFormData.email)){
-      setIsEmailValid(false)
-    } 
-  }
-},[screeningFormData.email])
+
 
 
 
@@ -213,6 +264,7 @@ useEffect(() => {
 
   const navigatePage = (Page, Data) => {
     console.log("check Screening Form: ", screeningFormData)
+    if(!checkAgeValidity()) return
     checkForm("ScreeningForm")
     if(!isFormFilled) {
       Alert.alert("Invalid Form", "Please complete the form first")
@@ -274,18 +326,45 @@ const [address, setAddress] = useState({
   Barangay: ""
 })
 
+const checkAgeValidity = () => {
+  const {Age, childAge} = screeningFormData
+  const motherAge = parseInt(Age)
+  const infantAge = parseInt(childAge)
+  if(motherAge < 13) {
+    Alert.alert("Invalid Mother Age"," Please input your proper birthday")
+    setIsAgeValid(false)
+    return false
+  }
+
+  if(childAge.includes("days") || childAge.includes("months")){
+    setIsChildAgeValid(true)
+    return true
+  }
+  
+  setIsAgeValid(true)
+  setIsChildAgeValid(true)
+  return true
+}
+
+
 // console.log("Form: ", screeningFormData)
 const updateAddress = (label, name) => {
   
   let data = label;
 
   if (label.toLowerCase().includes("city")) {
-    data = formatCity(label);
+    data = formatCity(label); // format City
   }
 
   const result = uncapitalizedString(data);
   // console.log("result: ", result);
-
+  if(name === "Municipality"){
+    console.log("City: ", result)
+    setScreeningFormData(prevFormData => ({
+      ...prevFormData,
+      [name]: result
+    }))
+  }
   setAddress(prevAddress => {
     const updatedAddress = {
       ...prevAddress,
@@ -296,17 +375,6 @@ const updateAddress = (label, name) => {
 };
 
 
-//update screening form after address data changes
-useEffect(() => {
-  // console.log("check Address after function: ", address)
-  if (checkForm("Address")) {
-    setScreeningFormData(prevData => ({
-      ...prevData,
-      homeAddress: address.Barangay + " " + address.Municipality
-    }));
-  }
-
-}, [address.Barangay, address.Municipality])
 
 const uncapitalizedString = (string) => {
   const trimmedString = string.trim();
@@ -326,6 +394,37 @@ const formatCity = (city) => {
   }
 }
 
+
+
+useEffect(() => {
+  //checkForm
+  checkForm("Screening Form")
+}, [screeningFormData.ageOfGestation])
+
+useEffect(() => {
+  checkAgeValidity()
+},[screeningFormData.birthDate, screeningFormData.childBirthDate])
+
+useEffect(() => {
+  if(screeningFormData.email !== ""){
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!emailPattern.test(screeningFormData.email)){
+      setIsEmailValid(false)
+    } 
+  }
+},[screeningFormData.email])
+
+//update screening form after address data changes
+useEffect(() => {
+  // console.log("check Address after function: ", address)
+  if (checkForm("Address")) {
+    setScreeningFormData(prevData => ({
+      ...prevData,
+      homeAddress: address.Barangay + " " + address.Municipality
+    }));
+  }
+
+}, [address.Barangay, address.Municipality])
 
   return (
     
@@ -409,7 +508,13 @@ const formatCity = (city) => {
             color="black" />
           </View>
         </View>
-
+        {!isAgeValid && screeningFormData.birthDate !=="" && (
+            <Text 
+              style = {{
+              alignSelf: "flex-end",
+              marginRight: "20%",
+              color: "red"}}>Please enter a valid Birthday</Text>
+          )}
         <View style={[styles.inputEmailAddressContainer, { elevation: 5 }]}>
           <TextInput
             placeholder="Email Address"
@@ -571,6 +676,14 @@ const formatCity = (city) => {
         </View>
 
         <Text style={styles.infantinfoText}>Infant Information</Text>
+
+        <View style={[styles.inputPhoneNumberContainer, { elevation: 5 }]}>
+          <TextInput
+            placeholder="Name of Child"
+            style={styles.inputField}
+            onChangeText={(value) => handleChangeText('childName', value)}
+          />
+        </View>
         <View style={styles.inputRowContainer1}>
          
             <View style={[styles.inputBirthWeightContainer, { elevation: 5 }]}>
@@ -634,7 +747,6 @@ const formatCity = (city) => {
             </View>
             
           </View>
-
           <View style={[styles.inputAgeContainer1, { elevation: 5 }]}>
             <TextInput
                 placeholder="Age"
@@ -645,13 +757,20 @@ const formatCity = (city) => {
               />
            
           </View>
+                           
         </View>
+        {!isChildAgeValid && screeningFormData.childBirthDate !=="" && (
+          <Text 
+            style = {{
+            alignSelf: "flex-start",
+            marginLeft: "10%",
+            color: "red"}}>Please enter a valid Birthday</Text>
+        )}
         <View style = {{
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
           marginTop: 15,
-          borderWidth: 0.5,
           borderRadius: 18,
           borderColor: '#E60965',
           backgroundColor: '#FFFFFF',
@@ -659,7 +778,9 @@ const formatCity = (city) => {
           width: "82%",
           alignSelf: "center",
           marginLeft: -10,
-          paddingRight: "5%"
+          paddingRight: "5%",
+          borderWidth: 1,
+          elevation:5
           }}>
           <View style={styles.inputAgeOfGestationContainer}>
             <Dropdown
@@ -702,6 +823,31 @@ const formatCity = (city) => {
             </TouchableOpacity>
    
         </View>
+
+        <View style={styles.medicalConditionStyle} >
+                           <Dropdown
+                            style={[ isGestationFocus && { borderColor: 'blue'}]}
+                            placeholderStyle={[styles.placeholderStyle, {marginLeft: 16}]}
+                            selectedTextStyle={[styles.selectedTextStyle, {marginTop: 20, paddingTop: 15}]}
+                            inputSearchStyle={styles.inputSearchStyle}
+                            data={medicalConditionData}
+                            search
+                            maxHeight={300}
+                            labelField="label"
+                            valueField="value"
+                            subField="children"
+                            placeholder={'Medical Condition'}
+                            searchPlaceholder="Search..."
+                            value={gestationValue}
+                            onFocus={() => setIsGestationFocus(true)}
+                            onBlur={() => setIsGestationFocus(false)}
+                            onChange={item => {
+                              setGestationValue
+                              handleChangeText('medicalCondition', item.label)
+                              setIsGestationFocus(false);
+                            }}
+                          />
+                    </View>
        
         
 
@@ -710,10 +856,10 @@ const formatCity = (city) => {
             styles.nextButton, 
               { 
                 width: 150,
-                opacity: isEmailExisted || !isFormFilled ? 0.5 : 1
+                opacity: isEmailExisted || !isFormFilled || isChildTooOld ? 0.5 : 1
               }
             ]}
-            disabled = {isEmailExisted || screeningFormData.email === ""}
+            // disabled = {isEmailExisted || screeningFormData.email === "" || isChildTooOld }
             onPress={() => navigatePage("RequestorMedicalAbstract", {screeningFormData: screeningFormData})}>
             <Text style={styles.nextButtonText}>Next</Text>
           </TouchableOpacity>
@@ -791,6 +937,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
+  medicalConditionStyle: {
+    borderWidth: 1,
+    borderRadius: 20,
+    borderColor: "#E60965",
+    backgroundColor:"white",
+    width: "82%",
+    paddingRight: 15,
+    paddingVertical: 4,
+    marginTop: 10,
+    elevation: 5,
+    alignSelf: "center",
+    marginLeft: -10
+  },
+
+
   sexDropdown: {
     marginHorizontal: 10
   },
@@ -802,7 +963,7 @@ const styles = StyleSheet.create({
     marginTop: "5%",
     flex: 1,
     paddingVertical: 10,
-    borderWidth: 0.5,
+    borderWidth: 1,
     borderRadius: 18,
     borderColor: '#E60965',
     elevation: 5,
@@ -954,7 +1115,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top', // Position the text at the top of the input field
   },
   inputFullNameContainer: {
-    borderWidth: 0.5, // Border width
+    borderWidth: 1, // Border width
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
@@ -962,6 +1123,7 @@ const styles = StyleSheet.create({
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 45, // Adjust height
     marginLeft: 30, // Move the input field to the right
+    elevation:5
   },
   inputRowContainer: {
     flexDirection: 'row',
@@ -970,7 +1132,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   inputAgeContainer: {
-    borderWidth: 0.5, // Border width
+    borderWidth: 1, // Border width
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
@@ -978,12 +1140,13 @@ const styles = StyleSheet.create({
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 45, // Adjust height
     marginLeft: -15, // Move the input field to the right
+    elevation:5
   },
   inputBirthdayContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 0.5, // Border width
+    borderWidth: 1, // Border width
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
@@ -991,9 +1154,10 @@ const styles = StyleSheet.create({
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 45, // Adjust height
     marginLeft: 15, // Move the input field to the right
+    elevation:5
   },
   inputEmailAddressContainer: {
-    borderWidth: 0.5, // Border width
+    borderWidth: 1, // Border width
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
@@ -1001,9 +1165,10 @@ const styles = StyleSheet.create({
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 45, // Adjust height
     marginLeft: 30, // Move the input field to the right
+    elevation:5
   },
   inputPhoneNumberContainer: {
-    borderWidth: 0.5, // Border width
+    borderWidth: 1, // Border width
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
@@ -1011,9 +1176,10 @@ const styles = StyleSheet.create({
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 45, // Adjust height
     marginLeft: 30, // Move the input field to the right
+    elevation:5
   },
   inputHomeAddressContainer: {
-    borderWidth: 0.5, // Border width
+    borderWidth: 1, // Border width
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
@@ -1021,6 +1187,7 @@ const styles = StyleSheet.create({
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 90, // Adjust height
     marginLeft: 30, // Move the input field to the right
+    elevation:5
   },
   infantinfoText:{
     textAlign: 'left', // Center align the text
@@ -1037,7 +1204,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
 inputAgeContainer1: {
-    borderWidth: 0.5, // Border width
+    borderWidth: 1, // Border width
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
@@ -1045,9 +1212,10 @@ inputAgeContainer1: {
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 45, // Adjust height
     marginLeft: 20, // Move the input field to the right
+    elevation:5
   },
 inputSexContainer: {
-  borderWidth: 0.5, // Border width
+  borderWidth: 1, // Border width
   borderRadius: 18, // Border radius
   borderColor: '#E60965', // Border color
   backgroundColor: '#FFFFFF', // Background color
@@ -1055,7 +1223,8 @@ inputSexContainer: {
   marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
   height: 45, // Adjust height
   marginLeft: 20, // Move the input field to the right
-  justifyContent: "center"
+  justifyContent: "center",
+  elevation:5
 },
 inputRowContainer2: {
   flexDirection: 'row',
@@ -1064,7 +1233,7 @@ inputRowContainer2: {
   marginTop: 5,
 },
 inputBirthdateContainer1: {
-  borderWidth: 0.5,
+  borderWidth: 1,
   borderRadius: 18,
   borderColor: '#E60965',
   backgroundColor: '#FFFFFF',
@@ -1072,9 +1241,10 @@ inputBirthdateContainer1: {
   marginTop: 15,
   height: 45, // Adjust height
   marginLeft: -15,
+  elevation:5
 },
   inputBirthWeightContainer: {
-  borderWidth: 0.5,
+  borderWidth: 1,
   borderRadius: 18,
   borderColor: '#E60965',
   backgroundColor: '#FFFFFF',
@@ -1082,12 +1252,14 @@ inputBirthdateContainer1: {
   marginTop: 15,
   height: 45, // Adjust height,
   marginLeft: -15,
+  elevation:5
 },
   inputAgeOfGestationContainer: {
   width: '95%',
   height: 45, // Adjust height
   backgroundColor: "white",
   borderRadius: 18,
+
 },
 
 buttonContainer: {

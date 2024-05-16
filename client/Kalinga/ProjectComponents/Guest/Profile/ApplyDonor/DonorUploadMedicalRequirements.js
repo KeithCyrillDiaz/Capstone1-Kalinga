@@ -11,115 +11,103 @@ import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
 import axios from 'axios';
 import { CommonActions } from '@react-navigation/native';
-import Spinner from 'react-native-loading-spinner-overlay';
 import ImageZoom from 'react-native-image-pan-zoom';
 import { BASED_URL } from '../../../../MyConstants.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
+import { Uploading } from '../../../uploader/Uploading.js';
+import { UploadImageOrFileToFirebase } from '../../../uploader/fireBaseUploader.js'
 const DonorUploadMedicalRequirements = ({route}) => {
 
   const { screeningFormData } = route.params;
 
-  
-  const [formData, setFormData] = useState(screeningFormData);
   const [selectedImage, setSelectedImage] = useState({});
   const [selectedFile, setSelectedFile] = useState({});
-  const [uploadedFiles, setUploadedFiles] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState('');
   const [fileContainer, setFileContainer] = useState(false)
   const [scrollableHorizontal, setScrollableHorizontal] = useState(false)
   const [imageContainer, setImageContainer] = useState(false)
   const navigation = useNavigation();
-  const [isLoading, setIsLoading] = useState(false);
- 
+
+  //uploaderModal
+  const [progressBar, setProgressBar] = useState(0)
+  const [uploadingImage, setUploadingImage] = useState(false)
+  const [imageUri, setIMageUri] = useState("")
+  const [loaderLabel, setLoaderLabel] = useState("")
+
+  const confirmation = () => {
+    Alert.alert('Confirmation','Are you sure you want to submit your Application?',
+    [
+      {
+        text: 'No',
+      },
+      {
+        text: 'Yes',
+        onPress: () =>  navigatePage("EmailVerification", screeningFormData),
+      },
+    ]
+  )
+    
+ }
+
+
   const navigatePage = async (Page, Data) => {
     try {
-
-        setIsLoading(true);
+      setUploadingImage(true)
+     if(Object.keys(selectedImage).length + Object.keys(selectedFile).length < 5){
+      Alert.alert(
+        "Incomplete Medical Requirements",
+        "Please upload all the required documents to proceed."
+      );
+      return
+     }
         // Send POST request to the specified URL with the form data
         const postScreeningForm = await axios.post(`${BASED_URL}/kalinga/addScreeningForm`, 
               screeningFormData,
         );
         // Log successful response from the backend
+
         console.log('Data saved successfully:', postScreeningForm.data);
 
-        setIsLoading(false);
-
-        const formData = new FormData();
-        formData.append('image', selectedImage);
-
-      
-        if(Object.keys(selectedImage).length !== 0){
-            const uploadedImages = new FormData();
-
-            for (const key in selectedImage) {
-              const imageData = selectedImage[key];
-              const file = {
-                uri: imageData.uri,
-                type: 'image/jpeg', // Assuming all image types are JPEG
-                name: `${key}.png`,
-              };
-
-              uploadedImages.append('DonorImages', file); // Append the file directly
-              uploadedImages.append(`userType`, "Donor"); 
-              uploadedImages.append(`owner`, imageData.owner);// Append userType
-              uploadedImages.append(`ownerID`, imageData.ownerID);// Append userType
-            }
-    
-            setUploadedFiles(uploadedImages)
-            const postImages = await axios.post(`${BASED_URL}/kalinga/addMedicalRequirementsAsImage`,
-            // const postImages = await axios.post(`${BASED_URL}/kalinga/addMedicalRequirementsAsImage`, 
-              uploadedImages,
-              {
-                headers: {
-                  'Content-Type': 'multipart/form-data'
-                }
-              }
-            );
-            console.log('Data saved successfully:', postImages.data);
-        }
-       
-          // Log successful response from the backend
-     
-            
-          if(Object.keys(selectedFile).length !== 0){
-
-              const uploadedFiles = new FormData();
-
-              for (const key in selectedFile) {
-                const imageData = selectedFile[key];
-                const parts = imageData.name.split(".");
-                const extension = parts[1]; // Extension part
-
-                const file = {
-                  uri: imageData.uri,
-                  type: imageData.type, 
-                  name: `${key}.${extension}`
-                };
-                uploadedFiles.append('DonorFiles', file); // Append the file directly
-                uploadedFiles.append(`userType`, "Donor"); 
-                uploadedFiles.append(`owner`, imageData.owner);// Append userType
-                uploadedFiles.append(`ownerID`, imageData.ownerID);// Append userType
-                uploadedFiles.append(`requirementType`, imageData.requirementType); // Append owner
-              }
-      
-              setUploadedFiles(uploadedFiles)
-      
-              const postFiles = await axios.post(`${BASED_URL}/kalinga/addMedicalRequirementsAsFile`, 
-                uploadedFiles,
-                {
-                  headers: {
-                    'Content-Type': 'multipart/form-data'
-                  }
-                }
-              );
-              console.log('Data saved successfully:', postFiles.data);
-          }
+        for (const key in selectedImage) {
+          const imageData = selectedImage[key];
           
+        await UploadImageOrFileToFirebase({
+          URI: imageData.uri, 
+          requirmentType: imageData.name,
+          purpose: "Application",
+          type: "Image",
+          userType: "Donor", 
+          userId: screeningFormData.Applicant_ID,
+          nameOfUser: screeningFormData.fullName,
+          percent: setProgressBar, // for uploading with loader
+          setImage: setIMageUri, // for uploading with loader
+          setLabel: setLoaderLabel  // for uploading with loader
+        });
+        }
+
+
+        for (const key in selectedFile) {
+          const fileData = selectedFile[key];
+          
+          await UploadImageOrFileToFirebase({
+            URI: fileData.uri, 
+            requirmentType: fileData.name,
+            purpose: "Application",
+            type: "File",
+            userType: "Donor", 
+            userId:screeningFormData.Applicant_ID,
+            nameOfUser: screeningFormData.fullName,
+            percent: setProgressBar,// for uploading with loader
+            setImage: setIMageUri, // for uploading modal
+            setLabel: setLoaderLabel // for uploading with loader
+          });
+        }
+
           await AsyncStorage.setItem('Pending', 'True')
           await AsyncStorage.setItem('DonorApplicant_ID', screeningFormData.Applicant_ID)
+          setUploadingImage(false)
+
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
@@ -130,14 +118,9 @@ const DonorUploadMedicalRequirements = ({route}) => {
     } catch (error) {
         // Handle error if the request fails
         console.error('Error saving data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-
-    
+    } 
 };
 
-   
   const handleImageUpload = async (attachmentType) => {
     try {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -276,6 +259,15 @@ const handleFileUpload = async (attachmentType) => {
         overScrollMode='never'
         style={styles.body}>
 
+          {uploadingImage && (
+             <Uploading 
+             progress={progressBar} 
+             Image={imageUri}
+             label={loaderLabel}
+            //  onClose = {() => setUploadingImage(false)}
+            />
+          )}
+
             <View style={styles.rectanglesContainer}>
                 <View style={styles.rectangle}></View>
                 <View style={styles.rectangle}></View>
@@ -283,7 +275,7 @@ const handleFileUpload = async (attachmentType) => {
                 <View style={styles.rectangle}></View>
                 <View style={styles.rectangleIndicator}></View>
             </View>
-         
+
             <Text style = {styles.title}> Upload Medical Requirements </Text>
             <Text style = {styles.note}> Note: Select your answer by clicking either the Icon</Text>
             
@@ -524,13 +516,6 @@ const handleFileUpload = async (attachmentType) => {
                   </View>
               </Modal>
 
-              <Spinner
-              visible={isLoading}
-              textContent={'Loading...'}
-              textStyle={{ color: '#FFF' }}
-            />
-      
-
             <TouchableOpacity onPress={toggleCheckbox} style={styles.checkbox}>
                 {isChecked ? <AntDesign name="checksquare" size={17} color="#E60965" /> 
                 : <Fontisto name="checkbox-passive" size={17} color="#E60965" />}
@@ -543,8 +528,8 @@ const handleFileUpload = async (attachmentType) => {
               styles.button, 
               { opacity: (isChecked && Object.keys(selectedImage).length + Object.keys(selectedFile).length >= 5) ? 1 : 0.5 } // Apply opacity based on conditions
             ]}
-            disabled={!isChecked || Object.keys(selectedImage).length + Object.keys(selectedFile).length < 5} // Disable the button based on conditions
-            onPress={() => navigatePage("EmailVerification", screeningFormData)}
+            disabled={!isChecked} // Disable the button based on conditions
+            onPress={() =>confirmation()}
           > 
             <Text style={styles.buttonTitle}>Submit</Text>
           </TouchableOpacity>

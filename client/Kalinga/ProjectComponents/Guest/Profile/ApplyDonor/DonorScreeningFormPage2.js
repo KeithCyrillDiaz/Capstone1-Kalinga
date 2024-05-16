@@ -1,6 +1,14 @@
 //Admin Initial Screening For page2
-import React, { useState }from 'react';
-import { ScrollView,Text, View, StatusBar, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
+import React, { useState, useEffect }from 'react';
+import { ScrollView,
+  Text, 
+  View, 
+  StatusBar, 
+  StyleSheet, 
+  TouchableOpacity, 
+  Alert,
+  TextInput
+} from 'react-native';
 import { globalStyles } from "../../../../styles_kit/globalStyles.js";
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { AntDesign } from '@expo/vector-icons';
@@ -12,23 +20,47 @@ const DonorScreeningFormPage2 = ({route}) => {
   // console.log(screeningFormData)
 
   const [formData, setFormData] = useState(screeningFormData);
-  
+  const [isFormFilled, setIsFormFilled] = useState(false)
+  const [selectedOption, setSelectedOption] = useState(null);
   const navigation = useNavigation();
 
   const navigatePage = (Page, data) => {
-    // Navigate to the next screen by route name
-    // console.log(data)
+    checkForm("Screening Form")
+    if(!isFormFilled) {
+      Alert.alert("Invalid Form", "Please complete the form first")
+      return
+    }
     navigation.navigate(Page, data);
   };
 
-  const [selectedOption, setSelectedOption] = useState(null);
+  useEffect(() => {
+    checkForm("Screening Form")
+  },[formData.Q2])
 
   const handleOptionSelect = (option) => {
       setSelectedOption(option);
       
   };
 
+  const checkForm = (value) => {
+    let keysToCheck = [
+      'typeOfDonor',
+      'QA',
+      'QB',
+      'Q1',
+      'Q2',
+      ];
   
+      const isFormDataValid = keysToCheck.every(key => formData[key].trim() !== '');
+  
+      if (isFormDataValid) {
+          console.log('All values until medical condition are valid');
+          setIsFormFilled(true)
+      } else {
+          console.log('Some values until medical condition are empty');
+          setIsFormFilled(false)
+      }
+  }
 
   const [medicalAnsweredQuestions, setMedicalAnsweredQuestions] = useState([]);
 
@@ -186,7 +218,10 @@ const DonorScreeningFormPage2 = ({route}) => {
                 </View>
 
 
-                      <TouchableOpacity style = {styles.button}  onPress={() => navigatePage("DonorMedicalHistory", { screeningFormData: formData })}>
+                      <TouchableOpacity style = {[styles.button,
+                        {opacity: !isFormFilled ? 0.5 : 1}
+                        ]}  
+                      onPress={() => navigatePage("DonorMedicalHistory", { screeningFormData: formData })}>
                             <Text style = {styles.buttonTitle}>Next</Text>
                       </TouchableOpacity>
                 

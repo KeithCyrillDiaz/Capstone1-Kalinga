@@ -9,6 +9,7 @@ export default function () {
   const [showAppointmentsDropdown, setShowAppointmentsDropdown] =
     useState(false);
   const [showUtilitiesDropdown, setShowUtilitiesDropdown] = useState(false);
+  const [showUsersDropdown, setShowUsersDropdown] = useState(false);
 
   const isActiveRoute = (route) => {
     const currentPath = window.location.pathname;
@@ -361,6 +362,30 @@ export default function () {
                   >
                     <h1 className="text-xl text-neutral-primary">Requestor</h1>
                   </NavLink>
+                  <NavLink
+                    to="/admin/donorAppointManage"
+                    className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
+                      isActiveRoute("city")
+                        ? "bg-primary-default"
+                        : "bg-transparent hover:bg-primary-default"
+                    }`}
+                  >
+                    <h1 className="text-lg text-neutral-primary">
+                      Donor Mamangement
+                    </h1>
+                  </NavLink>
+                  <NavLink
+                    to="/admin/requestorAppointments"
+                    className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
+                      isActiveRoute("city")
+                        ? "bg-primary-default"
+                        : "bg-transparent hover:bg-primary-default"
+                    }`}
+                  >
+                    <h1 className="text-lg text-neutral-primary">
+                      Requestor Mamangement
+                    </h1>
+                  </NavLink>
                 </div>
               )}
             </div>
@@ -413,9 +438,9 @@ export default function () {
               {showUtilitiesDropdown && (
                 <div className="p-2 w-full bg-secondary-default rounded-b-2xl pb-2 mb-2">
                   <NavLink
-              to="/admin/feedback"
-              className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
-                      isActiveRoute("city")
+                    to="/admin/feedback"
+                    className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
+                      isActiveRoute("feedback")
                         ? "bg-primary-default"
                         : "bg-transparent hover:bg-primary-default"
                     }`}
@@ -423,8 +448,8 @@ export default function () {
                     <h1 className="text-xl text-neutral-primary">Feedbacks</h1>
                   </NavLink>
                   <NavLink
-              to="/admin/bugs"
-              className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
+                    to="/admin/bugs"
+                    className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
                       isActiveRoute("city")
                         ? "bg-primary-default"
                         : "bg-transparent hover:bg-primary-default"

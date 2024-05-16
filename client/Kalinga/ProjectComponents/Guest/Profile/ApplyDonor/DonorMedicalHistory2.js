@@ -1,6 +1,14 @@
 //Guest Home
-import React, {useState} from 'react';
-import { ScrollView,Text, View, StatusBar, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import { 
+  ScrollView,
+  Text, 
+  View, 
+  StatusBar, 
+  StyleSheet, 
+  TouchableOpacity, 
+  Alert,
+  TextInput} from 'react-native';
 import { globalStyles } from "../../../../styles_kit/globalStyles.js";
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { AntDesign } from '@expo/vector-icons';
@@ -13,15 +21,58 @@ const DonorMedicalHistory2 = ({route}) => {
     // console.log(screeningFormData)
   
     const [formData, setFormData] = useState(screeningFormData);
+    const [isFormFilled, setIsFormFilled] = useState(false)
+    const [medicalAnsweredQuestions, setMedicalAnsweredQuestions] = useState([]);
+    const [sexualAnsweredQuestions, setSexualAnsweredQuestions] = useState([]);
 
     const navigatePage = (Page, data) => {
-      // console.log(screeningFormData)
-      // Navigate to the next screen by route name
+      if(formData.MH14 === "No"){
+        console.log(formData.MH2)
+        console.log(formData.MH2_Reason)
+        setFormData(prevFormData => ({
+          ...prevFormData,
+          MH14_Reason: '',
+        }))
+      }
+
+      if(formData.MH14 === "Yes" && formData.MH14_Reason === ""){
+        Alert.alert(
+          "Reason Required",
+          "Please provide a reason for selecting 'Yes' at question number 14."
+        )
+        setIsFormFilled(false)
+        return
+      }
+  
+      checkForm()
+      if(!isFormFilled) {
+        Alert.alert("Invalid Form", "Please complete the form first")
+        return
+      }
+
       navigation.navigate(Page, data);
     };
     
-    const [medicalAnsweredQuestions, setMedicalAnsweredQuestions] = useState([]);
-    const [sexualAnsweredQuestions, setSexualAnsweredQuestions] = useState([]);
+    const checkForm = () => {
+      let keysToCheck = [
+        'MH12',
+        'MH13',
+        'MH14',
+        'SH1',
+        'SH2',
+        ];
+    
+        const isFormDataValid = keysToCheck.every(key => formData[key].trim() !== '');
+    
+        if (isFormDataValid) {
+            console.log('All values until medical condition are valid');
+            setIsFormFilled(true)
+        } else {
+            console.log('Some values until medical condition are empty');
+            setIsFormFilled(false)
+        }
+    }
+    
 
     const handleChangeText = (value) => {
       setFormData(prevData => ({...prevData, 
@@ -30,6 +81,21 @@ const DonorMedicalHistory2 = ({route}) => {
       }))
       // setScreeningFormData({ ...screeningFormData, [name]: value });
   };
+
+  useEffect(() => {
+    checkForm()
+  }, [formData.MH12])
+
+  useEffect(() => {
+    console.log("formData.MH14_Reason: ", formData.MH14_Reason)
+    if(formData.MH14 === "No"){
+      setFormData({
+        ...formData,
+        MH14_Reason: ""
+      })
+    }
+  
+  }, [formData.MH14_Reason, formData.MH14])
 
     const pressOption = (questionId, answer, questionType) => {
         if(questionType === "Medical History")
@@ -52,7 +118,6 @@ const DonorMedicalHistory2 = ({route}) => {
         }
     };
     
-    const UserName = "Rogine"
 
     const renderQuestion = (questionId, questionText, questionType) => {
         let isChecked;
@@ -86,6 +151,7 @@ const DonorMedicalHistory2 = ({route}) => {
                       borderBottomColor: "#E60965",
                       borderBottomWidth: 1,
                       width: "85%",
+                      maxWidth:210,
                       marginLeft: 20,
                       color: "black",
                       paddingBottom: 2
@@ -94,6 +160,7 @@ const DonorMedicalHistory2 = ({route}) => {
                     textAlignVertical="bottom" // Align text to the top vertically
                     onChangeText={isChecked === 'Yes' ? (value) => handleChangeText(value) : undefined}
                     editable={isChecked === 'Yes'}
+                    value={formData[`MH${questionId}_Reason`]}
                   /> 
                   )} 
 
@@ -152,9 +219,13 @@ const DonorMedicalHistory2 = ({route}) => {
                     {renderQuestion(2, 'Nagkaroon ka na ba ng karanasang makipagtalik sa higit pa sa isang lalaki?', "Sexual History")}
                    
             </View>
-                     <TouchableOpacity style={styles.button} onPress={() => navigatePage("DonorUploadMedicalRequirements", { screeningFormData: formData })}>
-                        <Text style={styles.buttonTitle}>Next</Text>
-                     </TouchableOpacity>
+                      <TouchableOpacity style = {[styles.button,
+                        {opacity: !isFormFilled ? 0.5 : 1}
+                        ]}  
+                      onPress={() => navigatePage("DonorUploadMedicalRequirements", { screeningFormData: formData })}>
+                            <Text style = {styles.buttonTitle}>Next</Text>
+                      </TouchableOpacity>
+                    
         </ScrollView>
       </View>
         
@@ -225,7 +296,7 @@ const DonorMedicalHistory2 = ({route}) => {
       borderWidth: 1,
       borderRadius: 10,
       borderColor: '#E60965',
-      height: 230,
+      paddingBottom: 20,
       paddingRight: 10,
       marginBottom: 10,
       backgroundColor: "#FFFFFF",

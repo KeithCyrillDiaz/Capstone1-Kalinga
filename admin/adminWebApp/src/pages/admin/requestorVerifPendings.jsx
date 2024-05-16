@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
-
-import axios from 'axios'
+import axios from "axios";
 import { WebHost } from '../../../MyConstantAdmin'
 import { Loader } from '../../components/loader'
-
 import { RenderPendingVerification } from '../../components/Verification/RenderPendingVerification'
-
 export default function () {
   useEffect(() => {
     // Prevent scrolling of the entire page
@@ -16,15 +13,16 @@ export default function () {
     };
   }, []);
 
+
   const [forms, setForms] = useState([])
   const [loading, setLoading] = useState(false)
-  const userType = "Donor"
+  const userType = "Requestor"
   const fetchData = async () => {
     try { 
       setLoading(true)
       console.log("Fetching Data")
       const response = await axios.get(`${WebHost}/kalinga/getScreeningFormsUserType/${userType}`)
-      // console.log("response: ", response.data.screeningForms)
+      console.log(response.data.screeningForms)
       if(!response.data.screeningForms){
         console.log("Error fetching Screening Forms")
       } else {
@@ -37,11 +35,10 @@ export default function () {
       setLoading(false)
     }
   }
-  // console.log("forms: ",forms)
+  console.log("forms: ",forms)
   useEffect(() => {
     fetchData();
   }, []);
-
 
   return (
     <>
@@ -64,11 +61,11 @@ export default function () {
             ></path>
           </svg>
 
-          <h1 className="text-3xl text-primary-default">Donor Verification</h1>
+          <h1 className="text-3xl text-primary-default">Requestor Verification</h1>
         </div>
         <hr className="border-t-2 border-primary-default" />
 
-        <div className="p-8">
+        <div className="p-8" >
           <div className="flex flex-row items-center justify-between xl:gap-x-6 lg:gap-x-3">
             <div className="mt-8 ml-4 mb-1 text-4xl font-bold text-primary-default">
               Pendings
@@ -110,24 +107,26 @@ export default function () {
           className="overflow-hidden flex flex-col gap-y-4 mt-4"
           style={{ maxHeight: "calc(100vh - 8rem)" }}
         >
-         
           <div className="p-8 overflow-y-auto">
-          {forms.length===0 && (
-              <div className="bg-white rounded-2xl p-8 mb-4 flex items-center justify-center border border-primary-default">
-                No Pending Donor Application at the moment
-              </div>
-          )}
-          {forms.map((form, index) => (
-            <RenderPendingVerification 
-            key={index} 
-            name={form.fullName} 
-            email={form.email} 
-            date={form.createdAt} 
-            form={form}
-            userType={form.userType}//Donor
-            />
-          ))}
-          
+            <div className="flex flex-col">
+              {/* Details */}
+              {forms.length === 0 && (
+                <div className="bg-white rounded-2xl p-8 mb-4 flex items-center justify-center border border-primary-default">
+                  No Pending Requestor Application at the moment
+                </div>
+              )}
+            {forms.map((form, index) => (
+              <RenderPendingVerification 
+              key={index} 
+              name={form.fullName} 
+              email={form.email} 
+              date={form.createdAt} 
+              form={form}
+              userType={form.userType}//Requestor
+              />
+            ))}
+
+            </div>
           </div>
         </div>
       </section>
