@@ -8,6 +8,7 @@ import RequestPerMonth from "./requestPerMonth";
 import DonatePerMonth from "./donatePerMonth";
 import BarDonatePerMonth from "./BarDonatePerMonth";
 import BarRequestPerMonth from "./BarRequestPerMonth";
+import TotalUserPieChart from "./totalUserPieChart";
 
 
 
@@ -20,6 +21,7 @@ export { MobileChecker,
          RequestPerMonth,
          DonatePerMonth,
          BarDonatePerMonth,
-         BarRequestPerMonth
+         BarRequestPerMonth,
+         TotalUserPieChart
         };
 

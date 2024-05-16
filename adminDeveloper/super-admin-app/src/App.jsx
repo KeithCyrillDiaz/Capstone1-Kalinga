@@ -20,14 +20,13 @@ import {
   BugResolve,
   Feedback,
   FeedbackReport,
-  DonorAppointments,
-  RequestorAppointments,
   DonorAppointmentConfirmation,
   RequestorAppointmentConfirmation,
   Milkbanks,
   Users,
   DonorAccounts,
   DonorAppointManage,
+  RequestorManagement
 } from "@/pages";
 import { RootLayout, NotFound, MainLayout, AdminLayout } from "@/layouts";
 import { MobileChecker } from "@/components";
@@ -56,27 +55,17 @@ const router = createBrowserRouter(
         <Route path="approved" element={<Approved />} />
         <Route path="rejected" element={<Rejected />} />
         <Route path="bugs" element={<Bugs />} />
-        <Route path="bugReport" element={<BugReport />} />
+        <Route path="bugReport/:ReportBugID" element={<BugReport />} />
         <Route path="bugResolve" element={<BugResolve />} />
         <Route path="feedback" element={<Feedback />} />
         <Route path="feedbackReport" element={<FeedbackReport />} />
-        <Route path="donorAppointments" element={<DonorAppointments />} />
-        <Route
-          path="requestorAppointments"
-          element={<RequestorAppointments />}
-        />
-        <Route
-          path="donorAppointmentConfirmation/:AppointmentDonorID"
-          element={<DonorAppointmentConfirmation />}
-        />
-        <Route
-          path="requestorAppointmentConfirmation/:RequestID"
-          element={<RequestorAppointmentConfirmation />}
-        />
+        <Route path="donorAppointmentConfirmation/:AppointmentDonorID" element={<DonorAppointmentConfirmation />}/>
+        <Route path="requestorAppointmentConfirmation/:RequestID"element={<RequestorAppointmentConfirmation />}/>
         <Route path="milkbanks" element={<Milkbanks />} />
         <Route path="users" element={<Users />} />
         <Route path="DonorAccounts" element={<DonorAccounts />} />
         <Route path="DonorAppointManage" element={<DonorAppointManage />} />
+        <Route path="requestorManagement" element={<RequestorManagement />} />
       </Route>
 
       {/* 404 */}

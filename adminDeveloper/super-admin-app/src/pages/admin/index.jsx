@@ -2,10 +2,18 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Human from "@assets/human.png";
 import { WebHost } from "../../../MyConstantSuperAdmin";
+import { TotalUserPieChart } from "../../components";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+
 
 export default function Dashboard() {
   const [totalDonors, setTotalDonors] = useState(0);
   const [totalRequestors, setTotalRequestors] = useState(0);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [usersPerCity, setUsersPerCity] = useState([]);
+
+
+
 
   useEffect(() => {
     console.log("Fetching data...");
@@ -39,9 +47,39 @@ export default function Dashboard() {
           console.log("Response data:", error.response.data); // Log the response data if available
         }
       }
+      try {
+        const responseUsers = await axios.get(
+          `${WebHost}/kalinga/getTotalUser`
+        );
+        console.log("Requestors Response:", responseUsers.data); // Log the response data
+        setTotalUsers(responseUsers.data.totalUsers);
+      } catch (error) {
+        console.error("Error fetching total requestors:", error);
+        if (error.response) {
+          console.log("Response data:", error.response.data); // Log the response data if available
+        }
+      }
     };
 
     fetchCounts();
+  }, []);
+
+
+  useEffect(() => {
+    const fetchUsersPerCity = async () => {
+      try {
+        const response = await axios.get(`${WebHost}/kalinga/getTotalUsersPerCity`);
+        console.log("Users Per City Response:", response.data); // Log the response data
+        setUsersPerCity(response.data);
+      } catch (error) {
+        console.error("Error fetching users per city:", error);
+        if (error.response) {
+          console.log("Response data:", error.response.data);
+        }
+      }
+    };
+
+    fetchUsersPerCity();
   }, []);
 
   return (
@@ -80,7 +118,7 @@ export default function Dashboard() {
                 </div>
                 <div class="row-span-2 col-span-2 ">
                   <span className="text-center text-5xl font-semibold text-primary-default flex justify-center">
-                    456
+                  {totalDonors}
                   </span>
                 </div>
               </div>
@@ -112,7 +150,7 @@ export default function Dashboard() {
                 </div>
                 <div class="row-span-2 col-span-2 ">
                   <span className="text-center text-5xl font-semibold text-primary-default flex justify-center">
-                    456
+                  {totalRequestors}
                   </span>
                 </div>
               </div>
@@ -144,7 +182,7 @@ export default function Dashboard() {
                 </div>
                 <div class="row-span-2 col-span-2 ">
                   <span className="text-center text-5xl font-semibold text-primary-default flex justify-center">
-                    456
+                    {totalUsers}
                   </span>
                 </div>
               </div>
@@ -188,13 +226,23 @@ export default function Dashboard() {
                   App Users per Milkbank
                 </h2>
                 <span className="text-md text-primary-default font-sans ">
-                  basta pie chart dito comparing ung total users ng milkbanks
-                </span>
+                <TotalUserPieChart/>
+              </span>
               </div>
             </div>
 
-            <div className="col-span-3 row-span-3 px-16 bg-white rounded-lg shadow-md ">
-              dito po ay bar graph req and donor per city???
+            <div className="col-span-3 row-span-3 px-8 py-8 bg-white rounded-lg shadow-md">
+              <ResponsiveContainer width="100%" height="90%">
+                <BarChart data={usersPerCity} margin={{ top: 100, right: 30, left: 20, bottom: 30 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="city" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="totalDonors" name="Total Donors" fill="#ED5077" barSize={50} />
+                  <Bar dataKey="totalRequestors" name="Total Requestors" fill="#67C5F8" barSize={50} />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
 
             <div className="row-span-2 bg-white rounded-lg shadow-md px-6">
@@ -202,7 +250,7 @@ export default function Dashboard() {
                 Other Milkbank Stats
               </h2>
               <span className="text-md text-primary-default font-sans ">
-                Total Milkbanks: 3
+                Total Milkbanks: 1
               </span>
               <div class="grid grid-flow-row-dense grid-cols-3 grid-rows-3 gap-x-2 mt-6">
                 <div class="col-span-3">
@@ -221,10 +269,10 @@ export default function Dashboard() {
                   </span>
                 </div>
                 <div className="text-md text-primary-default font-sans text-right">
-                  10
+                {totalRequestors}
                 </div>
                 <div className="text-md text-primary-default font-sans text-right">
-                  5
+                {totalDonors}
                 </div>
               </div>
 
@@ -245,10 +293,10 @@ export default function Dashboard() {
                   </span>
                 </div>
                 <div className="text-md text-primary-default font-sans text-right">
-                  10
+                  3
                 </div>
                 <div className="text-md text-primary-default font-sans text-right">
-                  5
+                  3
                 </div>
               </div>
 
@@ -269,10 +317,10 @@ export default function Dashboard() {
                   </span>
                 </div>
                 <div className="text-md text-primary-default font-sans text-right">
-                  10
+                  2
                 </div>
                 <div className="text-md text-primary-default font-sans text-right">
-                  5
+                  2
                 </div>
               </div>
             </div>

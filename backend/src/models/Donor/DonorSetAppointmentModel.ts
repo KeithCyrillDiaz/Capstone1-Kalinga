@@ -22,6 +22,8 @@ export interface Appointment extends Document {
   selectedDate: string; 
   selectedTime: string;
   location: string;
+  createdAt: Date
+  
 }
 
 const AppointmentSchema: Schema = new Schema({
@@ -39,6 +41,7 @@ const AppointmentSchema: Schema = new Schema({
   selectedDate: { type: String, required: true },
   selectedTime: { type: String, required: true },
   location: { type: String, required: true },
+  createdAt: {type: Date, default: Date.now},
 });
 
 const AppointmentModel = mongoose.model<Appointment>('Appointment', AppointmentSchema);

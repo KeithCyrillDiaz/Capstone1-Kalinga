@@ -26,3 +26,14 @@ export const getTotalRequestor = async (req: Request, res: Response): Promise<vo
   }
 };
 
+export const getTotalUser = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const totalDonors: number = await DonorModel.distinct('Donor_ID').countDocuments();
+    const totalRequestors: number = await RequestorModel.distinct('Requestor_ID').countDocuments();
+    const totalUsers = totalDonors + totalRequestors;
+    res.json({ totalUsers });
+  } catch (error) {
+    console.error('Error fetching total users:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
