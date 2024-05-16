@@ -19,13 +19,13 @@ import { BASED_URL } from "../../../../MyConstants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from 'react-native-loading-spinner-overlay';
 import * as ImagePicker from 'expo-image-picker';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, CommonActions } from '@react-navigation/native';
+import { Uploading } from '../../../uploader/Uploading'
+import { uploadDpInFirebase } from '../../../uploader/fireBaseUploader'
 
 export default function EditPersonalScreen({route}) {
   
- const userInformation = route.params.userInformation
- const userName = route.params.userName
-
+ const {userName, userInformation, token} = route.params
  const navigate = useNavigation()
  const [userData, setUserData] = useState(userInformation)
  const [selectedImage, setSelectedImage] = useState({});
@@ -33,49 +33,82 @@ export default function EditPersonalScreen({route}) {
  const [isLoading, setIsloading] = useState(false)
 
 
+  //uploaderModal
+  const [progressBar, setProgressBar] = useState(0)
+  const [uploadingImage, setUploadingImage] = useState(false)
+  const [imageUri, setIMageUri] = useState("")
+  const [loaderLabel, setLoaderLabel] = useState("")
+
+  //Hooks from firebase import
+  const [axiosResponse, setAxiosResponse] = useState("")
+  const [link, setLink] = useState("")
+  const [imagePath, setImagePath] = useState("")
+
+ const sessionExpired = async() => {
+  await AsyncStorage.multiRemove(['token', 'userInformation', 'DPLink', 'Image_ID']);
+  Alert.alert("Session Expired", "Your session has expired. Please log in again.", [
+    {
+      text: "OK",
+      onPress: () => navigate.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'LogIn' }],
+        })
+      ),
+    },
+  ]);
+  return
+ }
+
+ useEffect (() => {
+  if(axiosResponse === "Unauthorized User") sessionExpired()
+ },[axiosResponse])
+
+ const storeDPInAsyncStorage = async () => {
+    if(link === "" && imagePath === "") return
+    console.log("storing DP details in Async")
+    await AsyncStorage.setItem('DPLink', link)
+    await AsyncStorage.setItem('Image_ID', imagePath)
+    setProfilePic(link)
+ }
+ 
  const uploadImage = async () => {
   try{
-    setIsloading(true)
+    setUploadingImage(true)
     console.log("Number of properties in selectedImage: ", Object.keys(selectedImage).length);
 
             if(Object.keys(selectedImage).length === 1){
-              const uploadedImages = new FormData();
-              const image = {
-                uri: selectedImage.ProfilePicture.uri,
-                type: 'image/jpeg', 
-                name: `${userData.fullName}.png`,
-              }
-             
-             
-              uploadedImages.append('ProfilePicture', image); 
-              uploadedImages.append(`userType`, "Requestor"); 
-              uploadedImages.append(`owner`, userData.fullName);// Append userType
-              uploadedImages.append(`ownerID`, userData.Requestor_ID);// Append userType
-              const Image_ID = await AsyncStorage.getItem("Image_ID")
-              if(Image_ID){
-                uploadedImages.append('Image_ID', Image_ID)
-              }
 
-              console.log("imageData: ", uploadedImages)
-              console.log("selectedImage: ",selectedImage )
-          
-              const result = await axios.post(`${BASED_URL}/kalinga/uploadDP`, uploadedImages, {
+              const response = await axios.get(`${BASED_URL}/kalinga/verifyToken`, {
                 headers: {
-                  'Content-Type': 'multipart/form-data'
+                  Authorization: `Bearer ${token}`
                 }
               });
-              await AsyncStorage.setItem('DPLink', result.data.link)
-              await AsyncStorage.setItem('Image_ID', result.data.Image_ID)
-               console.log(result.data.messages.message)
-               if(result.data.messages.code === 0){
-                console.log(result.data.messages.message)
-                console.log("link: ", result.data.link)
-                console.log("Image_ID: ", result.data.Image_ID)
-                setProfilePic(result.data.link)
-         
-                setSelectedImage({})
-                
-               }
+              if(response.data.messages.message === "Unauthorized User"){
+                setAxiosResponse(response.data.messages.message)
+                return
+              }
+            
+              for (const key in selectedImage) {
+                const imageData = selectedImage[key];
+
+                await uploadDpInFirebase({
+                  id: userInformation.Requestor_ID,
+                  userType: userInformation.userType,
+                  nameOfUser: userInformation.fullName,
+                  purpose: "DP",
+                  URI: imageData.uri,
+                  setImage: setIMageUri,
+                  setLabel: setLoaderLabel,
+                  percent: setProgressBar,
+                  token: token,
+                  setResponse: setAxiosResponse,
+                  setLink: setLink,
+                  setPath: setImagePath
+                });
+              }
+              setSelectedImage({})
+              return
             }
   }catch (error){
     console.log("error: ", error)
@@ -83,6 +116,7 @@ export default function EditPersonalScreen({route}) {
     fetchDP()
   }
  }
+
  const handleImageUpload = async () => {
   try {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -122,35 +156,34 @@ export default function EditPersonalScreen({route}) {
 };
 
 const fetchDP = async () => {
+  const result = await AsyncStorage.getItem('DPLink')
+  if(selectedImage.ProfilePicture){
+    console.log("selectedImage.ProfilePicture.uri: ", selectedImage.ProfilePicture.uri)
+    setProfilePic(selectedImage.ProfilePicture.uri)
+  } else if(result) {
+    setProfilePic(result)
+  } else setProfilePic("")
   const checkImage_ID = await AsyncStorage.getItem("Image_ID")
   if(!checkImage_ID){
     if(userInformation.Image_ID) await AsyncStorage.setItem("Image_ID", userInformation.Image_ID)
   }
-  const result = await AsyncStorage.getItem('DPLink')
-  if(selectedImage.ProfilePicture){
-    console.log("profilePicS: ", selectedImage.ProfilePicture.uri)
-    setProfilePic(selectedImage.ProfilePicture.uri)
-  } else if(result) {
-    setProfilePic(result)
-    console.log("profilePicR: ", result)
-  } else if(userInformation.Image_ID){
-    setProfilePic(userInformation.Image_ID)
-    console.log("profilePicU: ", userInformation.Image_ID)
-  } else setProfilePic("")
-
-  console.log("profilePic: ", profilePic)
 }
 
 useEffect(() => {
+  storeDPInAsyncStorage()
   fetchDP()
-  setIsloading(false)
+  setUploadingImage(false)
 },[selectedImage])
 
+useEffect(() => {
+  if(Object.keys(selectedImage) !== 0)setSelectedImage({})
+},[])
 
 const saveDetails = async () => {
   try{
-    setIsloading(true)
+
     if(userData !== userInformation){
+      console.log("Updating user Information")
       const result = await axios.post(`${BASED_URL}/kalinga/updateUserInformation`,{
         userData: userData
       })
@@ -190,7 +223,25 @@ const saveDetails = async () => {
 
  },[])
 
+//  const checkUserDetails = () => {
+//   const keys1 = Object.keys(userData);
+//   const keys2 = Object.keys(userInformation);
+  
+//   for (let key of keys1) {
+//     // Check if the key exists in the second object and if the values are equal
+//     if (userData[key] !== userInformation[key]) {
+//       console.log("userData[key]: ", userData[key])
+//       console.log("userInformation[key]: ", userInformation[key])
+//       return false;
+//     }
+//   }
+//   return true
+// }
  const confirmation = () => {
+    // if(!checkUserDetails()){
+    //   Alert.alert('No Changes Detected', 'Please update your details before saving.');
+    //   return
+    // }
     Alert.alert('Confirmation','Are you sure you want to save these Details?',
     [
       {
@@ -221,6 +272,14 @@ const saveDetails = async () => {
            flex: 1,
          }}
         >
+        {uploadingImage && (
+          <Uploading 
+            progress={progressBar} 
+            Image={imageUri}
+            label={loaderLabel}
+          />
+        )}
+
         <View
           style={{
             width: "100%",
@@ -229,7 +288,14 @@ const saveDetails = async () => {
           }}>
           <View style={{ position: "relative" }}>
             <Image
-              source={!selectedImage.ProfilePicture && profilePic === "" ? require("../../../../assets/Profile_icon.png") : profilePic === "" ? require("../../../../assets/Profile_icon.png") : { uri: profilePic }}
+              source={
+                !selectedImage.ProfilePicture && profilePic === "" 
+                ? require("../../../../assets/Profile_icon.png") 
+                : profilePic === "" 
+                ? require("../../../../assets/Profile_icon.png") 
+                : selectedImage.ProfilePicture 
+                ? {uri: selectedImage.ProfilePicture.uri} 
+                : { uri: profilePic }}
               style={{
                 width: 127,
                 height: 127,
@@ -368,7 +434,8 @@ const saveDetails = async () => {
             justifyContent: "center",
             alignItems: "center",
           }}>
-          <TouchableOpacity onPress={() => confirmation()}>
+          <TouchableOpacity 
+          onPress={() => confirmation()}>
             <View style={buttonStyle.primary}>
               <Text
                 style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
