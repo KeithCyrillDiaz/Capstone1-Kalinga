@@ -5,20 +5,31 @@ import { useParams} from "react-router-dom";
 import { Loader } from '../../components/loader'
 import axios from "axios";
 import { WebHost } from "../../../MyConstantAdmin";
+import { NoUploadedRequirementModal, ShowImage, MissingRequirements } from "../../modal/Verification/ImageModals";
 
 export default function () {
 
-  
 
-  const [loading, setLoading] = useState(false)
   const [activeTab, setActiveTab] = useState("screening");
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 4;
-  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [status, setStatus] = useState("");
+  const [images, setImages] = useState([]);
+  const [files, setFiles] = useState([])
 
-  
-  const { id } = useParams()
+  //Modals
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [openNoRequirementModal, setOpenNoRequirementModal] = useState(false)
+  const [openMissingRequirements, setOpenMissingRequirements] = useState(false)
+  const [showImage, setShowImage] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  //Image Modal Info
+  const [imageLink, setImageLink] = useState("")
+  const [fileName, setFileName] = useState("")
+
+  const { id } = useParams() // Applicant ID
+
   const [form, setForm] = useState({})
   //const [isRejectConfirmed, setIsRejectConfirmed] = useState(false);
 
@@ -84,14 +95,99 @@ export default function () {
     }
   } 
 
+  const fetchImagesAndFiles = async () => {
+    try{
+        console.log("Fetching Files and Images in database")
+        //getFileData in Database
+        const getFilesResponse = await axios.get(`${WebHost}/kalinga/getMedicalRequirementFile/${id}`)
+        console.log(getFilesResponse.data.messages.message)
+        if(getFilesResponse.data.messages.code === 0) {
+          setFiles(getFilesResponse.data.files)
+        }
+
+        //getImageData in Database
+        const getImagesResponse = await axios.get(`${WebHost}/kalinga/getMedicalRequirementImage/${id}`)
+        console.log(getImagesResponse.data.messages.message)
+        if(getImagesResponse.data.messages.code === 0) {
+          setImages(getImagesResponse.data.images)
+        }
+
+    } catch(error) {
+      console.log("Error fetching Images And Files", error)
+    }
+  }
+
+  const getImageByOriginalName = (name) => images.filter(image => image.originalname === name)
+  const getFileByOriginalName = (name) => files.filter(file => file.originalname === name)
+
+  const getImageUri = (requirement) => {
+
+    if(files.length === 0 && images.length === 0) {
+      console.log("No Requirements found")
+      setOpenMissingRequirements(true)
+      return
+    }
+
+    const file = getFileByOriginalName(requirement)
+    const image = getImageByOriginalName(requirement)
+
+    if(!file && !image) {
+      console.log("User have not uploaded any requirement for this ")
+      setOpenNoRequirementModal(true)
+      return
+    }
+    // const { link } = image ? image[0] : file[0]
+
+    if(image){
+      const { link } = image[0]// 0 index since isang image lang kinukuha sa array of images variable
+      console.log(`${requirement} link: `, link)
+      if(!link) {
+        console.log("Error: Image link is Missing")
+      } else {
+        setImageLink(link)
+        setShowImage(true)
+        setFileName(requirement)
+      }
+    } 
+
+    if(file) {
+      const { link } = file[0]// 0 index since isang file lang kinukuha sa array of files variable
+      console.log(`${requirement} link: `, link)
+      if(!link) {
+        console.log("Error: Image link is Missing")
+      } else {
+        window.open(link)
+      }
+    } 
+  }
+
+
+
   useEffect(() => {
     fetchData();
+    fetchImagesAndFiles();
   },[])
 
 
   return (
     <>
+      {/* Modals */}
       <Loader isLoading={loading}/>
+      {openNoRequirementModal && (
+        <NoUploadedRequirementModal onClose={() => setOpenNoRequirementModal(false)}/>
+      )}
+      {showImage && (
+        <ShowImage 
+          link = {imageLink}
+          fileName={fileName}
+          onClose={() => setShowImage(false)}
+        />
+      )}
+      {openMissingRequirements && (
+        <MissingRequirements
+        onClose={() => setOpenMissingRequirements(false)}
+        />
+      )}
       <section className="w-full min-h-screen bg-neutral-variant">
         <div>
           <div className="flex justify-center m-6">
@@ -156,27 +252,37 @@ export default function () {
             <div className="2xl:p-2">
               <div className="px-32">
                 <div className="2xl:my-8">
-                  <div className="bg-white relative border rounded-md border-primary-default px-8 2xl:py-6 md:py-4 my-6">
+                  <div 
+                  onClick={() => getImageUri("HepaB")}
+                  className="bg-white relative border rounded-md border-primary-default px-8 2xl:py-6 md:py-4 my-6">
                     <span className="flex justify-center font-sans text-primary-disabled text-xl font-bold">
                       Hepa B Test Result
                     </span>
                   </div>
-                  <div className="bg-white relative border rounded-md border-primary-default px-8 2xl:py-6 md:py-4  my-6">
+                  <div 
+                  onClick={() => getImageUri("HIV")}
+                  className="bg-white relative border rounded-md border-primary-default px-8 2xl:py-6 md:py-4  my-6">
                     <span className="flex justify-center font-sans text-primary-disabled text-xl font-bold">
                       HIV 1 & 2 Test Result
                     </span>
                   </div>
-                  <div className="bg-white relative border rounded-md border-primary-default  px-8 2xl:py-6 md:py-4  my-6">
+                  <div 
+                  onClick={() => getImageUri("Syphillis")}
+                  className="bg-white relative border rounded-md border-primary-default  px-8 2xl:py-6 md:py-4  my-6">
                     <span className="flex justify-center font-sans text-primary-disabled text-xl font-bold">
                       Syphilis Test Result
                     </span>
                   </div>
-                  <div className="bg-white relative border rounded-md border-primary-default  px-8 2xl:py-6 md:py-4  my-6">
+                  <div 
+                  onClick={() => getImageUri("Pregnancy Book")}
+                  className="bg-white relative border rounded-md border-primary-default  px-8 2xl:py-6 md:py-4  my-6">
                     <span className="flex justify-center font-sans text-primary-disabled text-xl font-bold">
                       Pregnancy Booklet
                     </span>
                   </div>
-                  <div className="bg-white relative border rounded-md border-primary-default  px-8 2xl:py-6 md:py-4  my-6">
+                  <div 
+                  onClick={() => getImageUri("Government_ID")}
+                  className="bg-white relative border rounded-md border-primary-default  px-8 2xl:py-6 md:py-4  my-6">
                     <span className="flex justify-center font-sans text-primary-disabled text-xl font-bold">
                       Government ID
                     </span>

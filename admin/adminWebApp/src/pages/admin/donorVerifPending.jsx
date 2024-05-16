@@ -24,7 +24,7 @@ export default function () {
       setLoading(true)
       console.log("Fetching Data")
       const response = await axios.get(`${WebHost}/kalinga/getScreeningFormsUserType/${userType}`)
-      console.log(response.data.screeningForms)
+      // console.log("response: ", response.data.screeningForms)
       if(!response.data.screeningForms){
         console.log("Error fetching Screening Forms")
       } else {
@@ -37,7 +37,7 @@ export default function () {
       setLoading(false)
     }
   }
-  console.log("forms: ",forms)
+  // console.log("forms: ",forms)
   useEffect(() => {
     fetchData();
   }, []);

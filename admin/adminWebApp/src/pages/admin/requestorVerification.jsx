@@ -177,7 +177,7 @@ export default function App() {
                         <>
                             <div className="p-2">
                                 <div className="px-14">
-                                    <RequestorPages form={form} currentPage={currentPage} />
+                                    <RequestorPages form={form} currentPage={currentPage} id={id}/>
                                 </div>
                                 <div className="fixed bottom-0 right-0 p-4 m-4">
                                     <div className="flex items-center space-x-4">

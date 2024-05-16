@@ -1,5 +1,5 @@
 import express from 'express'
-import { createMedicalRequirementFiles, createMedicalRequirementImages } from '../../models/ApplyAsDonor'
+import { createMedicalRequirementFiles, createMedicalRequirementImages, getScreeningFormByApplicantID } from '../../models/ApplyAsDonor'
 
 
 export const uploadImageOrFileData = async (req: express.Request, res: express.Response) => {
@@ -18,14 +18,29 @@ export const uploadImageOrFileData = async (req: express.Request, res: express.R
             }).status(400)
         }
 
+        const existingApplicant = await getScreeningFormByApplicantID(id)
+
+        if(!existingApplicant){
+            console.log("User not Found")
+            return res.json({
+                messages: {
+                    code: 1,
+                    message: "User not Found"
+                }
+            }).status(404)
+        }
+
+        const { fullName } = existingApplicant
+        
         const newData = {
+            owner: fullName,
             ownerID: id,
             link: url,
             path: path,
             purpose: purpose,
             originalname: name
         }
-
+        
         const result = type === "Image" ? await createMedicalRequirementImages(newData) 
         : await createMedicalRequirementFiles(newData)
 

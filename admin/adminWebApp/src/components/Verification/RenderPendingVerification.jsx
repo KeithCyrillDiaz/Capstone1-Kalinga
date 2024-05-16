@@ -14,7 +14,6 @@ export const RenderPendingVerification = ({
   userType
 }) => {
 
-  console.log("userType: ", userType)
   const [finalDate, setFinalDate] = useState("")
   const [deleteModal, setDeleteModal] = useState(false)
 
@@ -24,7 +23,9 @@ export const RenderPendingVerification = ({
       console.log("Date undefined")
       return
     }
+    console.log("Date: ", date)
     const newDate = formatDate(date) // import { formatDate } from "./formatDateFunction"
+    console.log("newDate: ", newDate)
     setFinalDate(newDate)
   }
 
