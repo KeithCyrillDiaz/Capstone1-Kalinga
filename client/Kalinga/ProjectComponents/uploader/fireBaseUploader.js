@@ -29,7 +29,7 @@ export const UploadImageOrFileToFirebase = ({
         }
        
 
-        const fileType = type === "File" ? "/Files/" : "/Images/";
+        const fileType = type === "File" ? "Files/" : "Images/";
         const secondFolder = purpose === "Application" 
           ? "Application/" 
           : purpose === "DP" || purpose === "ProfilePicture"
