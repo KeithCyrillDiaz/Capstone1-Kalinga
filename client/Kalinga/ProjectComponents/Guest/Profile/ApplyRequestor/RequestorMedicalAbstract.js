@@ -132,7 +132,7 @@ const handleFileUpload = async (attachmentType) => {
             ...selectedFile,
             [attachmentType]: {
                 // name: screeningFormData.fullName + "_" + attachmentType + result.assets[0].type,
-                name: result.assets[0].name,
+                name: attachmentType,
                 uri: result.assets[0].uri,
                 type: fileType,
                 userType: "Requestor",
