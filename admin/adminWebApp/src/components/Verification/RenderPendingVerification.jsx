@@ -24,6 +24,7 @@ export const RenderPendingVerification = ({
       return
     }
     const newDate = formatDate(date) // import { formatDate } from "./formatDateFunction"
+
     setFinalDate(newDate)
   }
 
