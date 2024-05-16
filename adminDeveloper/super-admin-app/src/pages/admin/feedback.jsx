@@ -1,18 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-
 const feedback = () => {
-  
-
-  
   return (
-    <section className="w-full min-h-screen bg-neutral-variant p-8">
-      
-        <div className="bg-white rounded-lg p-4 mb-4 flex items-center">
-
+    <section className="w-full min-h-screen bg-primary-body p-8">
+      <div className="bg-white rounded-lg p-4 mb-4 flex items-center">
         <div className="mr-4">
-        <svg
+          <svg
             xmlns="http://www.w3.org/2000/svg"
             width="100"
             height="100"
@@ -31,22 +25,21 @@ const feedback = () => {
         {/* Details */}
         <div className="flex-grow">
           <div>
-            <h3 className="text-lg font-semibold text-red-500 mb-2">Beverly Somodio</h3>
+            <h3 className="text-lg font-semibold text-red-500 mb-2">
+              Beverly Somodio
+            </h3>
             <p className="text-lg text-gray-600">ma.beverlysomodio@gmail.com</p>
             <p className="text-lg text-gray-600">July 04, 2024 | 10:00 pm</p>
-
           </div>
         </div>
         <div className="mr-8">
-        <Link to="/admin/feedbackReport">
-
-        <button className="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500">
-            Review
-          </button>
+          <Link to="/admin/feedbackReport">
+            <button className="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500">
+              Review
+            </button>
           </Link>
         </div>
       </div>
-
     </section>
   );
 };
