@@ -1,5 +1,5 @@
 import express from 'express'
-import { isAuthorized, tokenVerification } from '../middleware/Authentication'
+import { isAuthorized, tokenVerification, checkToken } from '../middleware/Authentication'
 import { getToken } from '../controllers/token'
 import { generateToken } from '../controllers/test'
 import { sendEmail, sendApprovedEmail, sendDeclinedEmail, sendCode } from '../controllers/Admin/sendEmail';
@@ -19,4 +19,7 @@ export default (router: express.Router) => {
     //code Checker
     router.get('/kalinga/checkCode/:Code', checkCode)
     router.get('/kalinga/checkPassCode/:Code', checkPassCode)
+
+    //check token
+    router.get('/kalinga/verifyToken', checkToken)
 }

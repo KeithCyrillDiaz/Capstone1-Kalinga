@@ -106,26 +106,28 @@ export const uploadDpInFirebase = async ({
   userType,
   nameOfUser,
   purpose,
+  URI,
   setImage,
   setLabel,
   percent,
   token,
-  setAuthorizationResponse,
+  setResponse,
+  setLink,
+  setPath,
 }) => {
   return new Promise(async (resolve, reject) => {
     try {
 
       if(setImage && setLabel && percent){
-          const uri = type === "File" ? "" : URI
-          const label = type === "File" ? "Uploading Files..." : "Uploading Images..."
+          const label = "Updating Profile Picture..."
           setLabel(label)
-          setImage(uri)
+          setImage(URI)
       }
      
 
-      const fileType = type === "File" ? "Files/" : "Images/";
+      const fileType = "Images/";
       const secondFolder = purpose === "Application" 
-        ? "Application/" 
+        ? "Application/"
         : purpose === "DP" || purpose === "ProfilePicture"
         ? "Profile-Pictures/"
         : purpose === "Request" 
@@ -151,14 +153,16 @@ export const uploadDpInFirebase = async ({
         reject(error);
       }, async () => {
         try {
+          setPath(filePath)
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          setLink(downloadURL)
           await uploadImageDataInDatabase({
             id: id,
             link: downloadURL,
             path: filePath,
             userType: userType,
             token: token,
-            setHook: setAuthorizationResponse
+            setHook: setResponse
           });
           resolve(); // Resolve the promise when upload and database update are complete
         } catch (error) {
@@ -176,7 +180,7 @@ export const uploadDpInFirebase = async ({
 
 export const uploadImageDataInDatabase = async ({id, link, path, userType, token, setHook}) => {
   try{
-      const response = await axios.post(`${BASED_URL}/kalinga/updateProfilePicture/${id}`,
+      const response = await axios.patch(`${BASED_URL}/kalinga/updateProfilePicture/${id}`,
         {
           userType,
           link,
@@ -189,13 +193,9 @@ export const uploadImageDataInDatabase = async ({id, link, path, userType, token
         }
       )
 
-      if(response.data.messages.message === "Unauthorized User"){
-        setHook("Unauthorized User")
-        return 
-      }
+      setHook(response.data.messages.message)
       console.log(response.data.messages.message)
   } catch {
     console.log("Error Uploading Image Data in Database", error)
-    return null
   }
 }

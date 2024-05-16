@@ -58,10 +58,6 @@ export default function SettingScreen({route}) {
             routes: [{ name: Page }],
         })
     );
-    if( Page === "ResetPassword"){
-      navigation.navigate('ResetPassword');
-      return
-    }
     return
     }
 

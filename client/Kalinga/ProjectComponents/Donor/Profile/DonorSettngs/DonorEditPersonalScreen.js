@@ -10,70 +10,106 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
-  Alert,
+  Alert
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import Header from "./Header";
+import axios from 'axios'
 import { BASED_URL } from "../../../../MyConstants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios"; 
-import * as ImagePicker from 'expo-image-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { useNavigation } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
+import { useNavigation, CommonActions } from '@react-navigation/native';
+import { Uploading } from '../../../uploader/Uploading'
+import { uploadDpInFirebase } from '../../../uploader/fireBaseUploader'
 
 export default function EditPersonalScreen({route}) {
-
-  const userInformation = route.params.userInformation
- const userName = route.params.userName
-  const navigate = useNavigation()
+  
+ const {userName, userInformation, token} = route.params
+ const navigate = useNavigation()
  const [userData, setUserData] = useState(userInformation)
  const [selectedImage, setSelectedImage] = useState({});
  const [profilePic, setProfilePic] = useState("")
  const [isLoading, setIsloading] = useState(false)
 
 
+  //uploaderModal
+  const [progressBar, setProgressBar] = useState(0)
+  const [uploadingImage, setUploadingImage] = useState(false)
+  const [imageUri, setIMageUri] = useState("")
+  const [loaderLabel, setLoaderLabel] = useState("")
+
+  //Hooks from firebase import
+  const [axiosResponse, setAxiosResponse] = useState("")
+  const [link, setLink] = useState("")
+  const [imagePath, setImagePath] = useState("")
+
+
+ const sessionExpired = async() => {
+  await AsyncStorage.multiRemove(['token', 'userInformation', 'DPLink', 'Image_ID']);
+  Alert.alert("Session Expired", "Your session has expired. Please log in again.", [
+    {
+      text: "OK",
+      onPress: () => navigate.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'LogIn' }],
+        })
+      ),
+    },
+  ]);
+  return
+ }
+
+ useEffect (() => {
+  if(axiosResponse === "Unauthorized User") sessionExpired()
+ },[axiosResponse])
+
+ const storeDPInAsyncStorage = async () => {
+    if(link === "" && imagePath === "") return
+    console.log("storing DP details in Async")
+    await AsyncStorage.setItem('DPLink', link)
+    await AsyncStorage.setItem('Image_ID', imagePath)
+    setProfilePic(link)
+ }
+ 
  const uploadImage = async () => {
   try{
-    setIsloading(true)
+    setUploadingImage(true)
     console.log("Number of properties in selectedImage: ", Object.keys(selectedImage).length);
 
             if(Object.keys(selectedImage).length === 1){
-              const uploadedImages = new FormData();
-              const image = {
-                uri: selectedImage.ProfilePicture.uri,
-                type: 'image/jpeg', 
-                name: `${userData.fullName}.png`,
-              }
-             
-             
-              uploadedImages.append('ProfilePicture', image); 
-              uploadedImages.append(`userType`, "Donor"); 
-              uploadedImages.append(`owner`, userData.fullName);// Append userType
-              uploadedImages.append(`ownerID`, userData.Donor_ID);// Append userType
-              const Image_ID = await AsyncStorage.getItem("Image_ID")
-              if(Image_ID){
-                uploadedImages.append('Image_ID', Image_ID)
-              }
 
-              console.log("imageData: ", uploadedImages)
-              console.log("selectedImage: ",selectedImage )
-          
-              const result = await axios.post(`${BASED_URL}/kalinga/uploadDP`, uploadedImages, {
+              const response = await axios.get(`${BASED_URL}/kalinga/verifyToken`, {
                 headers: {
-                  'Content-Type': 'multipart/form-data'
+                  Authorization: `Bearer ${token}`
                 }
               });
-              await AsyncStorage.setItem('DPLink', result.data.link)
-              await AsyncStorage.setItem('Image_ID', result.data.Image_ID)
-               console.log(result.data.messages.message)
-               if(result.data.messages.code === 0){
-                console.log(result.data.messages.message)
-                console.log("link: ", result.data.link)
-                console.log("Image_ID: ", result.data.Image_ID)
-                setProfilePic(result.data.link)
-                setSelectedImage({})
-                
-               }
+              if(response.data.messages.message === "Unauthorized User"){
+                setAxiosResponse(response.data.messages.message)
+                return
+              }
+            
+              for (const key in selectedImage) {
+                const imageData = selectedImage[key];
+
+                await uploadDpInFirebase({
+                  id: userInformation.Donor_ID,
+                  userType: userInformation.userType,
+                  nameOfUser: userInformation.fullName,
+                  purpose: "DP",
+                  URI: imageData.uri,
+                  setImage: setIMageUri,
+                  setLabel: setLoaderLabel,
+                  percent: setProgressBar,
+                  token: token,
+                  setResponse: setAxiosResponse,
+                  setLink: setLink,
+                  setPath: setImagePath
+                });
+              }
+              setSelectedImage({})
+              return
             }
   }catch (error){
     console.log("error: ", error)
@@ -81,11 +117,10 @@ export default function EditPersonalScreen({route}) {
     fetchDP()
   }
  }
+
  const handleImageUpload = async () => {
   try {
-      setIsloading(true)
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      setIsloading(false)
       if (status !== 'granted') {
           Alert.alert('Permission Denied', 'Sorry, we need camera roll permissions to make this work!');
           return;
@@ -118,70 +153,69 @@ export default function EditPersonalScreen({route}) {
     }
   } catch (error) {
       Alert.alert('Error', 'Failed to pick an image.');
-  } finally {
- 
   }
 };
 
 const fetchDP = async () => {
+  const result = await AsyncStorage.getItem('DPLink')
+  if(selectedImage.ProfilePicture){
+    console.log("selectedImage.ProfilePicture.uri: ", selectedImage.ProfilePicture.uri)
+    setProfilePic(selectedImage.ProfilePicture.uri)
+  } else if(result) {
+    setProfilePic(result)
+  } else setProfilePic("")
   const checkImage_ID = await AsyncStorage.getItem("Image_ID")
   if(!checkImage_ID){
     if(userInformation.Image_ID) await AsyncStorage.setItem("Image_ID", userInformation.Image_ID)
   }
-  const result = await AsyncStorage.getItem('DPLink')
-  if(selectedImage.ProfilePicture){
-    console.log("profilePicS: ", result)
-    setProfilePic(selectedImage.ProfilePicture.uri)
-  } else if(result) {
-    setProfilePic(result)
-    console.log("profilePicR: ", result)
-  } else if(userInformation.Image_ID){
-    setProfilePic(userInformation.Image_ID)
-    console.log("profilePicU: ", userInformation.Image_ID)
-  } else setProfilePic("")
-
-  console.log("profilePic: ", profilePic)
-
 }
 
 useEffect(() => {
+  storeDPInAsyncStorage()
   fetchDP()
-  setIsloading(false)
+  setUploadingImage(false)
 },[selectedImage])
 
+useEffect(() => {
+  if(Object.keys(selectedImage) !== 0)setSelectedImage({})
+},[])
 
- const saveDetails = async () => {
-      try{
-          setIsloading(true)
-        if(userData !== userInformation){
-          const result = await axios.post(`${BASED_URL}/kalinga/updateUserInformation`,{
-            userData: userData
-          })
-          console.log(result.data.messages.message)
-          if("result: ", result.data.messages.code === 0){
-            setUserData(result.data.result)
-            const updatedData = result.data.result
-            await AsyncStorage.setItem('userInformation', JSON.stringify(updatedData))
-          } else console.log("Error: ", result.data.messages.message)
-        }
-        uploadImage();
-      } catch(error) {
-        console.log("Error: ", error)
-        if(error)Alert.alert('Network error', `Please check your internet connection`)
-            else
-            Alert.alert('Something went wrong', "Please try again later")
-      } finally {
-        fetchDP()
-      }
+const saveDetails = async () => {
+  try{
 
- }
+    if(userData !== userInformation){
+      console.log("Updating user Information")
+      const result = await axios.post(`${BASED_URL}/kalinga/updateUserInformation`,{
+        userData: userData
+      })
+      console.log(result.data.messages.message)
+      if("result: ", result.data.messages.code === 0){
+        setUserData(result.data.result)
+        const updatedData = result.data.result
+        await AsyncStorage.setItem('userInformation', JSON.stringify(updatedData))
+      } else console.log("Error: ", result.data.messages.message)
+    }
+    uploadImage();
+
+  } catch(error) {
+    console.log("Error: ", error)
+    if(error)Alert.alert('Network error', `Please check your internet connection`)
+        else
+        Alert.alert('Something went wrong', "Please try again later")
+  } finally {
+    fetchDP()
+  }
+
+}
 
  const fetchData = async () => {
+  setIsloading(true)
   const userInformationToString = await AsyncStorage.getItem('userInformation')
   if(userInformationToString !== null ) {
     const userInformation = JSON.parse(userInformationToString);
     setUserData(userInformation)
   }
+  setIsloading(false)
  }
 
  useEffect(()=>{
@@ -214,169 +248,185 @@ useEffect(() => {
       <ScrollView contentContainerStyle={bodyStyle.container}>
         <StatusBar />
         <Header title="Personal Information" />
-
-
+        
         <ScrollView
-        overScrollMode="false"
-        style = {{
-          flex: 1,
-        }}
+         overScrollMode="false"
+         style = {{
+           flex: 1,
+         }}
         >
-          <View
-            style={{
-              width: "100%",
-              paddingHorizontal: 24,
-              alignItems: "center",
-            }}>
-            <View style={{ position: "relative" }}>
-              <Image
-                source={!selectedImage.ProfilePicture && profilePic === "" ? require("../../../../assets/Profile_icon.png") : profilePic === "" ? require("../../../../assets/Profile_icon.png") : { uri: profilePic }}
-                style={{
-                  width: 127,
-                  height: 127,
-                  borderWidth: 1,
-                  borderRadius: 100,
-                  marginBottom: 16,
-                  borderColor: "#E60965",
-                }}
-              />
-              {!selectedImage.ProfilePicture && (
-                <TouchableOpacity onPress={()=> handleImageUpload()} >
-                  <MaterialIcons
-                  name="camera-alt"
-                  size={48}
-                  color="#E60965"
-                  style={{ position: "absolute", bottom: 16, right: -5 }}
-                  />
-                </TouchableOpacity>
-              
-              )}
-            
-            </View>
+        {uploadingImage && (
+          <Uploading 
+            progress={progressBar} 
+            Image={imageUri}
+            label={loaderLabel}
+          />
+        )}
 
-            <View
+        <View
+          style={{
+            width: "100%",
+            paddingHorizontal: 24,
+            alignItems: "center",
+          }}>
+          <View style={{ position: "relative" }}>
+            <Image
+              source={
+                !selectedImage.ProfilePicture && profilePic === "" 
+                ? require("../../../../assets/Profile_icon.png") 
+                : profilePic === "" 
+                ? require("../../../../assets/Profile_icon.png") 
+                : selectedImage.ProfilePicture 
+                ? {uri: selectedImage.ProfilePicture.uri} 
+                : { uri: profilePic }}
               style={{
-                justifyContent: "center",
-                alignItems: "center",
-                marginBottom: 12,
-              }}>
-              <Text style={fontStyle.header}>{userName}</Text>
-              <Text style={fontStyle.subHeader}>Donor</Text>
-            </View>
+                width: 127,
+                height: 127,
+                borderWidth: 1,
+                borderRadius: 100,
+                marginBottom: 16,
+                borderColor: "#E60965",
+              }}
+            />
+            {!selectedImage.ProfilePicture && (
+              <TouchableOpacity onPress={()=> handleImageUpload()} >
+                <MaterialIcons
+                name="camera-alt"
+                size={48}
+                color="#E60965"
+                style={{ position: "absolute", bottom: 16, right: -5 }}
+                />
+              </TouchableOpacity>
+            
+            )}
+           
           </View>
 
-          <View style={{ flexDirection: "row", paddingHorizontal: 16, gap: 16 }}>
-            <View
-              style={{
-                width: Dimensions.get("screen").width / 2.3,
-              }}>
-              <View style={inputStyle.container}>
-                <Text style={inputStyle.label}>Age:</Text>
-                <TextInput style={inputStyle.primary} 
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: 12,
+            }}>
+            <Text style={fontStyle.header}>{userName}</Text>
+            <Text style={fontStyle.subHeader}>Donor</Text>
+          </View>
+        </View>
+
+        <View style={{ flexDirection: "row", paddingHorizontal: 16, gap: 16 }}>
+          <View
+            style={{
+              width: Dimensions.get("screen").width / 2.3,
+            }}>
+            <View style={inputStyle.container}>
+              <Text style={inputStyle.label}>Age: </Text>
+              <TextInput style={inputStyle.primary} 
                 value={userData.age}
                 onChangeText={(text) =>
                   setUserData((prevUserData) => ({
                     ...prevUserData,
                     age: text,
                   }))
-                }/>
-              </View>
-            </View>
-
-            <View
-              style={{
-                width: Dimensions.get("screen").width / 2.3,
-              }}>
-              <View style={inputStyle.container}>
-                <Text style={inputStyle.label}>Gender: </Text>
-                <TextInput style={inputStyle.primary} 
-                value={"Female"} 
-                onChangeText={(text) =>
-                  setUserData((prevUserData) => ({
-                    ...prevUserData,
-                    age: text,
-                  }))
                 }
-                editable={false}
-                />
-              </View>
-            </View>
-          </View>
-
-          <View style={{ paddingHorizontal: 16 }}>
-            <View style={inputStyle.container}>
-              <Text style={inputStyle.label}>Birthday: </Text>
-              <TextInput style={inputStyle.primary}
-              value={userData.birthDate}
-              onChangeText={(text) =>
-                setUserData((prevUserData) => ({
-                  ...prevUserData,
-                  birthDate: text,
-                }))
-              } />
-            </View>
-          </View>
-          <View style={{ paddingHorizontal: 16 }}>
-            <View style={inputStyle.container}>
-              <Text style={inputStyle.label}>Phone Number: </Text>
-              <TextInput style={inputStyle.primary}
-              value={userData.mobileNumber}
-              onChangeText={(text) =>
-                setUserData((prevUserData) => ({
-                  ...prevUserData,
-                  mobileNumber: text,
-                }))
-              } />
-            </View>
-          </View>
-          <View style={{ paddingHorizontal: 16 }}>
-            <View style={inputStyle.container}>
-              <Text style={inputStyle.label}>Email: </Text>
-              <TextInput style={inputStyle.primary} 
-              value={userData.email}
-              onChangeText={(text) =>
-                setUserData((prevUserData) => ({
-                  ...prevUserData,
-                  email: text,
-                }))
-              }
-              editable={false}
               />
-            </View>
-          </View>
-          <View style={{ paddingHorizontal: 16 }}>
-            <View style={inputStyle.container}>
-              <Text style={inputStyle.label}>Address: </Text>
-              <TextInput style={[inputStyle.primary, {width: "80%"}]}
-              multiline = {true} 
-              value={userData.homeAddress}
-              onChangeText={(text) =>
-                setUserData((prevUserData) => ({
-                  ...prevUserData,
-                  homeAddress: text,
-                }))
-              }/>
             </View>
           </View>
 
           <View
             style={{
-              width: "100%",
-              justifyContent: "center",
-              alignItems: "center",
+              width: Dimensions.get("screen").width / 2.3,
             }}>
-            <TouchableOpacity onPress={() => confirmation()}>
-              <View style={buttonStyle.primary}>
-                <Text
-                  style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
-                  Save
-                </Text>
-              </View>
-            </TouchableOpacity>
+            <View style={inputStyle.container}>
+              <Text style={inputStyle.label}>Gender: </Text>
+              <TextInput style={inputStyle.primary}
+                value={"Female"} 
+                onChangeText={(text) =>
+                  setUserData((prevUserData) => ({
+                    ...prevUserData,
+                    Gender: text,
+                  }))
+                }
+                editable={false}
+              />
+            </View>
           </View>
+        </View>
+
+        <View style={{ paddingHorizontal: 16 }}>
+          <View style={inputStyle.container}>
+            <Text style={inputStyle.label}>Birthday: </Text>
+            <TextInput style={inputStyle.primary} 
+             value = {userData.birthDate}
+             onChangeText={(text) =>
+              setUserData((prevUserData) => ({
+                ...prevUserData,
+                birthDate: text,
+              }))
+            }
+            />
+          </View>
+        </View>
+        <View style={{ paddingHorizontal: 16 }}>
+          <View style={inputStyle.container}>
+            <Text style={inputStyle.label}>Phone Number: </Text>
+            <TextInput style={inputStyle.primary} 
+             value = {userData.mobileNumber}
+             onChangeText={(text) =>
+              setUserData((prevUserData) => ({
+                ...prevUserData,
+                mobileNumber: text,
+              }))
+            }
+            />
+          </View>
+        </View>
+        <View style={{ paddingHorizontal: 16 }}>
+          <View style={inputStyle.container}>
+            <Text style={inputStyle.label}>Email: </Text>
+            <TextInput style={inputStyle.primary} 
+             value = {userData.email}
+             onChangeText={(text) =>
+              setUserData((prevUserData) => ({
+                ...prevUserData,
+                email: text,
+              }))
+            }
+            editable={false}
+            />
+          </View>
+        </View>
+        <View style={{ paddingHorizontal: 16 }}>
+          <View style={inputStyle.container}>
+            <Text style={inputStyle.label}>Address: </Text>
+            <TextInput style={[inputStyle.primary, {width: "80%"}]} 
+             multiline={true}
+             value = {userData.homeAddress}
+             onChangeText={(text) =>
+              setUserData((prevUserData) => ({
+                ...prevUserData,
+                homeAddress: text,
+              }))
+            }
+            />
+          </View>
+        </View>
+
+        <View
+          style={{
+            width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}>
+          <TouchableOpacity onPress={() => confirmation()}>
+            <View style={buttonStyle.primary}>
+              <Text
+                style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
+                Save
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
         </ScrollView>
-
-
 
 
         <Spinner 
@@ -385,7 +435,8 @@ useEffect(() => {
           textStyle={{ color: '#FFF' }}
         />
 
-       
+
+        
       </ScrollView>
     </SafeAreaView>
   );
@@ -417,6 +468,7 @@ const inputStyle = StyleSheet.create({
     backgroundColor: "white",
     elevation: 5,
     marginVertical: 7,
+
   },
 
   label: {
@@ -452,7 +504,7 @@ const buttonStyle = StyleSheet.create({
     backgroundColor: "#E60965",
     padding: 12,
     paddingHorizontal: 32,
-    minWidth: 150,
+    minWidth: 200,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 100,

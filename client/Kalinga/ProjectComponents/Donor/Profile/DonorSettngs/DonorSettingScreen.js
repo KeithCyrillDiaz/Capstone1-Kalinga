@@ -57,10 +57,6 @@ export default function SettingScreen({route}) {
             routes: [{ name: Page }],
         })
     );
-    if( Page === "ResetPassword"){
-      navigation.navigate('ResetPassword');
-      return
-    }
     return
     }
      navigation.navigate(Page, {userInformation: userInformation, userName: UserName, token: token}); // Navigate to the Login screen
