@@ -343,26 +343,6 @@ export default function () {
               {showAppointmentsDropdown && (
                 <div className="p-2 w-full bg-secondary-default rounded-b-2xl pb-2 mb-2">
                   <NavLink
-                    to="/admin/donorAppointments"
-                    className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-5 py-1 mb-1 ${
-                      isActiveRoute("chart")
-                        ? "bg-primary-default"
-                        : "bg-transparent hover:bg-primary-default"
-                    }`}
-                  >
-                    <h1 className="text-xl text-neutral-primary">Donor</h1>
-                  </NavLink>
-                  <NavLink
-                    to="/admin/requestorAppointments"
-                    className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
-                      isActiveRoute("city")
-                        ? "bg-primary-default"
-                        : "bg-transparent hover:bg-primary-default"
-                    }`}
-                  >
-                    <h1 className="text-xl text-neutral-primary">Requestor</h1>
-                  </NavLink>
-                  <NavLink
                     to="/admin/donorAppointManage"
                     className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
                       isActiveRoute("city")
@@ -375,9 +355,9 @@ export default function () {
                     </h1>
                   </NavLink>
                   <NavLink
-                    to="/admin/requestorAppointments"
+                    to="/admin/requestorManagement"
                     className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
-                      isActiveRoute("city")
+                      isActiveRoute("requestorManagement")
                         ? "bg-primary-default"
                         : "bg-transparent hover:bg-primary-default"
                     }`}
