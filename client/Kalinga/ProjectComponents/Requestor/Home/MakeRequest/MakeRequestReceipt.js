@@ -16,27 +16,30 @@ import {
 } from 'react-native';
 //import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import { useNavigation, useRoute } from '@react-navigation/native'; // Correct import
-import { MaterialIcons } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { globalHeader } from '../../../../styles_kit/globalHeader.js';
-import { globalStyles } from '../../../../styles_kit/globalStyles.js';
-import { Picker } from '@react-native-picker/picker';
-import { BackHandler } from 'react-native';
 import { BASED_URL } from '../../../../MyConstants.js';
-import Spinner from 'react-native-loading-spinner-overlay';
 import ImageZoom from 'react-native-image-pan-zoom';
-
+import { Uploading } from "../../../uploader/Uploading.js";
+import { UploadImageOrFileToFirebase } from '../../../uploader/fireBaseUploader.js'
 
 const MakeRequestReceipt = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { formData, BabyCategory, selectedImage } = route.params;
+  const { formData, screeningFormData, selectedImage, selectedFile } = route.params;
 
   // State to track selected image and input value
   const [modalVisible, setModalVisible] = useState(false);
   // const [scrollableHorizontal, setScrollableHorizontal] = useState(false)
   const [selectedImageUrl, setSelectedImageUrl] = useState('');
+
+  //uploaderModal
+  const [progressBar, setProgressBar] = useState(0)
+  const [uploadingImage, setUploadingImage] = useState(false)
+  const [imageUri, setIMageUri] = useState("")
+  const [loaderLabel, setLoaderLabel] = useState("")
+
+
   const confirmation = (status) => {
     if(status === "Confirm"){
       Alert.alert(
@@ -72,6 +75,20 @@ const MakeRequestReceipt = () => {
     }
   
   }
+
+  const reminder = () => {
+    Alert.alert(
+      "Reminder",
+      "Please remember to prepare a cooler with ice, as the milk you'll be collecting is frozen.",
+      [
+          {
+              text: 'Okay',
+              onPress: () => navigation.navigate('MakeRequest2') // Redirect to AppointmentConfirmationMessage
+          },
+      ]
+  );
+}
+
     const handleRequestCreation = async () => {
       try {
         const response = await fetch(`${BASED_URL}/kalinga/createRequest`, {
@@ -83,15 +100,72 @@ const MakeRequestReceipt = () => {
           
         });
 
+        setUploadingImage(true)
+        await uploadImagesAndFilesInFirebase()
+
       if (!response.ok) {
         throw new Error('Network response was not ok.');
       }
 
-      navigation.navigate('MakeRequest2'); // Redirect to AppointmentConfirmationMessage
+      reminder()
+
     } catch (error) {
       console.error('Error creating appointment:', error);
     }
   };
+
+  const uploadImagesAndFilesInFirebase = async() => {
+    try {
+
+      setUploadingImage(true)
+      console.log("Uploading Files in Firebase")
+
+      if(Object.keys(selectedImage).length !== 0){
+        for (const key in selectedImage) {
+          const imageData = selectedImage[key];
+          
+        await UploadImageOrFileToFirebase({
+          URI: imageData.uri, 
+          requirmentType: imageData.name,
+          purpose: "Request",
+          type: "Image",
+          userType: "Requestor", 
+          userId:screeningFormData.Applicant_ID,
+          nameOfUser: screeningFormData.fullName,
+          percent: setProgressBar, // for uploading with loader
+          setImage: setIMageUri, // for uploading with loader
+          setLabel: setLoaderLabel  // for uploading with loader
+        });
+        }
+      }
+    
+
+      if(Object.keys(selectedFile).length !== 0){
+        for (const key in selectedFile) {
+          const fileData = selectedFile[key];
+          
+          await UploadImageOrFileToFirebase({
+            URI: fileData.uri, 
+            requirmentType: fileData.requirmentType,
+            purpose: "Request",
+            type: "File",
+            userType: "Requestor", 
+            userId:screeningFormData.Applicant_ID,
+            nameOfUser: screeningFormData.fullName,
+            percent: setProgressBar,// for uploading with loader
+            setImage: setIMageUri, // for uploading modal
+            setLabel: setLoaderLabel // for uploading with loader
+          });
+        }
+      } 
+      
+    } catch(error) {
+      console.log("Error uploading Files in Firebase", error)
+      return
+    } finally {
+      setUploadingImage(false)
+    }
+  }
 
     return (
 			<SafeAreaView style = {styles.container}>
@@ -106,6 +180,15 @@ const MakeRequestReceipt = () => {
 					nestedScrollEnabled={true} 
 					showsVerticalScrollIndicator={false}
 				>
+
+          {uploadingImage && (
+             <Uploading 
+             progress={progressBar} 
+             Image={imageUri}
+             label={loaderLabel}
+            //  onClose = {() => setUploadingImage(false)}
+            />
+          )}
 
 						<View style={styles.body}>
                         <View style={styles.Title}>
@@ -197,13 +280,13 @@ const MakeRequestReceipt = () => {
                         borderRadius: 15,
                         elevation: 5,
                         marginTop: 20,
-                        marginHorizontal: "10%",
+                        marginHorizontal: "5%",
                         alignItems: "center"
                         }}>
                         <ScrollView 
                           showsHorizontalScrollIndicator={true}
                           overScrollMode='never'
-                          horizontal={false}
+                          horizontal={Object.keys(selectedImage).length > 2}
                         contentContainerStyle={{ flexDirection: 'row', }}
                       >
                           {Object.entries(selectedImage).map(([attachmentType, value]) => (
@@ -232,6 +315,41 @@ const MakeRequestReceipt = () => {
                         </ScrollView>
                     </View>
                 )}
+
+          {Object.keys(selectedFile).length !== 0 && (
+            <View  style={{ 
+              paddingVertical: 20,
+              borderColor: "#E60965",
+              borderWidth: 1,
+              backgroundColor: "white",
+              width: "80%",
+              borderRadius: 15,
+              elevation: 5,
+              alignSelf: "center",
+              alignItems: "center",
+              marginBottom: 20
+              }}>
+                {Object.entries(selectedFile).map(([attachmentType,  file]) => {
+                if (attachmentType !== "uri" && attachmentType !== "type") {
+                return (
+                    <View key={attachmentType} 
+                    style={{ 
+                      flexDirection: "row",      
+                      width: "90%",
+                      marginVertical: 10,
+                      gap: 10
+                      }}>
+                      <Text style = {{textAlign: "left", fontWeight: "bold", width: 100}}>{attachmentType} </Text>
+                      <Text style= {{flex: 1}}>{file.name}</Text>
+
+                    </View>
+                );
+                }
+                return null; // Return null for other entries
+                })}
+
+              </View>
+            )}
 
           <View style={styles.DonorButton}>
             <TouchableOpacity onPress={() => confirmation("Confirm")}>

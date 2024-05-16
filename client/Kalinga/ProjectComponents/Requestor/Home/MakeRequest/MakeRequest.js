@@ -2,7 +2,9 @@
 import  React, { useState, useEffect } from 'react';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
-import * as Font from 'expo-font';
+import { Dropdown } from 'react-native-element-dropdown';
+import {GestationData, GestationExplanation, sexData, medicalConditionData} from '../../../Guest/Profile/ageofGestationData.js'
+
 import { 
   Text, 
   View, 
@@ -24,8 +26,8 @@ import * as ImagePicker from 'expo-image-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
 import ImageZoom from 'react-native-image-pan-zoom';
 import { Picker } from '@react-native-picker/picker';
-
-
+import axios from 'axios';
+import { BASED_URL } from '../../../../MyConstants.js';
 
 
 export default function RequestorProfile({route}) {
@@ -40,19 +42,38 @@ export default function RequestorProfile({route}) {
   const [imageContainer, setImageContainer] = useState(false)
   const [isLoading, setIsLoading] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState('');
+  const [form, setForm] = useState({})
 
+   //Dropdowns
+   const [isGestationFocus, setIsGestationFocus] = useState(false)
+   const [gestationValue, setGestationValue] = useState("")
 
   let city
 
+  const fetchScreeningForm = async () => {
+    const response = await axios.get(`${BASED_URL}/kalinga/getScreeningFormsApplicant_ID/${Requestor_ID}`)
+    console.log(response.data.messages.message)
+    if(response.data.screeningForms){
+      setForm(response.data.screeningForms)
+      setFormData(prevForm => ({
+        ...prevForm,
+        ageOfGestation: response.data.screeningForms.ageOfGestation,
+        childBirthDate: response.data.screeningForms.childBirthDate,
+        medicalCondition: response.data.screeningForms.medicalCondition,
+      }))
+    }
+  }
+
   const [formData, setFormData] = useState({
     Requestor_ID: Requestor_ID,
-    userType: "Requestor",
-    RequestStatus: "Pending",
-      fullName: userInformation.fullName,
+      userType: "Requestor",
+      RequestStatus: "Pending",
       fullName: userInformation.fullName,
       phoneNumber: userInformation.mobileNumber,
       emailAddress: userInformation.email,
       homeAddress: userInformation.homeAddress,
+      ageOfGestation: '',
+      childBirthDate: '',
       city: '',
       medicalCondition: '',
       milkBank: "",
@@ -71,18 +92,25 @@ export default function RequestorProfile({route}) {
     }
     return
   }
+  
+  
+ 
 
   useEffect(() => {
+    fetchScreeningForm();
     getCity();
   },[])
 
 
   const checkForm = () => {
+    console.log("formData: ", formData)
     let keysToCheck = [
       'fullName',
       'phoneNumber',
       'emailAddress',
       'homeAddress',
+      'ageOfGestation',
+      'childBirthDate',
       'city',
       'medicalCondition',
       'milkBank',
@@ -141,21 +169,21 @@ export default function RequestorProfile({route}) {
 
   const navigation = useNavigation();
 
-  const navigatePage = () => {
+  const navigatePage = (page) => {
     setFormData(prevData => ({
       ...prevData,
       RequestStatus: 'Pending',
     }));
     checkForm()
     console.log(formData)
-    if(!isFormFilled ||  Object.keys(selectedImage).length === 0){
+    if(!isFormFilled){
       if(!isFormFilled)
         Alert.alert("Form Incomplete", "Please complete all required fields.");
       else
         Alert.alert("Image Required", "Please upload your prescription.");
       return
     }
-    navigation.navigate('MakeRequestReceipt', { selectedImage: selectedImage, formData: formData});
+    navigation.navigate(page, { selectedImage: selectedImage, formData: formData, screeningFormData: form });
 };
 
 const handleChange = (name, value) => {
@@ -244,6 +272,16 @@ const handleImageUpload = async (attachmentType) => {
                 </View>
 
                 <View style={styles.body}>
+                <Text 
+                  style = {{
+                    marginLeft: 20,
+                    color: "#E60965",
+                    fontSize: 20,
+                    fontFamily: "Open-Sans-Bold",
+                    marginBottom: 10,
+
+                  }}
+                  >Personal Information</Text>
                     <Text style={styles.bodyNote}>Note: All fields marked with (*) are required</Text>
                     <TextInput
                     style={styles.form1}
@@ -273,22 +311,61 @@ const handleImageUpload = async (attachmentType) => {
                     placeholder="Home Address *"
                     placeholderTextColor="#E60965"
                     onChangeText={(text) => handleInputChange('homeAddress', text)}
-
-                
                 />
+                 
+                <TextInput
+                        style={styles.form2}
+                        value={formData.ReasonForRequesting}
+                        placeholder="Reason for Requesting *"
+                        placeholderTextColor="#E60965"
+                        onChangeText={(text) => handleInputChange('ReasonForRequesting', text)}
+                        /> 
+                  <View style={styles.dropdownContainer1}>
+                    <Picker
+                      selectedValue={formData.ageOfGestation}
+                      style={{ height: 30, width: "100%", color: '#E60965'}}
+                      onValueChange={(text) => handleInputChange('ageOfGestation', text)} // Update BabyCategory state
+                    >
+                      <Picker.Item label="Select Age of Gestation" value="" />
+                      <Picker.Item label="Early Term" value="Early Term" />
+                      <Picker.Item label="Full Term" value="Full Term" />
+                      <Picker.Item label="Late Term" value="Late Term" />
+                      <Picker.Item label="Post Term" value="Post Term" />
+                    </Picker>
+                </View>
+         
 
                   <View style={styles.dropdownContainer1}>
-                                  <Picker
-                                selectedValue={formData.city}
-                                style={{ height: 30, width: "100%", color: '#E60965'}}
-                                onValueChange={(text) => handleInputChange('city', text)} // Update BabyCategory state
+                      <Picker
+                        selectedValue={formData.city}
+                        style={{ height: 30, width: "100%", color: '#E60965'}}
+                        onValueChange={(text) => handleInputChange('city', text)} // Update BabyCategory state
 
-                              >
-                                <Picker.Item label="Select City" value="" />
-                                <Picker.Item label="Manila City" value="Manila City" />
-                                <Picker.Item label="Quezon City" value="Quezon City" />
-                              </Picker>
-                              </View>
+                      >
+                        <Picker.Item label="Select City" value="" />
+                        <Picker.Item label="Manila City" value="Manila City" />
+                        <Picker.Item label="Quezon City" value="Quezon City" />
+                      </Picker>
+                  </View>
+
+                <Text 
+                  style = {{
+                    marginLeft: 20,
+                    color: "#E60965",
+                    fontSize: 20,
+                    fontFamily: "Open-Sans-Bold",
+                    marginTop:20,
+                    marginBottom: 10,
+
+                  }}
+                  >Infant Information</Text>
+                  <TextInput
+                    style={[styles.form1, {paddingLeft: 25}]}
+                    value={formData.childBirthDate}
+                    placeholder="Child Birthday *"
+                    placeholderTextColor="#E60965"
+                    onChangeText={(text) => handleInputChange('emailAddress', text)}
+                />         
                   <View
                     style={{
                       fontFamily: "OpenSans-Regular",
@@ -321,10 +398,9 @@ const handleImageUpload = async (attachmentType) => {
                       style={styles.dropdown}
                     >
                       <Picker.Item label="Baby Category" value="Baby Category" />
-                      <Picker.Item label="Healthy Baby" value="Healthy " style={styles.dropdownItem} />
+                      <Picker.Item label="Well Baby" value="Well Baby " style={styles.dropdownItem} />
                       <Picker.Item label="Sick Baby" value="Sick " style={styles.dropdownItem} />
                       <Picker.Item label="Medically Fragile Baby" value="Medically Fragile" style={styles.dropdownItem} />
-                      <Picker.Item label="Preterm Baby" value="Preterm " style={styles.dropdownItem} />
                     </Picker>
                    </View> 
 
@@ -353,27 +429,33 @@ const handleImageUpload = async (attachmentType) => {
                     </Picker>
                   </View>   
                   
-              <View style={styles.bodyForm1}>
-                    <TextInput
-                        style={styles.form3}
-                        value={formData.milkAmount}
-                        keyboardType='numeric'
-                        placeholder="Amount of milk to be requested (mL) *"
-                        placeholderTextColor="#E60965"
-                        onChangeText={(text) => handleInputChange('milkAmount', text)}
-                    />                 
+              <View style={[styles.bodyForm1, 
+                          {borderWidth: 1,
+                          borderColor: '#E60965', 
+                          borderRadius: 12,
+                          backgroundColor: "white",
+                          marginBottom:5,
+                          paddingHorizontal: 10,
+                          }]}>
+                    <Picker
+                        selectedValue={formData.milkAmount}
+                        style ={{
+                          color: '#E60965', 
+                        }}
+                        onValueChange={(itemValue) =>
+                          handleChange("milkAmount", itemValue)
+                        }
+                        >
+                        <Picker.Item label="Amount of Milk to be requested" value="" />
+                        <Picker.Item label="100 ml" value="100" />
+                        <Picker.Item label="200 ml" value="200" />
+                    </Picker>              
               </View>
-                    <TextInput
-                        style={styles.form2}
-                        value={formData.ReasonForRequesting}
-                        placeholder="Reason for Requesting *"
-                        placeholderTextColor="#E60965"
-                        onChangeText={(text) => handleInputChange('ReasonForRequesting', text)}
-                        />   
+                      
 
-                    <TouchableOpacity onPress={() => handleImageUpload("Prescription")} style = {styles.uploadContainer}>
+                    {/* <TouchableOpacity onPress={() => handleImageUpload("Prescription")} style = {styles.uploadContainer}>
                         <Text style = {styles.uploadContainerTitle}>Attach Prescription *</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
 
                     {imageContainer && (
                       <View  style = {{
@@ -425,8 +507,8 @@ const handleImageUpload = async (attachmentType) => {
             
                             
                 </View>
-                <TouchableOpacity style={styles.reqButton} onPress={() => navigatePage("MakeRequestReceipt")}>
-                    <Text style={{ color: 'white' }}>Make a Request</Text>
+                <TouchableOpacity style={styles.reqButton} onPress={() => navigatePage("MakeRequestUploadMedicalAbstract")}>
+                    <Text style={{ color: 'white' }}>Next</Text>
                 </TouchableOpacity>
             </View>
         </ScrollView>
@@ -484,6 +566,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFF8EB',
   },
+
+  inputAgeOfGestationContainer: {
+    width: '95%',
+    height: 45, // Adjust height
+    backgroundColor: "white",
+    borderRadius: 18,
+  
+  },
+  
 
   SmallHeader: {
     flexDirection: 'row',
