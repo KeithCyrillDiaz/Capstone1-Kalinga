@@ -112,7 +112,7 @@ const requestorAppointmentConfirmation = () => {
     { label: "Other", value: "other" },
   ];
   return (
-    <section className="w-full h-screen bg-primary-body overflow-hidden">
+    <section className="w-full h-screen bg-primary-body overflow-hidden px-4">
       <h1 className="mt-8 text-3xl text-pink-500 font-bold">
         Request Confirmation
       </h1>

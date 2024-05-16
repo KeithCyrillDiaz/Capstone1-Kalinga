@@ -151,7 +151,7 @@ const donorAppointmentConfirmation = () => {
   };
 
   return (
-    <section className="w-full h-screen bg-primary-body overflow-hidden relative">
+    <section className="w-full h-screen bg-primary-body overflow-hidden relative px-4">
       <h1 className="mt-8 text-3xl text-pink-500 font-bold">
         Appointment Confirmation
       </h1>

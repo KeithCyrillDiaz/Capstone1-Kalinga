@@ -1,35 +1,61 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import RemarksModal from "./remarksModal";
+import axios from "axios";
+import { WebHost } from "../../../../../MyConstantSuperAdmin";
 
 export default function () {
   const navigate = useNavigate();
   const [isRemarksModalOpen, setRemarksModalOpen] = useState(false);
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      created: "05-15-2024",
-      name: "John Doe",
-      email: "john@example.com",
-      schedule: "05-16-2024, 10:00 AM",
-      status: "Approved",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      email: "jane@example.com",
-      status: "Rejected",
-    },
-    // Add more users as needed
-  ]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [requestData, setRequestData] = useState(null); // State to store user data
+  const [currentPage, setCurrentPage] = useState(1);
+  const requestPerPage = 5; // Adjust as needed
 
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  useEffect(() => {
+    const fetchRequestData = async () => {
+      try {
+        const response = await axios.get(
+          `${WebHost}/kalinga/getRequestByUserType/Requestor`
+        );
+        const userData = response.data.request;
+        setRequestData(userData);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    // Call fetchUserData when the component mounts or userType changes
+    fetchRequestData();
+  }, []); // useEffect dependency on userType
+
+  const filteredRequest = requestData
+    ? requestData.filter((request) =>
+        request.fullName
+          .toLowerCase()
+          .includes(searchQuery.trim().toLowerCase())
+      )
+    : [];
+
+  const indexOfLastRequest = currentPage * requestPerPage;
+  const indexOfFirstRequest = indexOfLastRequest - requestPerPage;
+  const currentRequest = filteredRequest.slice(
+    indexOfFirstRequest,
+    indexOfLastRequest
+  );
+  const totalPages = Math.ceil(filteredRequest.length / requestPerPage);
+
+  const goToPage = (page) => {
+    setCurrentPage(page);
+  };
   const handleDelete = (id) => {
     setUsers(users.filter((user) => user.id !== id));
   };
 
-  const handleView = () => {
-    navigate("/admin/DonorAppointments");
-  };
 
   const [selectedUser, setSelectedUser] = useState(null);
 
@@ -44,7 +70,7 @@ export default function () {
         <div className="p-10 pt-2">
           <div>
             <h1 className="text-3xl text-primary-default font-bold font-sans my-4 mb-6">
-              Donor Appointments
+              Requestor Appointments
             </h1>
             <div className="flex flex-col">
               <div className="my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -81,7 +107,7 @@ export default function () {
                             scope="col"
                             className="text-center px-6 py-3 text-left text-md font-sans text-primary-default uppercase tracking-wider "
                           >
-                            Scheduled Date and Time
+                            Amount of Milk
                           </th>
                           <th
                             scope="col"
@@ -104,51 +130,56 @@ export default function () {
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-primary-default">
-                        {users.map((user) => (
-                          <tr key={user.id}>
+                      {currentRequest.map((request) => (
+                          <tr key={request._id}>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="text-center text-sm font-medium text-gray-900">
-                                {user.id}
+                              {request.RequestID}
                               </div>
                             </td>
                             <td className="px-2 py-4 whitespace-nowrap">
                               <div className="text-center text-sm font-medium text-gray-900">
-                                {user.created}
+                              {new Date(request.createdAt).toLocaleDateString()}{" "}
+                              {new Date(request.createdAt).toLocaleTimeString([], {
+                                hour: "numeric",
+                                minute: "2-digit",
+                              })}
                               </div>
                             </td>
                             <td className="px-4 py-4 whitespace-nowrap">
                               <div className="text-center text-sm font-medium text-gray-900 flex items-center justify-center">
-                                {user.name}
+                                {request.fullName}
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="text-center text-sm text-gray-500 flex items-center justify-center">
-                                {user.email}
+                                {request.emailAddress}
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="text-center text-sm text-gray-500 flex items-center justify-center">
-                                {user.schedule}
+                              {request.milkAmount} ml
+
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <span
                                 className={`flex justify-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                  user.status === "Approved"
+                                  request.RequestStatus === "Approved"
                                     ? "bg-lime-200 text-green-800"
                                     : "bg-red-100 text-red-800"
                                 }`}
                               >
-                                {user.status}
+                                {request.RequestStatus}
                               </span>
                             </td>
                             <td className="text-center px-6 py-4 whitespace-nowrap text-sm font-medium">
                               <div>
-                                {user.status === "Approved" ? (
+                                {request.RequestStatus === "Approved" ? (
                                   "This is approved."
                                 ) : (
                                   <button
-                                    onClick={() => handleRemarksModal(user)}
+                                    onClick={() => handleRemarksModal(request)}
                                     className="bg-neutral-variant p-1 px-2 rounded-full border border-primary-default text-primary-default hover:text-white hover:bg-primary-default"
                                   >
                                     View Remarks
@@ -157,9 +188,9 @@ export default function () {
                               </div>
                             </td>
 
-                            <td className="text-center px-6 py-4 whitespace-nowrap text-sm font-medium">
-                              <button
-                                onClick={() => handleView(user.id)}
+                            <td className="text-center px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center justify-center gap-2">
+                              <Link
+                                to={`/admin/requestorAppointmentConfirmation/${request.RequestID}`}
                                 className="bg-lime-300 px-4 py-2 rounded-full hover:bg-lime-400 mr-2"
                               >
                                 <svg
@@ -176,10 +207,10 @@ export default function () {
                                     d="M4 0C1.8 0 0 1.8 0 4v17c0 2.2 1.8 4 4 4h11c.4 0 .7-.094 1-.094c-1.4-.3-2.594-1.006-3.594-1.906H4c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h6.313c.7.2.687 1.1.687 2v3c0 .6.4 1 1 1h3c1 0 2 0 2 1v1h.5c.5 0 1 .088 1.5.188V8c0-1.1-.988-2.112-2.688-3.813c-.3-.2-.512-.487-.812-.687c-.2-.3-.488-.513-.688-.813C13.113.988 12.1 0 11 0zm13.5 12c-3 0-5.5 2.5-5.5 5.5s2.5 5.5 5.5 5.5c1.273 0 2.435-.471 3.375-1.219l.313.313a.955.955 0 0 0 .125 1.218l2.5 2.5c.4.4.975.4 1.375 0l.5-.5c.4-.4.4-1.006 0-1.406l-2.5-2.5a.935.935 0 0 0-1.157-.156l-.281-.313c.773-.948 1.25-2.14 1.25-3.437c0-3-2.5-5.5-5.5-5.5m0 1.5c2.2 0 4 1.8 4 4s-1.8 4-4 4s-4-1.8-4-4s1.8-4 4-4"
                                   ></path>
                                 </svg>
-                              </button>
+                              </Link>
                               <button
-                                onClick={() => handleDelete(user.id)}
-                                className="bg-red-500 px-4 py-2 rounded-full hover:bg-red-600"
+                                onClick={() => handleDelete(request.RequestID)}
+                                className="bg-red-500 px- py-2 rounded-full hover:bg-red-600"
                               >
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
@@ -208,7 +239,7 @@ export default function () {
           </div>
         </div>
       </section>
-
+{/* 
       {isRemarksModalOpen && selectedUser && (
         <RemarksModal
           isOpen={isRemarksModalOpen}
@@ -219,7 +250,7 @@ export default function () {
           }
           onCancel={() => setRemarksModalOpen(false)}
         />
-      )}
+      )} */}
     </>
   );
 }
