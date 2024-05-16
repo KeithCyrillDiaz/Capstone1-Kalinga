@@ -57,9 +57,6 @@ const DonorPages = ({ currentPage }) => {
               Birth Weight (kg)
             </div>
           </div>
-          <div className="bg-white relative border rounded-md border-primary-default bg-white px-3 py-2 my-4 font-sans text-primary-disabled">
-            Age of Gestation
-          </div>
         </div>
       </div>
     ),
