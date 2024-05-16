@@ -413,8 +413,8 @@ export default function () {
               {showUtilitiesDropdown && (
                 <div className="p-2 w-full bg-secondary-default rounded-b-2xl pb-2 mb-2">
                   <NavLink
-                    to="#"
-                    className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
+              to="/admin/feedback"
+              className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
                       isActiveRoute("city")
                         ? "bg-primary-default"
                         : "bg-transparent hover:bg-primary-default"
@@ -423,8 +423,8 @@ export default function () {
                     <h1 className="text-xl text-neutral-primary">Feedbacks</h1>
                   </NavLink>
                   <NavLink
-                    to="#"
-                    className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
+              to="/admin/bugs"
+              className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
                       isActiveRoute("city")
                         ? "bg-primary-default"
                         : "bg-transparent hover:bg-primary-default"

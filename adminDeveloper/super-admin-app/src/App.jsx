@@ -53,7 +53,7 @@ const router = createBrowserRouter(
         <Route path="approved" element={<Approved />} />
         <Route path="rejected" element={<Rejected />} />
         <Route path="bugs" element={<Bugs />} />
-        <Route path="bugReport" element={<BugReport />} />
+        <Route path="bugReport/:ReportBugID" element={<BugReport />} />
         <Route path="bugResolve" element={<BugResolve />} />
         <Route path="feedback" element={<Feedback />} />
         <Route path="feedbackReport" element={<FeedbackReport />} />

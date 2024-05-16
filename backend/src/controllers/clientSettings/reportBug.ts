@@ -219,49 +219,47 @@ export const deleteReport = async (req: express.Request, res: express.Response) 
 
 
 export const updateResolved = async (req: express.Request, res: express.Response) => {
-    try{
-        console.log(req.params)
+    try {
+        const { id } = req.params;
 
-        const { id } = req.params
-
-        if(!id){
-            console.log("Bad Request Invalid Report Bug ID")
+        if (!id) {
+            console.log("Bad Request Invalid Report Bug ID");
             return res.json({
                 messages: {
                     code: 1,
-                    message: "Bad Request Invalid Report Bug ID"
-                }
-            }).status(400)
+                    message: "Bad Request Invalid Report Bug ID",
+                },
+            }).status(400);
         }
 
-        const result = await updateResolvedOfReport(id)
+        const result = await updateResolvedOfReport(id); // Pass the bug report ID to the updateResolvedOfReport function
 
-        if(!result){
-            console.log("Failed to Update Report")
+        if (!result) {
+            console.log("Failed to Update Report");
             return res.json({
                 messages: {
                     code: 1,
-                    message: "Failed to Update Report"
-                }
-            }).status(400)
+                    message: "Failed to Update Report",
+                },
+            }).status(400);
         }
 
-        console.log("Successfully Updated Report")
+        console.log("Successfully Updated Report");
         return res.json({
             messages: {
                 code: 0,
-                message: "Successfully Updated Report"
-            }, result
-        }).status(200)
-
-    } catch(error){
-        console.log("Internal Server Error: ", error)
+                message: "Successfully Updated Report",
+            },
+            result,
+        }).status(200);
+    } catch (error) {
+        console.log("Internal Server Error: ", error);
         return res.json({
             messages: {
                 code: 1,
-                message: "Internal Server Error"
-            }, 
-            error
-        }).status(500)
+                message: "Internal Server Error",
+            },
+            error,
+        }).status(500);
     }
-}
+};
