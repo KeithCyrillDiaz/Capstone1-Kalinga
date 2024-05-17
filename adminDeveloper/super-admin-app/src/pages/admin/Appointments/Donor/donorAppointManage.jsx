@@ -4,14 +4,14 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { WebHost } from "../../../../../MyConstantSuperAdmin";
 
-export default function () {
+export default function ({ remarks }) {
   const navigate = useNavigate();
-  const [isRemarksModalOpen, setRemarksModalOpen] = useState(false);
+  const [selectedReason, setSelectedReason] = useState(""); // Add state to hold selected reason
   const [appointments, setAppointments] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const appointmentsPerPage = 10;
-  
+
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
@@ -24,34 +24,34 @@ export default function () {
         console.error("Error fetching appointments:", error);
       }
     };
-  
+
     fetchAppointments();
   }, []);
-  
-    const handleSearchChange = (event) => {
-      setSearchQuery(event.target.value);
-      setCurrentPage(1); // Reset to first page when search query changes
-    };
-  
-    const filteredAppointments = appointments.filter((appointment) =>
-      appointment.fullName
-        .toLowerCase()
-        .includes(searchQuery.trim().toLowerCase())
-    );
-  
-    // Calculate total pages based on filtered appointments
-    const totalPages = Math.ceil(
-      filteredAppointments.length / appointmentsPerPage
-    );
-  
-    const pageNumbers = [];
-    for (let i = 1; i <= totalPages; i++) {
-      pageNumbers.push(i);
-    }
-  
-    const goToPage = (page) => {
-      setCurrentPage(page);
-    };
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+    setCurrentPage(1); // Reset to first page when search query changes
+  };
+
+  const filteredAppointments = appointments.filter((appointment) =>
+    appointment.fullName
+      .toLowerCase()
+      .includes(searchQuery.trim().toLowerCase())
+  );
+
+  // Calculate total pages based on filtered appointments
+  const totalPages = Math.ceil(
+    filteredAppointments.length / appointmentsPerPage
+  );
+
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
+
+  const goToPage = (page) => {
+    setCurrentPage(page);
+  };
 
   const handleDelete = (id) => {
     setUsers(users.filter((user) => user.id !== id));
@@ -134,20 +134,24 @@ export default function () {
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-primary-default">
-                      {filteredAppointments.map((appointment) => (
+                        {filteredAppointments.map((appointment) => (
                           <tr key={appointment._id}>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="text-center text-sm font-medium text-gray-900">
-                              {appointment.AppointmentDonorID}
+                                {appointment.AppointmentDonorID}
                               </div>
                             </td>
                             <td className="px-2 py-4 whitespace-nowrap">
                               <div className="text-center text-sm font-medium text-gray-900">
-                              {new Date(appointment.createdAt).toLocaleDateString()}{" "}
-                              {new Date(appointment.createdAt).toLocaleTimeString([], {
-                                hour: "numeric",
-                                minute: "2-digit",
-                              })}
+                                {new Date(
+                                  appointment.createdAt
+                                ).toLocaleDateString()}{" "}
+                                {new Date(
+                                  appointment.createdAt
+                                ).toLocaleTimeString([], {
+                                  hour: "numeric",
+                                  minute: "2-digit",
+                                })}
                               </div>
                             </td>
                             <td className="px-4 py-4 whitespace-nowrap">
@@ -162,36 +166,38 @@ export default function () {
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="text-center text-sm text-gray-500 flex items-center justify-center">
-                              {new Date(appointment.selectedDate).toLocaleDateString()}{" "}
-                              {new Date(appointment.selectedTime).toLocaleTimeString([], {
-                                hour: "numeric",
-                                minute: "2-digit",
-                              })}
+                                {new Date(
+                                  appointment.selectedDate
+                                ).toLocaleDateString()}{" "}
+                                {new Date(
+                                  appointment.selectedTime
+                                ).toLocaleTimeString([], {
+                                  hour: "numeric",
+                                  minute: "2-digit",
+                                })}
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <span
                                 className={`flex justify-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                  appointment.DonationStatus === "Approved"
+                                  appointment.DonationStatus === "Complete"
                                     ? "bg-lime-200 text-green-800"
+                                    : appointment.DonationStatus === "Pending"
+                                    ? "bg-blue-100 text-red-800"
+                                    : appointment.DonationStatus === "Ongoing"
+                                    ? "bg-yellow-100 text-red-800"
                                     : "bg-red-100 text-red-800"
                                 }`}
                               >
                                 {appointment.DonationStatus}
                               </span>
                             </td>
+                            {/*DONATION REMARKS*/}
                             <td className="text-center px-6 py-4 whitespace-nowrap text-sm font-medium">
                               <div>
-                                {appointment.DonationStatus === "Approved" ? (
-                                  "This is approved."
-                                ) : (
-                                  <button
-                                    onClick={() => handleRemarksModal(appointment)}
-                                    className="bg-neutral-variant p-1 px-2 rounded-full border border-primary-default text-primary-default hover:text-white hover:bg-primary-default"
-                                  >
-                                    View Remarks
-                                  </button>
-                                )}
+                                {appointment.DonationStatus === "Approved"
+                                  ? "This is approved."
+                                  : remarks}
                               </div>
                             </td>
 
@@ -246,18 +252,6 @@ export default function () {
           </div>
         </div>
       </section>
-{/* 
-      {isRemarksModalOpen && selectedUser && (
-        <RemarksModal
-          isOpen={isRemarksModalOpen}
-          message={
-            selectedUser.status === "Approved"
-              ? "This donor is approved."
-              : "This donor is rejected."
-          }
-          onCancel={() => setRemarksModalOpen(false)}
-        />
-      )} */}
     </>
   );
 }

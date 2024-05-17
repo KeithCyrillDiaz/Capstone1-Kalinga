@@ -6,6 +6,7 @@ import DeclineModal from "../../../../Modal/DeclineModal";
 import axios from "axios";
 import { WebHost } from "../../../../../MyConstantSuperAdmin";
 import CompleteModal from "../../../../Modal/CompleteModal";
+import AppointmentDeclineModal from "../../../../Modal/AppointmentDeclineModal";
 
 const donorAppointmentConfirmation = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -403,7 +404,7 @@ const donorAppointmentConfirmation = () => {
         message="Are you sure you want to approve this appointment? Once approved, the appointment will be scheduled."
       />
 
-      <DeclineModal
+      <AppointmentDeclineModal
         isOpen={isDeclineModalOpen}
         onConfirm={handleDeclineConfirm}
         onCancel={handleDeclineCancel}
