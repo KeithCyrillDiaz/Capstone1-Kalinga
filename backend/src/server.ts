@@ -23,7 +23,7 @@ app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());
 
-app.get("/", (req, res) => { res.json("Kalinga Backend: Miss you Parrr") } )
+app.get("/", (req, res) => { res.json("Kalinga Backend") } )
 
 const server = http.createServer(app);
 
