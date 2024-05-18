@@ -79,7 +79,7 @@ export const updateDonorDetails = (Donor_ID: string, userDetails: any) => DonorM
 export const updateDonorProfilePic = (Donor_ID: string, link: string, id: string) => DonorModel.findOneAndUpdate({Donor_ID}, { $set: {DPLink: link, Image_ID: id} }, { new: true })
 export const BlockedDonor = (Donor_ID: string) => DonorModel.findOneAndUpdate({Donor_ID}, {$set: {Blocked: "Yes"}}, {new: true})
 export const getBlockedDonors = () => DonorModel.find({Blocked: "Yes"})
-
+export const updateDonorDp = (Donor_ID: string, link: String) => DonorModel.findOneAndUpdate({Donor_ID}, { $set: {DPLink: link, updatedAt: Date.now()} }, { new: true }) 
 
 export const getRequestor = () => RequestorModel.find()
 export const updateRequestorPassword=(Requestor_ID: string, Password: string, salt: string) => RequestorModel.findOneAndUpdate({Requestor_ID}, { $set: { password: Password, salt: salt } }, { new: true })
@@ -90,6 +90,7 @@ export const getRequestorById = (Requestor_ID: string) => RequestorModel.findOne
 export const createRequestor = (values: Record<string, any>) => new RequestorModel(values).save().then((donor) => donor.toObject())
 export const getBlockedRequestors = () => RequestorModel.find({Blocked: "Yes"})
 export const BlockedRequestor = (Requestor_ID: string) => RequestorModel.findOneAndUpdate({Requestor_ID}, {$set: {Blocked: "Yes"}}, {new: true})
+export const updateRequestorDp = (Requestor_ID: string, link: String) => RequestorModel.findOneAndUpdate({Requestor_ID}, { $set: {DPLink: link, updatedAt: Date.now()} }, { new: true }) 
 
 //export const deleteUserById = (id: string) => userModel.findOneAndDelete({_id: id})
 

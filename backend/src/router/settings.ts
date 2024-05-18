@@ -13,6 +13,7 @@ import { changePassword } from '../controllers/clientSettings/changePassword'
 import { fetchFeedBackByUserType, generateFeedback } from '../controllers/clientSettings/sendFeedback'
 import { checkPassword } from '../middleware/checkPassword'
 import { generateHelpAndSupportReport } from '../controllers/clientSettings/helpAndSupport'
+import { updateProfileImagelink } from '../controllers/clientSettings/changeProfileImage'
 
 export default (router: express.Router) => {
     
@@ -33,4 +34,6 @@ export default (router: express.Router) => {
     //Help and Support
     router.post('/kalinga/createHelpAndSupportReport/:id', tokenVerification, generateHelpAndSupportReport)
 
+    //Edit Personal Details
+    router.patch('/kalinga/updateProfilePicture/:id', tokenVerification, updateProfileImagelink)
 }

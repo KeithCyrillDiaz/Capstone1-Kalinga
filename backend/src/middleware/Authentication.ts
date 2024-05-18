@@ -64,3 +64,50 @@ export const tokenVerification = async ( req: express.Request,  res: express.Res
     }
 
 }
+
+
+export const checkToken = async ( req: express.Request,  res: express.Response ) => {
+    try{
+        
+        if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) {
+            console.log('Unauthorized User')
+            return res.json({ 
+                messages: {
+                    code: 1, 
+                    message: 'Unauthorized User', 
+                }
+            }).status(401)
+        }
+        
+        const token = req.headers.authorization.replace("Bearer ", "");
+        
+        const result = await getLogInToken(token)
+        if(!result) {
+            console.log("Invalid Token")
+            return res.json({
+                messages: {
+                    code: 1,
+                    message: "Unauthorized User"
+                }
+            }).status(401)
+        }   
+
+        console.log("User is Authorized")
+        return res.json({
+            messages: {
+                code: 0,
+                message: "User is Authorized"
+            }
+        }).status(200)
+        
+    } catch (error) {
+        console.log("Error: ", error)
+        return res.json({
+            messages: {
+                code: 1,
+                message: "Internal Server Error"
+            }
+        }).status(500)
+    }
+
+}

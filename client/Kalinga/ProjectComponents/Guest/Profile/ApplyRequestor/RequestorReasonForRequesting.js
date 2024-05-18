@@ -49,6 +49,26 @@ const ReasonForRequesting = ({route}) => {
         else setIsRFRMissing(false)
   };
 
+  const reminder = () => {
+    Alert.alert(
+      "Reminder",
+      "Please ensure you have the Medical Abstract of the infant ready as it is required for requesting milk.",
+      [
+          {
+              text: 'Okay',
+              onPress: () => {
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [{ name:"EmailVerification", params: screeningFormData } ], 
+                  })
+                );
+              },
+          },
+      ]
+  );
+}
+
   const confirmation = () => {
     const { RFR } = screeningFormData
     console.log("RFR: ", RFR)
@@ -129,12 +149,8 @@ const ReasonForRequesting = ({route}) => {
           await AsyncStorage.setItem('RequestorApplicant_ID', screeningFormData.Applicant_ID)
           setUploadingImage(false)
           
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [{ name:"EmailVerification", params: screeningFormData } ], 
-            })
-          );
+          reminder()
+         
           return
     } catch (error) {
         // Handle error if the request fails

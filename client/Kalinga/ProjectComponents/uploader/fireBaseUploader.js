@@ -100,3 +100,102 @@ export const uploadImageOrFileDataToDatabase = async ({id, purpose, path, url, n
         return
     }
 }
+
+export const uploadDpInFirebase = async ({
+  id,
+  userType,
+  nameOfUser,
+  purpose,
+  URI,
+  setImage,
+  setLabel,
+  percent,
+  token,
+  setResponse,
+  setLink,
+  setPath,
+}) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+
+      if(setImage && setLabel && percent){
+          const label = "Updating Profile Picture..."
+          setLabel(label)
+          setImage(URI)
+      }
+     
+
+      const fileType = "Images/";
+      const secondFolder = purpose === "Application" 
+        ? "Application/"
+        : purpose === "DP" || purpose === "ProfilePicture"
+        ? "Profile-Pictures/"
+        : purpose === "Request" 
+        ? "Request/"
+        : "BugReports/";
+      
+      const fileName = new Date().getTime();
+      const filePath = userType + "/" + nameOfUser + "/" + secondFolder + fileType;
+      
+    
+      const response = await fetch(URI);
+      const blob = await response.blob();
+      
+      // Upload the Image in the Firebase
+      const storageRef = ref(storage, filePath + fileName);
+      const uploadTask = uploadBytesResumable(storageRef, blob);
+
+      uploadTask.on("state_changed", (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        if(percent)percent(progress.toFixed());
+      }, (error) => {
+        console.error('Error uploading image: ', error);
+        reject(error);
+      }, async () => {
+        try {
+          setPath(filePath)
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          setLink(downloadURL)
+          await uploadImageDataInDatabase({
+            id: id,
+            link: downloadURL,
+            path: filePath,
+            userType: userType,
+            token: token,
+            setHook: setResponse
+          });
+          resolve(); // Resolve the promise when upload and database update are complete
+        } catch (error) {
+          console.error('Error getting download URL: ', error);
+          reject(error);
+        }
+      });
+    } catch (error) {
+      console.error('Error Uploading Profile Pic in Firebase: ', error);
+      reject(error);
+    }
+  });
+}
+
+
+export const uploadImageDataInDatabase = async ({id, link, path, userType, token, setHook}) => {
+  try{
+      const response = await axios.patch(`${BASED_URL}/kalinga/updateProfilePicture/${id}`,
+        {
+          userType,
+          link,
+          path
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+
+      setHook(response.data.messages.message)
+      console.log(response.data.messages.message)
+  } catch {
+    console.log("Error Uploading Image Data in Database", error)
+  }
+}
