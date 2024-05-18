@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { WebHost } from "../../../../../MyConstantSuperAdmin";
+import  DeleteRequestModal from "../../../../Modal/deleteRequestModal";
 
 export default function () {
   const navigate = useNavigate();
@@ -10,7 +11,8 @@ export default function () {
   const [searchQuery, setSearchQuery] = useState("");
   const [requestData, setRequestData] = useState(null); // State to store user data
   const [currentPage, setCurrentPage] = useState(1);
-  const requestPerPage = 5; // Adjust as needed
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // State for delete modal
+  const requestPerPage = 10; // Adjust as needed
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -52,9 +54,37 @@ export default function () {
   const goToPage = (page) => {
     setCurrentPage(page);
   };
-  const handleDelete = (id) => {
-    setUsers(users.filter((user) => user.id !== id));
-  };
+
+  // const handleDeleteConfirm = async () => {
+  //   if (selectedRequestId) {
+  //     try {
+  //       const response = await axios.delete(`${WebHost}/kalinga/deleteAppointmentRequestor/${selectedRequestId}`);
+  //       if (response.status === 200) {
+  //         const updatedRequests = requestData.filter(
+  //           (request) => request.RequestID !== selectedRequestId
+  //         );
+  //         setRequestData(updatedRequests);
+  //       } else {
+  //         console.error("Error deleting appointment:", response.data);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error deleting appointment:", error);
+  //     }
+  //   }
+  //   setIsDeleteModalOpen(false);
+  //   setSelectedRequestId(null);
+  // };
+
+  // const handleDeleteCancel = () => {
+  //   setIsDeleteModalOpen(false);
+  //   setSelectedRequestId(null);
+  // };
+
+  // const handleDelete = (RequestID) => {
+  //   setSelectedRequestId(RequestID);
+  //   setIsDeleteModalOpen(true);
+  // };
+
 
 
   const [selectedUser, setSelectedUser] = useState(null);
@@ -209,24 +239,24 @@ export default function () {
                                 </svg>
                               </Link>
                               <button
-                                onClick={() => handleDelete(request.RequestID)}
-                                className="bg-red-500 px- py-2 rounded-full hover:bg-red-600"
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="21"
-                                  height="21"
-                                  viewBox="0 0 24 24"
+                                  // onClick={() => handleDeleteConfirm(request.RequestID)}
+                                  className="bg-red-500 px- py-2 rounded-full hover:bg-red-600"
                                 >
-                                  <path
-                                    fill="#FFFFFF"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="1.5"
-                                    d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zM17 6H7v13h10zM9 17h2V8H9zm4 0h2V8h-2zM7 6v13z"
-                                  ></path>
-                                </svg>
-                              </button>
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="21"
+                                    height="21"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      fill="#FFFFFF"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth="1.5"
+                                      d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zM17 6H7v13h10zM9 17h2V8H9zm4 0h2V8h-2zM7 6v13z"
+                                    ></path>
+                                  </svg>
+                                </button>
                             </td>
                           </tr>
                         ))}
@@ -239,6 +269,12 @@ export default function () {
           </div>
         </div>
       </section>
+      {/* <DeleteRequestModal
+        isOpen={isDeleteModalOpen}
+        onConfirm={handleDeleteConfirm} 
+        onCancel={handleDeleteCancel}
+        message="Are you sure you want to delete this appointment?"
+      /> */}
 {/* 
       {isRemarksModalOpen && selectedUser && (
         <RemarksModal

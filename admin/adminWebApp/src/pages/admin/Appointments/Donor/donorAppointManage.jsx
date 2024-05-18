@@ -2,17 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { WebHost } from "../../../../../MyConstantSuperAdmin";
-import  DeleteModal from "../../../../Modal/deleteModal";
+import { WebHost } from "../../../../../MyConstantAdmin";
 
 export default function () {
   const navigate = useNavigate();
   const [isRemarksModalOpen, setRemarksModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // State for delete modal
   const [appointments, setAppointments] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [showModal, setShowModal] = useState(false);
   const appointmentsPerPage = 10;
   
   useEffect(() => {
@@ -56,29 +53,15 @@ export default function () {
       setCurrentPage(page);
     };
 
-    const handleDeleteConfirm = () => {
-      setIsDeleteModalOpen(false); // Close the delete modal
-      // Additional logic after confirming deletion
-    };
-  
-    const handleDeleteCancel = () => {
-      setIsDeleteModalOpen(false); // Close the delete modal
-      // Additional logic if deletion is canceled
-    };
-  
-
     const handleDelete = async (AppointmentDonorID) => {
       try {
-        const response = await axios.delete(
-          `${WebHost}/kalinga/deleteAppointmentDonor/${AppointmentDonorID}`
-        );
+        const response = await axios.delete(`${WebHost}/kalinga/deleteAppointmentDonor/${AppointmentDonorID}`);
         if (response.status === 200) {
           // Appointment deleted successfully
           const updatedAppointments = appointments.filter(
             (appointment) => appointment.AppointmentDonorID !== AppointmentDonorID
           );
           setAppointments(updatedAppointments);
-          setIsDeleteModalOpen(true); // Open delete confirmation modal
         } else {
           console.error("Error deleting appointment:", response.data);
           // Handle error (e.g., display error message to user)
@@ -88,8 +71,11 @@ export default function () {
         // Handle error (e.g., display error message to user)
       }
     };
-  
-  
+
+  const handleView = () => {
+    navigate("/admin/DonorAppointments");
+  };
+
   const [selectedUser, setSelectedUser] = useState(null);
 
   const handleRemarksModal = (user) => {
@@ -263,10 +249,8 @@ export default function () {
                                     ></path>
                                   </svg>
                                 </button>
-                      
                             </td>
                           </tr>
-                          
                         ))}
                       </tbody>
                     </table>
@@ -276,13 +260,19 @@ export default function () {
             </div>
           </div>
         </div>
-        </section>
-        <DeleteModal
-        isOpen={isDeleteModalOpen}
-        onConfirm={handleDeleteConfirm} // Pass handleDeleteConfirm as prop
-        onCancel={handleDeleteCancel}
-        message="Are you sure you want to delete this appointment?"
-      />
+      </section>
+{/* 
+      {isRemarksModalOpen && selectedUser && (
+        <RemarksModal
+          isOpen={isRemarksModalOpen}
+          message={
+            selectedUser.status === "Approved"
+              ? "This donor is approved."
+              : "This donor is rejected."
+          }
+          onCancel={() => setRemarksModalOpen(false)}
+        />
+      )} */}
     </>
   );
 }

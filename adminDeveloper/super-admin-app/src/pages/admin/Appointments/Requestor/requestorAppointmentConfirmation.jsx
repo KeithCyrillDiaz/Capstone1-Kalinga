@@ -57,53 +57,45 @@ const requestorAppointmentConfirmation = () => {
   const [isDeclineModalOpen, setIsDeclineModalOpen] = useState(false);
 
   const handleApproved = async () => {
-    setShowModal(true); // Open the modal
-
+    setShowModal(true); 
     try {
-      // Make a PUT request to update the RequestStatus to "Ongoing"
       await axios.put(`${WebHost}/kalinga/updateRequestStatus/${RequestID}`, {
-        RequestStatus: "Ongoing",
+        RequestStatus: "Approved",
       });
 
-      // Optionally, you can reload the data or do any other action upon successful update
     } catch (error) {
       console.error("Error updating request status:", error);
-      // Handle error if needed
     }
   };
+
+  const handleApprovedConfirm = () => {
+    setShowModal(false); 
+  };
+
+  const handleApprovedCancel = () => {
+    setShowModal(false);
+  };
   const handleDecline = async () => {
-    setIsDeclineModalOpen(true); // Open the modal
+    setIsDeclineModalOpen(true); 
 
     try {
-      // Make a PUT request to update the RequestStatus to "Ongoing"
       await axios.put(`${WebHost}/kalinga/updateRequestStatus/${RequestID}`, {
         RequestStatus: "Decline",
       });
 
-      // Optionally, you can reload the data or do any other action upon successful update
     } catch (error) {
       console.error("Error updating request status:", error);
-      // Handle error if needed
     }
   };
 
   const handleDeclineConfirm = () => {
-    // Add your logic for handling the "Solved" button action here
-    setIsDeclineModalOpen(false); // Close the modal
+    setIsDeclineModalOpen(false); 
   };
 
   const handleDeclineCancel = () => {
-    setIsDeclineModalOpen(false); // Close the modal
+    setIsDeclineModalOpen(false); 
   };
 
-  const handleApproveConfirm = () => {
-    // Add your logic for handling the "Solved" button action here
-    setShowModal(false); // Close the modal
-  };
-
-  const handleApproveCancel = () => {
-    setShowModal(false); // Close the modal
-  };
 
   const babyCategoryOptions = [
     { label: "Newborn", value: "newborn" },
@@ -235,7 +227,6 @@ const requestorAppointmentConfirmation = () => {
         </div>
       </div>
 
-      {/* Milk Bank Location Input */}
       <div className="mt-4 relative">
         <div className="relative">
           <input
@@ -277,7 +268,7 @@ const requestorAppointmentConfirmation = () => {
       <div className="absolute bottom-0 right-0 mb-8 mr-8 flex flex-col">
         {requestData &&
           requestData.Request &&
-          requestData.Request.RequestStatus !== "Ongoing" &&
+          requestData.Request.RequestStatus !== "Approved" &&
           requestData.Request.RequestStatus !== "Complete" && (
             <>
               <button
@@ -298,8 +289,8 @@ const requestorAppointmentConfirmation = () => {
 
       <RequestConfirmModal
         isOpen={showModal}
-        onCancel={handleApproveConfirm}
-        onConfirm={handleApproveCancel}
+        onConfirm={handleApprovedCancel}
+        onCancel={handleApprovedConfirm}
         message="Are you sure you want to approve this request? Once approved, the request process will proceed."
       />
 

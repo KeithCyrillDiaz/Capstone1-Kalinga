@@ -49,6 +49,9 @@ import {getReports} from '../controllers/clientSettings/reportBug';
 import {getBugReportById} from '../controllers/clientSettings/getBugReportByID';
 import { updateResolved } from '../controllers/clientSettings/reportBug';
 import { getResolvedReports } from '../controllers/clientSettings/reportBug'
+import { deleteAppointmentDonor } from '../controllers/Admin/Appointment/deleteAppointmentDonor'
+import { deleteAppointmentRequestor} from '../controllers/Admin/Appointment/deleteAppointmentRequestor'
+
 
 export default (router: express.Router) => {
   
@@ -109,6 +112,9 @@ export default (router: express.Router) => {
     router.get('/kalinga/getBugReportById/:ReportBugID', getBugReportById)
     router.get('/kalinga/updateResolved/:ReportBugID', updateResolved)
     router.get('/kalinga/getResolvedReports', getResolvedReports)
+    router.delete ('/kalinga/deleteAppointmentDonor/:AppointmentDonorID', deleteAppointmentDonor)
+    router.delete ('/kalinga/deleteAppointmentRequestor/:RequestID', deleteAppointmentRequestor)
+
 
 
 

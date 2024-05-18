@@ -10,7 +10,10 @@ import CompleteModal from "../../../../Modal/CompleteModal";
 const donorAppointmentConfirmation = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(new Date());
-  const [appointmentData, setAppointmentData] = useState(null); // State to store appointment data
+  const [appointmentData, setAppointmentData] = useState(null); 
+  const [showModal, setShowModal] = useState(false);
+  const [isDeclineModalOpen, setIsDeclineModalOpen] = useState(false);
+  const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     DonationStatus: "",
@@ -53,9 +56,7 @@ const donorAppointmentConfirmation = () => {
     fetchAppointmentData();
   }, [AppointmentDonorID]);
 
-  const [showModal, setShowModal] = useState(false);
-  const [isDeclineModalOpen, setIsDeclineModalOpen] = useState(false);
-  const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
+ 
 
   const handleApproved = async () => {
     setShowModal(true); // Open the modal
@@ -87,8 +88,22 @@ const donorAppointmentConfirmation = () => {
     }
   };
 
-  const handleComplete = () => {
+  const handleComplete = async () => { // Mark the function as async
     setIsCompleteModalOpen(true);
+  
+    try {
+      await axios.put(
+        `${WebHost}/kalinga/updateDonationComplete/${AppointmentDonorID}`,
+        {
+          DonationStatus: "Complete",
+        }
+      );
+
+      // Optionally, you can reload the data or do any other action upon successful update
+    } catch (error) {
+      console.error("Error updating request status:", error);
+      // Handle error if needed
+    }
   };
 
   const handleDeclineConfirm = async () => {
@@ -128,22 +143,8 @@ const donorAppointmentConfirmation = () => {
   };
 
   const handleCompleteConfirm = async () => {
-    try {
-      const response = await axios.put(
-        `${WebHost}/kalinga/updateDonationComplete/${AppointmentDonorID}`
-      );
+    setIsCompleteModalOpen(false);
 
-      // Log the updated donation status from the response
-      console.log("Status", response.data.DonationStatus);
-
-      // Handle success response
-      console.log("Donation status updated successfully:", response.data);
-      setIsCompleteModalOpen(false); // Close the modal
-    } catch (error) {
-      // Handle error
-      console.error("Error updating donation status:", error);
-      // You can add a notification or alert here to inform the user about the error
-    }
   };
 
   const handleCompleteCancel = () => {

@@ -4,23 +4,21 @@ import RequestConfirmModal from "../../../../modal/RequestConfirmModal";
 import RequestDeclineModal from "../../../../modal/RequestDeclineModal";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { WebHost } from '../../../../../MyConstantAdmin'
-
-
+import { WebHost } from "../../../../../MyConstantAdmin";
 
 const requestorAppointmentConfirmation = () => {
   const [requestData, setRequestData] = useState(null); // State to store fetched request details
 
   const [formData, setFormData] = useState({
-    fullName: '',
-    phoneNumber: '',
-    emailAddress: '',
-    homeAddress: '',
-    city: '',
-    medicalCondition: '',
-    milkAmount: '',
-    BabyCategory: '',
-    ReasonForRequesting: '',
+    fullName: "",
+    phoneNumber: "",
+    emailAddress: "",
+    homeAddress: "",
+    city: "",
+    medicalCondition: "",
+    milkAmount: "",
+    BabyCategory: "",
+    ReasonForRequesting: "",
   });
 
   const handleChange = (e) => {
@@ -30,29 +28,31 @@ const requestorAppointmentConfirmation = () => {
       [name]: value,
     }));
   };
-  
+
   const { RequestID } = useParams(); // Get the appointmentDonorID from the URL
 
   useEffect(() => {
     const fetchRequestData = async () => {
       try {
         console.log("Fetching appointment data for RequestID:", RequestID);
-        const response = await axios.get(`${WebHost}/kalinga/getRequestByID/${RequestID}`);
+        const response = await axios.get(
+          `${WebHost}/kalinga/getRequestByID/${RequestID}`
+        );
         console.log("API Response:", response.data);
         setRequestData(response.data); // Update state with response data
       } catch (error) {
-        console.error('Error fetching appointment data:', error);
+        console.error("Error fetching appointment data:", error);
       }
     };
-  
+
     console.log("RequestID:", RequestID);
     fetchRequestData();
   }, [RequestID]);
-  
-  console.log("Request Data:", requestData); 
-  
+
   console.log("Request Data:", requestData);
-  
+
+  console.log("Request Data:", requestData);
+
   const [showModal, setShowModal] = useState(false);
   const [isDeclineModalOpen, setIsDeclineModalOpen] = useState(false);
 
@@ -62,9 +62,9 @@ const requestorAppointmentConfirmation = () => {
     try {
       // Make a PUT request to update the RequestStatus to "Ongoing"
       await axios.put(`${WebHost}/kalinga/updateRequestStatus/${RequestID}`, {
-        RequestStatus: "Approved",
+        RequestStatus: "Ongoing",
       });
-      
+
       // Optionally, you can reload the data or do any other action upon successful update
     } catch (error) {
       console.error("Error updating request status:", error);
@@ -79,15 +79,13 @@ const requestorAppointmentConfirmation = () => {
       await axios.put(`${WebHost}/kalinga/updateRequestStatus/${RequestID}`, {
         RequestStatus: "Decline",
       });
-      
+
       // Optionally, you can reload the data or do any other action upon successful update
     } catch (error) {
       console.error("Error updating request status:", error);
       // Handle error if needed
     }
   };
-  
- 
 
   const handleDeclineConfirm = () => {
     // Add your logic for handling the "Solved" button action here
@@ -114,7 +112,7 @@ const requestorAppointmentConfirmation = () => {
     { label: "Other", value: "other" },
   ];
   return (
-    <section className="w-full min-h-screen bg-neutral-variant p-8 relative">
+    <section className="w-full h-screen bg-primary-body overflow-hidden px-4">
       <h1 className="mt-8 text-3xl text-pink-500 font-bold">
         Request Confirmation
       </h1>
@@ -125,7 +123,9 @@ const requestorAppointmentConfirmation = () => {
           type="text"
           id="fullName"
           name="fullName"
-          value={`Full Name: ${requestData ? requestData.Request.fullName : ''}`}
+          value={`Full Name: ${
+            requestData ? requestData.Request.fullName : ""
+          }`}
           onChange={handleChange}
           className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
           placeholder="Full Name"
@@ -138,7 +138,9 @@ const requestorAppointmentConfirmation = () => {
           type="tel"
           id="phoneNumber"
           name="phoneNumber"
-          value={`Phone Number: ${requestData ? requestData.Request.phoneNumber : ''}`}
+          value={`Phone Number: ${
+            requestData ? requestData.Request.phoneNumber : ""
+          }`}
           onChange={handleChange}
           className="w-3/4 md:w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
           placeholder="Phone Number"
@@ -151,7 +153,9 @@ const requestorAppointmentConfirmation = () => {
           type="email"
           id="emailAddress"
           name="emailAddress"
-          value={`Email Address: ${requestData ? requestData.Request.emailAddress : ''}`}
+          value={`Email Address: ${
+            requestData ? requestData.Request.emailAddress : ""
+          }`}
           onChange={handleChange}
           className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
           placeholder="Email Address"
@@ -164,7 +168,9 @@ const requestorAppointmentConfirmation = () => {
           type="text"
           id="homeAddress"
           name="homeAddress"
-          value={`Home Address: ${requestData ? requestData.Request.homeAddress : ''}`}
+          value={`Home Address: ${
+            requestData ? requestData.Request.homeAddress : ""
+          }`}
           onChange={handleChange}
           className="w-full px-4 py-2 h-20 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
           placeholder="Home Address"
@@ -177,7 +183,7 @@ const requestorAppointmentConfirmation = () => {
           type="text"
           id="city"
           name="city"
-          value={`City: ${requestData ? requestData.Request.city : ''}`}
+          value={`City: ${requestData ? requestData.Request.city : ""}`}
           onChange={handleChange}
           className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
           placeholder="City"
@@ -190,7 +196,9 @@ const requestorAppointmentConfirmation = () => {
           type="text"
           id="medicalCondition"
           name="medicalCondition"
-          value={`Medical Condition: ${requestData ? requestData.Request.medicalCondition : ''}`}
+          value={`Medical Condition: ${
+            requestData ? requestData.Request.medicalCondition : ""
+          }`}
           onChange={handleChange}
           className="w-full px-4 py-2  h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
           placeholder="Medical Condition"
@@ -204,18 +212,22 @@ const requestorAppointmentConfirmation = () => {
             type="text"
             id="amountDonated"
             name="amountDonated"
-            value={`Milk Amount: ${requestData ? requestData.Request.milkAmount : ''}`}
+            value={`Milk Amount: ${
+              requestData ? requestData.Request.milkAmount : ""
+            }`}
             onChange={handleChange}
             className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
             placeholder="Amount of Milk Donated"
           />
         </div>
         <div className="w-1/2">
-        <input
+          <input
             type="text"
             id="amountDonated"
             name="amountDonated"
-            value={`Baby Category: ${requestData ? requestData.Request.BabyCategory : ''}`}
+            value={`Baby Category: ${
+              requestData ? requestData.Request.BabyCategory : ""
+            }`}
             onChange={handleChange}
             className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
             placeholder="Amount of Milk Donated"
@@ -223,7 +235,6 @@ const requestorAppointmentConfirmation = () => {
         </div>
       </div>
 
-     
       {/* Milk Bank Location Input */}
       <div className="mt-4 relative">
         <div className="relative">
@@ -231,33 +242,43 @@ const requestorAppointmentConfirmation = () => {
             type="text"
             id="reasonRequest"
             name="reasonRequest"
-            value={`Reason for Requesting: ${requestData ? requestData.Request.ReasonForRequesting : ''}`}
+            value={`Reason for Requesting: ${
+              requestData ? requestData.Request.ReasonForRequesting : ""
+            }`}
             onChange={handleChange}
             className="w-full px-4 py-2 h-20 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500 pl-8"
             placeholder="Reason for Requesting"
           />
         </div>
-        </div>
+      </div>
 
-        <div className="mt-4 relative">
-        <label htmlFor="milkBankLocation" className="block text-pink-500 font-bold mb-2 text-pink-500">
-        Note: Maximum of 3 images or files per field.       
-         </label>
+      <div className="mt-4 relative">
+        <label
+          htmlFor="milkBankLocation"
+          className="block text-pink-500 font-bold mb-2 text-pink-500"
+        >
+          Note: Maximum of 3 images or files per field.
+        </label>
         <div className="relative">
           <input
             type="text"
             id="reasonRequest"
             name="reasonRequest"
-            value={`Reason For Requesting: ${requestData ? requestData.ReasonForRequesting : ''}`}
+            value={`Reason For Requesting: ${
+              requestData ? requestData.ReasonForRequesting : ""
+            }`}
             onChange={handleChange}
             className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500 pl-8"
             placeholder=""
           />
         </div>
-        </div>
+      </div>
 
-        <div className="absolute bottom-0 right-0 mb-8 mr-8 flex flex-col">
-          {requestData && requestData.Request && (requestData.Request.RequestStatus !== "Ongoing" && requestData.Request.RequestStatus !== "Complete") && (
+      <div className="absolute bottom-0 right-0 mb-8 mr-8 flex flex-col">
+        {requestData &&
+          requestData.Request &&
+          requestData.Request.RequestStatus !== "Ongoing" &&
+          requestData.Request.RequestStatus !== "Complete" && (
             <>
               <button
                 onClick={handleApproved}
@@ -273,7 +294,7 @@ const requestorAppointmentConfirmation = () => {
               </button>
             </>
           )}
-        </div>
+      </div>
 
       <RequestConfirmModal
         isOpen={showModal}

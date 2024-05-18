@@ -10,10 +10,10 @@ import DonorVerifPendings from './admin/donorVerifPending'
 import DonorVerification from './admin/donorVerification'
 import RequestorVerifPendings from './admin/requestorVerifPendings'
 import RequestorVerification from './admin/requestorVerification'
-import DonorAppointments from "./admin/Appointments/Donor/donorAppointments";
-import RequestorAppointments from "./admin/Appointments/Requestor/requestorAppointments";
 import DonorAppointmentConfirmation from "./admin/Appointments/Donor/donorAppointmentConfirmation"
 import RequestorAppointmentConfirmation from "./admin/Appointments/Requestor/requestorAppointmentConfirmation";
+import DonorAppointManage from "./admin/Appointments/Donor/donorAppointManage";
+import RequestorManagement from "./admin/Appointments/Requestor/requestorManagement"
 
 
 export { Login,
@@ -28,8 +28,8 @@ export { Login,
          DonorVerification ,
          RequestorVerification,
          RequestorVerifPendings,
-         DonorAppointments, 
-         RequestorAppointments,
          DonorAppointmentConfirmation,
-         RequestorAppointmentConfirmation
+         RequestorAppointmentConfirmation,
+         DonorAppointManage,
+         RequestorManagement
          };
