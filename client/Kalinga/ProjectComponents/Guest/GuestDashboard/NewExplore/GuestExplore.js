@@ -18,7 +18,12 @@ const GuestExplore = () => {
             latitude: 0,
             longitude: 0
         })
-        console.log("id: ",id)
+
+        const initial = {
+            latitude: 14.5995,
+            longitude: 120.9842
+        }
+
         const handleSearch = (input) => {
             setId(input)
         }
@@ -48,11 +53,11 @@ const GuestExplore = () => {
         <View style= {globalStyles.defaultBackgroundColor}>
             <SmallHeader title = {"Explore"} />
             <SearchBox data = {MilkBankList} onSelect={handleSearch} onClear = {handleSearchClear}/>
-            <MapComponent regionLat={region.latitude} regionLong={region.longitude}/>
+            <MapComponent regionLat={region.latitude} initialRegion={initial} regionLong={region.longitude}/>
             {/* {id && (
                 <MilkBankDetails id={id} onSelect={handleSetRegion}/>
             )} */}
-            <MilkBankDetails id={id} onSelect={handleSetRegion}/>
+            <MilkBankDetails id={id} onSelect={handleSetRegion} userType={"Guest"}/>
             
         </View>
           

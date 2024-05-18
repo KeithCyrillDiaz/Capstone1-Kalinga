@@ -20,18 +20,18 @@ export const MilkBankDetails = ({
     userType
 }) => {
     
-    if(!userType) userType = "Guest"
     const navigate = useNavigation()
     const bottomSheetRef = useRef(null);
     const [data, setData] = useState({})
     const [index, setIndex] = useState(2)
     //height of BottomSheet
-    const snapPoints = useMemo(() => ['3%','15%', '35%', '50%'], []);
+    const snapPoints = useMemo(() => ['3%', '15%', '35%', '53%'], []);
 
     const getMilbankDetails = (id) => MilkBankList.find((milkBank) => (milkBank.id === id))
     const fetchDetails = (index) => {
         if(!id && !index){
-            console.log("Id is Undefined")
+            console.log("Id is undefined or null",)
+            console.log("index is undefined or null")
             const MilkBank = getMilbankDetails(1)
             setIndex(0)
             setData(MilkBank)
