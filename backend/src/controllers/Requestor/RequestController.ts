@@ -18,6 +18,7 @@ const createRequest = async (req: Request, res: Response): Promise<void> => {
       milkAmount,
       BabyCategory,
       ReasonForRequesting,
+      RequestRemark,
     } = req.body;
 
     const currentTime = moment().toDate()
@@ -35,7 +36,8 @@ const createRequest = async (req: Request, res: Response): Promise<void> => {
       milkAmount,
       BabyCategory,
       ReasonForRequesting,
-      Date: currentTime
+      Date: currentTime,
+      RequestRemark
     });
     console.log(newRequest)
     res.status(201).json(newRequest);

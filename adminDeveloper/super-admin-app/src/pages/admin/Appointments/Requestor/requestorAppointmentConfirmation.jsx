@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import RequestConfirmModal from "../../../../Modal/RequestConfirmModal";
 import RequestDeclineModal from "../../../../Modal/RequestDeclineModal";
+import AppointmentRequestDeclineModal from "../../../../Modal/AppointmentRequestDeclineModal";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { WebHost } from "../../../../../MyConstantSuperAdmin";
@@ -57,53 +58,45 @@ const requestorAppointmentConfirmation = () => {
   const [isDeclineModalOpen, setIsDeclineModalOpen] = useState(false);
 
   const handleApproved = async () => {
-    setShowModal(true); // Open the modal
-
+    setShowModal(true); 
     try {
-      // Make a PUT request to update the RequestStatus to "Ongoing"
       await axios.put(`${WebHost}/kalinga/updateRequestStatus/${RequestID}`, {
-        RequestStatus: "Ongoing",
+        RequestStatus: "Approved",
       });
 
-      // Optionally, you can reload the data or do any other action upon successful update
     } catch (error) {
       console.error("Error updating request status:", error);
-      // Handle error if needed
     }
   };
+
+  const handleApprovedConfirm = () => {
+    setShowModal(false); 
+  };
+
+  const handleApprovedCancel = () => {
+    setShowModal(false);
+  };
   const handleDecline = async () => {
-    setIsDeclineModalOpen(true); // Open the modal
+    setIsDeclineModalOpen(true); 
 
     try {
-      // Make a PUT request to update the RequestStatus to "Ongoing"
       await axios.put(`${WebHost}/kalinga/updateRequestStatus/${RequestID}`, {
         RequestStatus: "Decline",
       });
 
-      // Optionally, you can reload the data or do any other action upon successful update
     } catch (error) {
       console.error("Error updating request status:", error);
-      // Handle error if needed
     }
   };
 
   const handleDeclineConfirm = () => {
-    // Add your logic for handling the "Solved" button action here
-    setIsDeclineModalOpen(false); // Close the modal
+    setIsDeclineModalOpen(false); 
   };
 
   const handleDeclineCancel = () => {
-    setIsDeclineModalOpen(false); // Close the modal
+    setIsDeclineModalOpen(false); 
   };
 
-  const handleApproveConfirm = () => {
-    // Add your logic for handling the "Solved" button action here
-    setShowModal(false); // Close the modal
-  };
-
-  const handleApproveCancel = () => {
-    setShowModal(false); // Close the modal
-  };
 
   const babyCategoryOptions = [
     { label: "Newborn", value: "newborn" },
@@ -236,22 +229,21 @@ const requestorAppointmentConfirmation = () => {
           </div>
         </div>
 
-        {/* Milk Bank Location Input */}
-        <div className="mt-4 relative">
-          <div className="relative">
-            <input
-              type="text"
-              id="reasonRequest"
-              name="reasonRequest"
-              value={`Reason for Requesting: ${
-                requestData ? requestData.Request.ReasonForRequesting : ""
-              }`}
-              onChange={handleChange}
-              className="w-full px-4 py-2 h-20 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500 pl-8"
-              placeholder="Reason for Requesting"
-            />
-          </div>
+      <div className="mt-4 relative">
+        <div className="relative">
+          <input
+            type="text"
+            id="reasonRequest"
+            name="reasonRequest"
+            value={`Reason for Requesting: ${
+              requestData ? requestData.Request.ReasonForRequesting : ""
+            }`}
+            onChange={handleChange}
+            className="w-full px-4 py-2 h-20 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500 pl-8"
+            placeholder="Reason for Requesting"
+          />
         </div>
+      </div>
 
         <div className="mt-4 relative">
           <label
@@ -278,7 +270,8 @@ const requestorAppointmentConfirmation = () => {
         <div className="absolute  right-0 mt-8 mr-16 flex flex-col">
           {requestData &&
             requestData.Request &&
-            requestData.Request.RequestStatus !== "Ongoing" &&
+            requestData.Request.RequestStatus !== "Approved" &&
+          requestData.Request.RequestStatus !== "Decline" &&
             requestData.Request.RequestStatus !== "Complete" && (
               <>
                 <button
@@ -299,18 +292,24 @@ const requestorAppointmentConfirmation = () => {
 
         <RequestConfirmModal
           isOpen={showModal}
-          onCancel={handleApproveConfirm}
-          onConfirm={handleApproveCancel}
-          message="Are you sure you want to approve this request? Once approved, the request process will proceed."
+            onConfirm={handleApprovedCancel}
+          onCancel={handleApprovedConfirm}
+        message="Are you sure you want to approve this request? Once approved, the request process will proceed."
         />
 
-        <RequestDeclineModal
-          isOpen={isDeclineModalOpen}
-          onConfirm={handleDeclineConfirm}
-          onCancel={handleDeclineCancel}
-          message="Are you sure you want to decline this request? Once declined, the request process will not proceed."
-        />
-      </div>
+      <RequestDeclineModal
+        isOpen={isDeclineModalOpen}
+        onConfirm={handleDeclineConfirm}
+        onCancel={handleDeclineCancel}
+        message="Are you sure you want to decline this request? Once declined, the request process will not proceed."
+      />
+
+      <AppointmentRequestDeclineModal
+        isOpen={isDeclineModalOpen}
+        onConfirm={handleDeclineConfirm}
+        onCancel={handleDeclineCancel}
+        message="Are you sure you want to decline this appointment? Once declined, the request process will not proceed."
+        RequestID={RequestID}       />
     </section>
   );
 };

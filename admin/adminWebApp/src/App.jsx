@@ -18,8 +18,8 @@ import {
   Approved,
   Rejected,
   Milkbanks,
-  DonorAppointments, 
-  RequestorAppointments,
+  DonorAppointManage,
+  RequestorManagement,
   DonorAppointmentConfirmation,
   RequestorAppointmentConfirmation
 
@@ -52,8 +52,8 @@ const router = createBrowserRouter(
         <Route path="forum" element={<Forum />} />
         <Route path="approved" element={<Approved />} />
         <Route path="rejected" element={<Rejected />} />
-        <Route path="donorAppointments" element={<DonorAppointments />} />
-        <Route path="requestorAppointments" element={<RequestorAppointments />} />
+        <Route path="DonorAppointManage" element={<DonorAppointManage />} />
+        <Route path="requestorManagement" element={<RequestorManagement />} />
         <Route path="donorAppointmentConfirmation/:AppointmentDonorID" element={<DonorAppointmentConfirmation />} />
         <Route path="requestorAppointmentConfirmation/:RequestID" element={<RequestorAppointmentConfirmation />} />
         <Route path="requestorAppointmentConfirmation/:RequestID" element={<DonorVerifPendings />} />

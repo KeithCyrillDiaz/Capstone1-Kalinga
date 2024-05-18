@@ -42,7 +42,7 @@ import DonorApproved from './ProjectComponents/Guest/Profile/ApplyDonor/DonorApp
 import GuestEducContents from './ProjectComponents/Guest/Home/EducContents.js'
 import GuestEducLibrary from './ProjectComponents/Guest/Home/EducLibrary.js'
 import InstantMess from './ProjectComponents/Guest/Home/InstantMess.js'
-import GuestExplore from './ProjectComponents/Guest/GuestDashboard/Explore/ExploreFinal.js'
+import GuestExplore from './ProjectComponents/Guest/GuestDashboard/NewExplore/GuestExplore.js'
 import GuestHome from './ProjectComponents/Guest/GuestDashboard/GuestHome.js'
 import GuestProfile from './ProjectComponents/Guest/GuestDashboard/GuestProfile.js'
 import ApplyAsDonorStack from './ProjectComponents/Guest/Profile/ApplyDonor/ApplyAsDonorStack.js';
@@ -86,7 +86,7 @@ import SetDateTimeLocation from './ProjectComponents/Donor/Home/MakeDonation/Set
 import AppointmentConfirmation from './ProjectComponents/Donor/Home/MakeDonation/AppointmentConfirmation.js'
 import DonorHelpAndSupportMessage from './ProjectComponents/Donor/Profile/DonorSettngs/DonorHelpAndSupportMessage.js'
 import AppointmentConfirmationMessage from './ProjectComponents/Donor/Home/MakeDonation/AppointmentConfirmationMessage.js';
-import ValidUserExplore from './ProjectComponents/Donor/Dashboard/Explore/ExploreFinal.js'
+import ValidUserExplore from './ProjectComponents/Donor/Dashboard/ValidUserExporeFInal/ValidUserExplore.js'
 
 
 {/* Requestor */}

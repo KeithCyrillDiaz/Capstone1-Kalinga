@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { WebHost } from "../../../../../MyConstantSuperAdmin";
+import DeleteModal from "../../../../Modal/deleteModal";
 
 export default function () {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export default function () {
   const [searchQuery, setSearchQuery] = useState("");
   const [requestData, setRequestData] = useState(null); // State to store user data
   const [currentPage, setCurrentPage] = useState(1);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // State for delete modal
   const requestPerPage = 10; // Adjust as needed
 
   const handleSearchChange = (event) => {
@@ -49,8 +51,40 @@ export default function () {
   );
   const totalPages = Math.ceil(filteredRequest.length / requestPerPage);
 
-  const handleDelete = (id) => {
-    setUsers(users.filter((user) => user.id !== id));
+  const goToPage = (page) => {
+    setCurrentPage(page);
+  };
+
+  const handleDelete = async (RequestID) => {
+    try {
+      const response = await axios.delete(
+        `${WebHost}/kalinga/deleteAppointmentRequestor/${RequestID}`
+      );
+      if (response.status === 200) {
+        // Appointment deleted successfully
+        const updatedAppointments = requestData.filter(
+          (request) => request.RequestID !== RequestID
+        );
+        setRequestData(updatedAppointments);
+        setIsDeleteModalOpen(true); // Open delete confirmation modal
+      } else {
+        console.error("Error deleting appointment:", response.data);
+        // Handle error (e.g., display error message to user)
+      }
+    } catch (error) {
+      console.error("Error deleting appointment:", error);
+      // Handle error (e.g., display error message to user)
+    }
+  };
+
+  const handleDeleteConfirm = () => {
+    setIsDeleteModalOpen(false); // Close the delete modal
+    // Additional logic after confirming deletion
+  };
+
+  const handleDeleteCancel = () => {
+    setIsDeleteModalOpen(false); // Close the delete modal
+    // Additional logic if deletion is canceled
   };
 
   const [selectedUser, setSelectedUser] = useState(null);
@@ -199,7 +233,7 @@ export default function () {
                               <div>
                                 {request.RequestStatus === "Approved"
                                   ? "This is approved."
-                                  : ""}
+                                  : request.RequestRemark}
                               </div>
                             </td>
 
@@ -290,6 +324,24 @@ export default function () {
           </div>
         </div>
       </section>
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+        message="Are you sure you want to delete this request?"
+      />
+      {/* 
+      {isRemarksModalOpen && selectedUser && (
+        <RemarksModal
+          isOpen={isRemarksModalOpen}
+          message={
+            selectedUser.status === "Approved"
+              ? "This donor is approved."
+              : "This donor is rejected."
+          }
+          onCancel={() => setRemarksModalOpen(false)}
+        />
+      )} */}
     </>
   );
 }

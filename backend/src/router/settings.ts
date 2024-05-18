@@ -28,8 +28,7 @@ export default (router: express.Router) => {
     router.patch('/kalinga/updatePassword/:id', tokenVerification, checkPassword, changePassword)
   
     //FeedBack
-    router.post('/kalinga/createFeedback/:id', tokenVerification, generateFeedback)
-    router.get('/kalinga/getFeedbackByUserType/:userType', tokenVerification, fetchFeedBackByUserType)
+    router.post('/kalinga/createFeedback/:id',tokenVerification, generateFeedback)
     router.get('/kalinga/getFeedbackByUserType/:userType', tokenVerification, fetchFeedBackByUserType)
     
     //Help and Support

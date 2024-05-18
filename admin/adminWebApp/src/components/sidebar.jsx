@@ -312,25 +312,27 @@ export default function () {
                 {showAppointmentsDropdown && (
                   <div className="p-2 w-full bg-secondary-default rounded-b-2xl pb-2 mb-2">
                     <NavLink
-                      to="/admin/donorAppointments"
-                      className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-10/12 rounded-2xl py-2 mb-2 ml-6 ${
-                        isActiveRoute("chart")
-                          ? "bg-primary-default"
-                          : "bg-transparent hover:bg-primary-default"
-                      }`}
-                    >
-                      <h1 className="text-xl text-neutral-primary">Donor</h1>
-                    </NavLink>
-                    <NavLink
-                      to="/admin/requestorAppointments"
-                      className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-10/12 rounded-2xl py-2 mb-2 ml-6 ${
+                      to="/admin/donorAppointManage"
+                      className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
                         isActiveRoute("city")
                           ? "bg-primary-default"
                           : "bg-transparent hover:bg-primary-default"
                       }`}
                     >
-                      <h1 className="text-xl text-neutral-primary">
-                        Requestor
+                      <h1 className="text-lg text-neutral-primary">
+                        Donor Mamangement
+                      </h1>
+                    </NavLink>
+                    <NavLink
+                      to="/admin/requestorManagement"
+                      className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
+                        isActiveRoute("requestorManagement")
+                          ? "bg-primary-default"
+                          : "bg-transparent hover:bg-primary-default"
+                      }`}
+                    >
+                      <h1 className="text-lg text-neutral-primary">
+                        Requestor Mamangement
                       </h1>
                     </NavLink>
                   </div>

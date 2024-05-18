@@ -3,13 +3,16 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { WebHost } from "../../../../../MyConstantSuperAdmin";
+import DeleteModal from "../../../../Modal/deleteModal";
 
 export default function ({ remarks }) {
   const navigate = useNavigate();
-  const [selectedReason, setSelectedReason] = useState(""); // Add state to hold selected reason
+  const [isRemarksModalOpen, setRemarksModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // State for delete modal
   const [appointments, setAppointments] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [showModal, setShowModal] = useState(false);
   const appointmentsPerPage = 10;
 
   useEffect(() => {
@@ -70,8 +73,36 @@ export default function ({ remarks }) {
     setCurrentPage(page);
   };
 
-  const handleDelete = (id) => {
-    // Implement deletion logic here
+  const handleDeleteConfirm = () => {
+    setIsDeleteModalOpen(false); // Close the delete modal
+    // Additional logic after confirming deletion
+  };
+
+  const handleDeleteCancel = () => {
+    setIsDeleteModalOpen(false); // Close the delete modal
+    // Additional logic if deletion is canceled
+  };
+
+  const handleDelete = async (AppointmentDonorID) => {
+    try {
+      const response = await axios.delete(
+        `${WebHost}/kalinga/deleteAppointmentDonor/${AppointmentDonorID}`
+      );
+      if (response.status === 200) {
+        // Appointment deleted successfully
+        const updatedAppointments = appointments.filter(
+          (appointment) => appointment.AppointmentDonorID !== AppointmentDonorID
+        );
+        setAppointments(updatedAppointments);
+        setIsDeleteModalOpen(true); // Open delete confirmation modal
+      } else {
+        console.error("Error deleting appointment:", response.data);
+        // Handle error (e.g., display error message to user)
+      }
+    } catch (error) {
+      console.error("Error deleting appointment:", error);
+      // Handle error (e.g., display error message to user)
+    }
   };
 
   const handleView = () => {
@@ -214,7 +245,7 @@ export default function ({ remarks }) {
                               <div>
                                 {appointment.DonationStatus === "Approved"
                                   ? "This is approved."
-                                  : remarks}
+                                  : appointment.DonorRemark}
                               </div>
                             </td>
 
@@ -242,7 +273,9 @@ export default function ({ remarks }) {
                                 </svg>
                               </Link>
                               <button
-                                onClick={() => handleDelete(appointment.id)}
+                                onClick={() =>
+                                  handleDelete(appointment.AppointmentDonorID)
+                                }
                                 className="px-3 py-1 rounded-full hover:bg-neutral-variant"
                               >
                                 <svg
@@ -305,6 +338,12 @@ export default function ({ remarks }) {
           </div>
         </div>
       </section>
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+        message="Are you sure you want to delete this appointment?"
+      />
     </>
   );
 }

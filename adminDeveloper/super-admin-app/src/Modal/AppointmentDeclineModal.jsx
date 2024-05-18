@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { WebHost } from "../../MyConstantSuperAdmin";
+import axios from "axios";
+
+
 
 const AppointmentDeclineModal = ({
   isOpen,
@@ -6,10 +10,16 @@ const AppointmentDeclineModal = ({
   onConfirm,
   onCancel,
   remarks,
+  AppointmentDonorID
+  
 }) => {
+    if (!AppointmentDonorID) {
+    return null; // or handle the case where AppointmentDonorID is null
+  }
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
   const [isThirdModalOpen, setIsThirdModalOpen] = useState(false);
   const [selectedReason, setSelectedReason] = useState("");
+  const [DonorRemark, setDonorRemark] = useState(""); // State to store the selected remark
 
   useEffect(() => {
     if (isOpen) {
@@ -24,17 +34,35 @@ const AppointmentDeclineModal = ({
   };
 
   const handleSecondModalConfirm = () => {
-    if (selectedReason) {
+    console.log('Selected DonorRemark:', DonorRemark); // Add this line for debugging
+    if (DonorRemark) {
+      // Send the selected DonorRemark to the server
+      putDonorRemarkToServer(DonorRemark);
       setIsSecondModalOpen(false); // Close the second modal
       setIsThirdModalOpen(true); // Open the third modal
-      setSelectedReason(selectedReason); // Update the selected reason in the parent component
+      setSelectedReason(DonorRemark); // Update the selected reason in the parent component
     } else {
       alert("Please select a reason for declining.");
     }
   };
 
-  console.log(selectedReason);
-
+  const putDonorRemarkToServer = async (remark) => {
+    try {
+      const requestBody = {
+        DonorRemark: remark,
+        AppointmentDonorID: AppointmentDonorID, // Include AppointmentDonorID in the request body
+      };
+  
+      console.log('Sending PUT request to:', `${WebHost}/kalinga/updateDonorRemark/${AppointmentDonorID}`);
+      console.log('Request Body:', requestBody);
+  
+      const response = await axios.put(`${WebHost}/kalinga/updateDonorRemark/${AppointmentDonorID}`, requestBody);
+  
+      console.log("Remark posted successfully:", response.data);
+    } catch (error) {
+      console.error("Error posting remark:", error);
+    }
+  };
   const handleThirdModalConfirm = () => {
     setIsThirdModalOpen(false); // Close the third modal
     onConfirm(); // Call the original onConfirm function
@@ -45,6 +73,7 @@ const AppointmentDeclineModal = ({
     setIsThirdModalOpen(false); // Close the third modal if open
     onCancel(); // Call the original onCancel function
   };
+
 
   return (
     <>
@@ -87,8 +116,8 @@ const AppointmentDeclineModal = ({
               <p className="text-xl">Kindly state the reason for decline:</p>
               <select
                 className="mt-4 w-full p-2 border rounded-lg"
-                value={selectedReason}
-                onChange={(e) => setSelectedReason(e.target.value)}
+                value={DonorRemark}
+                onChange={(e) => setDonorRemark(e.target.value)}
               >
                 <option value="" disabled>
                   Select a reason
