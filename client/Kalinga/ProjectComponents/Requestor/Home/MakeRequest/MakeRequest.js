@@ -164,11 +164,12 @@ export default function RequestorProfile({route}) {
     }
   };
 
+  const navigation = useNavigation();
   const handleBackPress = () => {
-      console.log("Back button pressed");
+      navigation.goBack()
   };
 
-  const navigation = useNavigation();
+  
 
   const navigatePage = (page) => {
     setFormData(prevData => ({
