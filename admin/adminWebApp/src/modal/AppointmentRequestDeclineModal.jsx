@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { WebHost } from "../../MyConstantSuperAdmin";
+import { WebHost } from "../../MyConstantAdmin";
 import axios from "axios";
 
 
 
-const AppointmentDeclineModal = ({
+const AppointmentRequestDeclineModal = ({
   isOpen,
   message,
   onConfirm,
   onCancel,
   remarks,
-  AppointmentDonorID
+  RequestID
   
 }) => {
-    if (!AppointmentDonorID) {
+    if (!RequestID) {
     return null; // or handle the case where AppointmentDonorID is null
   }
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
   const [isThirdModalOpen, setIsThirdModalOpen] = useState(false);
   const [selectedReason, setSelectedReason] = useState("");
-  const [DonorRemark, setDonorRemark] = useState(""); // State to store the selected remark
+  const [RequestRemark, setRequestRemark] = useState(""); // State to store the selected remark
 
   useEffect(() => {
     if (isOpen) {
@@ -34,29 +34,29 @@ const AppointmentDeclineModal = ({
   };
 
   const handleSecondModalConfirm = () => {
-    console.log('Selected DonorRemark:', DonorRemark); // Add this line for debugging
-    if (DonorRemark) {
+    console.log('Selected DonorRemark:', RequestRemark); // Add this line for debugging
+    if (RequestRemark) {
       // Send the selected DonorRemark to the server
-      putDonorRemarkToServer(DonorRemark);
+      putRequestRemarkToServer(RequestRemark);
       setIsSecondModalOpen(false); // Close the second modal
       setIsThirdModalOpen(true); // Open the third modal
-      setSelectedReason(DonorRemark); // Update the selected reason in the parent component
+      setSelectedReason(RequestRemark); // Update the selected reason in the parent component
     } else {
       alert("Please select a reason for declining.");
     }
   };
 
-  const putDonorRemarkToServer = async (remark) => {
+  const putRequestRemarkToServer = async (remark) => {
     try {
       const requestBody = {
-        DonorRemark: remark,
-        AppointmentDonorID: AppointmentDonorID, // Include AppointmentDonorID in the request body
+        RequestRemark: remark,
+        RequestID: RequestID,
       };
   
-      console.log('Sending PUT request to:', `${WebHost}/kalinga/updateDonorRemark/${AppointmentDonorID}`);
+      console.log('Sending PUT request to:', `${WebHost}/kalinga/updateRequestRemark/${RequestID}`);
       console.log('Request Body:', requestBody);
   
-      const response = await axios.put(`${WebHost}/kalinga/updateDonorRemark/${AppointmentDonorID}`, requestBody);
+      const response = await axios.put(`${WebHost}/kalinga/updateRequestRemark/${RequestID}`, requestBody);
   
       console.log("Remark posted successfully:", response.data);
     } catch (error) {
@@ -116,17 +116,17 @@ const AppointmentDeclineModal = ({
               <p className="text-xl">Kindly state the reason for decline:</p>
               <select
                 className="mt-4 w-full p-2 border rounded-lg"
-                value={DonorRemark}
-                onChange={(e) => setDonorRemark(e.target.value)}
+                value={RequestRemark}
+                onChange={(e) => setRequestRemark(e.target.value)}
               >
                 <option value="" disabled>
                   Select a reason
                 </option>
-                <option value="Full Schedule">Full Schedule</option>
-                <option value="Holiday">Holiday</option>
-                <option value="No Office Hours">No Office hours</option>
-                <option value="Insufficient Requirements">
-                  Insufficient Requirements
+                <option value="Insufficient Supply">Insufficient Supply</option>
+                <option value="Prioritization of Recipients">Prioritization of Recipients</option>
+                <option value="Non-Compliance with Policies">Non-Compliance with Policies</option>
+                <option value="Incomplete or Incorrect Information">
+                Incomplete or Incorrect Information
                 </option>
               </select>
               <div className="mt-8 flex justify-end">
@@ -149,7 +149,7 @@ const AppointmentDeclineModal = ({
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
             <div className="border-2 border-pink-800 bg-white p-12 rounded-lg shadow-lg max-w-lg">
               <p className="text-xl">
-                The appointment has been successfully declined, and the user
+                The request has been successfully declined, and the user
                 will receive a notification about its status.
               </p>
               <div className="mt-8 flex justify-end">
@@ -168,4 +168,4 @@ const AppointmentDeclineModal = ({
   );
 };
 
-export default AppointmentDeclineModal;
+export default AppointmentRequestDeclineModal;

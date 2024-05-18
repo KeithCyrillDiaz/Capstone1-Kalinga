@@ -1,123 +1,208 @@
-import React, { useState } from "react";
-import DonorUsers from "./donoraccounts";
-import ConfirmationModal from "./";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import RemarksModal from "./remarksModal";
 
 export default function () {
-  const [activeTab, setActiveTab] = useState("screening");
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 4;
-  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
-  const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
+  const navigate = useNavigate();
+  const [isRemarksModalOpen, setRemarksModalOpen] = useState(false);
   const [isApproveConfirmed, setIsApproveConfirmed] = useState();
-  const [isSecondModalConfirm, setSecondModalConfirm] = useState();
-  //const [isRejectConfirmed, setIsRejectConfirmed] = useState(false);
+  const [users, setUsers] = useState([
+    {
+      id: 1,
+      created: "05/18/2024",
+      name: "John Doe",
+      email: "john@example.com",
+      role: "Donor",
+      status: "Pending",
+    },
+    {
+      id: 2,
+      name: "Jane Smith",
+      email: "jane@example.com",
+      status: "Rejected",
+    },
+    // Add more users as needed
+  ]);
 
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
+  const handleDelete = (id) => {
+    setUsers(users.filter((user) => user.id !== id));
+  };
+
+  const handleView = () => {
+    navigate("/admin/DonorVerification");
+  };
+
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  const handleRemarksModal = (user) => {
+    setSelectedUser(user);
+    setRemarksModalOpen(true);
   };
 
   return (
     <>
       <section className="w-full h-screen bg-primary-body overflow-hidden">
-        <div>
-          <div className="flex justify-center mt-4">
-            <button
-              onClick={() => handleTabChange("screening")}
-              className={`${
-                activeTab === "screening"
-                  ? "bg-primary-default text-white"
-                  : "bg-transparent"
-              } text-primary-default text-xl py-2 px-20 border-2 border-primary-default font-sans focus:outline-none`}
-            >
-              Donor Accounts
-            </button>
-            <button
-              onClick={() => handleTabChange("medical")}
-              className={`${
-                activeTab === "medical"
-                  ? "bg-primary-default text-white"
-                  : "bg-transparent"
-              } text-primary-default text-xl py-2 px-20 border-2 border-primary-default font-sans focus:outline-none`}
-            >
-              Requestor Accounts
-            </button>
-          </div>
-          {activeTab === "screening" && (
-            <DonorUsers currentPage={currentPage} />
-          )}
-          {activeTab === "medical" && (
-            <div className="p-2">
-              <div className="px-32">
-                <div className="my-8">
-                  <div className="bg-white relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
-                    <span className="flex justify-center font-sans text-primary-disabled text-xl font-bold">
-                      Hepa B Test Result
-                    </span>
-                  </div>
-                  <div className="bg-white relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
-                    <span className="flex justify-center font-sans text-primary-disabled text-xl font-bold">
-                      HIV 1 & 2 Test Result
-                    </span>
-                  </div>
-                  <div className="bg-white relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
-                    <span className="flex justify-center font-sans text-primary-disabled text-xl font-bold">
-                      Syphilis Test Result
-                    </span>
-                  </div>
-                  <div className="bg-white relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
-                    <span className="flex justify-center font-sans text-primary-disabled text-xl font-bold">
-                      Pregnancy Booklet
-                    </span>
-                  </div>
-                  <div className="bg-white relative border rounded-md border-primary-default bg-white px-8 py-6 my-6">
-                    <span className="flex justify-center font-sans text-primary-disabled text-xl font-bold">
-                      Government ID
-                    </span>
-                  </div>
-                </div>
+        <div className="p-8 pt-2">
+          <div>
+            <h1 className="text-3xl text-primary-default font-bold font-sans my-4 mb-6">
+              User Management
+            </h1>
+            <div className="flex flex-col">
+              <div className="my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                  <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                    <table className="min-w-full divide-y divide-primary-default border">
+                      <thead className="bg-neutral-variant">
+                        <tr>
+                          <th
+                            scope="col"
+                            className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                          >
+                            Created On
+                          </th>
+                          <th
+                            scope="col"
+                            className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                          >
+                            Name
+                          </th>
+                          <th
+                            scope="col"
+                            className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                          >
+                            Email
+                          </th>
+                          <th
+                            scope="col"
+                            className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                          >
+                            Role
+                          </th>
+                          <th
+                            scope="col"
+                            className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                          >
+                            Status
+                          </th>
+                          <th
+                            scope="col"
+                            className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                          >
+                            Remarks
+                          </th>
+                          <th
+                            scope="col"
+                            className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                          >
+                            Actions
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-primary-default">
+                        {users.map((user) => (
+                          <tr key={user.id}>
+                            <td className="px-2 py-4 whitespace-nowrap">
+                              <div className="text-center text-sm font-medium text-gray-900">
+                                {user.created}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-center text-sm font-medium text-gray-900">
+                                {user.name}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-center text-sm text-gray-500">
+                                {user.email}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-center text-sm font-medium text-gray-900">
+                                {user.role}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <span
+                                className={`flex justify-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                  user.status === "Complete"
+                                    ? "bg-lime-200 text-green-800"
+                                    : user.status === "Pending"
+                                    ? "bg-blue-100 text-red-800"
+                                    : user.status === "Ongoing"
+                                    ? "bg-yellow-100 text-red-800"
+                                    : "bg-red-100 text-red-800"
+                                }`}
+                              >
+                                {user.status}
+                              </span>
+                            </td>
+                            <td className="text-center">Remarks</td>
 
-                <div className="flex flex-col">
-                  <div>
-                    <button
-                      className="hover:bg-primary-default hover:text-white fixed bg-neutral-default text-primary-default font-bold w-32 p-2 border border-primary-default rounded-full right-40"
-                      onClick={() => handleConfirmationClick(true)}
-                    >
-                      <span className="flex justify-center items-center font-sans">
-                        Approve
-                      </span>
-                    </button>
-                  </div>
-
-                  <div>
-                    <button
-                      className="hover:bg-primary-default hover:text-white fixed bg-neutral-default text-primary-default font-bold w-32 p-2 border border-primary-default rounded-full right-40 mt-12"
-                      onClick={() => handleConfirmationClick(false)}
-                    >
-                      <span className="flex justify-center items-center font-sans">
-                        Reject
-                      </span>
-                    </button>
+                            <td className="text-center py-4 whitespace-nowrap text-sm font-medium flex items-center justify-center gap-2">
+                              <Link
+                                to={`/admin/donorAppointmentConfirmation/`}
+                                className=" px-3 py-1 rounded-full hover:bg-neutral-variant mr-1"
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 32 32"
+                                >
+                                  <circle
+                                    cx={16}
+                                    cy={16}
+                                    r={4}
+                                    fill="#E60965"
+                                  ></circle>
+                                  <path
+                                    fill="#E60965"
+                                    d="M30.94 15.66A16.69 16.69 0 0 0 16 5A16.69 16.69 0 0 0 1.06 15.66a1 1 0 0 0 0 .68A16.69 16.69 0 0 0 16 27a16.69 16.69 0 0 0 14.94-10.66a1 1 0 0 0 0-.68M16 22.5a6.5 6.5 0 1 1 6.5-6.5a6.51 6.51 0 0 1-6.5 6.5"
+                                  ></path>
+                                </svg>
+                              </Link>
+                              <button
+                                onClick={() => handleDelete(appointment.id)}
+                                className="px-3 py-1 rounded-full hover:bg-neutral-variant"
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="21"
+                                  height="21"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    fill="#E60965"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="1.5"
+                                    d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zM17 6H7v13h10zM9 17h2V8H9zm4 0h2V8h-2zM7 6v13z"
+                                  ></path>
+                                </svg>
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </section>
 
-      {isConfirmationModalOpen && (
-        <ConfirmationModal
-          isOpen={isConfirmationModalOpen}
-          confirmMessage={() =>
-            isApproveConfirmed
-              ? "Are you sure you want to approve?"
-              : "Are you sure you want to reject?"
+      {isRemarksModalOpen && selectedUser && (
+        <RemarksModal
+          isOpen={isRemarksModalOpen}
+          message={
+            selectedUser.status === "Approved"
+              ? "This donor is approved."
+              : "This donor is rejected."
           }
-          onConfirm={() => {
-            setIsConfirmationModalOpen(false);
-          }}
-          onCancel={() => setIsConfirmationModalOpen(false)}
-          isApproved={isApproveConfirmed}
+          onCancel={() => setRemarksModalOpen(false)}
         />
       )}
     </>

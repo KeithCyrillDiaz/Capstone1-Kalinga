@@ -53,7 +53,8 @@ const DeclineModal = ({ isOpen, message, onConfirm, onCancel }) => {
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
             <div className="border-2 border-pink-800 bg-white p-12 rounded-lg shadow-lg max-w-lg">
               <p className="text-xl">
-              The appointment has been successfully declined, and the user will receive a notification about its status.
+                The appointment has been successfully declined, and the user
+                will receive a notification about its status.
               </p>
               <div className="mt-8 flex justify-end">
                 <button

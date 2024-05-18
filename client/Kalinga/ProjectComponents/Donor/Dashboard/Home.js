@@ -105,8 +105,57 @@ const DonorHome = ({route}) => {
       React.useCallback(() => {
         fetchUpdateduserInfo()
         storeInAsync()
+        simulateFetchDonationStatus();
       }, [])
   );
+
+  const simulateFetchDonationStatus = async () => {
+    try {
+        const response = await fetch(`${BASED_URL}/kalinga/getRequestStatus`);
+        if (!response.ok) {
+            console.log('Network response was not ok');
+        }
+
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            const data = await response.json();
+            console.log('Fetched Data:', data); // Log the fetched data
+            setDonationStatus(data.DonationStatus);
+            console.log('Updated Request Status:', data.DonationStatus); // Log the updated state
+        } else {
+            throw new Error('Invalid content type received');
+        }
+    } catch (error) {
+        console.error('Error fetching request status:', error);
+    }
+};
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchUpdateduserInfo()
+      storeInAsync()
+      simulateFetchRequestStatus();
+    }, [])
+);
+
+const handleMakeDonation = () => {
+    console.log('Current Donation Status:', DonationStatus);
+
+    const canMakeDonation = DonationStatus !== 'Pending' && DonationStatus !== 'Ongoing';
+    console.log('Can Make Donation:', canMakeDonation); // Log the evaluation result
+
+    if (canMakeDonation) {
+        console.log('Navigating to MakeRequest');
+        navigatePage('MyDonation');
+    } else {
+        console.log('Cannot Make Donatin');
+        Alert.alert(
+            'Cannot Make Donation',
+            'You already have a pending or ongoing donation. Please wait until it is resolved.',
+            [{ text: 'OK', onPress: () => console.log('OK Pressed') }]
+        );
+    }
+};
 
     return (
       <View style={[globalStyles.container, {marginTop: "-5%"}]}>
@@ -164,7 +213,7 @@ const DonorHome = ({route}) => {
               </View>
 
               <View style = {styles.flex_Row}>
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("SetAnAppointment")}>
+              <TouchableOpacity style={globalStyles.smallBackgroundBox} onPress={handleMakeDonation}>
                 <Ionicons name="calendar" size={70} color="#E60965" />
                   <View style = {styles.LabelCenter}>
                     <Text style = {styles.Label}>Make a Donation</Text>

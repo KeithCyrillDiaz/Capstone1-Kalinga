@@ -13,7 +13,7 @@ export default function () {
   return (
     <>
       <section className="w-full min-h-screen bg-primary-body overflow-hidden">
-        <div className="p-10 pt-2">
+        <div className="p-8 pt-2">
           <div>
             <h1 className="text-3xl text-primary-default font-bold font-sans py-4 ">
               Milkbanks

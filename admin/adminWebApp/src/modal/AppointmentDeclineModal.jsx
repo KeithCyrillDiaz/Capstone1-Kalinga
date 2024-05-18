@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { WebHost } from "../../MyConstantSuperAdmin";
+import { WebHost } from "../../MyConstantAdmin";
 import axios from "axios";
 
 

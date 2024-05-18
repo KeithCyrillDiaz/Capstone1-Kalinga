@@ -12,7 +12,6 @@ export default function () {
   const [showIssuesDropdown, setShowIssuesDropdown] = useState(false);
   const [showReportsDropdown, setShowReportsDropdown] = useState(false);
 
-
   const isActiveRoute = (route) => {
     const currentPath = window.location.pathname;
     if (
@@ -33,7 +32,7 @@ export default function () {
 
   return (
     <>
-      <section className="flex flex-col justify-between w-full h-full py-8 p-2 body-color">
+      <section className="flex flex-col justify-between w-full py-8 p-2 body-color">
         <div>
           <div className="flex items-center pb-8 gap-x-4 pl-4 pr-4">
             <img className="w-1/3" src={KalingaLogo} alt="KalingaLogo" />
@@ -79,9 +78,7 @@ export default function () {
             <div>
               <div className="relative">
                 <div
-                  onClick={() =>
-                    setShowReportsDropdown(!showReportsDropdown)
-                  }
+                  onClick={() => setShowReportsDropdown(!showReportsDropdown)}
                   className={`flex items-center cursor-pointer w-full rounded-t-2xl pt-2 pb-2 ${
                     showReportsDropdown ? "bg-secondary-default" : ""
                   }`}
@@ -123,16 +120,17 @@ export default function () {
                 {showReportsDropdown && (
                   <div className="p-2 w-full bg-secondary-default rounded-b-2xl pb-2 mb-2">
                     <NavLink
-                    to="/admin/chart"
-                    className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-8 py-2 mb-5  ${
+                      to="/admin/chart"
+                      className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-8 py-2 mb-5  ${
                         isActiveRoute("chart")
                           ? "bg-primary-default"
                           : "bg-transparent hover:bg-primary-default"
                       }`}
                     >
-                      <h1 className="text-xl text-neutral-primary">Total Donations & Requests</h1>
+                      <h1 className="text-xl text-neutral-primary">
+                        Total Donations & Requests
+                      </h1>
                     </NavLink>
-                    
                   </div>
                 )}
               </div>
@@ -189,9 +187,10 @@ export default function () {
                   d="M7.23 16.23q-.326 0-.547-.22q-.221-.222-.221-.548v-1h11.75l.634.634V6h1q.327 0 .548.221t.221.548v12.539l-3.077-3.077zm-3.845-.692V3.77q0-.327.22-.548T4.155 3h11.923q.327 0 .548.221t.221.548v7.923q0 .327-.221.548t-.548.222H6.462zm12.461-4.076V4H4.385v8.846l1.384-1.384zm-11.461 0V4z"
                 ></path>
               </svg>
-              <h1 className="ml-4 text-2xl text-neutral-primary">Forum Moderation</h1>
+              <h1 className="ml-4 text-2xl text-neutral-primary">
+                Forum Moderation
+              </h1>
             </NavLink>
-            
 
             {/* VERIFICATION */}
 
@@ -243,7 +242,9 @@ export default function () {
                         : "bg-transparent hover:bg-primary-default"
                     }`}
                   >
-                    <h1 className="text-xl text-neutral-primary">Donor</h1>
+                    <h1 className="text-xl text-neutral-primary">
+                      Donor Pendings
+                    </h1>
                   </NavLink>
                   <NavLink
                     to="/admin/requestorVerifPendings"
@@ -253,7 +254,9 @@ export default function () {
                         : "bg-transparent hover:bg-primary-default"
                     }`}
                   >
-                    <h1 className="text-xl text-neutral-primary">Requestor</h1>
+                    <h1 className="text-xl text-neutral-primary">
+                      Requestor Pendings
+                    </h1>
                   </NavLink>
                 </div>
               )}
@@ -309,25 +312,27 @@ export default function () {
                 {showAppointmentsDropdown && (
                   <div className="p-2 w-full bg-secondary-default rounded-b-2xl pb-2 mb-2">
                     <NavLink
-                      to="/admin/donorAppointments"
-                      className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-10/12 rounded-2xl py-2 mb-2 ml-6 ${
-                        isActiveRoute("chart")
-                          ? "bg-primary-default"
-                          : "bg-transparent hover:bg-primary-default"
-                      }`}
-                    >
-                      <h1 className="text-xl text-neutral-primary">Donor</h1>
-                    </NavLink>
-                    <NavLink
-                      to="/admin/requestorAppointments"
-                      className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-10/12 rounded-2xl py-2 mb-2 ml-6 ${
+                      to="/admin/donorAppointManage"
+                      className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
                         isActiveRoute("city")
                           ? "bg-primary-default"
                           : "bg-transparent hover:bg-primary-default"
                       }`}
                     >
-                      <h1 className="text-xl text-neutral-primary">
-                        Requestor
+                      <h1 className="text-lg text-neutral-primary">
+                        Donor Mamangement
+                      </h1>
+                    </NavLink>
+                    <NavLink
+                      to="/admin/requestorManagement"
+                      className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
+                        isActiveRoute("requestorManagement")
+                          ? "bg-primary-default"
+                          : "bg-transparent hover:bg-primary-default"
+                      }`}
+                    >
+                      <h1 className="text-lg text-neutral-primary">
+                        Requestor Mamangement
                       </h1>
                     </NavLink>
                   </div>
@@ -335,9 +340,7 @@ export default function () {
               </div>
             </div>
           </div>
-          
         </div>
-        
 
         <div className="grid items-center justify-center grid-flow-col-dense mb-20 gap-x-4">
           <span>

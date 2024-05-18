@@ -11,6 +11,8 @@ import {
   City,
   DonorVerifPendings,
   DonorVerification,
+  RequestorVerification,
+  RequestorVerifPendings,
   Chart,
   Forum,
   Approved,
@@ -24,9 +26,8 @@ import {
   RequestorAppointmentConfirmation,
   Milkbanks,
   Users,
-  DonorAccounts,
   DonorAppointManage,
-  RequestorManagement
+  RequestorManagement,
 } from "@/pages";
 import { RootLayout, NotFound, MainLayout, AdminLayout } from "@/layouts";
 import { MobileChecker } from "@/components";
@@ -49,7 +50,15 @@ const router = createBrowserRouter(
         <Route index element={<AdminDashboard />} />
         <Route path="city" element={<City />} />
         <Route path="DonorVerifPendings" element={<DonorVerifPendings />} />
-        <Route path="DonorVerification" element={<DonorVerification />} />
+        <Route path="DonorVerification/:id" element={<DonorVerification />} />
+        <Route
+          path="RequestorVerifPendings"
+          element={<RequestorVerifPendings />}
+        />
+        <Route
+          path="requestorVerification/:id"
+          element={<RequestorVerification />}
+        />
         <Route path="chart" element={<Chart />} />
         <Route path="forum" element={<Forum />} />
         <Route path="approved" element={<Approved />} />
@@ -59,11 +68,16 @@ const router = createBrowserRouter(
         <Route path="bugResolve" element={<BugResolve />} />
         <Route path="feedback" element={<Feedback />} />
         <Route path="feedbackReport" element={<FeedbackReport />} />
-        <Route path="donorAppointmentConfirmation/:AppointmentDonorID" element={<DonorAppointmentConfirmation />}/>
-        <Route path="requestorAppointmentConfirmation/:RequestID"element={<RequestorAppointmentConfirmation />}/>
+        <Route
+          path="donorAppointmentConfirmation/:AppointmentDonorID"
+          element={<DonorAppointmentConfirmation />}
+        />
+        <Route
+          path="requestorAppointmentConfirmation/:RequestID"
+          element={<RequestorAppointmentConfirmation />}
+        />
         <Route path="milkbanks" element={<Milkbanks />} />
         <Route path="users" element={<Users />} />
-        <Route path="DonorAccounts" element={<DonorAccounts />} />
         <Route path="DonorAppointManage" element={<DonorAppointManage />} />
         <Route path="requestorManagement" element={<RequestorManagement />} />
       </Route>

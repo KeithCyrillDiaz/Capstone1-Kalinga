@@ -3,17 +3,22 @@ import axios from "axios";
 import Human from "@assets/human.png";
 import { WebHost } from "../../../MyConstantSuperAdmin";
 import { TotalUserPieChart } from "../../components";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 export default function Dashboard() {
   const [totalDonors, setTotalDonors] = useState(0);
   const [totalRequestors, setTotalRequestors] = useState(0);
   const [totalUsers, setTotalUsers] = useState(0);
   const [usersPerCity, setUsersPerCity] = useState([]);
-
-
-
 
   useEffect(() => {
     console.log("Fetching data...");
@@ -64,11 +69,12 @@ export default function Dashboard() {
     fetchCounts();
   }, []);
 
-
   useEffect(() => {
     const fetchUsersPerCity = async () => {
       try {
-        const response = await axios.get(`${WebHost}/kalinga/getTotalUsersPerCity`);
+        const response = await axios.get(
+          `${WebHost}/kalinga/getTotalUsersPerCity`
+        );
         console.log("Users Per City Response:", response.data); // Log the response data
         setUsersPerCity(response.data);
       } catch (error) {
@@ -84,8 +90,8 @@ export default function Dashboard() {
 
   return (
     <>
-      <section className="w-full h-screen bg-primary-body overflow-hidden">
-        <div className="p-10 pt-2">
+      <section className="w-full bg-primary-body overflow-hidden">
+        <div className="p-8 pt-2">
           <div>
             <h1 className="text-3xl text-primary-default font-bold font-sans py-4 pb-6">
               Dashboard
@@ -118,7 +124,7 @@ export default function Dashboard() {
                 </div>
                 <div class="row-span-2 col-span-2 ">
                   <span className="text-center text-5xl font-semibold text-primary-default flex justify-center">
-                  {totalDonors}
+                    {totalDonors}
                   </span>
                 </div>
               </div>
@@ -150,7 +156,7 @@ export default function Dashboard() {
                 </div>
                 <div class="row-span-2 col-span-2 ">
                   <span className="text-center text-5xl font-semibold text-primary-default flex justify-center">
-                  {totalRequestors}
+                    {totalRequestors}
                   </span>
                 </div>
               </div>
@@ -208,8 +214,8 @@ export default function Dashboard() {
                   </svg>
                 </div>
                 <div class="col-span-2">
-                  <span className="text-2xl text-primary-default mt-4">
-                    Pending Bug Fixes
+                  <span className="text-2xl text-primary-default mt-4 ml-6">
+                    Pending Bugs
                   </span>
                 </div>
                 <div class="row-span-2 col-span-2 ">
@@ -220,27 +226,42 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="px-2 py-4 bg-white rounded-lg shadow-md flex justify-center items-center">
-              <div className="flex flex-col px-6 pt-2">
-                <h2 className="text-2xl text-primary-default ">
+            <div className="px-2 py-4 bg-white rounded-lg shadow-md flex flex-col items-center">
+              <div className="flex flex-col items-center px-6 pt-2 w-full">
+                <h2 className="text-2xl text-primary-default text-center">
                   App Users per Milkbank
                 </h2>
-                <span className="text-md text-primary-default font-sans ">
-                <TotalUserPieChart/>
-              </span>
+                <div className="w-full flex justify-center items-center">
+                  <div className="w-full h-full overflow-hidden">
+                    <TotalUserPieChart />
+                  </div>
+                </div>
               </div>
             </div>
 
             <div className="col-span-3 row-span-3 px-8 py-8 bg-white rounded-lg shadow-md">
               <ResponsiveContainer width="100%" height="90%">
-                <BarChart data={usersPerCity} margin={{ top: 100, right: 30, left: 20, bottom: 30 }}>
+                <BarChart
+                  data={usersPerCity}
+                  margin={{ top: 100, right: 30, left: 20, bottom: 30 }}
+                >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="city" />
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="totalDonors" name="Total Donors" fill="#ED5077" barSize={50} />
-                  <Bar dataKey="totalRequestors" name="Total Requestors" fill="#67C5F8" barSize={50} />
+                  <Bar
+                    dataKey="totalDonors"
+                    name="Total Donors"
+                    fill="#ED5077"
+                    barSize={50}
+                  />
+                  <Bar
+                    dataKey="totalRequestors"
+                    name="Total Requestors"
+                    fill="#67C5F8"
+                    barSize={50}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -269,10 +290,10 @@ export default function Dashboard() {
                   </span>
                 </div>
                 <div className="text-md text-primary-default font-sans text-right">
-                {totalRequestors}
+                  {totalRequestors}
                 </div>
                 <div className="text-md text-primary-default font-sans text-right">
-                {totalDonors}
+                  {totalDonors}
                 </div>
               </div>
 
