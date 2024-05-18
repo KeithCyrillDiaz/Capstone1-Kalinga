@@ -53,7 +53,6 @@ const DonorUploadMedicalRequirements = ({route}) => {
 
   const navigatePage = async (Page, Data) => {
     try {
-      setUploadingImage(true)
      if(Object.keys(selectedImage).length + Object.keys(selectedFile).length < 5){
       Alert.alert(
         "Incomplete Medical Requirements",
@@ -61,6 +60,8 @@ const DonorUploadMedicalRequirements = ({route}) => {
       );
       return
      }
+     
+     setUploadingImage(true)
         // Send POST request to the specified URL with the form data
         const postScreeningForm = await axios.post(`${BASED_URL}/kalinga/addScreeningForm`, 
               screeningFormData,

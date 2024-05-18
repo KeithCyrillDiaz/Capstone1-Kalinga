@@ -51,7 +51,6 @@ export default MapComponent = ({ regionLat, regionLong, showDirections }) => {
             <MapView
                 ref={mapViewRef}
                 style={{ flex: 1 }}
-                apiKey={GOOGLE_MAPS_API_KEY}
                 showsUserLocation={true}
                 showsMyLocationButton={true}
                 mapPadding={{ top: 100, bottom: 50, right: 10 }}

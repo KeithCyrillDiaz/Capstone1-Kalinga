@@ -340,6 +340,11 @@ const checkAgeValidity = () => {
     setIsChildAgeValid(true)
     return true
   }
+
+  if(childAge > 1 ){
+    setIsChildAgeValid(false)
+    return false
+  }
   
   setIsAgeValid(true)
   setIsChildAgeValid(true)
@@ -753,7 +758,7 @@ useEffect(() => {
                 style={styles.inputField}
                 onChangeText={(value) => handleChangeText('childAge', value)}
                 value = {screeningFormData.childAge}
-               
+               editable={false}
               />
            
           </View>

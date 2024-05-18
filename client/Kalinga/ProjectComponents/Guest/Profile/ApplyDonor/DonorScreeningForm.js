@@ -31,18 +31,6 @@ const DonorScreeningForm = () => {
 
     const navigation = useNavigation();
 
-  const navigatePage = (Page, data) => {
-    console.log("check Screening Form: ", screeningFormData)
-    if(!checkName)return
-    if(!checkAgeValidity()) return
-    checkForm("Screening Form")
-    if(!isFormFilled) {
-      Alert.alert("Invalid Form", "Please complete the form first")
-      return
-    }
-    navigation.navigate(Page, data);
-  };
-
   const applicantId = randomatic('Aa0', 20) + Date.now();
 
   const [screeningFormData, setScreeningFormData] = useState({
@@ -281,13 +269,12 @@ const handleChangeText = (name, value) => {
 
 const checkAgeValidity = () => {
   const {Age, childAge} = screeningFormData
-  if(childAge.includes("days") || childAge.includes("months"))return
   const motherAge = parseInt(Age)
   const infantAge = parseInt(childAge)
   if(motherAge < 13) {
     Alert.alert("Invalid Mother Age"," Please input your proper birthday")
     setIsAgeValid(false)
-    return
+    return false
   }
 
   if(motherAge <= infantAge && Age !== "" && childAge !== ""){
@@ -450,6 +437,17 @@ const setMonth = (num) => {
   else "Invalid Month"
 
 }
+
+const navigatePage = (Page, data) => {
+  console.log("check Screening Form: ", screeningFormData)
+  if(!checkAgeValidity()) return
+  checkForm("Screening Form")
+  if(!isFormFilled) {
+    Alert.alert("Invalid Form", "Please complete the form first")
+    return
+  }
+  navigation.navigate(Page, data);
+};
 
 useEffect(() => {
   if(screeningFormData.email !== ""){

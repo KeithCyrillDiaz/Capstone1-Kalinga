@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
-import { GOOGLE_MAPS_API_KEY } from '../Explore/sec';
+import MapView from 'react-native-maps';
 import { GetUsersLocation } from './UsersLocation';
-import MapViewDirections from 'react-native-maps-directions'; // Import MapViewDirections
+// import MapViewDirections from 'react-native-maps-directions'; // Import MapViewDirections
 
-export default MapComponent = ({ regionLat, regionLong, showDirections }) => {
+export default MapComponent = ({ regionLat, regionLong, initialRegion }) => {
     const originalZoom = {
         latitudeDelta: 0.0077,
         longitudeDelta: 0.0077,
@@ -46,12 +45,11 @@ export default MapComponent = ({ regionLat, regionLong, showDirections }) => {
         }
     }, [regionLat, regionLong, mapReady]);
 
-    if (latitude !== 0 && longitude !== 0 && mapReady) {
+    if (latitude!==0 && longitude !== 0 && mapReady) {
         return (
             <MapView
                 ref={mapViewRef}
                 style={{ flex: 1 }}
-                apiKey={GOOGLE_MAPS_API_KEY}
                 showsUserLocation={true}
                 showsMyLocationButton={true}
                 mapPadding={{ top: 100, bottom: 50, right: 10 }}
@@ -73,7 +71,7 @@ export default MapComponent = ({ regionLat, regionLong, showDirections }) => {
                            longitude: regionLong,
                        }}
                        /> 
-                )}
+                )} 
                 {/* Need may billing kaya comment nalang */}
                 {/* {regionLat !== 0 && regionLong !== 0 &&(
                     <MapViewDirections
