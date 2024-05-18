@@ -1,9 +1,8 @@
-
-import React, {useState, useEffect} from "react"
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { formatDate } from "./formatDateFunction";
-import { WebHost } from '../../../MyConstantAdmin'
-import axios from 'axios'
+import { WebHost } from "../../../MyConstantAdmin";
+import axios from "axios";
 import { DeleteScreeningFormModal } from "../../modal/Verification/DeleteScreeningFormModal";
 
 export const RenderPendingVerification = ({
@@ -11,54 +10,56 @@ export const RenderPendingVerification = ({
   email,
   date,
   form,
-  userType
+  userType,
 }) => {
-
-  const [finalDate, setFinalDate] = useState("")
-  const [deleteModal, setDeleteModal] = useState(false)
-
+  const [finalDate, setFinalDate] = useState("");
+  const [deleteModal, setDeleteModal] = useState(false);
 
   const setDateFormat = () => {
-    if(!date){
-      console.log("Date undefined")
-      return
+    if (!date) {
+      console.log("Date undefined");
+      return;
     }
-    const newDate = formatDate(date) // import { formatDate } from "./formatDateFunction"
+    const newDate = formatDate(date); // import { formatDate } from "./formatDateFunction"
 
-    setFinalDate(newDate)
-  }
+    setFinalDate(newDate);
+  };
 
   useEffect(() => {
-
     setDateFormat();
-  },[])
+  }, []);
 
-  const deleteApplicantForm = async() => {
-    console.log("Deleting Screening Form")
-    setDeleteModal(false)
-    try{
-      const { Applicant_ID } = form
+  const deleteApplicantForm = async () => {
+    console.log("Deleting Screening Form");
+    setDeleteModal(false);
+    try {
+      const { Applicant_ID } = form;
       // console.log(" Applicant_ID: ",  Applicant_ID)
-      const response = await axios.patch(`${WebHost}/kalinga/deleteScreeningFormByID/${Applicant_ID}`)
-      console.log(response.data.messages.message)
+      const response = await axios.patch(
+        `${WebHost}/kalinga/deleteScreeningFormByID/${Applicant_ID}`
+      );
+      console.log(response.data.messages.message);
       window.location.reload();
-    } catch(error){
-      console.log("Error Deleting Screening Form")
+    } catch (error) {
+      console.log("Error Deleting Screening Form");
     }
-
-  }
+  };
   const handleModal = () => {
-    console.log("click")
-    setDeleteModal(true)
-  }
+    console.log("click");
+    setDeleteModal(true);
+  };
   return (
-    <div className="bg-white rounded-2xl p-8 mb-4 flex items-center border border-primary-default">
-         <DeleteScreeningFormModal confirm={() => deleteApplicantForm()} onClose={() => setDeleteModal(false)} openModal={deleteModal}/>
-      <div className="mr-2">
+    <div className="bg-white rounded-2xl mb-4 flex items-center border border-primary-default py-2">
+      <DeleteScreeningFormModal
+        confirm={() => deleteApplicantForm()}
+        onClose={() => setDeleteModal(false)}
+        openModal={deleteModal}
+      />
+      <div className="ml-8">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="10em"
-          height="10em"
+          width="100"
+          height="100"
           viewBox="0 0 24 24"
           className="text-primary-default"
         >
@@ -72,33 +73,34 @@ export const RenderPendingVerification = ({
         </svg>
       </div>
       {/* Details */}
-      <div className="flex-grow ml-10">
+      <div className="flex-grow ml-8">
         <div>
-          <h3 className="text-3xl font-bold text-primary-default mb-6">
-            {name}
-          </h3>
-          <p className="text-2xl text-primary-default mb-6">
-            {email}
-          </p>
-          <p className="text-2xl text-primary-default mb-6">
-            {finalDate}
-          </p>
+          <h3 className="text-2xl font-bold text-primary-default">{name}</h3>
+          <p className="text-lg text-primary-default">{email}</p>
+          <p className="text-lg text-primary-default">{finalDate}</p>
         </div>
       </div>
       {/* Button */}
-      <div className="flex flex-col gap-y-4 mr-20">
-        <Link 
-        to={{pathname: userType === "Donor" ? `/admin/DonorVerification/${form.Applicant_ID}` : `/admin/requestorVerification/${form.Applicant_ID}`}}
-        > 
-
-          <button className="w-full h-10 px-16 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default">
+      <div className="flex flex-col gap-y-2 mr-14 p-2">
+        <Link
+          to={{
+            pathname:
+              userType === "Donor"
+                ? `/admin/DonorVerification/${form.Applicant_ID}`
+                : `/admin/requestorVerification/${form.Applicant_ID}`,
+          }}
+        >
+          <button className="w-full h-8 px-12 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default">
             View
           </button>
         </Link>
-          <button onClick={handleModal}  className="w-full h-10 px-16 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default">
-            Delete
-          </button>
+        <button
+          onClick={handleModal}
+          className="w-full h-8 px-12 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default"
+        >
+          Delete
+        </button>
       </div>
     </div>
-  )
-}
+  );
+};

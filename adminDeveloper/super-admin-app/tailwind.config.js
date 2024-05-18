@@ -44,11 +44,16 @@ module.exports = {
       },
       fontFamily: {
         kurale: ["Kurale", "serif"],
+        sans: ["Open Sans", "sans-serif"],
       },
       colors: {
         primary: {
           default: "#E60965",
           variant: "#F94892",
+          hover: "#ED78A9",
+          disabled: "#E36A91",
+          body: "#f5f5f5",
+          filter: "#E4ADC4",
         },
         secondary: {
           default: "#eb90ac",

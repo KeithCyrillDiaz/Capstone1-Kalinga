@@ -26,15 +26,11 @@ export default function () {
     return false;
   };
 
-  const handleSignOut = () => {
-    navigate("/");
-  };
-
   return (
     <>
-      <section className="flex flex-col justify-between w-full h-full py-4 p-2 mr-2 body-color">
+      <section className="flex flex-col justify-between w-60 h-full py-4 p-2 body-color">
         <div>
-          <div className="flex items-center pb-4 gap-x-2 pl-4  mb-6">
+          <div className="flex items-center pb-4 gap-x-2 pl-2  mb-6">
             <img className="w-1/3" src={KalingaLogo} alt="KalingaLogo" />
             <div>
               <h1 className="text-3xl font-bold text-neutral-primary">
@@ -46,101 +42,95 @@ export default function () {
             </div>
           </div>
           {/* DASHBOARD */}
+          <NavLink
+            to="/admin"
+            className={`flex items-center cursor-pointer w-full rounded-2xl py-1 mb-1 ${
+              isActiveRoute("admin")
+                ? "bg-secondary-default"
+                : "bg-transparent hover:bg-secondary-default"
+            }`}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="35"
+              height="35"
+              viewBox="0 0 24 24"
+              className="ml-6"
+            >
+              <path
+                fill="none"
+                stroke="#FFEECC"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.5"
+                d="M8.557 2.75H4.682A1.932 1.932 0 0 0 2.75 4.682v3.875a1.942 1.942 0 0 0 1.932 1.942h3.875a1.942 1.942 0 0 0 1.942-1.942V4.682A1.942 1.942 0 0 0 8.557 2.75m10.761 0h-3.875a1.942 1.942 0 0 0-1.942 1.932v3.875a1.943 1.943 0 0 0 1.942 1.942h3.875a1.942 1.942 0 0 0 1.932-1.942V4.682a1.932 1.932 0 0 0-1.932-1.932M8.557 13.5H4.682a1.943 1.943 0 0 0-1.932 1.943v3.875a1.932 1.932 0 0 0 1.932 1.932h3.875a1.942 1.942 0 0 0 1.942-1.932v-3.875a1.942 1.942 0 0 0-1.942-1.942m8.818-.001a3.875 3.875 0 1 0 0 7.75a3.875 3.875 0 0 0 0-7.75"
+              />
+            </svg>
+            <h1 className="ml-2 text-lg text-neutral-primary">Dashboard</h1>
+          </NavLink>
+          {/* MILKBANKS */}
+          <NavLink
+            to="/admin/milkbanks"
+            className={`flex items-center cursor-pointer w-full rounded-2xl py-1 mb-1 ${
+              isActiveRoute("milkbanks")
+                ? "bg-secondary-default"
+                : "bg-transparent hover:bg-secondary-default"
+            }`}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="35"
+              height="35"
+              viewBox="0 0 24 24"
+              className="ml-6"
+            >
+              <path
+                fill="none"
+                stroke="#FFEECC"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.5"
+                d="m11.28 2.8l-.5.5a5.5 5.5 0 0 0-4.37-.43l-.08-.07A2.5 2.5 0 0 0 2.8 6.33l.07.08a5.5 5.5 0 0 0 .43 4.37l-.5.5a1.5 1.5 0 0 0 0 2.12l1.41 1.42a1.5 1.5 0 0 0 2.12 0l.35-.36l7.08 7.07a1.5 1.5 0 0 0 2.12 0l5.65-5.65a1.5 1.5 0 0 0 0-2.12l-7.07-7.08l.36-.35a1.5 1.5 0 0 0 0-2.12L13.4 2.8a1.5 1.5 0 0 0-2.12 0m2.48 2.47l-8.49 8.49l-1.41-1.42l8.48-8.48m2.48 7.77l-3.19 3.19l-1.06-1.06l3.19-3.19m3.18 3.19l-3.18 3.18l-1.07-1.06l3.19-3.19Z"
+              ></path>
+            </svg>
+
+            <h1 className="ml-2 text-lg text-neutral-primary">Mikbanks</h1>
+          </NavLink>
+          {/* FORUM MOD */}
+          <NavLink
+            to="/admin/forum"
+            className={`flex items-center cursor-pointer w-full rounded-2xl py-1 mb-1 ${
+              isActiveRoute("forum")
+                ? "bg-secondary-default"
+                : "bg-transparent hover:bg-secondary-default"
+            }`}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="35"
+              height="35"
+              viewBox="0 0 24 24"
+              className="ml-6"
+            >
+              <path
+                fill="none"
+                stroke="#FFEECC"
+                strokeLinecap="round"
+                strokeWidth="1"
+                d="M7.23 16.23q-.326 0-.547-.22q-.221-.222-.221-.549v-1h11.75l.634.635V6h1q.327 0 .548.221t.222.548v10.595q0 .534-.498.742q-.497.207-.876-.171l-1.704-1.704zm-.768-3.769l-1.704 1.705q-.38.378-.876.17q-.497-.207-.497-.742V3.77q0-.327.22-.548Q3.828 3 4.155 3h11.923q.327 0 .548.221t.221.548v7.923q0 .327-.221.549q-.221.22-.548.22zm9.384-1V4H4.385v8.846l1.384-1.384zm-11.461 0V4z"
+              ></path>
+            </svg>
+
+            <h1 className="ml-2 text-md text-neutral-primary">
+              Forum Moderation
+            </h1>
+          </NavLink>
+          {/* REPORTS */}
           <div>
-            <NavLink
-              to="/admin"
-              className={`flex items-center cursor-pointer w-full rounded-2xl py-2 mb-1 ${
-                isActiveRoute("admin")
-                  ? "bg-secondary-default"
-                  : "bg-transparent hover:bg-secondary-default"
-              }`}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="35"
-                height="35"
-                viewBox="0 0 24 24"
-                className="ml-6"
-              >
-                <path
-                  fill="none"
-                  stroke="#FFEECC"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="1.5"
-                  d="M8.557 2.75H4.682A1.932 1.932 0 0 0 2.75 4.682v3.875a1.942 1.942 0 0 0 1.932 1.942h3.875a1.942 1.942 0 0 0 1.942-1.942V4.682A1.942 1.942 0 0 0 8.557 2.75m10.761 0h-3.875a1.942 1.942 0 0 0-1.942 1.932v3.875a1.943 1.943 0 0 0 1.942 1.942h3.875a1.942 1.942 0 0 0 1.932-1.942V4.682a1.932 1.932 0 0 0-1.932-1.932M8.557 13.5H4.682a1.943 1.943 0 0 0-1.932 1.943v3.875a1.932 1.932 0 0 0 1.932 1.932h3.875a1.942 1.942 0 0 0 1.942-1.932v-3.875a1.942 1.942 0 0 0-1.942-1.942m8.818-.001a3.875 3.875 0 1 0 0 7.75a3.875 3.875 0 0 0 0-7.75"
-                />
-              </svg>
-              <h1 className="ml-2 text-xl text-neutral-primary">Dashboard</h1>
-            </NavLink>
-
-            {/* MILKBANKS */}
-
-            <NavLink
-              to="/admin/milkbanks"
-              className={`flex items-center cursor-pointer w-full rounded-2xl py-2 mb-1 ${
-                isActiveRoute("milkbanks")
-                  ? "bg-secondary-default"
-                  : "bg-transparent hover:bg-secondary-default"
-              }`}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="35"
-                height="35"
-                viewBox="0 0 24 24"
-                className="ml-6"
-              >
-                <path
-                  fill="none"
-                  stroke="#FFEECC"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="1.5"
-                  d="m11.28 2.8l-.5.5a5.5 5.5 0 0 0-4.37-.43l-.08-.07A2.5 2.5 0 0 0 2.8 6.33l.07.08a5.5 5.5 0 0 0 .43 4.37l-.5.5a1.5 1.5 0 0 0 0 2.12l1.41 1.42a1.5 1.5 0 0 0 2.12 0l.35-.36l7.08 7.07a1.5 1.5 0 0 0 2.12 0l5.65-5.65a1.5 1.5 0 0 0 0-2.12l-7.07-7.08l.36-.35a1.5 1.5 0 0 0 0-2.12L13.4 2.8a1.5 1.5 0 0 0-2.12 0m2.48 2.47l-8.49 8.49l-1.41-1.42l8.48-8.48m2.48 7.77l-3.19 3.19l-1.06-1.06l3.19-3.19m3.18 3.19l-3.18 3.18l-1.07-1.06l3.19-3.19Z"
-                ></path>
-              </svg>
-
-              <h1 className="ml-2 text-xl text-neutral-primary">Mikbanks</h1>
-            </NavLink>
-
-            {/* FORUM MOD */}
-
-            <NavLink
-              to="/admin/forum"
-              className={`flex items-center cursor-pointer w-full rounded-2xl py-2 mb-1 ${
-                isActiveRoute("forum")
-                  ? "bg-secondary-default"
-                  : "bg-transparent hover:bg-secondary-default"
-              }`}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="35"
-                height="35"
-                viewBox="0 0 24 24"
-                className="ml-6"
-              >
-                <path
-                  fill="none"
-                  stroke="#FFEECC"
-                  strokeLinecap="round"
-                  strokeWidth="1"
-                  d="M7.23 16.23q-.326 0-.547-.22q-.221-.222-.221-.549v-1h11.75l.634.635V6h1q.327 0 .548.221t.222.548v10.595q0 .534-.498.742q-.497.207-.876-.171l-1.704-1.704zm-.768-3.769l-1.704 1.705q-.38.378-.876.17q-.497-.207-.497-.742V3.77q0-.327.22-.548Q3.828 3 4.155 3h11.923q.327 0 .548.221t.221.548v7.923q0 .327-.221.549q-.221.22-.548.22zm9.384-1V4H4.385v8.846l1.384-1.384zm-11.461 0V4z"
-                ></path>
-              </svg>
-
-              <h1 className="ml-2 text-xl text-neutral-primary">
-                Forum Moderation
-              </h1>
-            </NavLink>
-
-            {/* REPORTS */}
-
             <div className="relative">
               <div
                 onClick={() => setShowReportsDropdown(!showReportsDropdown)}
-                className={`flex items-center cursor-pointer w-full rounded-t-2xl pt-2 pb-2 ${
+                className={`flex items-center cursor-pointer w-full rounded-t-2xl  pb-2 ${
                   showReportsDropdown ? "bg-secondary-default" : ""
                 }`}
               >
@@ -161,7 +151,7 @@ export default function () {
                     <path d="M9 21h6m-6 0v-5m0 5H3.6a.6.6 0 0 1-.6-.6v-3.8a.6.6 0 0 1 .6-.6H9m6 5V9m0 12h5.4a.6.6 0 0 0 .6-.6V3.6a.6.6 0 0 0-.6-.6h-4.8a.6.6 0 0 0-.6.6V9m0 0H9.6a.6.6 0 0 0-.6.6V16"></path>
                   </g>
                 </svg>
-                <h1 className="ml-2 mr-2 text-xl text-neutral-primary">
+                <h1 className="ml-2 mr-2 text-lg text-neutral-primary">
                   Reports
                 </h1>
 
@@ -183,25 +173,25 @@ export default function () {
                   <NavLink
                     to="/admin/chart"
                     className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-5 py-1 mb-1 ${
-                      isActiveRoute("chart")
+                      isActiveRoute("donor verif")
                         ? "bg-primary-default"
                         : "bg-transparent hover:bg-primary-default"
                     }`}
                   >
-                    <h1 className="text-xl text-neutral-primary">
+                    <h1 className="text-lg text-neutral-primary">
                       Monthly Report
                     </h1>
                   </NavLink>
                   <NavLink
                     to="/admin/city"
                     className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
-                      isActiveRoute("city")
+                      isActiveRoute("requestor")
                         ? "bg-primary-default"
                         : "bg-transparent hover:bg-primary-default"
                     }`}
                   >
-                    <h1 className="text-xl text-neutral-primary">
-                      Cities Report
+                    <h1 className="text-lg text-neutral-primary">
+                      Per City Report
                     </h1>
                   </NavLink>
                 </div>
@@ -215,7 +205,7 @@ export default function () {
                 onClick={() =>
                   setVerificationDropdown(!showVerificationDropdown)
                 }
-                className={`flex items-center cursor-pointer w-full rounded-t-2xl pt-2 pb-2 ${
+                className={`flex items-center cursor-pointer w-full rounded-t-2xl pt-1 pb-1 ${
                   showVerificationDropdown ? "bg-secondary-default" : ""
                 } `}
               >
@@ -235,7 +225,7 @@ export default function () {
                     d="M4.616 19q-.691 0-1.153-.462T3 17.384V6.616q0-.691.463-1.153T4.615 5h14.77q.69 0 1.152.463T21 6.616v10.769q0 .69-.463 1.153T19.385 19zM4 8h16V6.616q0-.231-.192-.424T19.385 6H4.615q-.23 0-.423.192T4 6.616zm6.95 7.82l4.958-4.959l-.72-.719l-4.238 4.239l-2.138-2.139l-.72.72z"
                   ></path>
                 </svg>
-                <h1 className="ml-2 mr-2 text-xl text-neutral-primary">
+                <h1 className="ml-2 mr-2 text-lg text-neutral-primary">
                   Verification
                 </h1>
 
@@ -257,36 +247,36 @@ export default function () {
                   <NavLink
                     to="/admin/DonorVerifPendings"
                     className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-5 py-1 mb-1 ${
-                      isActiveRoute("chart")
+                      isActiveRoute("donor verif")
                         ? "bg-primary-default"
                         : "bg-transparent hover:bg-primary-default"
                     }`}
                   >
-                    <h1 className="text-xl text-neutral-primary">
+                    <h1 className="text-lg text-neutral-primary">
                       Donor Pendings
                     </h1>
                   </NavLink>
                   <NavLink
-                    to="/admin/city"
+                    to="/admin/RequestorVerifPendings"
                     className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
-                      isActiveRoute("city")
+                      isActiveRoute("requestor")
                         ? "bg-primary-default"
                         : "bg-transparent hover:bg-primary-default"
                     }`}
                   >
-                    <h1 className="text-xl text-neutral-primary">
+                    <h1 className="text-lg text-neutral-primary">
                       Requestor Pendings
                     </h1>
                   </NavLink>
                   <NavLink
-                    to="/admin/city"
+                    to="/admin/users"
                     className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
-                      isActiveRoute("city")
+                      isActiveRoute("users")
                         ? "bg-primary-default"
                         : "bg-transparent hover:bg-primary-default"
                     }`}
                   >
-                    <h1 className="text-xl text-neutral-primary">
+                    <h1 className="text-lg text-neutral-primary">
                       User Management
                     </h1>
                   </NavLink>
@@ -323,7 +313,7 @@ export default function () {
                     <circle cx={17} cy={17} r={5}></circle>
                   </g>
                 </svg>
-                <h1 className="ml-2 mr-2 text-xl text-neutral-primary">
+                <h1 className="ml-2 mr-2 text-lg text-neutral-primary">
                   Appointments
                 </h1>
 
@@ -350,7 +340,7 @@ export default function () {
                         : "bg-transparent hover:bg-primary-default"
                     }`}
                   >
-                    <h1 className="text-lg text-neutral-primary">
+                    <h1 className="text-md text-neutral-primary">
                       Donor Mamangement
                     </h1>
                   </NavLink>
@@ -362,7 +352,7 @@ export default function () {
                         : "bg-transparent hover:bg-primary-default"
                     }`}
                   >
-                    <h1 className="text-lg text-neutral-primary">
+                    <h1 className="text-md text-neutral-primary">
                       Requestor Mamangement
                     </h1>
                   </NavLink>
@@ -398,7 +388,7 @@ export default function () {
                   </g>
                 </svg>
 
-                <h1 className="ml-2 mr-2 text-xl text-neutral-primary">
+                <h1 className="ml-2 mr-2 text-lg text-neutral-primary">
                   Utilities
                 </h1>
 
@@ -425,7 +415,7 @@ export default function () {
                         : "bg-transparent hover:bg-primary-default"
                     }`}
                   >
-                    <h1 className="text-xl text-neutral-primary">Feedbacks</h1>
+                    <h1 className="text-lg text-neutral-primary">Feedbacks</h1>
                   </NavLink>
                   <NavLink
                     to="/admin/bugs"
@@ -435,7 +425,7 @@ export default function () {
                         : "bg-transparent hover:bg-primary-default"
                     }`}
                   >
-                    <h1 className="text-xl text-neutral-primary">Bugs</h1>
+                    <h1 className="text-lg text-neutral-primary">Bugs</h1>
                   </NavLink>
                 </div>
               )}

@@ -33,6 +33,15 @@ export default function ({ remarks }) {
     setCurrentPage(1); // Reset to first page when search query changes
   };
 
+  const handlePrevClick = () => {
+    setCurrentPage(currentPage === 1 ? totalPages : currentPage - 1);
+  };
+
+  const handleNextClick = () => {
+    setCurrentPage(currentPage === totalPages ? 1 : currentPage + 1);
+  };
+
+  // Filter appointments based on search query
   const filteredAppointments = appointments.filter((appointment) =>
     appointment.fullName
       .toLowerCase()
@@ -42,6 +51,14 @@ export default function ({ remarks }) {
   // Calculate total pages based on filtered appointments
   const totalPages = Math.ceil(
     filteredAppointments.length / appointmentsPerPage
+  );
+
+  // Get current page of appointments
+  const indexOfLastAppointment = currentPage * appointmentsPerPage;
+  const indexOfFirstAppointment = indexOfLastAppointment - appointmentsPerPage;
+  const currentAppointments = filteredAppointments.slice(
+    indexOfFirstAppointment,
+    indexOfLastAppointment
   );
 
   const pageNumbers = [];
@@ -54,7 +71,7 @@ export default function ({ remarks }) {
   };
 
   const handleDelete = (id) => {
-    setUsers(users.filter((user) => user.id !== id));
+    // Implement deletion logic here
   };
 
   const handleView = () => {
@@ -71,72 +88,72 @@ export default function ({ remarks }) {
   return (
     <>
       <section className="w-full h-screen bg-primary-body overflow-hidden">
-        <div className="p-10 pt-2">
+        <div className="p-12 pt-2">
           <div>
             <h1 className="text-3xl text-primary-default font-bold font-sans my-4 mb-6">
               Donor Appointments
             </h1>
             <div className="flex flex-col">
               <div className="my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                <div className="align-middle inline-block min-w-full sm:px-6 lg:px-8">
                   <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                     <table className="min-w-full divide-y divide-primary-default border">
                       <thead className="bg-neutral-variant">
                         <tr>
                           <th
                             scope="col"
-                            className="text-center px-6 py-3 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                            className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
                           >
                             Appointment ID
                           </th>
                           <th
                             scope="col"
-                            className="text-center px-6 py-3 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                            className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
                           >
                             Created on
                           </th>
                           <th
                             scope="col"
-                            className="text-center px-6 py-3 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                            className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
                           >
                             Name
                           </th>
                           <th
                             scope="col"
-                            className="text-center px-6 py-3 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                            className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
                           >
                             Email
                           </th>
                           <th
                             scope="col"
-                            className="text-center px-6 py-3 text-left text-md font-sans text-primary-default uppercase tracking-wider "
+                            className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider "
                           >
                             Scheduled Date and Time
                           </th>
                           <th
                             scope="col"
-                            className="px-6 py-3 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                            className="px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
                           >
                             Status
                           </th>
                           <th
                             scope="col"
-                            className="text-center px-6 py-3 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                            className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
                           >
                             Remarks
                           </th>
                           <th
                             scope="col"
-                            className="text-center px-6 py-3 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                            className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
                           >
                             Actions
                           </th>
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-primary-default">
-                        {filteredAppointments.map((appointment) => (
+                        {currentAppointments.map((appointment) => (
                           <tr key={appointment._id}>
-                            <td className="px-6 py-4 whitespace-nowrap">
+                            <td className="px-6 py-1 whitespace-nowrap">
                               <div className="text-center text-sm font-medium text-gray-900">
                                 {appointment.AppointmentDonorID}
                               </div>
@@ -177,7 +194,7 @@ export default function ({ remarks }) {
                                 })}
                               </div>
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
+                            <td className="px-6 py-1 whitespace-nowrap">
                               <span
                                 className={`flex justify-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                                   appointment.DonationStatus === "Complete"
@@ -201,29 +218,32 @@ export default function ({ remarks }) {
                               </div>
                             </td>
 
-                            <td className="text-center px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center justify-center gap-2">
+                            <td className="text-center  py-4 whitespace-nowrap text-sm font-medium flex items-center justify-center gap-2">
                               <Link
                                 to={`/admin/donorAppointmentConfirmation/${appointment.AppointmentDonorID}`}
-                                className="bg-lime-300 px-4 py-2 rounded-full hover:bg-lime-400 mr-2"
+                                className=" px-3 py-1 rounded-full hover:bg-neutral-variant mr-1"
                               >
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
-                                  width="20"
-                                  height="20"
-                                  viewBox="0 0 24 24"
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 32 32"
                                 >
+                                  <circle
+                                    cx={16}
+                                    cy={16}
+                                    r={4}
+                                    fill="#E60965"
+                                  ></circle>
                                   <path
-                                    fill="#000000"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="1.5"
-                                    d="M4 0C1.8 0 0 1.8 0 4v17c0 2.2 1.8 4 4 4h11c.4 0 .7-.094 1-.094c-1.4-.3-2.594-1.006-3.594-1.906H4c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h6.313c.7.2.687 1.1.687 2v3c0 .6.4 1 1 1h3c1 0 2 0 2 1v1h.5c.5 0 1 .088 1.5.188V8c0-1.1-.988-2.112-2.688-3.813c-.3-.2-.512-.487-.812-.687c-.2-.3-.488-.513-.688-.813C13.113.988 12.1 0 11 0zm13.5 12c-3 0-5.5 2.5-5.5 5.5s2.5 5.5 5.5 5.5c1.273 0 2.435-.471 3.375-1.219l.313.313a.955.955 0 0 0 .125 1.218l2.5 2.5c.4.4.975.4 1.375 0l.5-.5c.4-.4.4-1.006 0-1.406l-2.5-2.5a.935.935 0 0 0-1.157-.156l-.281-.313c.773-.948 1.25-2.14 1.25-3.437c0-3-2.5-5.5-5.5-5.5m0 1.5c2.2 0 4 1.8 4 4s-1.8 4-4 4s-4-1.8-4-4s1.8-4 4-4"
+                                    fill="#E60965"
+                                    d="M30.94 15.66A16.69 16.69 0 0 0 16 5A16.69 16.69 0 0 0 1.06 15.66a1 1 0 0 0 0 .68A16.69 16.69 0 0 0 16 27a16.69 16.69 0 0 0 14.94-10.66a1 1 0 0 0 0-.68M16 22.5a6.5 6.5 0 1 1 6.5-6.5a6.51 6.51 0 0 1-6.5 6.5"
                                   ></path>
                                 </svg>
                               </Link>
                               <button
                                 onClick={() => handleDelete(appointment.id)}
-                                className="bg-red-500 px- py-2 rounded-full hover:bg-red-600"
+                                className="px-3 py-1 rounded-full hover:bg-neutral-variant"
                               >
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
@@ -232,7 +252,7 @@ export default function ({ remarks }) {
                                   viewBox="0 0 24 24"
                                 >
                                   <path
-                                    fill="#FFFFFF"
+                                    fill="#E60965"
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
                                     strokeWidth="1.5"
@@ -247,6 +267,39 @@ export default function ({ remarks }) {
                     </table>
                   </div>
                 </div>
+              </div>
+              <div className="flex justify-end">
+                {/* Pagination */}
+                <nav className="block">
+                  <ul className="flex pl-0 rounded list-none flex-wrap">
+                    <button
+                      className="hover:font-bold hover:text-primary-default text-xl font-sans text-primary-disabled py-2 px-2"
+                      onClick={handlePrevClick}
+                    >
+                      {"<"}
+                    </button>
+                    {pageNumbers.map((number) => (
+                      <li key={number}>
+                        <button
+                          className={`${
+                            currentPage === number
+                              ? "hover:font-bold hover:text-primary-default text-lg font-sans text-primary-disabled py-2 px-2 font-bold"
+                              : "text-lg font-sans text-primary-disabled py-2 px-4"
+                          } `}
+                          onClick={() => goToPage(number)}
+                        >
+                          {number}
+                        </button>
+                      </li>
+                    ))}
+                    <button
+                      className="hover:font-bold hover:text-primary-default text-xl font-sans text-primary-disabled py-2 px-2"
+                      onClick={handleNextClick}
+                    >
+                      {">"}
+                    </button>
+                  </ul>
+                </nav>
               </div>
             </div>
           </div>

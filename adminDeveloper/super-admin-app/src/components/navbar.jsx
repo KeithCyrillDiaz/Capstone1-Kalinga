@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function () {
@@ -22,10 +22,30 @@ export default function () {
     navigate("/");
   };
 
+  const dropdownRef = useRef(null);
+
+  const handleDocumentClick = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setShowDropdown(false);
+    }
+  };
+
+  useEffect(() => {
+    if (showDropdown) {
+      document.addEventListener("click", handleDocumentClick);
+    } else {
+      document.removeEventListener("click", handleDocumentClick);
+    }
+
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, [showDropdown]);
+
   return (
     <nav className="bg-white flex justify-between items-center elevate-2 w-full pr-4">
       <div className="px-4 text-white flex items-center space-x-4 justify-end w-full">
-        <div className="flex items-center rounded-md  py-1">
+        <div className="flex items-center rounded-md py-1">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="30"
@@ -45,7 +65,7 @@ export default function () {
           <span className="text-primary-default">| {currentTime}</span>
         </div>
 
-        <div className="relative inline-block text-left">
+        <div className="relative inline-block text-left" ref={dropdownRef}>
           <div onClick={() => setShowDropdown(!showDropdown)}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -66,8 +86,8 @@ export default function () {
             </svg>
           </div>
           {showDropdown && (
-            <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-              <div className="flex flex-row p-2 pl-4">
+            <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+              <div className="relative flex flex-row p-2 pl-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="45"
