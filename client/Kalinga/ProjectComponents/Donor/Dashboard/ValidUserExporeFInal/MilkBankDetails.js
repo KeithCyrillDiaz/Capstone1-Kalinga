@@ -25,7 +25,7 @@ export const MilkBankDetails = ({
     const [data, setData] = useState({})
     const [index, setIndex] = useState(2)
     //height of BottomSheet
-    const snapPoints = useMemo(() => ['3%','15%', '35%', '50%', '70%'], []);
+    const snapPoints = useMemo(() => ['3%','15%', '35%', '50%'], []);
 
     const getMilbankDetails = (id) => MilkBankList.find((milkBank) => (milkBank.id === id))
     const fetchDetails = (index) => {
