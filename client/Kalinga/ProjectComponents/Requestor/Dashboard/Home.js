@@ -45,6 +45,8 @@ export default function RequestorHome({route}) {
           const result = await checkLocationPermission()
           console.log("result: ", result)
           if(!result)return
+          navigation.navigate(Page, {data: userInformation, token: token, requestStatus: requestStatus});
+          return
         }
         navigation.navigate(Page, {data: userInformation, token: token}); // Navigate to the Login screen
     };   

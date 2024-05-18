@@ -2,6 +2,7 @@
 import { StyleSheet } from "react-native";
 
 export const globalStyles = StyleSheet.create({
+
     container: {
       flex: 1,
       backgroundColor: '#FFF8EB',
@@ -9,7 +10,11 @@ export const globalStyles = StyleSheet.create({
       justifyContent: 'center',
       width: '100%',
       position: 'relative', // or 'absolute'
-      
+    },
+
+    defaultBackgroundColor: {
+      flex: 1,
+      backgroundColor: '#FFF8EB',
     },
 
     SafeArea:{
