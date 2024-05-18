@@ -2,42 +2,44 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import RemarksModal from "./remarksModal";
+import { WebHost } from "../../../MyConstantSuperAdmin";
 
-export default function () {
+
+export default function UserManagement() {
   const navigate = useNavigate();
   const [isRemarksModalOpen, setRemarksModalOpen] = useState(false);
-  const [isApproveConfirmed, setIsApproveConfirmed] = useState();
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      created: "05/18/2024",
-      name: "John Doe",
-      email: "john@example.com",
-      role: "Donor",
-      status: "Pending",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      email: "jane@example.com",
-      status: "Rejected",
-    },
-    // Add more users as needed
-  ]);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+      async function fetchData() {
+          try {
+              const response = await get(`${WebHost}//kalinga/getAllUsers`); // Updated endpoint for fetching all users
+              const data = await response.json();
+              if (response.ok) {
+                  setUsers([...data.donors, ...data.requestors]); // Concatenate donors and requestors
+              } else {
+                  console.error("Failed to fetch users:", data.messages.message);
+              }
+          } catch (error) {
+              console.error("Error fetching users:", error);
+          }
+      }
+      fetchData();
+  }, []);
 
   const handleDelete = (id) => {
-    setUsers(users.filter((user) => user.id !== id));
+      setUsers(users.filter((user) => user.id !== id));
   };
 
   const handleView = () => {
-    navigate("/admin/DonorVerification");
+      navigate("/admin/DonorVerification");
   };
 
   const [selectedUser, setSelectedUser] = useState(null);
 
   const handleRemarksModal = (user) => {
-    setSelectedUser(user);
-    setRemarksModalOpen(true);
+      setSelectedUser(user);
+      setRemarksModalOpen(true);
   };
 
   return (
@@ -104,22 +106,22 @@ export default function () {
                           <tr key={user.id}>
                             <td className="px-2 py-4 whitespace-nowrap">
                               <div className="text-center text-sm font-medium text-gray-900">
-                                {user.created}
+                                {user.createdAt}
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="text-center text-sm font-medium text-gray-900">
-                                {user.name}
+                                {user.fullName}
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="text-center text-sm text-gray-500">
-                                {user.email}
+                                {user.emailAddress}
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="text-center text-sm font-medium text-gray-900">
-                                {user.role}
+                                {user.UserType}
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
