@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import RequestConfirmModal from "../../../../Modal/RequestConfirmModal";
 import RequestDeclineModal from "../../../../Modal/RequestDeclineModal";
+import AppointmentRequestDeclineModal from "../../../../Modal/AppointmentRequestDeclineModal";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { WebHost } from "../../../../../MyConstantSuperAdmin";
@@ -269,6 +270,7 @@ const requestorAppointmentConfirmation = () => {
         {requestData &&
           requestData.Request &&
           requestData.Request.RequestStatus !== "Approved" &&
+          requestData.Request.RequestStatus !== "Decline" &&
           requestData.Request.RequestStatus !== "Complete" && (
             <>
               <button
@@ -300,6 +302,13 @@ const requestorAppointmentConfirmation = () => {
         onCancel={handleDeclineCancel}
         message="Are you sure you want to decline this request? Once declined, the request process will not proceed."
       />
+
+      <AppointmentRequestDeclineModal
+        isOpen={isDeclineModalOpen}
+        onConfirm={handleDeclineConfirm}
+        onCancel={handleDeclineCancel}
+        message="Are you sure you want to decline this appointment? Once declined, the request process will not proceed."
+        RequestID={RequestID}       />
     </section>
   );
 };

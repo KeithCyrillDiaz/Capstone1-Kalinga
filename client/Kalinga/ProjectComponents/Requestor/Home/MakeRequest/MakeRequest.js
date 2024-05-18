@@ -80,6 +80,7 @@ export default function RequestorProfile({route}) {
       milkAmount: '',
       BabyCategory: '',
       ReasonForRequesting: userInformation.RFR,
+      RequestRemark:""
       
   });
 

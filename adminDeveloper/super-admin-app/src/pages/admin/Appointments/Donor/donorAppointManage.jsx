@@ -226,7 +226,7 @@ export default function ({ remarks }) {
                               <div>
                                 {appointment.DonationStatus === "Approved"
                                   ? "This is approved."
-                                  : remarks}
+                                  :  appointment.DonorRemark}
                               </div>
                             </td>
 
@@ -285,7 +285,7 @@ export default function ({ remarks }) {
         </section>
         <DeleteModal
         isOpen={isDeleteModalOpen}
-        onConfirm={handleDeleteConfirm} // Pass handleDeleteConfirm as prop
+        onConfirm={handleDeleteConfirm}
         onCancel={handleDeleteCancel}
         message="Are you sure you want to delete this appointment?"
       />

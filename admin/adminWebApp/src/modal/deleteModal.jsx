@@ -1,6 +1,6 @@
 import React, { useState, useEffect  } from "react";
 
-const DeleteRequestModal = ({ isOpen, message, onConfirm, onCancel }) => {
+const DeleteModal = ({ isOpen, message, onConfirm, onCancel }) => {
     const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
     const [isFirstModalOpen, setIsFirstModalOpen] = useState(isOpen);
   
@@ -77,4 +77,4 @@ const DeleteRequestModal = ({ isOpen, message, onConfirm, onCancel }) => {
   );
 };
 
-export default DeleteRequestModal;
+export default DeleteModal;

@@ -51,6 +51,9 @@ import { updateResolved } from '../controllers/clientSettings/reportBug';
 import { getResolvedReports } from '../controllers/clientSettings/reportBug'
 import { deleteAppointmentDonor } from '../controllers/Admin/Appointment/deleteAppointmentDonor'
 import { deleteAppointmentRequestor} from '../controllers/Admin/Appointment/deleteAppointmentRequestor'
+import { updateDonorRemark } from '../controllers/Admin/Appointment/updateDonorRemark'
+import { updateRequestRemark} from '../controllers/Admin/Appointment/updateRequestRemark'
+import { getDonationStatus} from '../controllers/Donor/getDonationStatus'
 
 
 export default (router: express.Router) => {
@@ -75,6 +78,7 @@ export default (router: express.Router) => {
     router.put ('/kalinga/updateDonationComplete/:AppointmentDonorID', sendUpdateStatusAppointmentNotification, updateDonationComplete)
     router.get('/kalinga/getCompletedDonation/:Donor_ID', getCompletedDonation)
     router.get('/kalinga/getDonorStats/:Donor_ID', getDonorStats)
+    router.get('/kalinga/getDonationStatus', getDonationStatus)
 
 
    //Requestor
@@ -114,6 +118,9 @@ export default (router: express.Router) => {
     router.get('/kalinga/getResolvedReports', getResolvedReports)
     router.delete ('/kalinga/deleteAppointmentDonor/:AppointmentDonorID', deleteAppointmentDonor)
     router.delete ('/kalinga/deleteAppointmentRequestor/:RequestID', deleteAppointmentRequestor)
+    router.put ('/kalinga/updateDonorRemark/:AppointmentDonorID', updateDonorRemark)
+    router.put ('/kalinga/updateRequestRemark/:RequestID', updateRequestRemark)
+
 
 
 

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { WebHost } from "../../../../../MyConstantSuperAdmin";
-import  DeleteRequestModal from "../../../../Modal/deleteRequestModal";
+import  DeleteModal from "../../../../Modal/deleteModal";
 
 export default function () {
   const navigate = useNavigate();
@@ -55,37 +55,36 @@ export default function () {
     setCurrentPage(page);
   };
 
-  // const handleDeleteConfirm = async () => {
-  //   if (selectedRequestId) {
-  //     try {
-  //       const response = await axios.delete(`${WebHost}/kalinga/deleteAppointmentRequestor/${selectedRequestId}`);
-  //       if (response.status === 200) {
-  //         const updatedRequests = requestData.filter(
-  //           (request) => request.RequestID !== selectedRequestId
-  //         );
-  //         setRequestData(updatedRequests);
-  //       } else {
-  //         console.error("Error deleting appointment:", response.data);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error deleting appointment:", error);
-  //     }
-  //   }
-  //   setIsDeleteModalOpen(false);
-  //   setSelectedRequestId(null);
-  // };
+  const handleDelete = async (RequestID) => {
+    try {
+      const response = await axios.delete(`${WebHost}/kalinga/deleteAppointmentRequestor/${RequestID}`);
+      if (response.status === 200) {
+        // Appointment deleted successfully
+        const updatedAppointments = requestData.filter(
+          (request) => request.RequestID !== RequestID
+        );
+        setRequestData(updatedAppointments);
+        setIsDeleteModalOpen(true); // Open delete confirmation modal
 
-  // const handleDeleteCancel = () => {
-  //   setIsDeleteModalOpen(false);
-  //   setSelectedRequestId(null);
-  // };
+      } else {
+        console.error("Error deleting appointment:", response.data);
+        // Handle error (e.g., display error message to user)
+      }
+    } catch (error) {
+      console.error("Error deleting appointment:", error);
+      // Handle error (e.g., display error message to user)
+    }
+  };
 
-  // const handleDelete = (RequestID) => {
-  //   setSelectedRequestId(RequestID);
-  //   setIsDeleteModalOpen(true);
-  // };
+  const handleDeleteConfirm = () => {
+    setIsDeleteModalOpen(false); // Close the delete modal
+    // Additional logic after confirming deletion
+  };
 
-
+  const handleDeleteCancel = () => {
+    setIsDeleteModalOpen(false); // Close the delete modal
+    // Additional logic if deletion is canceled
+  };
 
   const [selectedUser, setSelectedUser] = useState(null);
 
@@ -207,14 +206,7 @@ export default function () {
                               <div>
                                 {request.RequestStatus === "Approved" ? (
                                   "This is approved."
-                                ) : (
-                                  <button
-                                    onClick={() => handleRemarksModal(request)}
-                                    className="bg-neutral-variant p-1 px-2 rounded-full border border-primary-default text-primary-default hover:text-white hover:bg-primary-default"
-                                  >
-                                    View Remarks
-                                  </button>
-                                )}
+                                ) : request.RequestRemark}
                               </div>
                             </td>
 
@@ -239,7 +231,7 @@ export default function () {
                                 </svg>
                               </Link>
                               <button
-                                  // onClick={() => handleDeleteConfirm(request.RequestID)}
+                                  onClick={() => handleDelete(request.RequestID)}
                                   className="bg-red-500 px- py-2 rounded-full hover:bg-red-600"
                                 >
                                   <svg
@@ -269,12 +261,12 @@ export default function () {
           </div>
         </div>
       </section>
-      {/* <DeleteRequestModal
+      <DeleteModal
         isOpen={isDeleteModalOpen}
-        onConfirm={handleDeleteConfirm} 
+        onConfirm={handleDeleteConfirm}
         onCancel={handleDeleteCancel}
-        message="Are you sure you want to delete this appointment?"
-      /> */}
+        message="Are you sure you want to delete this request?"
+      />
 {/* 
       {isRemarksModalOpen && selectedUser && (
         <RemarksModal

@@ -27,6 +27,7 @@ const donorAppointmentConfirmation = () => {
     location: "",
     selectedDate: selectedDate.toISOString(),
     selectedTime: selectedTime.toISOString(),
+    
   });
 
   const handleChange = (e) => {
@@ -37,8 +38,7 @@ const donorAppointmentConfirmation = () => {
     }));
   };
 
-  const { AppointmentDonorID } = useParams(); // Get the appointmentDonorID from the URL
-
+  const { AppointmentDonorID } = useParams(); 
   useEffect(() => {
     const fetchAppointmentData = async () => {
       try {
@@ -410,7 +410,7 @@ const donorAppointmentConfirmation = () => {
         onConfirm={handleDeclineConfirm}
         onCancel={handleDeclineCancel}
         message="Are you sure you want to decline this appointment? Once declined, the request process will not proceed."
-      />
+        AppointmentDonorID={AppointmentDonorID}       />
 
       <CompleteModal
         isOpen={isCompleteModalOpen}

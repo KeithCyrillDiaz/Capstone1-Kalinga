@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import ConfirmationModal from "../../../../modal/ConfirmationModal";
-import DeclineModal from "../../../../modal/DeclineModal";
-import axios from "axios";
 import { WebHost } from "../../../../../MyConstantAdmin";
+import axios from "axios";
 import CompleteModal from "../../../../modal/CompleteModal";
+import AppointmentDeclineModal from "../../../../modal/AppointmentDeclineModal";
 
 const donorAppointmentConfirmation = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -26,6 +26,7 @@ const donorAppointmentConfirmation = () => {
     location: "",
     selectedDate: selectedDate.toISOString(),
     selectedTime: selectedTime.toISOString(),
+    
   });
 
   const handleChange = (e) => {
@@ -36,8 +37,7 @@ const donorAppointmentConfirmation = () => {
     }));
   };
 
-  const { AppointmentDonorID } = useParams(); // Get the appointmentDonorID from the URL
-
+  const { AppointmentDonorID } = useParams(); 
   useEffect(() => {
     const fetchAppointmentData = async () => {
       try {
@@ -404,12 +404,12 @@ const donorAppointmentConfirmation = () => {
         message="Are you sure you want to approve this appointment? Once approved, the appointment will be scheduled."
       />
 
-      <DeclineModal
+      <AppointmentDeclineModal
         isOpen={isDeclineModalOpen}
         onConfirm={handleDeclineConfirm}
         onCancel={handleDeclineCancel}
         message="Are you sure you want to decline this appointment? Once declined, the request process will not proceed."
-      />
+        AppointmentDonorID={AppointmentDonorID}       />
 
       <CompleteModal
         isOpen={isCompleteModalOpen}

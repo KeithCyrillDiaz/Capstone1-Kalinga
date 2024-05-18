@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { WebHost } from "../../../../../MyConstantAdmin";
+import  DeleteModal from "../../../../modal/deleteModal";
 
 export default function () {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export default function () {
   const [searchQuery, setSearchQuery] = useState("");
   const [requestData, setRequestData] = useState(null); // State to store user data
   const [currentPage, setCurrentPage] = useState(1);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // State for delete modal
   const requestPerPage = 10; // Adjust as needed
 
   const handleSearchChange = (event) => {
@@ -62,6 +64,8 @@ export default function () {
           (request) => request.RequestID !== RequestID
         );
         setRequestData(updatedAppointments);
+        setIsDeleteModalOpen(true); // Open delete confirmation modal
+
       } else {
         console.error("Error deleting appointment:", response.data);
         // Handle error (e.g., display error message to user)
@@ -72,6 +76,15 @@ export default function () {
     }
   };
 
+  const handleDeleteConfirm = () => {
+    setIsDeleteModalOpen(false); // Close the delete modal
+    // Additional logic after confirming deletion
+  };
+
+  const handleDeleteCancel = () => {
+    setIsDeleteModalOpen(false); // Close the delete modal
+    // Additional logic if deletion is canceled
+  };
 
   const [selectedUser, setSelectedUser] = useState(null);
 
@@ -193,14 +206,7 @@ export default function () {
                               <div>
                                 {request.RequestStatus === "Approved" ? (
                                   "This is approved."
-                                ) : (
-                                  <button
-                                    onClick={() => handleRemarksModal(request)}
-                                    className="bg-neutral-variant p-1 px-2 rounded-full border border-primary-default text-primary-default hover:text-white hover:bg-primary-default"
-                                  >
-                                    View Remarks
-                                  </button>
-                                )}
+                                ) : request.RequestRemark}
                               </div>
                             </td>
 
@@ -255,6 +261,12 @@ export default function () {
           </div>
         </div>
       </section>
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+        message="Are you sure you want to delete this request?"
+      />
 {/* 
       {isRemarksModalOpen && selectedUser && (
         <RemarksModal
