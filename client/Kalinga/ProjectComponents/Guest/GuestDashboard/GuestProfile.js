@@ -35,7 +35,13 @@ export default function GuestProfile() {
 
   const navigatePage = (Page) => {
     if(Page === "LogIn"){
-      navigation.replace(Page)
+      navigation.dispatch(
+        CommonActions.reset({
+            index: 0,
+            routes: [{ name: Page }],
+        })
+    );
+    return
     }
     if(Page === "ApplyAsRequestorStack" && requestor_ID !== null){
       Alert.alert('Pending Requestor Applicant', 
