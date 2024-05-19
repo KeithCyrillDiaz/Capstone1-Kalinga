@@ -40,7 +40,7 @@ const LogIn = () => {
         // Proceed with login request
         try {
             setIsLoading(true);
-            const LogIn = await axios.post(`${BASED_URL}/kalinga/adminLoginIn`, {username, password});
+            const LogIn = await axios.post(`${BASED_URL}/kalinga/superAdminLogin`, {username, password});
 
             if (LogIn.status === 200) {
                 navigation.dispatch(

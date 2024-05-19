@@ -2,7 +2,7 @@ import express from 'express';
 
 import { registerUserOrSetNewPassword } from '../controllers/setPassAndRegisterUser';
 import { registerRequestor } from '../controllers/Requestor/Apply_As_Requestor/registerRequestor';
-import { AdminLogIn } from '../controllers/Admin/adminLogin';
+import { AdminLogIn, superAdminLogIn } from '../controllers/Admin/adminLogin';
 import { createAppointment } from '../controllers/Donor/appointmentController';
 import { getAppointmentByDonorID } from '../controllers/Admin/Appointment/getDonorAppointment';
 import {createRequest} from "../controllers/Requestor/RequestController";
@@ -53,7 +53,7 @@ import { deleteAppointmentDonor } from '../controllers/Admin/Appointment/deleteA
 import { deleteAppointmentRequestor} from '../controllers/Admin/Appointment/deleteAppointmentRequestor'
 import { updateDonorRemark } from '../controllers/Admin/Appointment/updateDonorRemark'
 import { updateRequestRemark} from '../controllers/Admin/Appointment/updateRequestRemark'
-import { getDonationStatus} from '../controllers/Donor/getDonationStatus'
+import { getDonationStatus, getDonationStatusOfMother } from '../controllers/Donor/getDonationStatus'
 import { getAllUsers } from '../controllers/SuperAdmin/getAllUser'
 import { deleteUser } from '../controllers/SuperAdmin/deleteUser'
 
@@ -65,7 +65,8 @@ export default (router: express.Router) => {
     router.post('/kalinga/registerRequestor', registerRequestor);
     router.post('/kalinga/userLogin', logInUser)
     router.get('/kalinga/userLogout/:token', logOutUser)
-    router.post('/kalinga/adminLoginIn', AdminLogIn)
+    router.post('/kalinga/superAdminLogin', superAdminLogIn)
+    router.post('/kalinga/adminLogin', AdminLogIn)
     router.get('/kalinga/isApproved/:Applicant_ID', isApproved)
     router.post('/kalinga/updateUserInformation', updateUserDetails)
 
@@ -80,6 +81,7 @@ export default (router: express.Router) => {
     router.get('/kalinga/getCompletedDonation/:Donor_ID', getCompletedDonation)
     router.get('/kalinga/getDonorStats/:Donor_ID', getDonorStats)
     router.get('/kalinga/getDonationStatus', getDonationStatus)
+    router.get('/kalinga/getDonationStatusMoterSide/:id', getDonationStatusOfMother)
 
 
    //Requestor
