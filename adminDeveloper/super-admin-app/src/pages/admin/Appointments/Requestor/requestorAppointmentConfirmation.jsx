@@ -103,128 +103,127 @@ const requestorAppointmentConfirmation = () => {
   ];
   return (
     <section className="w-full h-screen bg-primary-body overflow-hidden px-4">
-      <div className="p-12 pt-2">
-        <h1 className="text-3xl text-primary-default font-bold font-sans my-4 mb-6">
-          Request Confirmation
-        </h1>
+      <h1 className="mt-8 text-3xl text-pink-500 font-bold">
+        Request Confirmation
+      </h1>
 
-        {/* Full Name Input */}
-        <div className="mt-8">
+      {/* Full Name Input */}
+      <div className="mt-8">
+        <input
+          type="text"
+          id="fullName"
+          name="fullName"
+          value={`Full Name: ${
+            requestData ? requestData.Request.fullName : ""
+          }`}
+          onChange={handleChange}
+          className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
+          placeholder="Full Name"
+        />
+      </div>
+
+      {/* Phone Number Input */}
+      <div className="mt-4">
+        <input
+          type="tel"
+          id="phoneNumber"
+          name="phoneNumber"
+          value={`Phone Number: ${
+            requestData ? requestData.Request.phoneNumber : ""
+          }`}
+          onChange={handleChange}
+          className="w-3/4 md:w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
+          placeholder="Phone Number"
+        />
+      </div>
+
+      {/* Email Address Input */}
+      <div className="mt-4">
+        <input
+          type="email"
+          id="emailAddress"
+          name="emailAddress"
+          value={`Email Address: ${
+            requestData ? requestData.Request.emailAddress : ""
+          }`}
+          onChange={handleChange}
+          className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
+          placeholder="Email Address"
+        />
+      </div>
+
+      {/* Home Address Input */}
+      <div className="mt-4">
+        <input
+          type="text"
+          id="homeAddress"
+          name="homeAddress"
+          value={`Home Address: ${
+            requestData ? requestData.Request.homeAddress : ""
+          }`}
+          onChange={handleChange}
+          className="w-full px-4 py-2 h-20 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
+          placeholder="Home Address"
+        />
+      </div>
+
+      {/* City Input */}
+      <div className="mt-4">
+        <input
+          type="text"
+          id="city"
+          name="city"
+          value={`City: ${requestData ? requestData.Request.city : ""}`}
+          onChange={handleChange}
+          className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
+          placeholder="City"
+        />
+      </div>
+
+      {/* Medical Condition Input */}
+      <div className="mt-4">
+        <input
+          type="text"
+          id="medicalCondition"
+          name="medicalCondition"
+          value={`Medical Condition: ${
+            requestData ? requestData.Request.medicalCondition : ""
+          }`}
+          onChange={handleChange}
+          className="w-full px-4 py-2  h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
+          placeholder="Medical Condition"
+        />
+      </div>
+
+      {/* Amount Donated Input */}
+      <div className="flex mt-4">
+        <div className="w-1/2 mr-4">
           <input
             type="text"
-            id="fullName"
-            name="fullName"
-            value={`Full Name: ${
-              requestData ? requestData.Request.fullName : ""
+            id="amountDonated"
+            name="amountDonated"
+            value={`Milk Amount: ${
+              requestData ? requestData.Request.milkAmount : ""
             }`}
             onChange={handleChange}
             className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
-            placeholder="Full Name"
+            placeholder="Amount of Milk Donated"
           />
         </div>
-
-        {/* Phone Number Input */}
-        <div className="mt-4">
+        <div className="w-1/2">
           <input
-            type="tel"
-            id="phoneNumber"
-            name="phoneNumber"
-            value={`Phone Number: ${
-              requestData ? requestData.Request.phoneNumber : ""
-            }`}
-            onChange={handleChange}
-            className="w-3/4 md:w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
-            placeholder="Phone Number"
-          />
-        </div>
-
-        {/* Email Address Input */}
-        <div className="mt-4">
-          <input
-            type="email"
-            id="emailAddress"
-            name="emailAddress"
-            value={`Email Address: ${
-              requestData ? requestData.Request.emailAddress : ""
+            type="text"
+            id="amountDonated"
+            name="amountDonated"
+            value={`Baby Category: ${
+              requestData ? requestData.Request.BabyCategory : ""
             }`}
             onChange={handleChange}
             className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
-            placeholder="Email Address"
+            placeholder="Amount of Milk Donated"
           />
         </div>
-
-        {/* Home Address Input */}
-        <div className="mt-4">
-          <input
-            type="text"
-            id="homeAddress"
-            name="homeAddress"
-            value={`Home Address: ${
-              requestData ? requestData.Request.homeAddress : ""
-            }`}
-            onChange={handleChange}
-            className="w-full px-4 py-2 h-20 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
-            placeholder="Home Address"
-          />
-        </div>
-
-        {/* City Input */}
-        <div className="mt-4">
-          <input
-            type="text"
-            id="city"
-            name="city"
-            value={`City: ${requestData ? requestData.Request.city : ""}`}
-            onChange={handleChange}
-            className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
-            placeholder="City"
-          />
-        </div>
-
-        {/* Medical Condition Input */}
-        <div className="mt-4">
-          <input
-            type="text"
-            id="medicalCondition"
-            name="medicalCondition"
-            value={`Medical Condition: ${
-              requestData ? requestData.Request.medicalCondition : ""
-            }`}
-            onChange={handleChange}
-            className="w-full px-4 py-2  h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
-            placeholder="Medical Condition"
-          />
-        </div>
-
-        {/* Amount Donated Input */}
-        <div className="flex mt-4">
-          <div className="w-1/2 mr-4">
-            <input
-              type="text"
-              id="amountDonated"
-              name="amountDonated"
-              value={`Milk Amount: ${
-                requestData ? requestData.Request.milkAmount : ""
-              }`}
-              onChange={handleChange}
-              className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
-              placeholder="Amount of Milk Donated"
-            />
-          </div>
-          <div className="w-1/2">
-            <input
-              type="text"
-              id="amountDonated"
-              name="amountDonated"
-              value={`Baby Category: ${
-                requestData ? requestData.Request.BabyCategory : ""
-              }`}
-              onChange={handleChange}
-              className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
-              placeholder="Amount of Milk Donated"
-            />
-          </div>
-        </div>
+      </div>
 
         <div className="mt-4 relative">
           <div className="relative">
@@ -242,29 +241,29 @@ const requestorAppointmentConfirmation = () => {
           </div>
         </div>
 
-        <div className="mt-4 relative">
-          <label
-            htmlFor="milkBankLocation"
-            className="block text-pink-500 font-bold mb-2 text-pink-500"
-          >
-            Note: Maximum of 3 images or files per field.
-          </label>
-          <div className="relative">
-            <input
-              type="text"
-              id="reasonRequest"
-              name="reasonRequest"
-              value={`Reason For Requesting: ${
-                requestData ? requestData.ReasonForRequesting : ""
-              }`}
-              onChange={handleChange}
-              className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500 pl-8"
-              placeholder=""
-            />
-          </div>
+      <div className="mt-4 relative">
+        <label
+          htmlFor="milkBankLocation"
+          className="block text-pink-500 font-bold mb-2 text-pink-500"
+        >
+          Note: Maximum of 3 images or files per field.
+        </label>
+        <div className="relative">
+          <input
+            type="text"
+            id="reasonRequest"
+            name="reasonRequest"
+            value={`Reason For Requesting: ${
+              requestData ? requestData.ReasonForRequesting : ""
+            }`}
+            onChange={handleChange}
+            className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500 pl-8"
+            placeholder=""
+          />
         </div>
+      </div>
 
-        <div className="absolute  right-0 mt-8 mr-16 flex flex-col">
+    <div className="absolute  right-0 mt-8 mr-16 flex flex-col">
           {requestData &&
             requestData.Request &&
             requestData.Request.RequestStatus !== "Approved" &&

@@ -20,7 +20,6 @@ const ValidUserExplore = ({route}) => {
             latitude: 0,
             longitude: 0
         })
-        console.log("id: ",id)
         const handleSearch = (input) => {
             setId(input)
         }

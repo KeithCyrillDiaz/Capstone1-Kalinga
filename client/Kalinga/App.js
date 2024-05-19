@@ -199,7 +199,7 @@ export default function App() {
 
   const checkPermission = async () => {
     const permission = await AsyncStorage.getItem("LocationPermission")
-    console.log("permission: ",permission)
+    console.log("permission: ", permission)
     if(permission === "true"){
       await AsyncStorage.setItem("LocationPermission", "true")
       try{

@@ -95,7 +95,7 @@ const ResetPassword = ({route}) => {
                                 value={Email}
                             />
                             </View>
-                        {!token && (
+                        {token == "" && (
                             <View style= {{flexDirection: "row", alignItems: "center", bottom: "10%"}}>
                                 <Text style={styles.RememberPasswordText}>Remember password?</Text>
                                 <TouchableOpacity onPress={handleRememberPassword}><Text style = {[styles.RememberPasswordText, {marginLeft: 5, textDecorationLine: "underline"}]}>Login</Text></TouchableOpacity>

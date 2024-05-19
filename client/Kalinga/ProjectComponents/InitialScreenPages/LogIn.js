@@ -40,7 +40,7 @@ const LogIn = () => {
     const [showPassword, setShowPassword] = useState(false); 
 
     const handleForgotPassword = () => {
-        navigation.navigate('ResetPassword');
+        navigation.navigate('ResetPassword', {token: ""});
     };
     const clearAsyncStorage = async () => {
         const keysToRemove = ['Applicant_ID', 'userType', 'isRegistered'];
