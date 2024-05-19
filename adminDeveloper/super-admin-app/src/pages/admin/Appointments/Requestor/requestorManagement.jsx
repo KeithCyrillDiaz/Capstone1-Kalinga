@@ -51,10 +51,6 @@ export default function () {
   );
   const totalPages = Math.ceil(filteredRequest.length / requestPerPage);
 
-  // const goToPage = (page) => {
-  //   setCurrentPage(page);
-  // };
-
   const handleDelete = async (RequestID) => {
     try {
       const response = await axios.delete(
