@@ -225,21 +225,21 @@ const requestorAppointmentConfirmation = () => {
         </div>
       </div>
 
-        <div className="mt-4 relative">
-          <div className="relative">
-            <input
-              type="text"
-              id="reasonRequest"
-              name="reasonRequest"
-              value={`Reason for Requesting: ${
-                requestData ? requestData.Request.ReasonForRequesting : ""
-              }`}
-              onChange={handleChange}
-              className="w-full px-4 py-2 h-20 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500 pl-8"
-              placeholder="Reason for Requesting"
-            />
-          </div>
+      <div className="mt-4 relative">
+        <div className="relative">
+          <input
+            type="text"
+            id="reasonRequest"
+            name="reasonRequest"
+            value={`Reason for Requesting: ${
+              requestData ? requestData.Request.ReasonForRequesting : ""
+            }`}
+            onChange={handleChange}
+            className="w-full px-4 py-2 h-20 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500 pl-8"
+            placeholder="Reason for Requesting"
+          />
         </div>
+      </div>
 
       <div className="mt-4 relative">
         <label
@@ -263,51 +263,50 @@ const requestorAppointmentConfirmation = () => {
         </div>
       </div>
 
-    <div className="absolute  right-0 mt-8 mr-16 flex flex-col">
-          {requestData &&
-            requestData.Request &&
-            requestData.Request.RequestStatus !== "Approved" &&
-            requestData.Request.RequestStatus !== "Decline" &&
-            requestData.Request.RequestStatus !== "Complete" && (
-              <>
-                <button
-                  onClick={handleApproved}
-                  className="bg-primary-default text-white px-4 py-2 rounded-full mb-4"
-                >
-                  Approved
-                </button>
-                <button
-                  onClick={handleDecline}
-                  className="bg-white text-pink-500 px-4 py-2 rounded-full border border-pink-500"
-                >
-                  Decline
-                </button>
-              </>
-            )}
-        </div>
-
-        <RequestConfirmModal
-          isOpen={showModal}
-          onConfirm={handleApprovedCancel}
-          onCancel={handleApprovedConfirm}
-          message="Are you sure you want to approve this request? Once approved, the request process will proceed."
-        />
-
-        <RequestDeclineModal
-          isOpen={isDeclineModalOpen}
-          onConfirm={handleDeclineConfirm}
-          onCancel={handleDeclineCancel}
-          message="Are you sure you want to decline this request? Once declined, the request process will not proceed."
-        />
-
-        <AppointmentRequestDeclineModal
-          isOpen={isDeclineModalOpen}
-          onConfirm={handleDeclineConfirm}
-          onCancel={handleDeclineCancel}
-          message="Are you sure you want to decline this appointment? Once declined, the request process will not proceed."
-          RequestID={RequestID}
-        />
+      <div className="absolute  right-0 mt-8 mr-16 flex flex-col">
+        {requestData &&
+          requestData.Request &&
+          requestData.Request.RequestStatus !== "Approved" &&
+          requestData.Request.RequestStatus !== "Decline" &&
+          requestData.Request.RequestStatus !== "Complete" && (
+            <>
+              <button
+                onClick={handleApproved}
+                className="bg-primary-default text-white px-4 py-2 rounded-full mb-4"
+              >
+                Approved
+              </button>
+              <button
+                onClick={handleDecline}
+                className="bg-white text-pink-500 px-4 py-2 rounded-full border border-pink-500"
+              >
+                Decline
+              </button>
+            </>
+          )}
       </div>
+
+      <RequestConfirmModal
+        isOpen={showModal}
+        onConfirm={handleApprovedCancel}
+        onCancel={handleApprovedConfirm}
+        message="Are you sure you want to approve this request? Once approved, the request process will proceed."
+      />
+
+      <RequestDeclineModal
+        isOpen={isDeclineModalOpen}
+        onConfirm={handleDeclineConfirm}
+        onCancel={handleDeclineCancel}
+        message="Are you sure you want to decline this request? Once declined, the request process will not proceed."
+      />
+
+      <AppointmentRequestDeclineModal
+        isOpen={isDeclineModalOpen}
+        onConfirm={handleDeclineConfirm}
+        onCancel={handleDeclineCancel}
+        message="Are you sure you want to decline this appointment? Once declined, the request process will not proceed."
+        RequestID={RequestID}
+      />
     </section>
   );
 };
