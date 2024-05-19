@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { WebHost } from "../../../MyConstantSuperAdmin";
+import { Pie } from "react-chartjs-2";
+import Chart from 'chart.js/auto';
+
 
 export default function () {
   const [city, setCity] = useState(""); // State to hold the selected city
@@ -17,7 +20,7 @@ export default function () {
           )}`
         );
 
-        setDonationData(donationResponse.data);
+    
 
         const requestResponse = await axios.get(
           `${WebHost}/kalinga/getRequestStatusTotal?city=${encodeURIComponent(
@@ -25,10 +28,16 @@ export default function () {
           )}`
         );
 
+      
+        console.log("Donation Response:", donationResponse.data);
+        console.log("Request Response:", requestResponse.data);
+    
+        setDonationData(donationResponse.data);
         setRequestData(requestResponse.data);
 
         setError(null); // Clear any previous errors
       } catch (error) {
+        console.error("Error fetching data:", error);
         setError("Error fetching data: " + error.message); // Set error state with descriptive message
       }
     };
@@ -46,6 +55,34 @@ export default function () {
 
   const toggleFilterVisibility = () => {
     setIsFilterVisible(!isFilterVisible);
+  };
+
+  const donationChartData = {
+    labels: ['Successful Donations', 'Unsuccessful Donations'],
+    datasets: [
+      {
+        data: [
+          donationData.totalCompleteDonations || 0,
+          donationData.totalDeclinedDonations || 0,
+        ],
+        backgroundColor: ['#36A2EB', '#FF6384'],
+        hoverBackgroundColor: ['#36A2EB', '#FF6384'],
+      },
+    ],
+  };
+
+  const requestChartData = {
+    labels: ['Successful Requests', 'Unsuccessful Requests'],
+    datasets: [
+      {
+        data: [
+          requestData.totalCompleteRequests || 0,
+          requestData.totalDeclinedRequests || 0,
+        ],
+        backgroundColor: ['#36A2EB', '#FF6384'],
+        hoverBackgroundColor: ['#36A2EB', '#FF6384'],
+      },
+    ],
   };
 
   return (
@@ -107,13 +144,16 @@ export default function () {
           </div>
           <hr className="border-t-1 mt-4 border-primary-default" />
 
-          {city === "Manila City" && (
+          {(city === "Manila City" || city === "Quezon City") && (
             <div className="xl:px-8 lg:px-2 flex items-center justify-center w-full h-[60%] 2xl:gap-x-32 xl:gap-x-20 lg:gap-x-8">
-              <div className=" bg-white rounded-lg shadow-lg p-4 pb-10 ">
-                <div className="flex flex-col items-center justify-center gap-y-12">
-                  <h1 className="text-4xl text-center text-primary-default">
-                    Donations
-                  </h1>
+              <div className="bg-white rounded-lg shadow-lg p-4 pb-10 flex flex-col items-center gap-y-12">
+                <h1 className="text-4xl text-center text-primary-default">
+                  Donations
+                </h1>
+                <div className="flex flex-row items-center gap-x-6">
+                  <div className="w-1/2">
+                    <Pie data={donationChartData} />
+                  </div>
                   <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-24 lg:px-16 rounded-xl border-primary-default">
                     <h1 className="pb-4 text-6xl text-center text-primary-default">
                       {donationData.totalCompleteDonations}
@@ -121,8 +161,6 @@ export default function () {
                     <p className="text-2xl text-center text-primary-default">
                       Successful
                     </p>
-                  </div>
-                  <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-20 lg:px-12 rounded-xl border-primary-default">
                     <h1 className="pb-4 text-6xl text-center text-primary-default">
                       {donationData.totalDeclinedDonations}
                     </h1>
@@ -133,75 +171,34 @@ export default function () {
                 </div>
               </div>
 
-              <div className="flex flex-col items-center justify-center gap-y-12">
+              <div className="bg-white rounded-lg shadow-lg p-4 pb-10 flex flex-col items-center gap-y-12">
                 <h1 className="text-4xl text-center text-primary-default">
                   Requests
                 </h1>
-                <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-24 lg:px-16 rounded-xl border-primary-default">
-                  <h1 className="pb-4 text-6xl text-center text-primary-default">
-                    {requestData.totalCompleteRequests}
-                  </h1>
-                  <p className="text-2xl text-center text-primary-default">
-                    Successful
-                  </p>
-                </div>
-                <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-20 lg:px-12 rounded-xl border-primary-default">
-                  <h1 className="pb-4 text-6xl text-center text-primary-default">
-                    {requestData.totalDeclinedRequests}
-                  </h1>
-                  <p className="text-2xl text-center text-primary-default">
-                    Unsuccessful
-                  </p>
+                <div className="flex flex-row items-center gap-x-6">
+                  <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-24 lg:px-16 rounded-xl border-primary-default">
+                    <h1 className="pb-4 text-6xl text-center text-primary-default">
+                      {requestData.totalCompleteRequests}
+                    </h1>
+                    <p className="text-2xl text-center text-primary-default">
+                      Successful
+                    </p>
+                    <h1 className="pb-4 text-6xl text-center text-primary-default">
+                      {requestData.totalDeclinedRequests}
+                    </h1>
+                    <p className="text-2xl text-center text-primary-default">
+                      Unsuccessful
+                    </p>
+                  </div>
+                  <div className="w-1/2">
+                    <Pie data={requestChartData} />
+                  </div>
                 </div>
               </div>
             </div>
           )}
-          {city === "Quezon City" && (
-            <div className="xl:px-8 lg:px-2 flex items-center justify-center w-full h-[60%] 2xl:gap-x-32 xl:gap-x-20 lg:gap-x-8">
-              <div className="flex flex-col items-center justify-center gap-y-12">
-                <h1 className="text-4xl text-center text-primary-default">
-                  Donations
-                </h1>
-                <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-24 lg:px-16 rounded-xl border-primary-default">
-                  <h1 className="pb-4 text-6xl text-center text-primary-default">
-                    {donationData.totalCompleteDonations}
-                  </h1>
-                  <p className="text-2xl text-center text-primary-default">
-                    Successful
-                  </p>
-                </div>
-                <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-20 lg:px-12 rounded-xl border-primary-default">
-                  <h1 className="pb-4 text-6xl text-center text-primary-default">
-                    {donationData.totalDeclinedDonations}
-                  </h1>
-                  <p className="text-2xl text-center text-primary-default">
-                    Unsuccessful
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-col items-center justify-center gap-y-12">
-                <h1 className="text-4xl text-center text-primary-default">
-                  Requests
-                </h1>
-                <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-24 lg:px-16 rounded-xl border-primary-default">
-                  <h1 className="pb-4 text-6xl text-center text-primary-default">
-                    {requestData.totalCompleteRequests}
-                  </h1>
-                  <p className="text-2xl text-center text-primary-default">
-                    Successful
-                  </p>
-                </div>
-                <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-20 lg:px-12 rounded-xl border-primary-default">
-                  <h1 className="pb-4 text-6xl text-center text-primary-default">
-                    {requestData.totalDeclinedRequests}
-                  </h1>
-                  <p className="text-2xl text-center text-primary-default">
-                    Unsuccessful
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
+
+          {error && <div className="text-red-500">{error}</div>}
         </div>
       </section>
     </>

@@ -2,7 +2,7 @@ import express from 'express';
 
 import { registerUserOrSetNewPassword } from '../controllers/setPassAndRegisterUser';
 import { registerRequestor } from '../controllers/Requestor/Apply_As_Requestor/registerRequestor';
-import { AdminLogIn } from '../controllers/Admin/adminLogin';
+import { AdminLogIn, superAdminLogIn } from '../controllers/Admin/adminLogin';
 import { createAppointment } from '../controllers/Donor/appointmentController';
 import { getAppointmentByDonorID } from '../controllers/Admin/Appointment/getDonorAppointment';
 import {createRequest} from "../controllers/Requestor/RequestController";
@@ -54,7 +54,8 @@ import { deleteAppointmentRequestor} from '../controllers/Admin/Appointment/dele
 import { updateDonorRemark } from '../controllers/Admin/Appointment/updateDonorRemark'
 import { updateRequestRemark} from '../controllers/Admin/Appointment/updateRequestRemark'
 import { getDonationStatus, getDonationStatusOfMother } from '../controllers/Donor/getDonationStatus'
-
+import { getAllUsers } from '../controllers/SuperAdmin/getAllUser'
+import { deleteUser } from '../controllers/SuperAdmin/deleteUser'
 
 export default (router: express.Router) => {
   
@@ -64,7 +65,8 @@ export default (router: express.Router) => {
     router.post('/kalinga/registerRequestor', registerRequestor);
     router.post('/kalinga/userLogin', logInUser)
     router.get('/kalinga/userLogout/:token', logOutUser)
-    router.post('/kalinga/adminLoginIn', AdminLogIn)
+    router.post('/kalinga/superAdminLogin', superAdminLogIn)
+    router.post('/kalinga/adminLogin', AdminLogIn)
     router.get('/kalinga/isApproved/:Applicant_ID', isApproved)
     router.post('/kalinga/updateUserInformation', updateUserDetails)
 
@@ -121,6 +123,8 @@ export default (router: express.Router) => {
     router.delete ('/kalinga/deleteAppointmentRequestor/:RequestID', deleteAppointmentRequestor)
     router.put ('/kalinga/updateDonorRemark/:AppointmentDonorID', updateDonorRemark)
     router.put ('/kalinga/updateRequestRemark/:RequestID', updateRequestRemark)
+    router.get ('/kalinga/getAllUsers', getAllUsers)
+    router.delete ('/kalinga/deleteUser/:id/:userType', deleteUser)
 
 
 
