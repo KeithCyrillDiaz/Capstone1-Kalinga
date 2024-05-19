@@ -53,7 +53,7 @@ import { deleteAppointmentDonor } from '../controllers/Admin/Appointment/deleteA
 import { deleteAppointmentRequestor} from '../controllers/Admin/Appointment/deleteAppointmentRequestor'
 import { updateDonorRemark } from '../controllers/Admin/Appointment/updateDonorRemark'
 import { updateRequestRemark} from '../controllers/Admin/Appointment/updateRequestRemark'
-import { getDonationStatus} from '../controllers/Donor/getDonationStatus'
+import { getDonationStatus, getDonationStatusOfMother } from '../controllers/Donor/getDonationStatus'
 
 
 export default (router: express.Router) => {
@@ -79,6 +79,7 @@ export default (router: express.Router) => {
     router.get('/kalinga/getCompletedDonation/:Donor_ID', getCompletedDonation)
     router.get('/kalinga/getDonorStats/:Donor_ID', getDonorStats)
     router.get('/kalinga/getDonationStatus', getDonationStatus)
+    router.get('/kalinga/getDonationStatusMoterSide/:id', getDonationStatusOfMother)
 
 
    //Requestor
