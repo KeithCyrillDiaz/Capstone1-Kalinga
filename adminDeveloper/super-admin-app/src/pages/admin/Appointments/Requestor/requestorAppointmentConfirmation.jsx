@@ -58,45 +58,42 @@ const requestorAppointmentConfirmation = () => {
   const [isDeclineModalOpen, setIsDeclineModalOpen] = useState(false);
 
   const handleApproved = async () => {
-    setShowModal(true); 
+    setShowModal(true);
     try {
       await axios.put(`${WebHost}/kalinga/updateRequestStatus/${RequestID}`, {
         RequestStatus: "Approved",
       });
-
     } catch (error) {
       console.error("Error updating request status:", error);
     }
   };
 
   const handleApprovedConfirm = () => {
-    setShowModal(false); 
+    setShowModal(false);
   };
 
   const handleApprovedCancel = () => {
     setShowModal(false);
   };
   const handleDecline = async () => {
-    setIsDeclineModalOpen(true); 
+    setIsDeclineModalOpen(true);
 
     try {
       await axios.put(`${WebHost}/kalinga/updateRequestStatus/${RequestID}`, {
         RequestStatus: "Decline",
       });
-
     } catch (error) {
       console.error("Error updating request status:", error);
     }
   };
 
   const handleDeclineConfirm = () => {
-    setIsDeclineModalOpen(false); 
+    setIsDeclineModalOpen(false);
   };
 
   const handleDeclineCancel = () => {
-    setIsDeclineModalOpen(false); 
+    setIsDeclineModalOpen(false);
   };
-
 
   const babyCategoryOptions = [
     { label: "Newborn", value: "newborn" },
@@ -229,21 +226,21 @@ const requestorAppointmentConfirmation = () => {
           </div>
         </div>
 
-      <div className="mt-4 relative">
-        <div className="relative">
-          <input
-            type="text"
-            id="reasonRequest"
-            name="reasonRequest"
-            value={`Reason for Requesting: ${
-              requestData ? requestData.Request.ReasonForRequesting : ""
-            }`}
-            onChange={handleChange}
-            className="w-full px-4 py-2 h-20 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500 pl-8"
-            placeholder="Reason for Requesting"
-          />
+        <div className="mt-4 relative">
+          <div className="relative">
+            <input
+              type="text"
+              id="reasonRequest"
+              name="reasonRequest"
+              value={`Reason for Requesting: ${
+                requestData ? requestData.Request.ReasonForRequesting : ""
+              }`}
+              onChange={handleChange}
+              className="w-full px-4 py-2 h-20 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500 pl-8"
+              placeholder="Reason for Requesting"
+            />
+          </div>
         </div>
-      </div>
 
         <div className="mt-4 relative">
           <label
@@ -271,7 +268,7 @@ const requestorAppointmentConfirmation = () => {
           {requestData &&
             requestData.Request &&
             requestData.Request.RequestStatus !== "Approved" &&
-          requestData.Request.RequestStatus !== "Decline" &&
+            requestData.Request.RequestStatus !== "Decline" &&
             requestData.Request.RequestStatus !== "Complete" && (
               <>
                 <button
@@ -292,24 +289,26 @@ const requestorAppointmentConfirmation = () => {
 
         <RequestConfirmModal
           isOpen={showModal}
-            onConfirm={handleApprovedCancel}
+          onConfirm={handleApprovedCancel}
           onCancel={handleApprovedConfirm}
-        message="Are you sure you want to approve this request? Once approved, the request process will proceed."
+          message="Are you sure you want to approve this request? Once approved, the request process will proceed."
         />
 
-      <RequestDeclineModal
-        isOpen={isDeclineModalOpen}
-        onConfirm={handleDeclineConfirm}
-        onCancel={handleDeclineCancel}
-        message="Are you sure you want to decline this request? Once declined, the request process will not proceed."
-      />
+        <RequestDeclineModal
+          isOpen={isDeclineModalOpen}
+          onConfirm={handleDeclineConfirm}
+          onCancel={handleDeclineCancel}
+          message="Are you sure you want to decline this request? Once declined, the request process will not proceed."
+        />
 
-      <AppointmentRequestDeclineModal
-        isOpen={isDeclineModalOpen}
-        onConfirm={handleDeclineConfirm}
-        onCancel={handleDeclineCancel}
-        message="Are you sure you want to decline this appointment? Once declined, the request process will not proceed."
-        RequestID={RequestID}       />
+        <AppointmentRequestDeclineModal
+          isOpen={isDeclineModalOpen}
+          onConfirm={handleDeclineConfirm}
+          onCancel={handleDeclineCancel}
+          message="Are you sure you want to decline this appointment? Once declined, the request process will not proceed."
+          RequestID={RequestID}
+        />
+      </div>
     </section>
   );
 };
