@@ -54,7 +54,8 @@ import { deleteAppointmentRequestor} from '../controllers/Admin/Appointment/dele
 import { updateDonorRemark } from '../controllers/Admin/Appointment/updateDonorRemark'
 import { updateRequestRemark} from '../controllers/Admin/Appointment/updateRequestRemark'
 import { getDonationStatus} from '../controllers/Donor/getDonationStatus'
-
+import { getAllUsers } from '../controllers/SuperAdmin/getAllUser'
+import { deleteUser } from '../controllers/SuperAdmin/deleteUser'
 
 export default (router: express.Router) => {
   
@@ -120,6 +121,8 @@ export default (router: express.Router) => {
     router.delete ('/kalinga/deleteAppointmentRequestor/:RequestID', deleteAppointmentRequestor)
     router.put ('/kalinga/updateDonorRemark/:AppointmentDonorID', updateDonorRemark)
     router.put ('/kalinga/updateRequestRemark/:RequestID', updateRequestRemark)
+    router.get ('/kalinga/getAllUsers', getAllUsers)
+    router.delete ('/kalinga/deleteUser/:id/:userType', deleteUser)
 
 
 
