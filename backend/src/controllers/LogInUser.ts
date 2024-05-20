@@ -129,8 +129,55 @@ export const logOutUser = async (req: express.Request, res: express.Response) =>
         return res.json({
             messages: {
                 code: 1,
-                message: "Deleted Token Successfully"
+                message: "Internal Server Error"
             }
         })
+    }
+}
+
+
+export const checkIfBlock = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    try{
+        const { email }=req.body
+        if(!email) {
+            console.log("No Email, Bad Request")
+            return res.json({
+                messages: {
+                    code: 1,
+                    message: "No Email, Bad Request"
+                }
+            }).status(400)
+        }
+        let exisitingUser
+        exisitingUser = await getDonorByEmail(email)
+        if(!exisitingUser) exisitingUser = await getRequestorByEmail(email)
+
+        if(!exisitingUser) {
+            console.log("Email Not Found")
+            return res.json({
+                messages: {
+                    code: 1,
+                    message: "Email Not Found"
+                }
+            }).status(400)
+        }
+        if(exisitingUser.Blocked === "Yes"){
+            console.log("User is Blocked")
+            return res.json({
+                messages: {
+                    code: 1,
+                    message: "User is Blocked"
+                }
+            }).status(400)
+        }
+
+        next()
+    } catch(error) {
+    return res.json({
+                messages: {
+                    code: 1,
+                    message: "Internal Server Error"
+                }
+            }).status(500)
     }
 }

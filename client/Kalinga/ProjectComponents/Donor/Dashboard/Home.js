@@ -18,6 +18,7 @@ const DonorHome = ({route}) => {
     const token = route.params.token
     // console.log("route.params.userInformation: ", route.params.userInformation.fullName)
     const [userInformation, setUserInformation] = useState(route.params.userInformation)
+    const [donationStatus, setDonationStatus] = useState('empty'); // State to hold request status
     const storeInAsync = async () => {
       await AsyncStorage.setItem('userInformation', JSON.stringify(userInformation))
       await AsyncStorage.setItem('token', token)
@@ -36,10 +37,24 @@ const DonorHome = ({route}) => {
     
     const navigatePage = async (Page) => {
 
+      if(Page === "Donor Educational Library"){
+        Alert.alert(
+          "Sorry, this feature is not yet available right now.",
+          "Rest assured, our team is hard at work developing new features to better serve our community. Your continued support means the world to us. Thank you for your patience!",
+          [
+            {
+              text: "Okay",
+            }
+          ]
+        );
+        return
+      }
       if(Page === "ValidUserExplore"){
         const result = await checkLocationPermission()
         console.log("result: ", result)
         if(!result)return
+        navigation.navigate(Page, {data: userInformation, token: token, donationStatus: donationStatus});
+        return
       }
       navigation.navigate(Page, {data: userInformation, token: token}); // Navigate to the Login screen
   };   
@@ -101,52 +116,32 @@ const DonorHome = ({route}) => {
       }
     }
             
-    useFocusEffect(
-      React.useCallback(() => {
-        fetchUpdateduserInfo()
-        storeInAsync()
-        simulateFetchDonationStatus();
-      }, [])
-  );
-
   const simulateFetchDonationStatus = async () => {
     try {
-        const response = await fetch(`${BASED_URL}/kalinga/getRequestStatus`);
-        if (!response.ok) {
-            console.log('Network response was not ok');
+        console.log("Fetching Donation Status")
+        const response = await axios.get(`${BASED_URL}/kalinga/getDonationStatusMoterSide/${userInformation.Donor_ID}`);
+        console.log(response.data.messages.message)
+        if(response.data.messages.code === 1) return
+        if(response.data.messages.message !== "No pending or ongoing Donation Appointment"){
+          console.log("Donation Status:", response.data.appointments.DonationStatus)
+          setDonationStatus(response.data.appointments.DonationStatus);
         }
-
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-            const data = await response.json();
-            console.log('Fetched Data:', data); // Log the fetched data
-            setDonationStatus(data.DonationStatus);
-            console.log('Updated Request Status:', data.DonationStatus); // Log the updated state
-        } else {
-            throw new Error('Invalid content type received');
-        }
+        // console.log('Updated Donation Status:', data.DonationStatus);
     } catch (error) {
-        console.error('Error fetching request status:', error);
+        console.error('Error fetching Donation status:', error);
     }
 };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      fetchUpdateduserInfo()
-      storeInAsync()
-      simulateFetchRequestStatus();
-    }, [])
-);
 
 const handleMakeDonation = () => {
-    console.log('Current Donation Status:', DonationStatus);
+    console.log('Current Donation Status:', donationStatus);
 
-    const canMakeDonation = DonationStatus !== 'Pending' && DonationStatus !== 'Ongoing';
+    const canMakeDonation = donationStatus !== 'Pending' && donationStatus !== 'Ongoing';
     console.log('Can Make Donation:', canMakeDonation); // Log the evaluation result
 
     if (canMakeDonation) {
         console.log('Navigating to MakeRequest');
-        navigatePage('MyDonation');
+        navigatePage('SetAnAppointment');
     } else {
         console.log('Cannot Make Donatin');
         Alert.alert(
@@ -156,6 +151,14 @@ const handleMakeDonation = () => {
         );
     }
 };
+
+useFocusEffect(
+  React.useCallback(() => {
+    fetchUpdateduserInfo()
+    storeInAsync()
+    simulateFetchDonationStatus();
+  }, [])
+);
 
     return (
       <View style={[globalStyles.container, {marginTop: "-5%"}]}>
@@ -169,64 +172,53 @@ const handleMakeDonation = () => {
         overScrollMode='never' // Disable the over-scroll effect or the Jelly effect when reaching the end of the scroll
         nestedScrollEnabled={true} // Enable nested scrolling
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingBottom: 20}}
         >
               <View style = {styles.flex_start}>
                 <Text style = {styles.title}>Donor's Dashboard</Text>
               </View>
-              <View style = {styles.flex_Row}>
+              <View style = {styles.boxRowContainer}>
 
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("ValidUserExplore")}>
+                <TouchableOpacity style = {styles.box} onPress={() => navigatePage("ValidUserExplore")}>
                     <MaterialIcons name="location-pin" size={70} color="#E60965" />
-                    <View style = {styles.LabelCenter}>
-                      <Text style = {styles.Label}>Milk Bank Locator</Text>
-                      <Text style = {styles.subLabel}>Easily find human milk banks near you</Text>
-                    </View>
+                    <Text style = {styles.boxTitle}>Milk Bank Locator</Text>
+                    <Text style = {styles.subLabel}>Easily find human milk banks near you</Text>
                 </TouchableOpacity>
                 
-                  <TouchableOpacity style = {globalStyles.smallBackgroundBox}  onPress={() => navigatePage("Donor Educational Library")}>
-                    <Ionicons name="book" size={70} color="#E60965" />
-                    <View style = {styles.LabelCenter}>
-                      <Text style = {styles.Label}>Educational Library</Text>
+                  <TouchableOpacity style = {styles.box}  onPress={() => navigatePage("Donor Educational Library")}>
+                      <Ionicons name="book" size={70} color="#E60965" />
+                      <Text style = {styles.boxTitle}>Educational Library</Text>
                       <Text style = {styles.subLabel}>Explore our educational articles on breastfeeding and maternal health</Text>
-                    </View>
                   </TouchableOpacity>
                 
 
               </View>
 
-              <View style = {styles.flex_Row}>
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("Chat Assistance")}>
-                <FontAwesome5 name="robot" size={70} color="#E60965"/>
-                  <View style = {styles.LabelCenter}>
-                    <Text style = {styles.Label}>Instant Messaging</Text>
+              <View style = {styles.boxRowContainer}>
+                <TouchableOpacity style = {styles.box} onPress={() => navigatePage("Chat Assistance")}>
+                    <FontAwesome5 name="robot" size={70} color="#E60965"/>
+                    <Text style = {styles.boxTitle}>Instant Messaging</Text>
                     <Text style = {styles.subLabel}>Chat with our chatbot for quick respond to FAQs </Text>
-                  </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("DonorForum", userInformation)}>
-                <MaterialIcons name="forum" size={70} color="#E60965" />
-                  <View style = {styles.LabelCenter}>
-                    <Text style = {styles.Label}>Forum</Text>
+                <TouchableOpacity style = {styles.box} onPress={() => navigatePage("DonorForum", userInformation)}>
+                    <MaterialIcons name="forum" size={70} color="#E60965" />
+                    <Text style = {styles.boxTitle}>Forum</Text>
                     <Text style = {styles.ShortLabel}>Engage with user discussions</Text>
-                  </View>
                 </TouchableOpacity>
               </View>
 
-              <View style = {styles.flex_Row}>
-              <TouchableOpacity style={globalStyles.smallBackgroundBox} onPress={handleMakeDonation}>
-                <Ionicons name="calendar" size={70} color="#E60965" />
-                  <View style = {styles.LabelCenter}>
-                    <Text style = {styles.Label}>Make a Donation</Text>
+              <View style = {styles.boxRowContainer}>
+              <TouchableOpacity style={styles.box} onPress={handleMakeDonation}>
+                    <Ionicons name="calendar" size={70} color="#E60965" />
+                    <Text style = {styles.boxTitle}>Make a Donation</Text>
                     <Text style = {styles.subLabel}>Ready to donate? Set an appointment</Text>
-                  </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("MyDonationTabs")}>
+                <TouchableOpacity style = {styles.box} onPress={() => navigatePage("MyDonationTabs")}>
                   <SimpleLineIcons name="graph" size={70} color="#E60965"s />
-                  <View style = {styles.LabelCenter}>
-                    <Text style = {styles.Label}>My Donations</Text>
+                    <Text style = {styles.boxTitle}>My Donations</Text>
                     <Text style = {styles.subLabel}>View Milk Donation History</Text>
-                  </View>
                 </TouchableOpacity>
               </View>
        
@@ -239,6 +231,39 @@ const handleMakeDonation = () => {
 
   const styles = StyleSheet.create({
 
+    boxRowContainer: {
+      flexDirection: "row",
+      alignItems:"center",
+      justifyContent:"space-evenly",
+      paddingVertical:10,
+      gap: 17
+    },
+  
+    box: {
+      backgroundColor: "white",
+      height:170,
+      maxHeight:180,
+      width: 160,
+      maxWidth:200,
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 17,
+      elevation:7
+    },
+    boxTitle: {
+      textAlign: "center",
+      fontFamily: "Open-Sans-Bold",
+      fontSize: 16,
+      color:"#E60965",
+    },
+    boxMinitext: {
+      width:100,
+      textAlign: "center",
+      fontSize: 14,
+      color:"#E60965",
+      fontFamily: "Open-Sans-Regular"
+    },
+  
 
     flex_start:{ 
       flex: 1,

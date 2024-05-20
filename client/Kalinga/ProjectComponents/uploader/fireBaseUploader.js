@@ -20,7 +20,6 @@ export const UploadImageOrFileToFirebase = ({
   }) => {
     return new Promise(async (resolve, reject) => {
       try {
-
         if(setImage && setLabel && percent){
             const uri = type === "File" ? "" : URI
             const label = type === "File" ? "Uploading Files..." : "Uploading Images..."

@@ -68,7 +68,7 @@ useEffect(() => {
     
   return (
 
-      <SafeAreaView style = {styles.SafeArea}>
+      <SafeAreaView style = {globalStyles.defaultBackgroundColor}>
           <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style = {globalHeader.SmallHeader}>
               <Text style = {globalHeader.SmallHeaderTitle}>My Donation</Text>
@@ -149,7 +149,7 @@ useEffect(() => {
         color: "#E60965",
         fontFamily: "Open-Sans-Bold",
         fontSize: 18,
-        textAlign: "justify"
+        textAlign: "center"
     },
 
     messTitle: {

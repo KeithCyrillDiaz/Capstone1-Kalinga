@@ -96,7 +96,9 @@ const ForumPage = ({route}) => {
                 content: postContent,
                 userType: userType
             })
+            console.log(result.data.messages.message)
             setIsModalOpen(false)
+            Alert.alert('Waiting for Admin Approval', 'Your post is being processed by the admin. It will be posted once approved.');
             fetchPost();
         } catch(error) {
             if(error)Alert.alert('Network error', `Please check your internet connection`)
@@ -192,7 +194,7 @@ const ForumPage = ({route}) => {
 
   return (
         <View 
-            style={{ flex: 1, backgroundColor: '#FFF8EB',}} 
+            style={{ flex: 1, backgroundColor: '#f5f5f5',}} 
             behavior={Platform.OS === "ios" ? "padding" : "height"} // Adjust behavior based on platform
             keyboardVerticalOffset={Platform.OS === "ios" ? 0 : -150} // Adjust vertical offset if needed
         >
@@ -201,31 +203,37 @@ const ForumPage = ({route}) => {
               <Text style = {globalHeader.SmallHeaderTitle}>Forum</Text>
             </View>
             
-            <View style = {styles.ForumContainer}>
-                { profilePic === "" 
-                    ?<FontAwesome name="user-circle-o" size={40} color="#E60965" />
-                    : <Image
-                        source = {{uri: profilePic}}
-                        style = {{
-                            width: 45,
-                            height: 45,
-                            borderWidth: 1,
-                            borderRadius: 100,
-                            borderColor: "#E60965",
-                        }}
-                      />
-                }
-                <TextInput
-                 style={styles.inputField}
-                 //value={message}
-                 //onChangeText={setMessage}
-                 placeholder="Search"
-                 placeholderTextColor="#E60965"
-                 //onSubmitEditing={handleMessageSend}
-                 //returnKeyType="send"
-                />
-                <TouchableOpacity>
-                <MaterialIcons onPress={() => setIsModalOpen(true)} name="post-add" size={50} color="#E60965" />
+            <View style = {[styles.ForumContainer, { justifyContent:"space-between", paddingHorizontal:7, paddingVertical:7}]}>
+                {/* <View style={{flexDirection: "row", alignItems: "center", gap:7}}> */}
+                    { profilePic === "" 
+                        ?<FontAwesome name="user-circle-o" size={40} color="#E60965" />
+                        : <Image
+                            source = {{uri: profilePic}}
+                            style = {{
+                                width: 45,
+                                height: 45,
+                                borderWidth: 1,
+                                borderRadius: 100,
+                                borderColor: "#E60965",
+                            }}
+                        />
+                    }
+                    {/* <TextInput
+                    style={styles.inputField}
+                    //value={message}
+                    //onChangeText={setMessage}
+                    placeholder="Search"
+                    placeholderTextColor="#E60965"
+                    //onSubmitEditing={handleMessageSend}
+                    //returnKeyType="send"
+                    /> */}
+                    <TouchableOpacity onPress={() => setIsModalOpen(true)} >
+                        <Text style = {{marginTop:10, fontFamily: "Kurale", fontSize: 15, width: 170, textAlign: "center", color: "#E60965"}}>What's on your mind {firstName}?</Text>
+                    </TouchableOpacity>
+                    
+                {/* </View> */}
+                <TouchableOpacity onPress={() => setIsModalOpen(true)} >
+                    <MaterialIcons name="post-add" size={50} color="#E60965" />
                 </TouchableOpacity>
               
             </View>
@@ -290,32 +298,35 @@ const ForumPage = ({route}) => {
                                 <Text style = {[styles.postContent]}>
                                     {item.content}
                                 </Text>
+                                <View style = {{
+                                    flexDirection: "row",
+                                    marginHorizontal: "6%",
+                                    alignItems: "center",
+                                    justifyContent: "space-evenly",
+                                    marginTop: 10,
+                                    marginBottom:5
+                                    }}>
+                                    <View style={styles.reactionContainer}>
+                                        <View style = {styles.reactionLeftBox}>
+                                            <TouchableOpacity>
+                                            <AntDesign name={likedPosts.includes(item.post_ID) ? "heart" : "hearto"} size={24} color="#E60965" onPress={() => handleHeartClick(item.post_ID)} />
+                                            </TouchableOpacity>
+                                            <Text style = {styles.ReactsLeftLabel}>
+                                                Love
+                                            </Text>
+                                        </View>
+                                    </View>
+                                    <View style={styles.reactionContainer}>
+                                        <View style = {styles.reactionRightBox}>
+                                            <TouchableOpacity onPress={() => handleCommentClick(item.post_ID)}>
+                                                <Feather name="message-circle" size={24} color="#E60965" />
+                                            </TouchableOpacity>
+                                            <Text style={styles.ReactsLabel}>Comments</Text>
+                                        </View> 
+                                    </View>
+                                </View>
                     </View>
-                    <View style = {{
-                        flexDirection: "row",
-                        marginHorizontal: "6%",
-                        alignItems: "center",
-                        justifyContent: "space-evenly"
-                        }}>
-                        <View style={styles.reactionContainer}>
-                            <View style = {styles.reactionLeftBox}>
-                                <TouchableOpacity>
-                                <AntDesign name={likedPosts.includes(item.post_ID) ? "heart" : "hearto"} size={24} color="#E60965" onPress={() => handleHeartClick(item.post_ID)} />
-                                </TouchableOpacity>
-                                <Text style = {styles.ReactsLeftLabel}>
-                                    Love
-                                </Text>
-                            </View>
-                        </View>
-                        <View style={styles.reactionContainer}>
-                            <View style = {styles.reactionRightBox}>
-                                <TouchableOpacity onPress={() => handleCommentClick(item.post_ID)}>
-                                    <Feather name="message-circle" size={24} color="#E60965" />
-                                </TouchableOpacity>
-                                <Text style={styles.ReactsLabel}>Comments</Text>
-                            </View> 
-                        </View>
-                    </View>
+                   
                     <ScrollView
                     style = {{ 
                         flex: 1,
@@ -327,7 +338,9 @@ const ForumPage = ({route}) => {
                         <View style = {styles.commentOutputBox}>
                             {item.comments_ID && item.comments_ID.map((comment, index) => (
                                 <View style ={{marginTop: 10}} key={index}>
-                                    <View style={styles.flex_start}>
+                                     <View style={[styles.flex_start, {
+                                        backgroundColor: "#f5f5f5"
+                                        }]}>
                                         { (!comment.DonorOwnerID || !comment.DonorOwnerID.DPLink)
                                             && (!comment.RequestorOwnerID || !comment.RequestorOwnerID.DPLink)
                                             ?<FontAwesome name="user-circle-o" size={40} color="#E60965" />
@@ -385,7 +398,7 @@ const ForumPage = ({route}) => {
                                 .filter(comment => comment.post_ID === item.post_ID) // Filter comments for the current post
                                 .map((comment, index) => (
                                 <View key={index}>
-                                    <View style={styles.flex_start}>
+                                    <View style={[styles.flex_start, {backgroundColor: "#f5f5f5"}]}>
                                         {!userInformation.DPLink ? (
                                             <FontAwesome name="user-circle-o" size={40} color="#E60965" />
                                         ) : (
@@ -601,39 +614,44 @@ const ForumPage = ({route}) => {
 
     Box: {
         flex: 1,
-        //backgroundColor: '#FFE7DA',
+        backgroundColor: 'white',
         //width: '90%',
-        marginHorizontal: "6%",
-        borderWidth: 4,
-        borderColor: "#E60965",
-        borderTopLeftRadius: 15,
-        borderTopRightRadius: 15,
-        borderBottomWidth: 0,
-        paddingVertical: "4%", 
-        paddingHorizontal: "3%",
+        marginHorizontal: "10%",
+        // borderWidth: 4,
+        // borderColor: "#E60965",
+        // borderTopLeftRadius: 15,
+        // borderTopRightRadius: 15,
+        // borderBottomWidth: 0,
+        borderRadius: 17,
+        paddingHorizontal: "7%",
+        elevation:5,
+        paddingTop: 17
     },
 
     reactionContainer: {
         flex: 1,
+        elevation:5
     },
 
     reactionLeftBox: {
         flexDirection: "row",
         justifyContent: "center",
-        borderWidth:4,
-        borderRightWidth: 0,
-        borderColor: "#E60965",
+        // borderWidth:4,
+        // borderRightWidth: 0,
+        // borderColor: "#E60965",
+        // borderBottomLeftRadius: 15,
         paddingVertical: 7,
-        borderBottomLeftRadius: 15
+        // elevation:5
     },
 
     reactionRightBox: {
         flexDirection: "row",
         justifyContent: "center",
-        borderWidth:4,
+        // borderWidth:4,
+        // borderBottomRightRadius: 15,
+        // borderColor: "#E60965",
         paddingVertical: 7,
-        borderBottomRightRadius: 15,
-        borderColor: "#E60965",
+        // elevation:5
     },
 
     commentContainer: {

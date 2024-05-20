@@ -5,7 +5,7 @@ export const globalStyles = StyleSheet.create({
 
     container: {
       flex: 1,
-      backgroundColor: '#FFF8EB',
+      backgroundColor: '#f5f5f5',
       alignItems: 'center',
       justifyContent: 'center',
       width: '100%',
@@ -14,7 +14,7 @@ export const globalStyles = StyleSheet.create({
 
     defaultBackgroundColor: {
       flex: 1,
-      backgroundColor: '#FFF8EB',
+      backgroundColor: '#f5f5f5',
     },
 
     SafeArea:{

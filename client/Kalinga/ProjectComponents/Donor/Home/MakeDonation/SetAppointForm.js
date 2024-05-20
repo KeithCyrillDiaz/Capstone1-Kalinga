@@ -48,7 +48,6 @@ const SetAppointment = ({route}) => {
     Donor_ID: Donor_ID,
     userType: "Donor",
     DonationStatus: "Pending",
-    DonorRemark: "",
     fullName: userInformation.fullName,
     phoneNumber: userInformation.mobileNumber,
     emailAddress: userInformation.email,
@@ -208,19 +207,25 @@ const SetAppointment = ({route}) => {
                       *
                     </Text>
                 </View>
-                <View style={styles.dropdownContainer}>
-                <Picker
-                  selectedValue={formData.city}
-                  style={{ height: 30, width: "100%", color: '#E60965'}}
-                  onValueChange={(itemValue) =>
-                    handleChange("city", itemValue)
-                  }
-                >
-                  <Picker.Item label="Select City" value="" />
-                  <Picker.Item label="Manila City" value="Manila City" />
-                  <Picker.Item label="Quezon City" value="Quezon City" />
-                </Picker>
-            </View>
+                <View style={styles.inputField}>
+                  <View style={styles.spaceBetween}>
+                    <Picker
+                      selectedValue={formData.city}
+                      style={{ height: 30, width: "100%", color: '#E60965'}}
+                      onValueChange={(itemValue) =>
+                        handleChange("city", itemValue)
+                      }
+                    >
+                      <Picker.Item label="Select City" value="" />
+                      <Picker.Item label="Manila City" value="Manila City" />
+                      <Picker.Item label="Quezon City" value="Quezon City" />
+                    </Picker>
+                  </View>
+                 
+                    <Text style = {styles.asterix}>
+                      *
+                    </Text>
+                </View>
                 <View style={styles.inputField}>
                   <View style={styles.spaceBetween}>
                     <Picker
@@ -305,7 +310,7 @@ const SetAppointment = ({route}) => {
 
     spaceBetween:{
       //backgroundColor: "gray",
-      width: "95%"
+      width: "95%",
     },
 
     note: {
@@ -317,21 +322,20 @@ const SetAppointment = ({route}) => {
     },
     
     inputField: {
-      //backgroundColor: "gray",
+      backgroundColor: "white",
       padding: 10,
       paddingLeft: 15,
       width: "90%",
-      borderWidth: 1,
-      borderColor: "#E60965",
-      borderRadius: 20,
+      borderRadius: 10,
       marginTop: 20,
       flexDirection: "row",
       alignItems: "center",
-      
+      elevation:7,
     },
 
     placeholderDesign: {
-      fontFamily: "Open-Sans-Light"
+      fontFamily: "Kurale",
+      color: "#E60965",
     },
 
     asterix: {
@@ -372,13 +376,10 @@ const SetAppointment = ({route}) => {
       padding: 10,
       paddingLeft: 15,
       width: "90%",
-      borderWidth: 1,
-      borderColor: "#E60965",
       borderRadius: 20,
       marginTop: 20,
       flexDirection: "row",
       alignItems: "center",
-      
 },
 dropdown: {
   height: 10,

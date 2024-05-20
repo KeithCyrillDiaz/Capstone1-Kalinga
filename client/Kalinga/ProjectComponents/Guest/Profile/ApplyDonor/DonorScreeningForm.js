@@ -48,7 +48,6 @@ const DonorScreeningForm = () => {
     sex: '',
     childBirthDate: '',
     birthWeight: '',
-    ageOfGestation: '',
     typeOfDonor: '',
     QA: '',
     QB: '',
@@ -141,7 +140,6 @@ const checkForm = (value) => {
     'sex',
     'childBirthDate',
     'birthWeight',
-    'ageOfGestation',
     ];
 
     if(value === "Address") {
@@ -477,12 +475,12 @@ useEffect(() => {
 useEffect(() => {
   //checkForm
   checkForm("Screening Form")
-}, [screeningFormData.ageOfGestation])
+}, [screeningFormData.childBirthDate])
 
   return (
     
 
-      <SafeAreaView style = {styles.SafeArea}>
+      <SafeAreaView style = {globalStyles.defaultBackgroundColor}>
           <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style = {globalHeader.SmallHeader}>
               <Text style = {globalHeader.SmallHeaderTitle}>Apply as Donor</Text>
@@ -696,7 +694,7 @@ useEffect(() => {
                       flex: 1, 
                       width: "90%"
                       }}>
-                      <Text style={{ color: "#E60965", fontSize: 14, marginLeft: 10, fontFamily: "Open-Sans-SemiBold"}}>Complete Address:</Text>
+                      <Text style={{ color: "#E60965", fontSize: 16, marginLeft: 10, fontFamily: "Open-Sans-SemiBold"}}>Complete Address:</Text>
                       <TextInput
                           style={[styles.BiginputField, {width: "100%"}]}
                           placeholder="Complete Home Address"
@@ -785,7 +783,9 @@ useEffect(() => {
                         style={[styles.birthDayInputField,
                           {
                             marginHorizontal: 0,
-                            width: "70%"
+                            width: "70%",
+                            fontFamily: "Open-Sans-Regular",
+                            fontSize: 16, 
                           }
                         ]}
                         placeholder="Birth Date: MM/DD/YY"
@@ -808,11 +808,10 @@ useEffect(() => {
                                 marginRight: "20%",
                                 color: "red"}}>Please enter a valid Birthday</Text>
                             )}
-                    <View 
+                    {/* <View 
                       style = {{
                         flex: 1,
                         flexDirection: "row",
-                        borderWidth: 1,
                         borderRadius: 20,
                         borderColor: "#E60965",
                         backgroundColor:"white",
@@ -821,7 +820,7 @@ useEffect(() => {
                         justifyContent: "space-between",
                         paddingRight: 15,
                         paddingVertical: 4,
-                        elevation: 5,
+                        elevation: 7,
                         marginTop: 7,
                       }}
                     >
@@ -863,7 +862,7 @@ useEffect(() => {
                           />
                         </TouchableOpacity>
               
-                    </View>
+                    </View> */}
                     
               </View>
 
@@ -900,9 +899,9 @@ useEffect(() => {
             backgroundColor: "white",
             height: "60%",
             width: "80%",
-            borderWidth: 1,
             borderColor: "#E60965",
-            borderRadius: 17
+            borderRadius: 17,
+            elevation: 7
           }}>
             <TouchableOpacity
              onPress={() => setOpenGestationInfo(false)}
@@ -949,7 +948,7 @@ useEffect(() => {
   const styles = StyleSheet.create ({
 
     addressDropdown: {
-      borderWidth: 1,
+      elevation: 7,
       borderRadius: 20,
       borderColor: "#E60965",
       paddingVertical: 5,
@@ -959,6 +958,8 @@ useEffect(() => {
       backgroundColor: "#FFFFFF",
       elevation: 5,
       paddingRight: 10,
+      fontSize: 16, 
+      fontFamily: "Open-Sans-Regular"
     },
    
     label: {
@@ -968,30 +969,32 @@ useEffect(() => {
       top: 8,
       zIndex: 999,
       paddingHorizontal: 8,
-      fontSize: 14,
+      fontSize: 16, 
     },
     placeholderStyle: {
-      fontSize: 14,
       marginLeft: 20,
       color: "#E60965",
-
+      fontSize: 16, 
+      fontFamily: "Open-Sans-Regular"
     },
   
     selectedTextStyle: {
-      fontSize: 14,
+      fontSize: 16, 
       marginLeft: 15,
       height: 70,
       justifyContent: "center",
       alignItems: "center",
       color: '#E60965',
+      fontFamily: "Open-Sans-Regular"
     },
 
     sexSelectedTextStyle: {
-      fontSize: 13,
+      fontSize: 16, 
       marginLeft: 10,
       justifyContent: "center",
       alignItems: "center",
       color: '#E60965',
+      fontFamily: "Open-Sans-Regular"
     },
   
     inputSearchStyle: {
@@ -1025,7 +1028,7 @@ useEffect(() => {
     label: {
         color: "white",
         fontFamily: "Open-Sans-Bold",
-        fontSize: 15,
+        fontSize: 16, 
 
     },
     rectanglesContainer: {
@@ -1038,18 +1041,20 @@ useEffect(() => {
 
     rectangle: {
       width: 50,
-      height: 4, 
-      backgroundColor: '#FFEECC', // Color for Rectangle F94892
+      height: 7, 
+      backgroundColor: 'white', // Color for Rectangle F94892
       borderRadius: 10,
       marginHorizontal: 5,
+      elevation: 7
     },
 
     rectangleIndicator: {
       width: 50,
-      height: 4, 
+      height: 7, 
       backgroundColor: '#F94892', // Color for Rectangle F94892
       borderRadius: 10,
       marginHorizontal: 5,
+      elevation: 7
     },
 
     title: {
@@ -1081,13 +1086,13 @@ useEffect(() => {
 
     text: {
         fontFamily: "Open-Sans-Regular",
-        fontSize: 15,
+        fontSize: 16, 
         textAlign: "justify",
         marginTop: "5%",
     },
 
     ageInfantInputField: {
-      borderWidth: 1,
+      fontSize: 16, 
       borderRadius: 20,
       borderColor: "#E60965",
       paddingVertical: 5,
@@ -1095,21 +1100,22 @@ useEffect(() => {
       width: "27%",
       color: "#E60965",
       backgroundColor: "#FFFFFF",
-      elevation: 5,
+      elevation: 7,
+      fontFamily: "Open-Sans-Regular"
     },
 
     sexInputField: {
+      fontSize: 16, 
       width: "35%",
       backgroundColor: "#FFFFFF",
-      borderWidth: 1,
       borderRadius: 20,
       borderColor: "#E60965",
-      elevation: 5,
+      elevation: 7,
       paddingHorizontal: 10,
+      fontFamily: "Open-Sans-Regular"
     },
 
     ageInputField: {
-      borderWidth: 1,
       borderRadius: 20,
       borderColor: "#E60965",
       paddingVertical: 5,
@@ -1119,11 +1125,12 @@ useEffect(() => {
       marginRight: "3%",
       color: "#E60965",
       backgroundColor: "#FFFFFF",
-      elevation: 5,
+      elevation: 7,
+      fontFamily: "Open-Sans-Regular",
+      fontSize: 16, 
     },
 
     birthDayInputField: {
-      borderWidth: 1,
       borderRadius: 20,
       borderColor: "#E60965",
       paddingVertical: 5,
@@ -1133,7 +1140,9 @@ useEffect(() => {
       marginHorizontal: "3%",
       color: "#E60965",
       backgroundColor: "#FFFFFF",
-      elevation: 5,
+      elevation: 7,
+      fontFamily: "Open-Sans-Regular",
+      fontSize: 16, 
     },
       ageOfGestationDropDown: {
         width: "90%",
@@ -1143,7 +1152,6 @@ useEffect(() => {
       },
 
       BiginputField: {
-        borderWidth: 1,
         borderRadius: 20,
         borderColor: "#E60965",
         paddingVertical: 7,
@@ -1152,11 +1160,12 @@ useEffect(() => {
         marginVertical: "1.5%",
         color: "#E60965",
         backgroundColor: "#FFFFFF",
-        elevation: 5
+        elevation: 7,
+        fontFamily: "Open-Sans-Regular",
+        fontSize: 16, 
     },
 
     SmallinputField: {
-        borderWidth: 1,
         borderRadius: 20,
         borderColor: "#E60965",
         paddingVertical: 5,
@@ -1166,7 +1175,9 @@ useEffect(() => {
         marginRight: "3%",
         color: "#E60965",
         backgroundColor: "#FFFFFF",
-        elevation: 5,
+        elevation: 7,
+        fontFamily: "Open-Sans-Regular",
+        fontSize: 16, 
     },
 
    

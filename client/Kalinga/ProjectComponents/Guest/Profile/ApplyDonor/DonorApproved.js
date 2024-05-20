@@ -32,13 +32,13 @@ const DonorApproved = () => {
 
   return (
 
-      <SafeAreaView style = {styles.SafeArea}>
+      <SafeAreaView style = {globalStyles.defaultBackgroundColor}>
           <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style = {globalHeader.SmallHeader}>
               <Text style = {globalHeader.SmallHeaderTitle}>Apply as Donor</Text>
             </View>
 
-            <View style = {styles.container}>
+            <View style = {globalStyles.defaultBackgroundColor}>
               <Octicons name="checklist" size={200} color="#F94892" />
               <View style = {styles.labelContainer}>
                 <Text style = {styles.mess}>{FirstParagraph}</Text>

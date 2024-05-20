@@ -11,6 +11,7 @@ import { Octicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { globalStyles } from '../../../styles_kit/globalStyles.js';
 
 
 
@@ -81,7 +82,7 @@ const DonorProfile = ({route}) => {
 
     return (
         
-        <SafeAreaView style = {styles.safeArea}>
+        <SafeAreaView style = {globalStyles.defaultBackgroundColor}>
             <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style = {globalHeader.SmallHeader}>
               <Text style = {globalHeader.SmallHeaderTitle}>Profile</Text>
@@ -127,7 +128,7 @@ const DonorProfile = ({route}) => {
 
                   <View style = {styles.box}>
                     
-                      <TouchableOpacity  onPress={() => navigatePage("DonorSavedArticles")}>
+                      {/* <TouchableOpacity  onPress={() => navigatePage("DonorSavedArticles")}>
                         <View style = {styles.rowBox}>
                           <View style = {styles.rowMenu}>
                             <FontAwesome5 style = {styles.iconBookmark} name="bookmark" size={30} color="#E60965" />
@@ -138,10 +139,10 @@ const DonorProfile = ({route}) => {
                           <Entypo name="chevron-right" size={30} color="#E60965" />
               
                         </View>
-                      </TouchableOpacity>
+                      </TouchableOpacity> */}
                        
                  
-                  <TouchableOpacity onPress = {() => navigatePage("DonorFavoriteArticles")}>
+                  {/* <TouchableOpacity onPress = {() => navigatePage("DonorFavoriteArticles")}>
                       <View style = {styles.rowBox}>
                           <View style = {styles.rowMenu}>
                             <MaterialCommunityIcons style = {styles.iconBabyBottle} name="baby-bottle-outline" size={38} color="#E60965"/>
@@ -153,7 +154,7 @@ const DonorProfile = ({route}) => {
                           <Entypo name="chevron-right" size={30} color="#E60965" />
                       </View>
 
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     
                     <TouchableOpacity onPress={() => navigatePage("DonorSettingScreen")}>
                       <View style = {styles.rowBox}>

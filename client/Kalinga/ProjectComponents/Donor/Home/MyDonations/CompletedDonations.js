@@ -6,6 +6,7 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import axios from 'axios'; // Import axios for API requests
 import { format } from 'date-fns';
 import { BASED_URL } from '../../../../MyConstants.js';
+import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 
 const Tab = createBottomTabNavigator()
 
@@ -27,6 +28,9 @@ const CompleteDonations = ({route}) => {
       fetchData();
     }, [])
   )
+  useEffect(() => {
+    fetchData();
+  },[])
 
   const fetchData = async () => {
     try {
@@ -57,7 +61,7 @@ const CompleteDonations = ({route}) => {
 
 };
     return (
-             <SafeAreaView style = {styles.container}>
+             <SafeAreaView style = {globalStyles.defaultBackgroundColor}>
                 <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
               
                 <ScrollView
@@ -245,14 +249,13 @@ const styles = StyleSheet.create ({
 
   boxColContainer: {
 		alignSelf:"center",
-		width: 350,
-		height: 130,
-		backgroundColor: "#FFE5EC",
+		maxWidth: 350,
+		backgroundColor: "white",
 		marginTop: 15,
 		borderRadius: 18,
 		justifyContent: 'center',
+        paddingVertical:10,
 		elevation: 10,
-        paddingBottom: 7,
 	},
 
 	boxContentContainer: {

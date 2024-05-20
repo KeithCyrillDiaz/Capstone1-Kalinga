@@ -22,6 +22,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useNavigation, CommonActions } from '@react-navigation/native';
 import { Uploading } from '../../../uploader/Uploading'
 import { uploadDpInFirebase } from '../../../uploader/fireBaseUploader'
+import { globalStyles } from "../../../../styles_kit/globalStyles";
 
 export default function EditPersonalScreen({route}) {
   
@@ -261,7 +262,7 @@ const saveDetails = async () => {
  }
 
   return (
-    <SafeAreaView style={bodyStyle.main}>
+    <SafeAreaView style={globalStyles.defaultBackgroundColor}>
       <ScrollView contentContainerStyle={bodyStyle.container}>
         <StatusBar />
         <Header title="Personal Information" />
@@ -476,17 +477,14 @@ const bodyStyle = StyleSheet.create({
 const inputStyle = StyleSheet.create({
   container: {
     overflow: "hidden",
-    borderWidth: 1.5,
-    borderColor: "#E60965",
     flexDirection: "row",
     gap: 7,
     alignItems: "center",
     paddingHorizontal: 16,
     borderRadius: 13,
     backgroundColor: "white",
-    elevation: 5,
+    elevation: 7,
     marginVertical: 7,
-
   },
 
   label: {

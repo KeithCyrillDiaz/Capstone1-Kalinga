@@ -72,7 +72,13 @@ const LogIn = () => {
                 email: email,
                 password: password
             });
-    
+            if(result.data.messages.message === "User is Blocked"){
+                Alert.alert(
+                    "Account Blocked",
+                    "Your account has been permanently blocked by the Milk Bank. Please check your email for more information."
+                );
+                return
+            }
             if (result.data.messages.code !== 0) {
                 Alert.alert('Login Failed', `${result.data.messages.message}`);
                 

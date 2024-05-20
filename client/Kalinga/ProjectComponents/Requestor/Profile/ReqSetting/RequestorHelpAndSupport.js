@@ -14,6 +14,7 @@ import {
 import { Entypo } from "@expo/vector-icons";
 import Header from "./Header";
 import { useNavigation } from '@react-navigation/native';
+import { globalStyles } from "../../../../styles_kit/globalStyles";
 
 
 export default function HelpAndSupport({route}) {
@@ -27,7 +28,7 @@ export default function HelpAndSupport({route}) {
   }
 
   return (
-    <SafeAreaView style={bodyStyle.main}>
+    <SafeAreaView style={globalStyles.defaultBackgroundColor}>
       <ScrollView stickyHeaderIndices={[1]}>
         <StatusBar />
         <Header title="Help & Support" />
@@ -54,7 +55,7 @@ export default function HelpAndSupport({route}) {
 
         <View
           style={{
-            backgroundColor: "#FFF1EB",
+            backgroundColor: "white",
             opacity: 1,
             marginHorizontal: 16,
             elevation: 5,
@@ -111,17 +112,9 @@ export default function HelpAndSupport({route}) {
             alignItems: "center",
             marginBottom: 24,
           }}>
-          <Text style={{ color: "#E60965" }}>
+          {/* <Text style={{ color: "#E60965" }}>
             Still need assistance? Help is a mail away
-          </Text>
-          <TouchableOpacity onPress={() => handleSendMessage()}>
-            <View style={buttonStyle.primary}>
-              <Text
-                style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
-                Send a message
-              </Text>
-            </View>
-          </TouchableOpacity>
+          </Text> */}
         </View>
       </ScrollView>
     </SafeAreaView>
