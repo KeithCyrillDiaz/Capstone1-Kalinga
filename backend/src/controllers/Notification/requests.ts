@@ -12,7 +12,7 @@ export const sendRequestsNotification = async (
         const { RequestID } = req.params
         const { RequestStatus } = req.body
 
-        const allowedStatuses = ["Decline", "Approved"];
+        const allowedStatuses = ["Decline", "Ongoing"];
 
             if (!RequestID || !RequestStatus || !allowedStatuses.includes(RequestStatus))
                 {
@@ -38,7 +38,7 @@ export const sendRequestsNotification = async (
             }
 
             let newNotification
-            if (RequestStatus === "Approved") {
+            if (RequestStatus === "Ongoing") {
                 newNotification = {
                     ownerID: Request.Requestor_ID,
                     title: "Request Approved",
