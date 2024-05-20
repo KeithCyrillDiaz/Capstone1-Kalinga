@@ -12,7 +12,7 @@ export const sendRequestsNotification = async (
         const { RequestID } = req.params
         const { RequestStatus } = req.body
 
-        const allowedStatuses = ["Decline", "Approved"];
+        const allowedStatuses = ["Decline", "Ongoing"];
 
             if (!RequestID || !RequestStatus || !allowedStatuses.includes(RequestStatus))
                 {

@@ -16,11 +16,10 @@ const createRequest = async (req: Request, res: Response): Promise<void> => {
       medicalCondition,
       milkBank,
       milkAmount,
-      BabyCategory,
       ReasonForRequesting,
-      RequestRemark,
     } = req.body;
 
+    console.log(req.body)
     const currentTime = moment().toDate()
     const newRequest = await RequestModel.create({
       Requestor_ID,
@@ -34,10 +33,8 @@ const createRequest = async (req: Request, res: Response): Promise<void> => {
       medicalCondition,
       milkBank,
       milkAmount,
-      BabyCategory,
       ReasonForRequesting,
       Date: currentTime,
-      RequestRemark
     });
     console.log(newRequest)
     res.status(201).json(newRequest);
