@@ -62,12 +62,12 @@ const requestorAppointmentConfirmation = () => {
     try {
       await axios.put(`${WebHost}/kalinga/updateRequestStatus/${RequestID}`, {
         RequestStatus: "Ongoing",
+        BabyCategory: formData.BabyCategory, 
       });
     } catch (error) {
       console.error("Error updating request status:", error);
     }
   };
-
   const handleApprovedConfirm = () => {
     setShowModal(false);
   };
@@ -101,6 +101,14 @@ const requestorAppointmentConfirmation = () => {
     { label: "Toddler", value: "toddler" },
     { label: "Other", value: "other" },
   ];
+
+  const handleBabyCategoryChange = (e) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      BabyCategory: e.target.value,
+    }));
+  };
+
   return (
     <section className="w-full h-screen bg-primary-body overflow-hidden px-4">
       <div className="p-10 pt-1">
@@ -261,13 +269,14 @@ const requestorAppointmentConfirmation = () => {
                   <select
                     id="babyCategorization"
                     name="babyCategorization"
-                    onChange={(e) => console.log(e.target.value)}
-                    className="mt-2 bg-white  w-full rounded-lg shadow-md p-2 focus:outline-none focus:ring-primary-default focus:border-primary-default sm:text-md text-primary-default"
+                    value={formData.BabyCategory}
+                    onChange={handleBabyCategoryChange}
+                    className="mt-2 bg-white w-full rounded-lg shadow-md p-2 focus:outline-none focus:ring-primary-default focus:border-primary-default sm:text-md text-primary-default"
                   >
                     <option value="">Select Baby Category</option>
                     <option value="Well baby">Well baby</option>
                     <option value="Sick Baby">Sick Baby</option>
-                    <option value="Sick Baby">Medically Fragile Baby</option>
+                    <option value="Medically Fragile Baby">Medically Fragile Baby</option>
                   </select>
                 )}
             </div>
