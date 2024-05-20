@@ -67,7 +67,7 @@ const router = createBrowserRouter(
         <Route path="bugReport/:ReportBugID" element={<BugReport />} />
         <Route path="bugResolve" element={<BugResolve />} />
         <Route path="feedback" element={<Feedback />} />
-        <Route path="feedbackReport" element={<FeedbackReport />} />
+        <Route path="feedbackReport/:feedBack_ID" element={<FeedbackReport />} />
         <Route
           path="donorAppointmentConfirmation/:AppointmentDonorID"
           element={<DonorAppointmentConfirmation />}
