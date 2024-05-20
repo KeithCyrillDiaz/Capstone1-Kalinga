@@ -12,7 +12,7 @@ export const sendRequestsNotification = async (
         const { RequestID } = req.params
         const { RequestStatus } = req.body
 
-        const allowedStatuses = ["Decline", "Ongoing"];
+        const allowedStatuses = ["Decline", "Ongoing", "Complete"];
 
             if (!RequestID || !RequestStatus || !allowedStatuses.includes(RequestStatus))
                 {
@@ -41,17 +41,24 @@ export const sendRequestsNotification = async (
             if (RequestStatus === "Ongoing") {
                 newNotification = {
                     ownerID: Request.Requestor_ID,
-                    title: "Request Approved",
+                    title: "Request Update: Approved",
                     content: `Your request for milk has been approved by the milk bank. You can now proceed to collect your milk.`,
                     milkBank: Request.milkBank
                 };
             } else if (RequestStatus === "Decline") {
                 newNotification = {
                     ownerID: Request.Requestor_ID,
-                    title: "Request Declined",
+                    title: "Request Update: Declined",
                     content: `Unfortunately, your request for milk has been declined by the Milk Bank.`,
                     milkBank: Request.milkBank
                 };
+            } else if (RequestStatus === "Complete") {
+                newNotification = {
+                    ownerID: Request.Requestor_ID,
+                    title: `Request Update: Completed`,
+                    content: `Congratulations! Your request appointment has been successfully completed. Thank you!`,
+                    milkBank: Request.milkBank
+            };
             }
             
             const result = await createNotification(newNotification)

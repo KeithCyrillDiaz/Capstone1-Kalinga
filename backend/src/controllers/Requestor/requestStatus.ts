@@ -25,5 +25,50 @@ export const getRequestStatus = async (req: Request, res: Response): Promise<voi
   }
 };
 
-// Export the controller function
-export default getRequestStatus;
+export const getRequestStatusOfMother = async (req: Request, res: Response) => {
+  try{
+      const { id } = req.params
+      
+      if(!id) {
+        console.log("Bad Request")
+        return res.json({
+          messages: {
+            code: 1,
+            message: "Bad Request"
+          }
+        }).status(404)
+      }
+
+      const appointments = await RequestModel.findOne({Requestor_ID: id, $or: [{RequestStatus: "Pending"}, {RequestStatus: "Ongoing"}]})
+
+      if(appointments){
+        console.log("There still Ongoing Or Pending Request")
+        return res.json({
+          messages: {
+            code: 0,
+            message: "There still Ongoing Or Pending Request"
+          },
+          appointments
+        }).status(400)
+      }
+
+      console.log("No pending or ongoing Request Appointment")
+      return res.json({
+        messages: {
+          code: 0,
+          message: "No pending or ongoing Request Appointment"
+        },
+        appointments
+      }).status(200)
+
+  } catch(error) {
+    console.log("InternalServer Error")
+    return res.json({
+      messages: {
+        code: 1,
+        message: "InternalServer Error"
+      },
+      error
+    }).status(500)
+  }
+}

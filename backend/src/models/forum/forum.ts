@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { ppid } from 'process'
 
 
 const PostSchema = new mongoose.Schema({
@@ -19,7 +20,8 @@ export const PostModel = mongoose.model('Posts', PostSchema)
 
 export const createPost = (values: Record<string, any>) => new PostModel(values).save().then((result) => result.toObject())
 export const deletePost = (post_ID: string) => PostModel.findOneAndDelete({post_ID: post_ID})
-export const getPosts = () => PostModel.find({status: "Äpproved"})
+export const approvedPost = (id: string ) => PostModel.findOneAndUpdate({post_ID: id}, {$set: {status: "Approved"}}, {new: true})
+export const getPosts = () => PostModel.find({status: "Approved"})
     .populate('DonorOwnerID')
     .populate('RequestorOwnerID')
     .populate('DonorLikes')
