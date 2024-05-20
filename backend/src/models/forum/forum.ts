@@ -10,6 +10,7 @@ const PostSchema = new mongoose.Schema({
     DonorLikes: [{type: mongoose.Schema.Types.ObjectId, ref: "Donor"}],
     RequestorLikes: [{type: mongoose.Schema.Types.ObjectId, ref: "Requestor"}],
     comments_ID: [{type: mongoose.Schema.Types.ObjectId, ref: "Comment"}],
+    status: {type: String, default: "Pending"},
     createdAt: {type: Date, default: Date.now},
     updatedAt: {type: Date, default: Date.now},
 })
@@ -18,7 +19,7 @@ export const PostModel = mongoose.model('Posts', PostSchema)
 
 export const createPost = (values: Record<string, any>) => new PostModel(values).save().then((result) => result.toObject())
 export const deletePost = (post_ID: string) => PostModel.findOneAndDelete({post_ID: post_ID})
-export const getPosts = () => PostModel.find()
+export const getPosts = () => PostModel.find({status: "Äpproved"})
     .populate('DonorOwnerID')
     .populate('RequestorOwnerID')
     .populate('DonorLikes')

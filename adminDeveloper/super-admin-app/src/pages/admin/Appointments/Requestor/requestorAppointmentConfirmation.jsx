@@ -308,7 +308,6 @@ const requestorAppointmentConfirmation = () => {
           message="Are you sure you want to decline this appointment? Once declined, the request process will not proceed."
           RequestID={RequestID}
         />
-      </div>
     </section>
   );
 };

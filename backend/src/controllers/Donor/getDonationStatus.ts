@@ -27,3 +27,52 @@ export const getDonationStatus = async (req: Request, res: Response): Promise<vo
 
 // Export the controller function
 export default getDonationStatus;
+
+
+export const getDonationStatusOfMother = async (req: Request, res: Response) => {
+  try{
+      const { id } = req.params
+      
+      if(!id) {
+        console.log("Bad Request")
+        return res.json({
+          messages: {
+            code: 1,
+            message: "Bad Request"
+          }
+        }).status(404)
+      }
+
+      const appointments = await AppointmentModel.findOne({Donor_ID: id, $or: [{DonationStatus: "Pending"}, {DonationStatus: "Ongoing"}]})
+
+      if(appointments){
+        console.log("There still Ongoing Or Pending Donation")
+        return res.json({
+          messages: {
+            code: 0,
+            message: "There still Ongoing Or Pending Donation"
+          },
+          appointments
+        }).status(400)
+      }
+
+      console.log("No pending or ongoing Donation Appointment")
+      return res.json({
+        messages: {
+          code: 0,
+          message: "No pending or ongoing Donation Appointment"
+        },
+        appointments
+      }).status(200)
+
+  } catch(error) {
+    console.log("InternalServer Error")
+    return res.json({
+      messages: {
+        code: 1,
+        message: "InternalServer Error"
+      },
+      error
+    }).status(500)
+  }
+}
