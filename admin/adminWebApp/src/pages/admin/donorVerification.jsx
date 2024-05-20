@@ -69,10 +69,13 @@ export default function () {
       {status: formatStatus}
     )
     console.log("response: ",response.data.messages.message)
+    if(response.data.messages.code === 0)sendEmail(data)
+
    } catch (error) {
     console.log("Error Deleting ScreeningForm", error)
    }
  }
+
 
   const fetchData = async () => {
     try{

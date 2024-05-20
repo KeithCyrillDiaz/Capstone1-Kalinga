@@ -53,6 +53,8 @@ export default function App() {
           {status: formatStatus}
         )
         console.log("response: ",response.data.messages.message)
+        if(response.data.messages.code === 0)sendEmail(data)
+  
        } catch (error) {
         console.log("Error Deleting ScreeningForm", error)
        }
@@ -214,7 +216,7 @@ export default function App() {
                                         className="hover:bg-primary-default hover:text-white fixed bg-neutral-default text-primary-default font-bold w-32 p-2 border border-primary-default rounded-full right-40"
                                         onClick={() => {
                                             setStatus("approved");
-                                            sendEmail("approved")
+                                            deleteScreeningForm("approved")
                                             setIsConfirmationModalOpen(true)
                            
                                           }}
@@ -230,7 +232,7 @@ export default function App() {
                                         className="hover:bg-primary-default hover:text-white fixed bg-neutral-default text-primary-default font-bold w-32 p-2 border border-primary-default rounded-full right-40 mt-12"
                                         onClick={() => {
                                             setStatus("declined");
-                                            sendEmail("declined")
+                                            deleteScreeningForm("declined")
                                             setIsConfirmationModalOpen(true)
                     
                                           }}

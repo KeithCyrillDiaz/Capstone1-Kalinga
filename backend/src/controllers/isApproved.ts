@@ -46,8 +46,6 @@ export const isApproved = async (req: express.Request, res: express.Response) =>
             }).status(200)
         }
 
-
-
     } catch(error){
         return res.json({
             messages:{
