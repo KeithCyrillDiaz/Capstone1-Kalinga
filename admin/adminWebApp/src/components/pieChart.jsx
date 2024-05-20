@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { WebHost } from '../../MyConstantAdmin'
+import { WebHost } from "../../MyConstantAdmin";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
 export default function ({ name }) {
@@ -10,8 +10,12 @@ export default function ({ name }) {
   useEffect(() => {
     const fetchDonationsData = async () => {
       try {
-        const responseComplete = await axios.get(`${WebHost}/kalinga/getCompleteDonationsTotal`);
-        const responseDeclined = await axios.get(`${WebHost}/kalinga/getDeclinedDonationsTotal`);
+        const responseComplete = await axios.get(
+          `${WebHost}/kalinga/getCompleteDonationsTotal`
+        );
+        const responseDeclined = await axios.get(
+          `${WebHost}/kalinga/getDeclinedDonationsTotal`
+        );
 
         setTotalCompleteDonations(responseComplete.data.totalCompleteDonations);
         setTotalDeclinedDonations(responseDeclined.data.totalDeclinedDonations);
@@ -19,7 +23,7 @@ export default function ({ name }) {
         console.error(error); // Log any errors
       }
     };
-  
+
     fetchDonationsData();
   }, []);
 
@@ -59,13 +63,17 @@ export default function ({ name }) {
         </ResponsiveContainer>
         <div className="grid items-center justify-center grid-flow-row-dense gap-y-6">
           <div className="px-6 py-2 bg-white border shadow-xl rounded-2xl border-primary-default">
-            <h1 className="text-4xl text-center text-primary-default">{totalCompleteDonations}</h1>
+            <h1 className="text-4xl text-center text-primary-default">
+              {totalCompleteDonations}
+            </h1>
             <p className="text-center 2xl:text-3xl xl:text-2xl text-primary-default">
               Successful
             </p>
           </div>
           <div className="px-6 py-2 bg-white border shadow-xl rounded-2xl border-primary-default">
-            <h1 className="text-4xl text-center text-primary-default">{totalUnsuccessful}</h1>
+            <h1 className="text-4xl text-center text-primary-default">
+              {totalUnsuccessful}
+            </h1>
             <p className="text-center 2xl:text-3xl xl:text-2xl text-primary-default">
               Unsuccessful
             </p>

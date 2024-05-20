@@ -2,18 +2,15 @@ import React, { useState, useEffect } from "react";
 import { WebHost } from "../../MyConstantAdmin";
 import axios from "axios";
 
-
-
 const AppointmentRequestDeclineModal = ({
   isOpen,
   message,
   onConfirm,
   onCancel,
   remarks,
-  RequestID
-  
+  RequestID,
 }) => {
-    if (!RequestID) {
+  if (!RequestID) {
     return null; // or handle the case where AppointmentDonorID is null
   }
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
@@ -34,7 +31,7 @@ const AppointmentRequestDeclineModal = ({
   };
 
   const handleSecondModalConfirm = () => {
-    console.log('Selected DonorRemark:', RequestRemark); // Add this line for debugging
+    console.log("Selected DonorRemark:", RequestRemark); // Add this line for debugging
     if (RequestRemark) {
       // Send the selected DonorRemark to the server
       putRequestRemarkToServer(RequestRemark);
@@ -52,12 +49,18 @@ const AppointmentRequestDeclineModal = ({
         RequestRemark: remark,
         RequestID: RequestID,
       };
-  
-      console.log('Sending PUT request to:', `${WebHost}/kalinga/updateRequestRemark/${RequestID}`);
-      console.log('Request Body:', requestBody);
-  
-      const response = await axios.put(`${WebHost}/kalinga/updateRequestRemark/${RequestID}`, requestBody);
-  
+
+      console.log(
+        "Sending PUT request to:",
+        `${WebHost}/kalinga/updateRequestRemark/${RequestID}`
+      );
+      console.log("Request Body:", requestBody);
+
+      const response = await axios.put(
+        `${WebHost}/kalinga/updateRequestRemark/${RequestID}`,
+        requestBody
+      );
+
       console.log("Remark posted successfully:", response.data);
     } catch (error) {
       console.error("Error posting remark:", error);
@@ -73,7 +76,6 @@ const AppointmentRequestDeclineModal = ({
     setIsThirdModalOpen(false); // Close the third modal if open
     onCancel(); // Call the original onCancel function
   };
-
 
   return (
     <>
@@ -123,10 +125,14 @@ const AppointmentRequestDeclineModal = ({
                   Select a reason
                 </option>
                 <option value="Insufficient Supply">Insufficient Supply</option>
-                <option value="Prioritization of Recipients">Prioritization of Recipients</option>
-                <option value="Non-Compliance with Policies">Non-Compliance with Policies</option>
+                <option value="Prioritization of Recipients">
+                  Prioritization of Recipients
+                </option>
+                <option value="Non-Compliance with Policies">
+                  Non-Compliance with Policies
+                </option>
                 <option value="Incomplete or Incorrect Information">
-                Incomplete or Incorrect Information
+                  Incomplete or Incorrect Information
                 </option>
               </select>
               <div className="mt-8 flex justify-end">
@@ -149,8 +155,8 @@ const AppointmentRequestDeclineModal = ({
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
             <div className="border-2 border-pink-800 bg-white p-12 rounded-lg shadow-lg max-w-lg">
               <p className="text-xl">
-                The request has been successfully declined, and the user
-                will receive a notification about its status.
+                The request has been successfully declined, and the user will
+                receive a notification about its status.
               </p>
               <div className="mt-8 flex justify-end">
                 <button

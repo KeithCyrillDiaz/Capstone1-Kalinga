@@ -10,51 +10,50 @@ import { FaEyeSlash } from "react-icons/fa";
 export default function () {
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const [hidePassword, setHidePassword] = useState(true)
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [hidePassword, setHidePassword] = useState(true);
 
-  const [noInputs, setNoInputs] = useState(false)
-  const [noUsernameInputs, seNoUsernameInputs] = useState(false)
-  const [noPasswordInput, setNoPasswordInput] = useState(false)
-  const [invalidCredentials, setInvalidCredentials] = useState(false)
-  const [message, setMessage] = useState("")
+  const [noInputs, setNoInputs] = useState(false);
+  const [noUsernameInputs, seNoUsernameInputs] = useState(false);
+  const [noPasswordInput, setNoPasswordInput] = useState(false);
+  const [invalidCredentials, setInvalidCredentials] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleLogin = async () => {
-    if(username==="" && password ===""){
-      console.log("Invalid Inputs")
-      setNoInputs(true)
-      return
+    if (username === "" && password === "") {
+      console.log("Invalid Inputs");
+      setNoInputs(true);
+      return;
     }
-    if(username===""){
-      console.log("Invalid Useranme Input")
-      seNoUsernameInputs(true)
-      return
+    if (username === "") {
+      console.log("Invalid Useranme Input");
+      seNoUsernameInputs(true);
+      return;
     }
-    if(password ===""){
-      console.log("Invalid Password Input")
-      setNoPasswordInput(true)
-      return
+    if (password === "") {
+      console.log("Invalid Password Input");
+      setNoPasswordInput(true);
+      return;
     }
 
     try {
-        const result = await AdminLogin({
-          username: username,
-          password: password,
-        })
-        if(result.messages.code === 1){
-          console.log("Invalid Redentials")
-          setMessage(result.messages.message)
-          setInvalidCredentials(true)
-          return
-        }
-        navigate("/admin");
+      const result = await AdminLogin({
+        username: username,
+        password: password,
+      });
+      if (result.messages.code === 1) {
+        console.log("Invalid Redentials");
+        setMessage(result.messages.message);
+        setInvalidCredentials(true);
+        return;
+      }
+      navigate("/admin");
     } catch (error) {
-      console.log("Failed SuperAdmin Login", error)
-      return
+      console.log("Failed SuperAdmin Login", error);
+      return;
     }
   };
-
   return (
     <>
       <section className="w-full min-h-screen overflow-hidden body-color">
@@ -69,7 +68,7 @@ export default function () {
                       Kalinga
                     </h1>
                     <h1 className="font-normal text-center xl:text-5xl lg:text-3xl text-primary-default">
-                    Admin
+                      Admin
                     </h1>
                   </div>
                 </div>
@@ -83,36 +82,37 @@ export default function () {
                     <p className="absolute text-2xl font-medium xl:top-[12rem] lg:top-[8rem] xl:left-[13rem] lg:left-[10rem] text-primary-default">
                       Please enter valid credentials.
                     </p>
-                      {/* Alerts */}
-                      {noInputs && (
-                            <AlertModal
-                            message={message}
-                            NoInputs={noInputs}
-                            onClose={() => setNoInputs(false)}
-                            />
-                      )}
-                      {noUsernameInputs && (
-                            <AlertModal
-                            message={message}
-                            NoUsernameInputs={noUsernameInputs}
-                            onClose={() => seNoUsernameInputs(false)}
-                            />
-                      )}
-                      {noPasswordInput && (
-                            <AlertModal
-                            message={message}
-                            NoPasswordInput={noPasswordInput}
-                            onClose={() => setNoPasswordInput(false)}
-                            />
-                      )}
-                      {invalidCredentials && (
-                            <AlertModal
-                            message={message}
-                            InvalidUsername={invalidCredentials}
-                            onClose={() => setInvalidCredentials(false)}
-                            />
-                      )}
-                      
+
+                    {/* Alerts */}
+                    {noInputs && (
+                      <AlertModal
+                        message={message}
+                        NoInputs={noInputs}
+                        onClose={() => setNoInputs(false)}
+                      />
+                    )}
+                    {noUsernameInputs && (
+                      <AlertModal
+                        message={message}
+                        NoUsernameInputs={noUsernameInputs}
+                        onClose={() => seNoUsernameInputs(false)}
+                      />
+                    )}
+                    {noPasswordInput && (
+                      <AlertModal
+                        message={message}
+                        NoPasswordInput={noPasswordInput}
+                        onClose={() => setNoPasswordInput(false)}
+                      />
+                    )}
+                    {invalidCredentials && (
+                      <AlertModal
+                        message={message}
+                        InvalidUsername={invalidCredentials}
+                        onClose={() => setInvalidCredentials(false)}
+                      />
+                    )}
+
                     <div className="absolute xl:top-[16rem] lg:top-[12rem] xl:left-[13rem] lg:left-[10rem]">
                       <div className="absolute inset-y-0 left-0 flex items-center pl-3">
                         <svg
@@ -157,25 +157,27 @@ export default function () {
                       </div>
                       <div className="flex flex-row items-center">
                         <input
-                           type={hidePassword ? "password" : "text"}
+                          type={hidePassword ? "password" : "text"}
                           placeholder="Password"
                           className="py-4 text-xl border shadow-xl pr-7 pl-14 rounded-2xl border-primary-default focus:outline-none focus:ring-2 focus:ring-primary-default focus:border-transparent placeholder:text-primary-default text-primary-default"
                           onChange={(event) => setPassword(event.target.value)}
                           value={password}
-                      />
+                        />
                         {!hidePassword && (
-                          <FaEye 
-                          onClick={() => setHidePassword(true)}
-                          className="ml-[-11%]"
-                          size={24} 
-                          color={"black"}/>
+                          <FaEye
+                            onClick={() => setHidePassword(true)}
+                            className="ml-[-11%]"
+                            size={24}
+                            color={"black"}
+                          />
                         )}
                         {hidePassword && (
                           <FaEyeSlash
-                          onClick={() => setHidePassword(false)}
-                          className="ml-[-11%]"
-                          size={24} 
-                          color={"black"}/>
+                            onClick={() => setHidePassword(false)}
+                            className="ml-[-11%]"
+                            size={24}
+                            color={"black"}
+                          />
                         )}
                       </div>
                     </div>

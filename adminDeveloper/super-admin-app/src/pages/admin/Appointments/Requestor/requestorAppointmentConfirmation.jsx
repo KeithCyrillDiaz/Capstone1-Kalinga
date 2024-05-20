@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import RequestConfirmModal from "../../../../Modal/RequestConfirmModal";
+import RequestConfirmModal from "../../../../modal/RequestConfirmModal";
 import RequestDeclineModal from "../../../../Modal/RequestDeclineModal";
 import AppointmentRequestDeclineModal from "../../../../Modal/AppointmentRequestDeclineModal";
 import axios from "axios";

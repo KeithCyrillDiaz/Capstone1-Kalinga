@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { WebHost } from '../../MyConstantAdmin'
+import { WebHost } from "../../MyConstantAdmin";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
 export default function RequestPieChart({ name }) {
@@ -10,8 +10,12 @@ export default function RequestPieChart({ name }) {
   useEffect(() => {
     const fetchRequestsData = async () => {
       try {
-        const responseComplete = await axios.get(`${WebHost}/kalinga/getCompleteRequestsTotal`);
-        const responseDeclined = await axios.get(`${WebHost}/kalinga/getDeclinedRequestsTotal`);
+        const responseComplete = await axios.get(
+          `${WebHost}/kalinga/getCompleteRequestsTotal`
+        );
+        const responseDeclined = await axios.get(
+          `${WebHost}/kalinga/getDeclinedRequestsTotal`
+        );
 
         setTotalCompleteRequests(responseComplete.data.totalCompleteRequests);
         setTotalDeclinedRequests(responseDeclined.data.totalDeclinedRequests);
@@ -19,7 +23,7 @@ export default function RequestPieChart({ name }) {
         console.error(error); // Log any errors
       }
     };
-  
+
     fetchRequestsData();
   }, []);
 
@@ -56,13 +60,17 @@ export default function RequestPieChart({ name }) {
         </ResponsiveContainer>
         <div className="grid items-center justify-center grid-flow-row-dense gap-y-6">
           <div className="px-6 py-2 bg-white border shadow-xl rounded-2xl border-primary-default">
-            <h1 className="text-4xl text-center text-primary-default">{totalCompleteRequests}</h1>
+            <h1 className="text-4xl text-center text-primary-default">
+              {totalCompleteRequests}
+            </h1>
             <p className="text-center 2xl:text-3xl xl:text-2xl text-primary-default">
               Complete
             </p>
           </div>
           <div className="px-6 py-2 bg-white border shadow-xl rounded-2xl border-primary-default">
-            <h1 className="text-4xl text-center text-primary-default">{totalDeclinedRequests}</h1>
+            <h1 className="text-4xl text-center text-primary-default">
+              {totalDeclinedRequests}
+            </h1>
             <p className="text-center 2xl:text-3xl xl:text-2xl text-primary-default">
               Decline
             </p>
