@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import Human from "@assets/human.png";
 import { WebHost } from "../../../MyConstantAdmin";
 import { TotalUserPieChart } from "../../components";
+import { AdminLogin } from "../../api/AdminLogin";
+import { useParams } from "react-router-dom";
 import {
   BarChart,
   Bar,
@@ -88,13 +89,15 @@ export default function Dashboard() {
     fetchUsersPerCity();
   }, []);
 
+  const { username } = useParams();
+
   return (
     <>
       <section className="w-full bg-primary-body overflow-hidden">
         <div className="p-8 pt-2">
           <div>
-            <h1 className="text-3xl text-primary-default font-bold font-sans py-4 pb-6">
-              Dashboard
+            <h1 className="text-2xl text-primary-default font-bold font-sans py-4 mt-6 pb-6">
+              Welcome, {username} Admin!
             </h1>
           </div>
           <div className="grid grid-cols-4 gap-6">

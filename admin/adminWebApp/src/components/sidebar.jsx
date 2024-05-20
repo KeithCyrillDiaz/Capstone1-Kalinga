@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import KalingaLogo from "@assets/Kalinga-Logo-Small.png";
-import { useNavigate, NavLink } from "react-router-dom";
+import { useNavigate, NavLink, useParams } from "react-router-dom";
 
 export default function () {
   const navigate = useNavigate();
+  const { username } = useParams();
   const [showReportsDropdown, setShowReportsDropdown] = useState(false);
   const [showVerificationDropdown, setVerificationDropdown] = useState(false);
   const [showAppointmentsDropdown, setShowAppointmentsDropdown] =
@@ -37,13 +38,13 @@ export default function () {
                 Kalinga
               </h1>
               <h3 className="text-lg font-medium text-neutral-primary">
-                Super Admin
+                Admin
               </h3>
             </div>
           </div>
           {/* DASHBOARD */}
           <NavLink
-            to="/admin"
+            to={`/admin/${username}`}
             className={`flex items-center cursor-pointer w-full rounded-2xl py-1 mb-1 ${
               isActiveRoute("admin")
                 ? "bg-secondary-default"
@@ -68,34 +69,7 @@ export default function () {
             </svg>
             <h1 className="ml-2 text-lg text-neutral-primary">Dashboard</h1>
           </NavLink>
-          {/* MILKBANKS */}
-          <NavLink
-            to="/admin/milkbanks"
-            className={`flex items-center cursor-pointer w-full rounded-2xl py-1 mb-1 ${
-              isActiveRoute("milkbanks")
-                ? "bg-secondary-default"
-                : "bg-transparent hover:bg-secondary-default"
-            }`}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="35"
-              height="35"
-              viewBox="0 0 24 24"
-              className="ml-6"
-            >
-              <path
-                fill="none"
-                stroke="#FFEECC"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="1.5"
-                d="m11.28 2.8l-.5.5a5.5 5.5 0 0 0-4.37-.43l-.08-.07A2.5 2.5 0 0 0 2.8 6.33l.07.08a5.5 5.5 0 0 0 .43 4.37l-.5.5a1.5 1.5 0 0 0 0 2.12l1.41 1.42a1.5 1.5 0 0 0 2.12 0l.35-.36l7.08 7.07a1.5 1.5 0 0 0 2.12 0l5.65-5.65a1.5 1.5 0 0 0 0-2.12l-7.07-7.08l.36-.35a1.5 1.5 0 0 0 0-2.12L13.4 2.8a1.5 1.5 0 0 0-2.12 0m2.48 2.47l-8.49 8.49l-1.41-1.42l8.48-8.48m2.48 7.77l-3.19 3.19l-1.06-1.06l3.19-3.19m3.18 3.19l-3.18 3.18l-1.07-1.06l3.19-3.19Z"
-              ></path>
-            </svg>
 
-            <h1 className="ml-2 text-lg text-neutral-primary">Mikbanks</h1>
-          </NavLink>
           {/* FORUM MOD */}
           <NavLink
             to="/admin/forum"
@@ -180,18 +154,6 @@ export default function () {
                   >
                     <h1 className="text-lg text-neutral-primary">
                       Monthly Report
-                    </h1>
-                  </NavLink>
-                  <NavLink
-                    to="/admin/city"
-                    className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
-                      isActiveRoute("requestor")
-                        ? "bg-primary-default"
-                        : "bg-transparent hover:bg-primary-default"
-                    }`}
-                  >
-                    <h1 className="text-lg text-neutral-primary">
-                      Per City Report
                     </h1>
                   </NavLink>
                 </div>
@@ -360,78 +322,6 @@ export default function () {
               )}
             </div>
           </div>
-          {/* UTILITIES */}
-          <div>
-            <div className="relative">
-              <div
-                onClick={() => setShowUtilitiesDropdown(!showUtilitiesDropdown)}
-                className={`flex items-center cursor-pointer w-full rounded-t-2xl pt-2 pb-2 ${
-                  showUtilitiesDropdown ? "bg-secondary-default" : ""
-                }`}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="35"
-                  height="35"
-                  viewBox="0 0 24 24"
-                  className="ml-6"
-                >
-                  <g
-                    fill="none"
-                    stroke="#FFEECC"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                  >
-                    <circle cx={12} cy={12} r={3}></circle>
-                    <path d="M13.765 2.152C13.398 2 12.932 2 12 2c-.932 0-1.398 0-1.765.152a2 2 0 0 0-1.083 1.083c-.092.223-.129.484-.143.863a1.617 1.617 0 0 1-.79 1.353a1.617 1.617 0 0 1-1.567.008c-.336-.178-.579-.276-.82-.308a2 2 0 0 0-1.478.396C4.04 5.79 3.806 6.193 3.34 7c-.466.807-.7 1.21-.751 1.605a2 2 0 0 0 .396 1.479c.148.192.355.353.676.555c.473.297.777.803.777 1.361c0 .558-.304 1.064-.777 1.36c-.321.203-.529.364-.676.556a2 2 0 0 0-.396 1.479c.052.394.285.798.75 1.605c.467.807.7 1.21 1.015 1.453a2 2 0 0 0 1.479.396c.24-.032.483-.13.819-.308a1.617 1.617 0 0 1 1.567.008c.483.28.77.795.79 1.353c.014.38.05.64.143.863a2 2 0 0 0 1.083 1.083C10.602 22 11.068 22 12 22c.932 0 1.398 0 1.765-.152a2 2 0 0 0 1.083-1.083c.092-.223.129-.483.143-.863c.02-.558.307-1.074.79-1.353a1.617 1.617 0 0 1 1.567-.008c.336.178.579.276.819.308a2 2 0 0 0 1.479-.396c.315-.242.548-.646 1.014-1.453c.466-.807.7-1.21.751-1.605a2 2 0 0 0-.396-1.479c-.148-.192-.355-.353-.676-.555A1.617 1.617 0 0 1 19.562 12c0-.558.304-1.064.777-1.36c.321-.203.529-.364.676-.556a2 2 0 0 0 .396-1.479c-.052-.394-.285-.798-.75-1.605c-.467-.807-.7-1.21-1.015-1.453a2 2 0 0 0-1.479-.396c-.24.032-.483.13-.82.308a1.617 1.617 0 0 1-1.566-.008a1.617 1.617 0 0 1-.79-1.353c-.014-.38-.05-.64-.143-.863a2 2 0 0 0-1.083-1.083Z"></path>
-                  </g>
-                </svg>
-
-                <h1 className="ml-2 mr-2 text-lg text-neutral-primary">
-                  Utilities
-                </h1>
-
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="30"
-                  height="30"
-                  viewBox="0 0 24 24"
-                  className={`absolute right-2 transform transition-transform duration-300 ${
-                    showUtilitiesDropdown ? "rotate-0" : "rotate-180"
-                  }`}
-                >
-                  <path fill="#FFEECC" d="m7 10l5 5l5-5z" />
-                </svg>
-              </div>
-
-              {showUtilitiesDropdown && (
-                <div className="p-2 w-full bg-secondary-default rounded-b-2xl pb-2 mb-2">
-                  <NavLink
-                    to="/admin/feedback"
-                    className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
-                      isActiveRoute("feedback")
-                        ? "bg-primary-default"
-                        : "bg-transparent hover:bg-primary-default"
-                    }`}
-                  >
-                    <h1 className="text-lg text-neutral-primary">Feedbacks</h1>
-                  </NavLink>
-                  <NavLink
-                    to="/admin/bugs"
-                    className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
-                      isActiveRoute("city")
-                        ? "bg-primary-default"
-                        : "bg-transparent hover:bg-primary-default"
-                    }`}
-                  >
-                    <h1 className="text-lg text-neutral-primary">Bugs</h1>
-                  </NavLink>
-                </div>
-              )}
-            </div>
-          </div>
-          \
         </div>
       </section>
     </>
