@@ -7,12 +7,11 @@ import DeleteModal from "../../../../Modal/deleteModal";
 
 export default function ({ remarks }) {
   const navigate = useNavigate();
-  const [isRemarksModalOpen, setRemarksModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // State for delete modal
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [appointments, setAppointments] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [showModal, setShowModal] = useState(false);
+
   const appointmentsPerPage = 10;
 
   useEffect(() => {
@@ -22,7 +21,7 @@ export default function ({ remarks }) {
           `${WebHost}/kalinga/getAppointmentByUsertype/Donor`
         );
         setAppointments(response.data.appointment);
-        console.log(response.data.appointment); // Add this line to check the appointments data
+        console.log(response.data.appointment);
       } catch (error) {
         console.error("Error fetching appointments:", error);
       }
@@ -30,11 +29,6 @@ export default function ({ remarks }) {
 
     fetchAppointments();
   }, []);
-
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
-    setCurrentPage(1); // Reset to first page when search query changes
-  };
 
   const handlePrevClick = () => {
     setCurrentPage(currentPage === 1 ? totalPages : currentPage - 1);
@@ -44,19 +38,79 @@ export default function ({ remarks }) {
     setCurrentPage(currentPage === totalPages ? 1 : currentPage + 1);
   };
 
-  // Filter appointments based on search query
-  const filteredAppointments = appointments.filter((appointment) =>
-    appointment.fullName
-      .toLowerCase()
-      .includes(searchQuery.trim().toLowerCase())
+  //FILTERS
+  const toggleFilterVisibility = () => {
+    setIsFilterVisible(!isFilterVisible);
+  };
+
+  const months = [
+    { id: 1, name: "January" },
+    { id: 2, name: "February" },
+    { id: 3, name: "March" },
+    { id: 4, name: "April" },
+    { id: 5, name: "May" },
+    { id: 6, name: "June" },
+    { id: 7, name: "July" },
+    { id: 8, name: "August" },
+    { id: 9, name: "September" },
+    { id: 10, name: "October" },
+    { id: 11, name: "November" },
+    { id: 12, name: "December" },
+  ];
+
+  const [filters, setFilters] = useState({
+    monthOfCreation: "",
+    monthScheduled: "",
+    status: "",
+    remarks: "",
+  });
+
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
+  };
+
+  const applyFilters = (filters, appointments) => {
+    return appointments.filter((appointment) => {
+      const matchMonthOfCreation = filters.monthOfCreation
+        ? new Date(appointment.createdAt).toLocaleString("default", {
+            month: "long",
+          }) === filters.monthOfCreation
+        : true;
+      const matchMonthScheduled = filters.monthScheduled
+        ? new Date(appointment.selectedDate).toLocaleString("default", {
+            month: "long",
+          }) === filters.monthScheduled
+        : true;
+      const matchStatus = filters.status
+        ? appointment.DonationStatus === filters.status
+        : true;
+      const matchRemarks = filters.remarks
+        ? appointment.DonorRemark === filters.remarks
+        : true;
+      return (
+        matchMonthOfCreation &&
+        matchMonthScheduled &&
+        matchStatus &&
+        matchRemarks
+      );
+    });
+  };
+
+  const filteredAppointments = applyFilters(filters, appointments).filter(
+    (appointment) =>
+      appointment.fullName
+        .toLowerCase()
+        .includes(searchQuery.trim().toLowerCase())
   );
 
-  // Calculate total pages based on filtered appointments
   const totalPages = Math.ceil(
     filteredAppointments.length / appointmentsPerPage
   );
 
-  // Get current page of appointments
   const indexOfLastAppointment = currentPage * appointmentsPerPage;
   const indexOfFirstAppointment = indexOfLastAppointment - appointmentsPerPage;
   const currentAppointments = filteredAppointments.slice(
@@ -74,13 +128,11 @@ export default function ({ remarks }) {
   };
 
   const handleDeleteConfirm = () => {
-    setIsDeleteModalOpen(false); // Close the delete modal
-    // Additional logic after confirming deletion
+    setIsDeleteModalOpen(false);
   };
 
   const handleDeleteCancel = () => {
-    setIsDeleteModalOpen(false); // Close the delete modal
-    // Additional logic if deletion is canceled
+    setIsDeleteModalOpen(false);
   };
 
   const handleDelete = async (AppointmentDonorID) => {
@@ -89,41 +141,133 @@ export default function ({ remarks }) {
         `${WebHost}/kalinga/deleteAppointmentDonor/${AppointmentDonorID}`
       );
       if (response.status === 200) {
-        // Appointment deleted successfully
         const updatedAppointments = appointments.filter(
           (appointment) => appointment.AppointmentDonorID !== AppointmentDonorID
         );
         setAppointments(updatedAppointments);
-        setIsDeleteModalOpen(true); // Open delete confirmation modal
+        setIsDeleteModalOpen(true);
       } else {
         console.error("Error deleting appointment:", response.data);
-        // Handle error (e.g., display error message to user)
       }
     } catch (error) {
       console.error("Error deleting appointment:", error);
-      // Handle error (e.g., display error message to user)
     }
-  };
-
-  const handleView = () => {
-    navigate("/admin/DonorAppointments");
-  };
-
-  const [selectedUser, setSelectedUser] = useState(null);
-
-  const handleRemarksModal = (user) => {
-    setSelectedUser(user);
-    setRemarksModalOpen(true);
   };
 
   return (
     <>
       <section className="w-full h-screen bg-primary-body overflow-hidden">
-        <div className="p-12 pt-2">
+        <div className="p-8 pt-1">
           <div>
             <h1 className="text-3xl text-primary-default font-bold font-sans my-4 mb-6">
               Donor Appointments
             </h1>
+            <div className="px-8 mb-4">
+              <div className="flex flex-col items-end xl:gap-x-6 lg:gap-x-3">
+                <button
+                  onClick={toggleFilterVisibility}
+                  className="bg-primary-default text-white py-2 px-4 rounded-xl focus:outline-none hover:bg-pink-600 shadow-md flex items-center"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1em"
+                    height="1em"
+                    viewBox="0 0 36 36"
+                    className="mr-2"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M22 33V19.5L33.47 8A1.81 1.81 0 0 0 34 6.7V5a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1.67a1.79 1.79 0 0 0 .53 1.27L14 19.58v10.2Z"
+                      className="clr-i-solid clr-i-solid-path-1"
+                    ></path>
+                    <path
+                      fill="currentColor"
+                      d="M33.48 4h-31a.52.52 0 0 0-.48.52v1.72a1.33 1.33 0 0 0 .39.95l12 12v10l7.25 3.61V19.17l12-12a1.35 1.35 0 0 0 .36-.91V4.52a.52.52 0 0 0-.52-.52"
+                      className="clr-i-solid clr-i-solid-path-1"
+                    ></path>
+                    <path fill="none" d="M0 0h36v36H0z"></path>
+                  </svg>
+                  Filter By
+                </button>
+
+                {isFilterVisible && (
+                  <div className="mt-2 w-auto gap-x-4 bg-neutral-variant flex p-2 px-6 pb-4 rounded-md shadow-md justify-end">
+                    <div className="border-b border-primary-default">
+                      <label className="text-xs text-primary-default">
+                        Month Created
+                      </label>
+                      <select
+                        className="bg-white text-primary-default text-lg py-1 pl-2 rounded-sm hover:cursor-pointer w-full"
+                        name="monthOfCreation"
+                        value={filters.monthOfCreation}
+                        onChange={handleFilterChange}
+                      >
+                        <option value="">Select Month Created</option>
+                        {months.map((month) => (
+                          <option key={month.id} value={month.name}>
+                            {month.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="border-b border-primary-default">
+                      <label className="text-xs text-primary-default">
+                        Month Scheduled
+                      </label>
+                      <select
+                        className="bg-white text-primary-default text-lg py-1 pl-2 rounded-sm hover:cursor-pointer w-full"
+                        name="monthScheduled"
+                        value={filters.monthScheduled}
+                        onChange={handleFilterChange}
+                      >
+                        <option value="">Select Month Scheduled</option>
+                        {months.map((month) => (
+                          <option key={month.id} value={month.name}>
+                            {month.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="border-b border-primary-default">
+                      <label className="text-xs text-primary-default">
+                        Status
+                      </label>
+                      <select
+                        className="bg-white text-primary-default text-lg py-1 pl-2 rounded-sm hover:cursor-pointer w-full"
+                        name="status"
+                        value={filters.status}
+                        onChange={handleFilterChange}
+                      >
+                        <option value="">Select Status</option>
+                        <option value="Complete">Complete</option>
+                        <option value="Ongoing">Ongoing</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Decline">Decline</option>
+                      </select>
+                    </div>
+                    <div className="border-b border-primary-default">
+                      <label className="text-xs text-primary-default">
+                        Remarks
+                      </label>
+                      <select
+                        className="bg-white text-primary-default text-lg py-1 pl-2 rounded-sm hover:cursor-pointer w-full"
+                        name="remarks"
+                        value={filters.remarks}
+                        onChange={handleFilterChange}
+                      >
+                        <option value="">Select Remarks</option>
+                        <option value="Full Schedule">Full Schedule</option>
+                        <option value="Holiday">Holiday</option>
+                        <option value="No Office Hours">No Office Hours</option>
+                        <option value="Insufficient Requirement">
+                          Insufficient Requirement
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
             <div className="flex flex-col">
               <div className="my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div className="align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -133,9 +277,9 @@ export default function ({ remarks }) {
                         <tr>
                           <th
                             scope="col"
-                            className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                            className="text-center px-4 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
                           >
-                            Appointment ID
+                            Index
                           </th>
                           <th
                             scope="col"
@@ -182,11 +326,13 @@ export default function ({ remarks }) {
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-primary-default">
-                        {currentAppointments.map((appointment) => (
+                        {currentAppointments.map((appointment, index) => (
                           <tr key={appointment._id}>
-                            <td className="px-6 py-1 whitespace-nowrap">
+                            <td className="px-2 py-1 whitespace-nowrap">
                               <div className="text-center text-sm font-medium text-gray-900">
-                                {appointment.AppointmentDonorID}
+                                {index +
+                                  1 +
+                                  (currentPage - 1) * appointmentsPerPage}
                               </div>
                             </td>
                             <td className="px-2 py-4 whitespace-nowrap">
@@ -231,10 +377,10 @@ export default function ({ remarks }) {
                                   appointment.DonationStatus === "Complete"
                                     ? "bg-lime-200 text-green-800"
                                     : appointment.DonationStatus === "Pending"
-                                    ? "bg-blue-100 text-red-800"
+                                    ? "bg-orange-300 text-red-800"
                                     : appointment.DonationStatus === "Ongoing"
-                                    ? "bg-yellow-100 text-red-800"
-                                    : "bg-red-100 text-red-800"
+                                    ? "bg-yellow-200 text-red-800"
+                                    : "bg-red-200 text-red-800"
                                 }`}
                               >
                                 {appointment.DonationStatus}
@@ -243,9 +389,13 @@ export default function ({ remarks }) {
                             {/*DONATION REMARKS*/}
                             <td className="text-center px-6 py-4 whitespace-nowrap text-sm font-medium">
                               <div>
-                                {appointment.DonationStatus === "Approved"
-                                  ? "This is approved."
-                                  : appointment.DonorRemark}
+                                {appointment.DonationStatus === "Complete"
+                                  ? "This appointment is Complete."
+                                  : appointment.DonationStatus === "Pending"
+                                  ? "This appointment is still pending."
+                                  : appointment.DonationStatus === "Ongoing"
+                                  ? "This appointment is now ongoing."
+                                  : `This appointment is declined due to ${appointment.DonorRemark}`}
                               </div>
                             </td>
 

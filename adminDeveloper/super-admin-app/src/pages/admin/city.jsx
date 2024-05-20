@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { WebHost } from "../../../MyConstantSuperAdmin";
 import { Pie } from "react-chartjs-2";
-import Chart from 'chart.js/auto';
-
+import Chart from "chart.js/auto";
 
 export default function () {
   const [city, setCity] = useState(""); // State to hold the selected city
@@ -20,18 +19,15 @@ export default function () {
           )}`
         );
 
-    
-
         const requestResponse = await axios.get(
           `${WebHost}/kalinga/getRequestStatusTotal?city=${encodeURIComponent(
             city
           )}`
         );
 
-      
         console.log("Donation Response:", donationResponse.data);
         console.log("Request Response:", requestResponse.data);
-    
+
         setDonationData(donationResponse.data);
         setRequestData(requestResponse.data);
 
@@ -58,29 +54,29 @@ export default function () {
   };
 
   const donationChartData = {
-    labels: ['Successful Donations', 'Unsuccessful Donations'],
+    labels: ["Successful Donations", "Unsuccessful Donations"],
     datasets: [
       {
         data: [
           donationData.totalCompleteDonations || 0,
           donationData.totalDeclinedDonations || 0,
         ],
-        backgroundColor: ['#36A2EB', '#FF6384'],
-        hoverBackgroundColor: ['#36A2EB', '#FF6384'],
+        backgroundColor: ["#36A2EB", "#FF6384"],
+        hoverBackgroundColor: ["#36A2EB", "#FF6384"],
       },
     ],
   };
 
   const requestChartData = {
-    labels: ['Successful Requests', 'Unsuccessful Requests'],
+    labels: ["Successful Requests", "Unsuccessful Requests"],
     datasets: [
       {
         data: [
           requestData.totalCompleteRequests || 0,
           requestData.totalDeclinedRequests || 0,
         ],
-        backgroundColor: ['#36A2EB', '#FF6384'],
-        hoverBackgroundColor: ['#36A2EB', '#FF6384'],
+        backgroundColor: ["#36A2EB", "#FF6384"],
+        hoverBackgroundColor: ["#36A2EB", "#FF6384"],
       },
     ],
   };
@@ -145,8 +141,8 @@ export default function () {
           <hr className="border-t-1 mt-4 border-primary-default" />
 
           {(city === "Manila City" || city === "Quezon City") && (
-            <div className="xl:px-8 lg:px-2 flex items-center justify-center w-full h-[60%] 2xl:gap-x-32 xl:gap-x-20 lg:gap-x-8">
-              <div className="bg-white rounded-lg shadow-lg p-4 pb-10 flex flex-col items-center gap-y-12">
+            <div className="grid grid-flow-row-dense px-4 xl:grid-cols-2 gap-4 mt-6">
+              <div className=" bg-white rounded-lg shadow-lg p-4 pb-10 ">
                 <h1 className="text-4xl text-center text-primary-default">
                   Donations
                 </h1>
@@ -171,7 +167,7 @@ export default function () {
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg shadow-lg p-4 pb-10 flex flex-col items-center gap-y-12">
+              <div className=" bg-white rounded-lg shadow-lg p-4 pb-10 ">
                 <h1 className="text-4xl text-center text-primary-default">
                   Requests
                 </h1>
