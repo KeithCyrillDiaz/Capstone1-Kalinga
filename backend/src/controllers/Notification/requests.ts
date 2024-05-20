@@ -38,7 +38,7 @@ export const sendRequestsNotification = async (
             }
 
             let newNotification
-            if (RequestStatus === "Approved") {
+            if (RequestStatus === "Ongoing") {
                 newNotification = {
                     ownerID: Request.Requestor_ID,
                     title: "Request Approved",
