@@ -140,59 +140,57 @@ export default function () {
           </div>
           <hr className="border-t-1 mt-4 border-primary-default" />
 
-          {(city === "Manila City" || city === "Quezon City") && (
-            <div className="grid grid-flow-row-dense px-4 xl:grid-cols-2 gap-4 mt-6">
-              <div className=" bg-white rounded-lg shadow-lg p-4 pb-10 ">
-                <h1 className="text-4xl text-center text-primary-default">
-                  Donations
-                </h1>
-                <div className="flex flex-row items-center gap-x-6">
-                  <div className="w-1/2">
-                    <Pie data={donationChartData} />
-                  </div>
-                  <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-24 lg:px-16 rounded-xl border-primary-default">
-                    <h1 className="pb-4 text-6xl text-center text-primary-default">
-                      {donationData.totalCompleteDonations}
-                    </h1>
-                    <p className="text-2xl text-center text-primary-default">
-                      Successful
-                    </p>
-                    <h1 className="pb-4 text-6xl text-center text-primary-default">
-                      {donationData.totalDeclinedDonations}
-                    </h1>
-                    <p className="text-2xl text-center text-primary-default">
-                      Unsuccessful
-                    </p>
-                  </div>
+          <div className="grid grid-flow-row-dense px-4 xl:grid-cols-2 gap-4 mt-6">
+            <div className=" bg-white rounded-lg shadow-lg p-4 pb-10 ">
+              <h1 className="text-4xl text-center text-primary-default">
+                Donations
+              </h1>
+              <div className="flex flex-row items-center gap-x-6">
+                <div className="w-1/2">
+                  <Pie data={donationChartData} />
                 </div>
-              </div>
-
-              <div className=" bg-white rounded-lg shadow-lg p-4 pb-10 ">
-                <h1 className="text-4xl text-center text-primary-default">
-                  Requests
-                </h1>
-                <div className="flex flex-row items-center gap-x-6">
-                  <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-24 lg:px-16 rounded-xl border-primary-default">
-                    <h1 className="pb-4 text-6xl text-center text-primary-default">
-                      {requestData.totalCompleteRequests}
-                    </h1>
-                    <p className="text-2xl text-center text-primary-default">
-                      Successful
-                    </p>
-                    <h1 className="pb-4 text-6xl text-center text-primary-default">
-                      {requestData.totalDeclinedRequests}
-                    </h1>
-                    <p className="text-2xl text-center text-primary-default">
-                      Unsuccessful
-                    </p>
-                  </div>
-                  <div className="w-1/2">
-                    <Pie data={requestChartData} />
-                  </div>
+                <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-24 lg:px-16 rounded-xl border-primary-default">
+                  <h1 className="pb-4 text-6xl text-center text-primary-default">
+                    {donationData.totalCompleteDonations}
+                  </h1>
+                  <p className="text-2xl text-center text-primary-default">
+                    Successful
+                  </p>
+                  <h1 className="pb-4 text-6xl text-center text-primary-default">
+                    {donationData.totalDeclinedDonations}
+                  </h1>
+                  <p className="text-2xl text-center text-primary-default">
+                    Unsuccessful
+                  </p>
                 </div>
               </div>
             </div>
-          )}
+
+            <div className=" bg-white rounded-lg shadow-lg p-4 pb-10 ">
+              <h1 className="text-4xl text-center text-primary-default">
+                Requests
+              </h1>
+              <div className="flex flex-row items-center gap-x-6">
+                <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-24 lg:px-16 rounded-xl border-primary-default">
+                  <h1 className="pb-4 text-6xl text-center text-primary-default">
+                    {requestData.totalCompleteRequests}
+                  </h1>
+                  <p className="text-2xl text-center text-primary-default">
+                    Successful
+                  </p>
+                  <h1 className="pb-4 text-6xl text-center text-primary-default">
+                    {requestData.totalDeclinedRequests}
+                  </h1>
+                  <p className="text-2xl text-center text-primary-default">
+                    Unsuccessful
+                  </p>
+                </div>
+                <div className="w-1/2">
+                  <Pie data={requestChartData} />
+                </div>
+              </div>
+            </div>
+          </div>
 
           {error && <div className="text-red-500">{error}</div>}
         </div>

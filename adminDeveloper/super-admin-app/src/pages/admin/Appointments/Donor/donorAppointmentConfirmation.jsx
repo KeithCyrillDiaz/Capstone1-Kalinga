@@ -166,7 +166,8 @@ const donorAppointmentConfirmation = () => {
               appointmentData ? appointmentData.fullName : ""
             }`}
             onChange={handleChange}
-            className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-primary-default"
+            className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+            disabled
             placeholder="Full Name"
           />
         </div>
@@ -181,7 +182,8 @@ const donorAppointmentConfirmation = () => {
               appointmentData ? appointmentData.phoneNumber : ""
             }`}
             onChange={handleChange}
-            className="w-3/4 md:w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-primary-default"
+            className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+            disabled
             placeholder="Phone Number"
           />
         </div>
@@ -196,7 +198,8 @@ const donorAppointmentConfirmation = () => {
               appointmentData ? appointmentData.emailAddress : ""
             }`}
             onChange={handleChange}
-            className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-primary-default"
+            className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+            disabled
             placeholder="Email Address"
           />
         </div>
@@ -211,7 +214,8 @@ const donorAppointmentConfirmation = () => {
               appointmentData ? appointmentData.homeAddress : ""
             }`}
             onChange={handleChange}
-            className="w-full px-4 py-2 h-20 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-primary-default"
+            className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+            disabled
             placeholder="Home Address"
           />
         </div>
@@ -224,7 +228,8 @@ const donorAppointmentConfirmation = () => {
             name="city"
             value={`City: ${appointmentData ? appointmentData.city : ""}`}
             onChange={handleChange}
-            className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-primary-default"
+            className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+            disabled
             placeholder="City"
           />
         </div>
@@ -239,7 +244,8 @@ const donorAppointmentConfirmation = () => {
               appointmentData ? appointmentData.medicalCondition : ""
             }`}
             onChange={handleChange}
-            className="w-full px-4 py-2  h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-primary-default"
+            className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+            disabled
             placeholder="Medical Condition"
           />
         </div>
@@ -254,7 +260,8 @@ const donorAppointmentConfirmation = () => {
               appointmentData ? appointmentData.milkAmount : ""
             }`}
             onChange={handleChange}
-            className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-primary-default"
+            className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+            disabled
             placeholder="Amount of Milk Donated"
           />
         </div>
@@ -275,7 +282,8 @@ const donorAppointmentConfirmation = () => {
                 value={appointmentData ? appointmentData.selectedDate : ""}
                 onChange={handleChange}
                 placeholder="Date"
-                className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-primary-default pl-8"
+                className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+                disabled
               />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -312,7 +320,8 @@ const donorAppointmentConfirmation = () => {
                 value={appointmentData ? appointmentData.selectedTime : ""}
                 onChange={handleChange}
                 placeholder="Time"
-                className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-primary-default pl-8"
+                className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+                disabled
               />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -348,7 +357,8 @@ const donorAppointmentConfirmation = () => {
               name="milkBankLocation"
               value={appointmentData ? appointmentData.location : ""}
               onChange={handleChange}
-              className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-primary-default pl-8"
+              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+              disabled
               placeholder="Milkbank Location"
             />
             <svg

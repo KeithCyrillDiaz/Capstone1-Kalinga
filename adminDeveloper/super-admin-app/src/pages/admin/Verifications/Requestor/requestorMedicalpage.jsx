@@ -155,25 +155,6 @@ const RequestorMedicalPage = ({ currentPage, id }) => {
                 ))}
               </div>
             </div>
-            <div className="mt-4 mx-20 border-b border-primary-default">
-              <label
-                htmlFor="babyCategorization"
-                className="block text-lg text-primary-default"
-              >
-                Baby Categorization: (based on Medical Abstract)
-              </label>
-              <select
-                id="babyCategorization"
-                name="babyCategorization"
-                className="mt-2 block w-full rounded-sm shadow-sm p-2 focus:outline-none focus:ring-primary-default focus:border-primary-default sm:text-md text-primary-default"
-                onChange={(e) => console.log(e.target.value)}
-              >
-                <option value="">Select Baby Category</option>
-                <option value="Well baby">Well baby</option>
-                <option value="Sick Baby">Sick Baby</option>
-                <option value="Sick Baby">Medically Fragile Baby</option>
-              </select>
-            </div>
           </div>
         </div>
       </>
