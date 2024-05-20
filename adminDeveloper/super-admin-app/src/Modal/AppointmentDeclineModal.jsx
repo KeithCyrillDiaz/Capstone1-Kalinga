@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { WebHost } from "../../MyConstantSuperAdmin";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
-
 
 const AppointmentDeclineModal = ({
   isOpen,
@@ -10,16 +9,16 @@ const AppointmentDeclineModal = ({
   onConfirm,
   onCancel,
   remarks,
-  AppointmentDonorID
-  
+  AppointmentDonorID,
 }) => {
-    if (!AppointmentDonorID) {
+  if (!AppointmentDonorID) {
     return null; // or handle the case where AppointmentDonorID is null
   }
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
   const [isThirdModalOpen, setIsThirdModalOpen] = useState(false);
   const [selectedReason, setSelectedReason] = useState("");
   const [DonorRemark, setDonorRemark] = useState(""); // State to store the selected remark
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isOpen) {
@@ -34,7 +33,7 @@ const AppointmentDeclineModal = ({
   };
 
   const handleSecondModalConfirm = () => {
-    console.log('Selected DonorRemark:', DonorRemark); // Add this line for debugging
+    console.log("Selected DonorRemark:", DonorRemark); // Add this line for debugging
     if (DonorRemark) {
       // Send the selected DonorRemark to the server
       putDonorRemarkToServer(DonorRemark);
@@ -52,12 +51,18 @@ const AppointmentDeclineModal = ({
         DonorRemark: remark,
         AppointmentDonorID: AppointmentDonorID, // Include AppointmentDonorID in the request body
       };
-  
-      console.log('Sending PUT request to:', `${WebHost}/kalinga/updateDonorRemark/${AppointmentDonorID}`);
-      console.log('Request Body:', requestBody);
-  
-      const response = await axios.put(`${WebHost}/kalinga/updateDonorRemark/${AppointmentDonorID}`, requestBody);
-  
+
+      console.log(
+        "Sending PUT request to:",
+        `${WebHost}/kalinga/updateDonorRemark/${AppointmentDonorID}`
+      );
+      console.log("Request Body:", requestBody);
+
+      const response = await axios.put(
+        `${WebHost}/kalinga/updateDonorRemark/${AppointmentDonorID}`,
+        requestBody
+      );
+
       console.log("Remark posted successfully:", response.data);
     } catch (error) {
       console.error("Error posting remark:", error);
@@ -66,6 +71,7 @@ const AppointmentDeclineModal = ({
   const handleThirdModalConfirm = () => {
     setIsThirdModalOpen(false); // Close the third modal
     onConfirm(); // Call the original onConfirm function
+    navigate(-1);
   };
 
   const handleCancel = () => {
@@ -73,7 +79,6 @@ const AppointmentDeclineModal = ({
     setIsThirdModalOpen(false); // Close the third modal if open
     onCancel(); // Call the original onCancel function
   };
-
 
   return (
     <>

@@ -8,12 +8,26 @@ import axios from "axios";
 export default function UserManagement() {
   const navigate = useNavigate();
   const [isRemarksModalOpen, setRemarksModalOpen] = useState(false);
-  const [deleteUserId, setDeleteUserId] = useState(null); 
+  const [deleteUserId, setDeleteUserId] = useState(null);
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [userType, setUserType] = useState("");
 
+  const months = [
+    { id: 1, name: "January" },
+    { id: 2, name: "February" },
+    { id: 3, name: "March" },
+    { id: 4, name: "April" },
+    { id: 5, name: "May" },
+    { id: 6, name: "June" },
+    { id: 7, name: "July" },
+    { id: 8, name: "August" },
+    { id: 9, name: "September" },
+    { id: 10, name: "October" },
+    { id: 11, name: "November" },
+    { id: 12, name: "December" },
+  ];
 
   const toggleFilterVisibility = () => {
     setIsFilterVisible(!isFilterVisible);
@@ -37,7 +51,6 @@ export default function UserManagement() {
     fetchData();
   }, []);
 
-
   const handleView = () => {
     navigate("/admin/DonorVerification");
   };
@@ -53,45 +66,50 @@ export default function UserManagement() {
     const selectedType = e.target.value;
     setUserType(selectedType);
     if (selectedType === "Donor") {
-      setFilteredUsers(users.filter(user => user.userType === "Donor"));
+      setFilteredUsers(users.filter((user) => user.userType === "Donor"));
     } else if (selectedType === "Requestor") {
-      setFilteredUsers(users.filter(user => user.userType === "Requestor"));
+      setFilteredUsers(users.filter((user) => user.userType === "Requestor"));
     } else {
       setFilteredUsers(users);
     }
   };
 
- 
- 
   const handleDelete = async (id, userType) => {
     try {
       if (!id) {
-        console.error('Error deleting user: ID is undefined');
+        console.error("Error deleting user: ID is undefined");
         return;
       }
-  
-      console.log('Deleting user:', id, userType); // Log user data
-  
-      const response = await axios.delete(`${WebHost}/kalinga/deleteUser/${id}/${userType}`);
-      console.log('Delete response status:', response.status); // Log response status
-  
+
+      console.log("Deleting user:", id, userType); // Log user data
+
+      const response = await axios.delete(
+        `${WebHost}/kalinga/deleteUser/${id}/${userType}`
+      );
+      console.log("Delete response status:", response.status); // Log response status
+
       if (response.status === 200) {
-        console.log('User deleted successfully');
+        console.log("User deleted successfully");
         // Update state after successful deletion
-        const updatedUsers = users.filter(user => (userType === 'Donor' ? user.Donor_ID : user.Requestor_ID) !== id);
-        const updatedFilteredUsers = filteredUsers.filter(user => (userType === 'Donor' ? user.Donor_ID : user.Requestor_ID) !== id);
-        console.log('Updated users:', updatedUsers);
-        console.log('Updated filteredUsers:', updatedFilteredUsers);
+        const updatedUsers = users.filter(
+          (user) =>
+            (userType === "Donor" ? user.Donor_ID : user.Requestor_ID) !== id
+        );
+        const updatedFilteredUsers = filteredUsers.filter(
+          (user) =>
+            (userType === "Donor" ? user.Donor_ID : user.Requestor_ID) !== id
+        );
+        console.log("Updated users:", updatedUsers);
+        console.log("Updated filteredUsers:", updatedFilteredUsers);
         setUsers(updatedUsers);
         setFilteredUsers(updatedFilteredUsers);
       } else {
-        console.error('Failed to delete user');
+        console.error("Failed to delete user");
       }
     } catch (error) {
-      console.error('Error deleting user:', error);
+      console.error("Error deleting user:", error);
     }
   };
-  
 
   return (
     <>
@@ -132,7 +150,9 @@ export default function UserManagement() {
                 {isFilterVisible && (
                   <div className="mt-2 w-auto gap-x-4 bg-neutral-variant flex p-2 px-6 pb-4 rounded-md shadow-md justify-end">
                     <div className="border-b border-primary-default">
-                      <label className="text-xs text-primary-default">User</label>
+                      <label className="text-xs text-primary-default">
+                        User
+                      </label>
                       <select
                         className="bg-white text-primary-default text-xl py-1 px-5 pr-10 rounded-sm hover:cursor-pointer w-full"
                         value={userType}
@@ -178,7 +198,7 @@ export default function UserManagement() {
                           >
                             Role
                           </th>
-                         
+
                           <th
                             scope="col"
                             className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
@@ -210,9 +230,8 @@ export default function UserManagement() {
                                 {user.userType}
                               </div>
                             </td>
-                            
-                            
-                              <td className="text-center py-4 whitespace-nowrap text-sm font-medium flex items-center justify-center gap-2">
+
+                            <td className="text-center py-4 whitespace-nowrap text-sm font-medium flex items-center justify-center gap-2">
                               <Link
                                 to={`/admin/donorAppointmentConfirmation/`}
                                 className=" px-3 py-1 rounded-full hover:bg-neutral-variant mr-1"
@@ -236,7 +255,12 @@ export default function UserManagement() {
                                 </svg>
                               </Link>
                               <button
-                                onClick={() => handleDelete(user.Requestor_ID || user.Donor_ID, user.userType)}
+                                onClick={() =>
+                                  handleDelete(
+                                    user.Requestor_ID || user.Donor_ID,
+                                    user.userType
+                                  )
+                                }
                                 className="px-3 py-1 rounded-full hover:bg-neutral-variant"
                               >
                                 <svg
@@ -254,7 +278,7 @@ export default function UserManagement() {
                                   ></path>
                                 </svg>
                               </button>
-                                                          </td>
+                            </td>
                           </tr>
                         ))}
                       </tbody>

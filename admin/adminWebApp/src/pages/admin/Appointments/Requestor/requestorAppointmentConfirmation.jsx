@@ -58,45 +58,42 @@ const requestorAppointmentConfirmation = () => {
   const [isDeclineModalOpen, setIsDeclineModalOpen] = useState(false);
 
   const handleApproved = async () => {
-    setShowModal(true); 
+    setShowModal(true);
     try {
       await axios.put(`${WebHost}/kalinga/updateRequestStatus/${RequestID}`, {
-        RequestStatus: "Approved",
+        RequestStatus: "Ongoing",
       });
-
     } catch (error) {
       console.error("Error updating request status:", error);
     }
   };
 
   const handleApprovedConfirm = () => {
-    setShowModal(false); 
+    setShowModal(false);
   };
 
   const handleApprovedCancel = () => {
     setShowModal(false);
   };
   const handleDecline = async () => {
-    setIsDeclineModalOpen(true); 
+    setIsDeclineModalOpen(true);
 
     try {
       await axios.put(`${WebHost}/kalinga/updateRequestStatus/${RequestID}`, {
         RequestStatus: "Decline",
       });
-
     } catch (error) {
       console.error("Error updating request status:", error);
     }
   };
 
   const handleDeclineConfirm = () => {
-    setIsDeclineModalOpen(false); 
+    setIsDeclineModalOpen(false);
   };
 
   const handleDeclineCancel = () => {
-    setIsDeclineModalOpen(false); 
+    setIsDeclineModalOpen(false);
   };
-
 
   const babyCategoryOptions = [
     { label: "Newborn", value: "newborn" },
@@ -308,7 +305,8 @@ const requestorAppointmentConfirmation = () => {
         onConfirm={handleDeclineConfirm}
         onCancel={handleDeclineCancel}
         message="Are you sure you want to decline this appointment? Once declined, the request process will not proceed."
-        RequestID={RequestID}       />
+        RequestID={RequestID}
+      />
     </section>
   );
 };
