@@ -103,13 +103,13 @@ const requestorAppointmentConfirmation = () => {
   ];
   return (
     <section className="w-full h-screen bg-primary-body overflow-hidden px-4">
-      <div className="p-8 pt-1">
-        <h1 className="mt-8 text-3xl text-pink-500 font-bold">
+      <div className="p-10 pt-1">
+        <h1 className="text-3xl text-primary-default font-bold font-sans py-4 pb-2">
           Request Confirmation
         </h1>
 
         {/* Full Name Input */}
-        <div className="mt-8">
+        <div className="mt-2">
           <input
             type="text"
             id="fullName"
@@ -118,114 +118,107 @@ const requestorAppointmentConfirmation = () => {
               requestData ? requestData.Request.fullName : ""
             }`}
             onChange={handleChange}
-            className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
+            className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+            disabled
             placeholder="Full Name"
           />
         </div>
 
-        {/* Phone Number Input */}
-        <div className="mt-4">
-          <input
-            type="tel"
-            id="phoneNumber"
-            name="phoneNumber"
-            value={`Phone Number: ${
-              requestData ? requestData.Request.phoneNumber : ""
-            }`}
-            onChange={handleChange}
-            className="w-3/4 md:w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
-            placeholder="Phone Number"
-          />
+        {/* Phone Number and Email Address  */}
+        <div className="flex gap-x-2">
+          <div className="w-2/3 mt-4">
+            <input
+              type="email"
+              id="emailAddress"
+              name="emailAddress"
+              value={`Email Address: ${
+                requestData ? requestData.Request.emailAddress : ""
+              }`}
+              onChange={handleChange}
+              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+              disabled
+              placeholder="Email Address"
+            />
+          </div>
+          <div className="w-1/3 mt-4">
+            <input
+              type="tel"
+              id="phoneNumber"
+              name="phoneNumber"
+              value={`Phone Number: ${
+                requestData ? requestData.Request.phoneNumber : ""
+              }`}
+              onChange={handleChange}
+              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+              disabled
+              placeholder="Phone Number"
+            />
+          </div>
         </div>
 
-        {/* Email Address Input */}
-        <div className="mt-4">
-          <input
-            type="email"
-            id="emailAddress"
-            name="emailAddress"
-            value={`Email Address: ${
-              requestData ? requestData.Request.emailAddress : ""
-            }`}
-            onChange={handleChange}
-            className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
-            placeholder="Email Address"
-          />
+        {/* Home Address and City Input */}
+        <div className="flex gap-x-2">
+          <div className="w-2/3 mt-4">
+            <input
+              type="text"
+              id="homeAddress"
+              name="homeAddress"
+              value={`Home Address: ${
+                requestData ? requestData.Request.homeAddress : ""
+              }`}
+              onChange={handleChange}
+              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+              disabled
+              placeholder="Home Address"
+            />
+          </div>
+          <div className="w-1/3 mt-4">
+            <input
+              type="text"
+              id="city"
+              name="city"
+              value={`City: ${requestData ? requestData.Request.city : ""}`}
+              onChange={handleChange}
+              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+              disabled
+              placeholder="City"
+            />
+          </div>
         </div>
 
-        {/* Home Address Input */}
-        <div className="mt-4">
-          <input
-            type="text"
-            id="homeAddress"
-            name="homeAddress"
-            value={`Home Address: ${
-              requestData ? requestData.Request.homeAddress : ""
-            }`}
-            onChange={handleChange}
-            className="w-full px-4 py-2 h-20 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
-            placeholder="Home Address"
-          />
-        </div>
-
-        {/* City Input */}
-        <div className="mt-4">
-          <input
-            type="text"
-            id="city"
-            name="city"
-            value={`City: ${requestData ? requestData.Request.city : ""}`}
-            onChange={handleChange}
-            className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
-            placeholder="City"
-          />
-        </div>
-
-        {/* Medical Condition Input */}
-        <div className="mt-4">
-          <input
-            type="text"
-            id="medicalCondition"
-            name="medicalCondition"
-            value={`Medical Condition: ${
-              requestData ? requestData.Request.medicalCondition : ""
-            }`}
-            onChange={handleChange}
-            className="w-full px-4 py-2  h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
-            placeholder="Medical Condition"
-          />
-        </div>
-
-        {/* Amount Donated Input */}
-        <div className="flex mt-4">
-          <div className="w-1/2 mr-4">
+        {/* Medical Condition and Milk Requested Input */}
+        <div className="flex gap-x-2">
+          <div className="w-2/3 mt-4">
+            <input
+              type="text"
+              id="medicalCondition"
+              name="medicalCondition"
+              value={`Medical Condition: ${
+                requestData ? requestData.Request.medicalCondition : ""
+              }`}
+              onChange={handleChange}
+              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+              disabled
+              placeholder="Medical Condition"
+            />
+          </div>
+          <div className="w-1/3 mt-4">
             <input
               type="text"
               id="amountDonated"
               name="amountDonated"
-              value={`Milk Amount: ${
+              value={`Requested Milk Amount (in mL): ${
                 requestData ? requestData.Request.milkAmount : ""
               }`}
               onChange={handleChange}
-              className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
-              placeholder="Amount of Milk Donated"
-            />
-          </div>
-          <div className="w-1/2">
-            <input
-              type="text"
-              id="amountDonated"
-              name="amountDonated"
-              value={`Baby Category: ${
-                requestData ? requestData.Request.BabyCategory : ""
-              }`}
-              onChange={handleChange}
-              className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
+              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+              disabled
               placeholder="Amount of Milk Donated"
             />
           </div>
         </div>
 
+        {/* Reason */}
         <div className="mt-4 relative">
           <div className="relative">
             <input
@@ -236,31 +229,48 @@ const requestorAppointmentConfirmation = () => {
                 requestData ? requestData.Request.ReasonForRequesting : ""
               }`}
               onChange={handleChange}
-              className="w-full px-4 py-2 h-20 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500 pl-8"
+              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+              disabled
               placeholder="Reason for Requesting"
             />
           </div>
         </div>
 
         <div className="mt-4 relative">
-          <label
-            htmlFor="milkBankLocation"
-            className="block text-pink-500 font-bold mb-2 text-pink-500"
-          >
-            Note: Maximum of 3 images or files per field.
-          </label>
-          <div className="relative">
-            <input
-              type="text"
-              id="reasonRequest"
-              name="reasonRequest"
-              value={`Reason For Requesting: ${
-                requestData ? requestData.ReasonForRequesting : ""
-              }`}
-              onChange={handleChange}
-              className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500 pl-8"
-              placeholder=""
-            />
+          <div className="bg-white px-4 py-2 w-1/3 h-72 shadow-md  rounded-lg focus:outline-none focus: text-primary-default">
+            <span className="flex justify-center text-primary-default text-lg text-center">
+              Medical Abstract
+            </span>
+          </div>
+        </div>
+
+        <div className="mt-4 ">
+          <div className="flex bg-white w-full px-4 py-2 h-30 shadow-md  rounded-lg focus:outline-none focus: text-primary-default">
+            <div>
+              <label
+                htmlFor="babyCategorization"
+                className="block text-md text-primary-default"
+              >
+                Baby Categorization: (based on Medical Abstract)
+              </label>
+              {requestData &&
+                requestData.Request &&
+                requestData.Request.RequestStatus !== "Ongoing" &&
+                requestData.Request.RequestStatus !== "Decline" &&
+                requestData.Request.RequestStatus !== "Complete" && (
+                  <select
+                    id="babyCategorization"
+                    name="babyCategorization"
+                    onChange={(e) => console.log(e.target.value)}
+                    className="mt-2 bg-white  w-full rounded-lg shadow-md p-2 focus:outline-none focus:ring-primary-default focus:border-primary-default sm:text-md text-primary-default"
+                  >
+                    <option value="">Select Baby Category</option>
+                    <option value="Well baby">Well baby</option>
+                    <option value="Sick Baby">Sick Baby</option>
+                    <option value="Sick Baby">Medically Fragile Baby</option>
+                  </select>
+                )}
+            </div>
           </div>
         </div>
 
@@ -279,7 +289,7 @@ const requestorAppointmentConfirmation = () => {
                 </button>
                 <button
                   onClick={handleDecline}
-                  className="bg-white text-pink-500 px-4 py-2 rounded-full border border-pink-500"
+                  className="bg-white text-primary-default px-4 py-2 rounded-full border border-primary-default"
                 >
                   Decline
                 </button>
