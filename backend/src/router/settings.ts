@@ -14,6 +14,7 @@ import { fetchFeedBackByUserType, generateFeedback } from '../controllers/client
 import { checkPassword } from '../middleware/checkPassword'
 import { generateHelpAndSupportReport } from '../controllers/clientSettings/helpAndSupport'
 import { updateProfileImagelink } from '../controllers/clientSettings/changeProfileImage'
+import { getFeedbackByFeedbackID } from '../controllers/clientSettings/getFeedback'
 
 export default (router: express.Router) => {
     
@@ -21,15 +22,16 @@ export default (router: express.Router) => {
     router.post('/kalinga/createReportBug/:id', tokenVerification, reportBug)
     router.get('/kalinga/getReportBugs/', tokenVerification, getReports)
     router.get('/kalinga/getResolvedReportBugs/', tokenVerification, getResolvedReports)
-    router.patch('/kalinga/updateResolved/:id', tokenVerification, updateResolved)
+    router.patch('/kalinga/updateResolved/:id', tokenVerification,  updateResolved)
     router.delete('/kalinga/deleteReport/:id', tokenVerification, deleteReport)
 
     //ChangePassword
     router.patch('/kalinga/updatePassword/:id', tokenVerification, checkPassword, changePassword)
   
     //FeedBack
-    router.post('/kalinga/createFeedback/:id',tokenVerification, generateFeedback)
+    router.post('/kalinga/createFeedback/:id', tokenVerification, generateFeedback)
     router.get('/kalinga/getFeedbackByUserType/:userType', tokenVerification, fetchFeedBackByUserType)
+        router.get('/kalinga/getFeedbackByFeedbackID/:feedBack_ID', tokenVerification, getFeedbackByFeedbackID)
     
     //Help and Support
     router.post('/kalinga/createHelpAndSupportReport/:id', tokenVerification, generateHelpAndSupportReport)

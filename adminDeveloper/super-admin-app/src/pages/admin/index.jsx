@@ -19,6 +19,8 @@ export default function Dashboard() {
   const [totalRequestors, setTotalRequestors] = useState(0);
   const [totalUsers, setTotalUsers] = useState(0);
   const [usersPerCity, setUsersPerCity] = useState([]);
+  const [totalPendingBugs, setTotalPendingBugs] = useState(0);
+
 
   useEffect(() => {
     console.log("Fetching data...");
@@ -88,6 +90,27 @@ export default function Dashboard() {
     fetchUsersPerCity();
   }, []);
 
+  useEffect(() => {
+    const fetchPendingBugs = async () => {
+      try {
+        const response = await axios.get(`${WebHost}/kalinga/getReports`);
+        console.log("Pending Bugs Response:", response.data);
+        if (response.data && response.data.result) {
+          setTotalPendingBugs(response.data.result.length);
+        } else {
+          console.error("Invalid response format for pending bugs");
+        }
+      } catch (error) {
+        console.error("Error fetching pending bugs:", error);
+        if (error.response) {
+          console.log("Response data:", error.response.data);
+        }
+      }
+    };
+
+    fetchPendingBugs();
+  }, []);
+  
   return (
     <>
       <section className="w-full bg-primary-body overflow-hidden">
@@ -220,7 +243,7 @@ export default function Dashboard() {
                 </div>
                 <div class="row-span-2 col-span-2 ">
                   <span className="text-center text-5xl font-semibold text-primary-default flex justify-center">
-                    456
+                  {totalPendingBugs}
                   </span>
                 </div>
               </div>

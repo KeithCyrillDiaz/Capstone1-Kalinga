@@ -47,6 +47,7 @@ export default function RequestPieChart({ name }) {
               cx="50%"
               cy="50%"
               outerRadius={120}
+              innerRadius={60}
             >
               {chartData.map((entry, index) => (
                 <Cell

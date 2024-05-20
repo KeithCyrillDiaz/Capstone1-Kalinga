@@ -38,7 +38,7 @@ export default function RequestorAppointments() {
 
   const [filters, setFilters] = useState({
     monthOfCreation: "",
-    babyCategory: "",
+    BabyCategory: "",
     status: "",
     remarks: "",
   });
@@ -396,7 +396,7 @@ export default function RequestorAppointments() {
                                 </div>
                               </td>
                               <td className="text-center px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <div>Baby Category</div>
+                                <div>{appointment.BabyCategory}</div>
                               </td>
                               <td className="px-6 py-1 whitespace-nowrap">
                                 <span
