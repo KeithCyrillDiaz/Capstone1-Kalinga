@@ -288,14 +288,11 @@ const handleFileUpload = async (attachmentType) => {
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                        <TouchableOpacity onPress={()=>handleImageUpload('HepaB')}>
+                        <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('HepaB')}>
                           <AntDesign name="picture" size={27} color="#E60965" />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=> handleFileUpload('hepaB')} style  = {{
-
-                          flexDirection: "row", alignItems: "center"
-                        }}>
-                          <Text style={styles.verticalLine}>|</Text>
+                        <Text style={styles.verticalLine}>|</Text>
+                        <TouchableOpacity style = {{ backgroundColor: "pink", padding: 5, borderRadius: 7}} onPress={()=> handleFileUpload('hepaB')}>
                           <AntDesign name="file1" size={24} color="#E60965"/>
                         </TouchableOpacity>
                     </View>
@@ -311,14 +308,11 @@ const handleFileUpload = async (attachmentType) => {
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                        <TouchableOpacity onPress={()=>handleImageUpload('HIV')}>
+                        <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('HIV')}>
                           <AntDesign name="picture" size={27} color="#E60965" />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=> handleFileUpload('HIV')}style  = {{
-
-                          flexDirection: "row", alignItems: "center"
-                        }}>
-                          <Text style={styles.verticalLine}>|</Text>
+                        <Text style={styles.verticalLine}>|</Text>
+                        <TouchableOpacity style = {{ backgroundColor: "pink", padding: 5, borderRadius: 7}}  onPress={()=> handleFileUpload('HIV')}>
                           <AntDesign name="file1" size={24} color="#E60965"/>
                         </TouchableOpacity>
                     </View>
@@ -332,14 +326,11 @@ const handleFileUpload = async (attachmentType) => {
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                        <TouchableOpacity onPress={()=>handleImageUpload('Syphillis')}>
+                        <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('Syphillis')}>
                           <AntDesign name="picture" size={27} color="#E60965" />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=> handleFileUpload('Syphillis')} style  = {{
-
-                          flexDirection: "row", alignItems: "center"
-                        }}>
-                          <Text style={styles.verticalLine}>|</Text>
+                        <Text style={styles.verticalLine}>|</Text>
+                        <TouchableOpacity style = {{ backgroundColor: "pink", padding: 5, borderRadius: 7}}  onPress={()=> handleFileUpload('Syphillis')} >
                           <AntDesign name="file1" size={24} color="#E60965"/>
                         </TouchableOpacity>
                     </View>
@@ -353,14 +344,11 @@ const handleFileUpload = async (attachmentType) => {
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                        <TouchableOpacity onPress={()=>handleImageUpload('Pregnancy Book')}>
+                        <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('Pregnancy Book')}>
                           <AntDesign name="picture" size={27} color="#E60965" />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=> handleFileUpload('Pregnancy Book')} style  = {{
-
-                          flexDirection: "row", alignItems: "center"
-                        }}>
-                          <Text style={styles.verticalLine}>|</Text>
+                        <Text style={styles.verticalLine}>|</Text>
+                        <TouchableOpacity style = {{ backgroundColor: "pink", padding: 5, borderRadius: 7}}  onPress={()=> handleFileUpload('Pregnancy Book')}>
                           <AntDesign name="file1" size={24} color="#E60965"/>
                         </TouchableOpacity>
                     </View>
@@ -374,14 +362,11 @@ const handleFileUpload = async (attachmentType) => {
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                        <TouchableOpacity onPress={()=>handleImageUpload('Government_ID')}>
+                        <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}}  onPress={()=>handleImageUpload('Government_ID')}>
                           <AntDesign name="picture" size={27} color="#E60965" />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=> handleFileUpload('Government_ID')} style  = {{
-
-                          flexDirection: "row", alignItems: "center"
-                        }}>
-                          <Text style={styles.verticalLine}>|</Text>
+                        <Text style={styles.verticalLine}>|</Text>
+                        <TouchableOpacity style = {{ backgroundColor: "pink", padding: 5, borderRadius: 7}}  onPress={()=> handleFileUpload('Government_ID')} >
                           <AntDesign name="file1" size={24} color="#E60965"/>
                         </TouchableOpacity>
                     </View>
@@ -400,13 +385,12 @@ const handleFileUpload = async (attachmentType) => {
                   <View  style = {{
                     height: 150,
                     marginBottom: 20,
-                    borderWidth: 1,
                     backgroundColor: "white",
                     paddingLeft: 10,
                     paddingRight: 10,
                     borderColor: "#E60965",
                     borderRadius: 15,
-                    elevation: 5,
+                    elevation: 7,
                     marginTop: 20,
                     }}>
                     <ScrollView 
@@ -448,11 +432,10 @@ const handleFileUpload = async (attachmentType) => {
                       <View  style={{ 
                         paddingVertical: 20,
                         borderColor: "#E60965",
-                        borderWidth: 1,
                         backgroundColor: "white",
                         width: "100%",
                         borderRadius: 15,
-                        elevation: 5,
+                        elevation: 7,
                   
                         }}>
                           {Object.entries(selectedFile).map(([attachmentType,  file]) => {
@@ -629,7 +612,6 @@ const handleFileUpload = async (attachmentType) => {
     iconContainer: {
       flexDirection: "row",
       alignItems: "center",
-      backgroundColor: "#FFEECC",
       paddingHorizontal: 5,
       marginLeft: 10,
     },
@@ -640,13 +622,12 @@ const handleFileUpload = async (attachmentType) => {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: 'space-between',
-        borderWidth: 1,
         borderColor: "#E60965",
         borderRadius: 10,
         paddingVertical: 10,
         paddingHorizontal: 10,
         marginBottom: 17,
-        elevation: 5,
+        elevation: 7,
         backgroundColor: "#FFFFFF"
     },
 
@@ -666,18 +647,20 @@ const handleFileUpload = async (attachmentType) => {
 
   rectangle: {
     width: 50,
-    height: 4, 
-    backgroundColor: '#FFEECC', // Color for Rectangle F94892
+    height: 7, 
+    backgroundColor: 'white', // Color for Rectangle F94892
     borderRadius: 10,
     marginHorizontal: 5,
+    elevation: 7
   },
 
   rectangleIndicator: {
     width: 50,
-    height: 4, 
+    height: 7, 
     backgroundColor: '#F94892', // Color for Rectangle F94892
     borderRadius: 10,
     marginHorizontal: 5,
+    elevation: 7
   },
 
     verticalLine: {

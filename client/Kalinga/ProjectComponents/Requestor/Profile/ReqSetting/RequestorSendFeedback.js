@@ -15,6 +15,7 @@ import Header from "./Header";
 import { useNavigation } from '@react-navigation/native';
 import axios from "axios";
 import { BASED_URL } from "../../../../MyConstants";
+import { globalStyles } from "../../../../styles_kit/globalStyles";
 
 export default function SendFeedback({route}) {
 
@@ -125,7 +126,7 @@ export default function SendFeedback({route}) {
   
 
   return (
-    <SafeAreaView style={bodyStyle.main}>
+    <SafeAreaView style={globalStyles.defaultBackgroundColor}>
       <ScrollView stickyHeaderIndices={[1]}>
         <StatusBar />
         <Header title="Send Feedback" />
@@ -166,8 +167,8 @@ export default function SendFeedback({route}) {
           <View
             style={{
               backgroundColor: "#FFFFFF",
-              elevation: 5,
-              borderWidth: 1,
+              elevation: 7,
+              borderRadius: 17,
               borderColor: "#E60965",
               padding: 16,
               fontSize: 16,

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
-import { GOOGLE_MAPS_API_KEY } from '../Explore/sec';
 import { GetUsersLocation } from './UsersLocation';
 import MapViewDirections from 'react-native-maps-directions'; // Import MapViewDirections
 

@@ -40,7 +40,18 @@ export default function RequestorHome({route}) {
 
     
     const navigatePage = async (Page) => {
-
+        if(Page === "RequestorEducLibrary"){
+          Alert.alert(
+            "Sorry, this feature is not yet available right now.",
+            "Rest assured, our team is hard at work developing new features to better serve our community. Your continued support means the world to us. Thank you for your patience!",
+            [
+              {
+                text: "Okay",
+              }
+            ]
+          );
+          return
+      }
         if(Page === "ValidUserExplore"){
           const result = await checkLocationPermission()
           console.log("result: ", result)
@@ -111,19 +122,12 @@ export default function RequestorHome({route}) {
     }
     const simulateFetchRequestStatus = async () => {
       try {
-          const response = await fetch(`${BASED_URL}/kalinga/getRequestStatus`);
-          if (!response.ok) {
-              console.log('Network response was not ok');
-          }
-
-          const contentType = response.headers.get('content-type');
-          if (contentType && contentType.includes('application/json')) {
-              const data = await response.json();
-              console.log('Fetched Data:', data); // Log the fetched data
-              setRequestStatus(data.RequestStatus);
-              console.log('Updated Request Status:', data.RequestStatus); // Log the updated state
-          } else {
-              throw new Error('Invalid content type received');
+          const response = await axios.get(`${BASED_URL}/kalinga/getRequestStatusOfMotherMobile/${userInformation.Requestor_ID}`);
+          console.log(response.data.messages.message)
+          if(response.data.messages.code === 1) return
+          if(response.data.messages.message !== "No pending or ongoing Request Appointment"){
+            console.log("Request Status:", response.data.appointments.RequestStatus)
+            setRequestStatus(response.data.appointments.RequestStatus);
           }
       } catch (error) {
           console.error('Error fetching request status:', error);
@@ -141,7 +145,7 @@ export default function RequestorHome({route}) {
   const handleMakeRequest = () => {
       console.log('Current Request Status:', requestStatus);
   
-      const canMakeRequest = requestStatus !== 'Pending' && requestStatus !== 'Approved';
+      const canMakeRequest = requestStatus !== 'Pending' && requestStatus !== 'Ongoing';
       console.log('Can Make Request:', canMakeRequest); // Log the evaluation result
   
       if (canMakeRequest) {
@@ -169,64 +173,53 @@ export default function RequestorHome({route}) {
         overScrollMode='never' // Disable the over-scroll effect or the Jelly effect when reaching the end of the scroll
         nestedScrollEnabled={true} // Enable nested scrolling
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingBottom: 20}}
         >
               <View style = {styles.flex_start}>
                 <Text style = {styles.title}>Requestor's Dashboard</Text>
               </View>
-              <View style = {styles.flex_Row}>
+              <View style = {styles.boxRowContainer}>
               
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("ValidUserExplore")}>
+                <TouchableOpacity style = {styles.box} onPress={() => navigatePage("ValidUserExplore")}>
                     <MaterialIcons name="location-pin" size={70} color="#E60965" />
-                    <View style = {styles.LabelCenter}>
-                      <Text style = {styles.Label}>Milk Bank Locator</Text>
-                      <Text style = {styles.subLabel}>Easily find human milk banks near you</Text>
-                    </View>
+                    <Text style = {styles.boxTitle}>Milk Bank Locator</Text>
+                    <Text style = {styles.subLabel}>Easily find human milk banks near you</Text>
                 </TouchableOpacity>
                 
-                  <TouchableOpacity style = {globalStyles.smallBackgroundBox}  onPress={() => navigatePage("RequestorEducLibrary")}>
-                    <Ionicons name="book" size={70} color="#E60965" />
-                    <View style = {styles.LabelCenter}>
-                      <Text style = {styles.Label}>Educational Library</Text>
+                  <TouchableOpacity style = {styles.box} onPress={() => navigatePage("RequestorEducLibrary")}>
+                      <Ionicons name="book" size={70} color="#E60965" />
+                      <Text style = {styles.boxTitle}>Educational Library</Text>
                       <Text style = {styles.subLabel}>Explore our educational articles on breastfeeding and maternal health</Text>
-                    </View>
                   </TouchableOpacity>
                 
 
               </View>
 
-              <View style = {styles.flex_Row}>
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("RequestorChatAssistance")}>
-                <FontAwesome5 name="robot" size={70} color="#E60965"/>
-                  <View style = {styles.LabelCenter}>
-                    <Text style = {styles.Label}>Instant Messaging</Text>
+              <View style = {styles.boxRowContainer}>
+                <TouchableOpacity style = {styles.box} onPress={() => navigatePage("RequestorChatAssistance")}>
+                    <FontAwesome5 name="robot" size={70} color="#E60965"/>
+                    <Text style = {styles.boxTitle}>Instant Messaging</Text>
                     <Text style = {styles.subLabel}>Chat with our chatbot for quick respond to FAQs </Text>
-                  </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("RequestorForum")}>
-                <MaterialIcons name="forum" size={70} color="#E60965" />
-                  <View style = {styles.LabelCenter}>
-                    <Text style = {styles.Label}>Forum</Text>
+                <TouchableOpacity style = {styles.box} onPress={() => navigatePage("RequestorForum")}>
+                    <MaterialIcons name="forum" size={70} color="#E60965" />
+                    <Text style = {styles.boxTitle}>Forum</Text>
                     <Text style = {styles.ShortLabel}>Engage with user discussions</Text>
-                  </View>
                 </TouchableOpacity>
               </View>
 
-              <View style = {styles.flex_Row}>
-              <TouchableOpacity style={globalStyles.smallBackgroundBox} onPress={handleMakeRequest}>
-                <Ionicons name="calendar" size={70} color="#E60965" />
-                  <View style = {styles.LabelCenter}>
-                    <Text style = {styles.Label}>Make Request</Text>
+              <View style = {styles.boxRowContainer}>
+              <TouchableOpacity style={styles.box} onPress={handleMakeRequest}>
+                    <Ionicons name="calendar" size={70} color="#E60965" />
+                    <Text style = {styles.boxTitle}>Make Request</Text>
                     <Text style = {styles.subLabel}>Ready to Request Milk? Set an appointment</Text>
-                  </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity style = {globalStyles.smallBackgroundBox} onPress={() => navigatePage("RequestTab")}>
-                  <SimpleLineIcons name="graph" size={70} color="#E60965"s />
-                  <View style = {styles.LabelCenter}>
-                    <Text style = {styles.Label}>My Request</Text>
+                <TouchableOpacity style = {styles.box} onPress={() => navigatePage("RequestTab")}>
+                    <SimpleLineIcons name="graph" size={70} color="#E60965"s />
+                    <Text style = {styles.boxTitle}>My Request</Text>
                     <Text style = {styles.subLabel}>View Milk Request History</Text>
-                  </View>
                 </TouchableOpacity>
               </View>
              
@@ -239,7 +232,38 @@ export default function RequestorHome({route}) {
 
 
   const styles = StyleSheet.create({
-
+    boxRowContainer: {
+      flexDirection: "row",
+      alignItems:"center",
+      justifyContent:"space-evenly",
+      paddingVertical:10,
+      gap: 17
+    },
+  
+    box: {
+      backgroundColor: "white",
+      height:170,
+      maxHeight:180,
+      width: 160,
+      maxWidth:200,
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 17,
+      elevation:7
+    },
+    boxTitle: {
+      textAlign: "center",
+      fontFamily: "Open-Sans-Bold",
+      fontSize: 16,
+      color:"#E60965",
+    },
+    boxMinitext: {
+      width:100,
+      textAlign: "center",
+      fontSize: 14,
+      color:"#E60965",
+      fontFamily: "Open-Sans-Regular"
+    },
 
     flex_start:{ 
       //backgroundColor: "gray",

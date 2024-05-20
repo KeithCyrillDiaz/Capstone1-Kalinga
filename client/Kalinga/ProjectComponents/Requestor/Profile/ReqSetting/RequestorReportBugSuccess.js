@@ -12,6 +12,7 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 import Header from "./Header";
 import { useNavigation } from '@react-navigation/native';
+import { globalStyles } from "../../../../styles_kit/globalStyles";
 
 export default function ReportBugSuccess({route}) {
 
@@ -22,7 +23,7 @@ export default function ReportBugSuccess({route}) {
  }
 
   return (
-    <SafeAreaView style={bodyStyle.main}>
+    <SafeAreaView style={globalStyles.defaultBackgroundColor}>
       <ScrollView stickyHeaderIndices={[1]}>
         <StatusBar />
         <Header title="Report a Bug" />

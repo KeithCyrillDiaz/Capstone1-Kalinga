@@ -84,7 +84,7 @@ const DonorMedicalHistory2 = ({route}) => {
 
   useEffect(() => {
     checkForm()
-  }, [formData.MH12])
+  }, [formData.SH2])
 
   useEffect(() => {
     console.log("formData.MH14_Reason: ", formData.MH14_Reason)
@@ -261,18 +261,20 @@ const DonorMedicalHistory2 = ({route}) => {
 
     rectangle: {
       width: 50,
-      height: 4, 
-      backgroundColor: '#FFEECC', // Color for Rectangle F94892
+      height: 7, 
+      backgroundColor: 'white', // Color for Rectangle F94892
       borderRadius: 10,
       marginHorizontal: 5,
+      elevation: 7
     },
 
     rectangleIndicator: {
       width: 50,
-      height: 4, 
+      height: 7, 
       backgroundColor: '#F94892', // Color for Rectangle F94892
       borderRadius: 10,
       marginHorizontal: 5,
+      elevation: 7
     },
 
     title: {

@@ -230,7 +230,7 @@ const SetDateTimeLocation = () => {
                     <View style={[styles.BiginputField, {paddingLeft: 0,}]}>
                          <Picker
                             selectedValue={newForm.location}
-                            style={{ height: 30, width: "90%", color: '#E60965'}}
+                            style={{ height: 30, width: "90%", color: '#E60965', fontFamily: "Kurale"}}
                             onValueChange={(itemValue) =>
                             handleChange("location", itemValue)
                             }
@@ -263,7 +263,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     inputText: {
-        color: "black"
+        color: '#E60965',
+        fontFamily:"Kurale"
     },
     title: {
         textAlign: 'center',
@@ -319,22 +320,18 @@ const styles = StyleSheet.create({
        fontSize: 25,
        fontWeight: "bold"
 
-
-   
        },
        BiginputField: {
         flexDirection: 'row',
         alignItems: 'center',
-        borderWidth: 1,
         backgroundColor:'white',
-        borderWidth: 1,
-        borderRadius: 10,
-        borderColor: '#E60965',
+        borderRadius: 17,
         paddingVertical: 7,
         paddingHorizontal: 20,
         width: 320,
         marginBottom: 40,
-        color: "black"
+        elevation: 5,
+
     },
     icon: {
         marginLeft: 180 // Adjust the margin right for the icon

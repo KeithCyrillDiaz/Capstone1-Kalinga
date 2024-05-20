@@ -53,7 +53,7 @@ export const SearchBox = ({onSelect, data, onClear }) => {
                 )}
                 
             </View>
-           {showList && (
+           {showList && input !=="" && (
              <View style={[styles.listContainer, input !== "" ? {marginTop: 10} : {marginTop: 0} ]}>
                 <FlatList 
                 data={data}

@@ -15,6 +15,7 @@ import { Octicons } from '@expo/vector-icons';
 import { useNavigation, CommonActions, useFocusEffect } from '@react-navigation/native';
 import axios from "axios"
 import { BASED_URL } from '../../../MyConstants.js'
+import { globalStyles } from "../../../styles_kit/globalStyles.js";
 
 
 const RequestorNotification = ({route}) => {
@@ -112,7 +113,7 @@ const RequestorNotification = ({route}) => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={globalStyles.defaultBackgroundColor}>
       <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
       <View style={globalHeader.SmallHeader}>
         <Text style={globalHeader.SmallHeaderTitle}>Notifications</Text>
@@ -122,6 +123,7 @@ const RequestorNotification = ({route}) => {
         overScrollMode='never'
         nestedScrollEnabled={true} 
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingBottom: 20}}
       >
         {notifications.length !== 0 && notifications.map((notification) => (
           <TouchableOpacity

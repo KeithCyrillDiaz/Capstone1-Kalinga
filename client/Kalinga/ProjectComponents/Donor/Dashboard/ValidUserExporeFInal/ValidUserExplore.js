@@ -10,7 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const ValidUserExplore = ({route}) => {
 
-    const {data, token, requestStatus} = route.params
+    const {data, token, requestStatus, donationStatus} = route.params
 
     const navigation = useNavigation()
 
@@ -44,19 +44,10 @@ const ValidUserExplore = ({route}) => {
                 longitude: 0
             }))
         }
-
-        const handleSetAppointments = async () => {
-            if(data.userType === "Donor"){
-                navigation.navigate("SetAnAppointment", {data: data, token: token})
-                return
-            }
-            handleMakeRequest()
-        }
-
         const handleMakeRequest = () => {
             console.log('Current Request Status:', requestStatus);
         
-            const canMakeRequest = requestStatus !== 'Pending' && requestStatus !== 'Approved';
+            const canMakeRequest = requestStatus !== 'Pending' && requestStatus !== 'Ongoing';
             console.log('Can Make Request:', canMakeRequest); // Log the evaluation result
         
             if (canMakeRequest) {
@@ -71,6 +62,39 @@ const ValidUserExplore = ({route}) => {
                 );
             }
         };
+
+        const handleMakeDonation = () => {
+            console.log('Current Donation Status:', donationStatus);
+        
+            const canMakeDonation = donationStatus !== 'Pending' && donationStatus !== 'Ongoing';
+            console.log('Can Make Donation:', canMakeDonation); // Log the evaluation result
+        
+            if (canMakeDonation) {
+                console.log('Navigating to MakeRequest');
+                navigatePage('SetAnAppointment');
+            } else {
+                console.log('Cannot Make Donatin');
+                Alert.alert(
+                    'Cannot Make Donation',
+                    'You already have a pending or ongoing donation. Please wait until it is resolved.',
+                    [{ text: 'OK', onPress: () => console.log('OK Pressed') }]
+                );
+            }
+        };
+
+        const handleSetAppointments = async () => {
+            if(data.userType === "Donor"){
+                handleMakeDonation()
+                return
+            }
+            handleMakeRequest()
+            return
+        }
+
+        const navigatePage = async (Page) => {
+            navigation.navigate(Page, {data: data, token: token}); // Navigate to the Login screen
+            return
+        };   
 
     return (   
         <View style= {globalStyles.defaultBackgroundColor}>

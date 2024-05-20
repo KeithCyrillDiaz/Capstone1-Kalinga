@@ -259,7 +259,8 @@ const DonorScreeningFormPage2 = ({route}) => {
       // marginVertical: 30,
       //backgroundColor: "gray"
       paddingHorizontal: 20,
-   
+      color: '#E60965',
+      fontFamily: "Open-Sans-SemiBold"
   },
 
     title: {
@@ -296,6 +297,7 @@ const DonorScreeningFormPage2 = ({route}) => {
         marginLeft: 20,
         marginTop: 10,
         color: "#E60965",
+        fontFamily: "Open-Sans-SemiBold"
       },
       rectanglesContainer: {
         flexDirection: "row",
@@ -307,18 +309,20 @@ const DonorScreeningFormPage2 = ({route}) => {
 
     rectangle: {
       width: 50,
-      height: 4, 
-      backgroundColor: '#FFEECC', // Color for Rectangle F94892
+      height: 7, 
+      backgroundColor: 'white', // Color for Rectangle F94892
       borderRadius: 10,
       marginHorizontal: 5,
+      elevation: 7
     },
 
     rectangleIndicator: {
       width: 50,
-      height: 4, 
+      height: 7, 
       backgroundColor: '#F94892', // Color for Rectangle F94892
       borderRadius: 10,
       marginHorizontal: 5,
+      elevation: 7
     },
 
     circle: {
@@ -338,7 +342,7 @@ const DonorScreeningFormPage2 = ({route}) => {
         width: 330,
         marginLeft: 20,
         marginBottom: 20,
- 
+        fontFamily: "Open-Sans-SemiBold"
       },
   
       question: {
@@ -347,6 +351,7 @@ const DonorScreeningFormPage2 = ({route}) => {
         //backgroundColor: "gray",
         width: 230,
         marginLeft: 20,
+        fontFamily: "Open-Sans-SemiBold"
       },
   
 
@@ -391,20 +396,18 @@ const DonorScreeningFormPage2 = ({route}) => {
 
       box: {
         borderColor: '#E60965',
-        borderWidth: 1,
-        elevation: 5
+        elevation: 7
       },
 
       box1: {
         borderColor: '#E60965',
-        borderWidth: 1,
         height: 100,
         justifyContent: "center",
         borderRadius: 10,
         marginTop: 10,
         marginBottom: 20,
         backgroundColor: "#FFFFFF",
-        elevation: 5
+        elevation: 7
       },
 
       box2: {
@@ -412,7 +415,6 @@ const DonorScreeningFormPage2 = ({route}) => {
         alignSelf: "flex-start",
         justifyContent: "flex-start",
         borderColor: '#E60965',
-        borderWidth: 1,
         borderRadius: 10,
         marginBottom: 20,
         // marginHorizontal: 10
@@ -420,16 +422,16 @@ const DonorScreeningFormPage2 = ({route}) => {
         paddingVertical: 10,
         height: 150,
         backgroundColor: "#FFFFFF",
-        elevation: 5
+        elevation: 7
       },
 
       box3: {
         borderColor: '#E60965',
-        elevation: 5
+        elevation: 7
+        
       },
 
       text1: {
-
         marginBottom: 10,
         marginHorizontal: 10,
         color: '#E60965',
@@ -449,17 +451,18 @@ const DonorScreeningFormPage2 = ({route}) => {
         textAlign: "left",
         marginTop:10,
         //backgroundColor: "gray",
-        alignSelf: "left"
+        alignSelf: "left",
+        fontFamily: "Open-Sans-SemiBold"
 
       },
 
       form: {
-        borderWidth: 1,
         borderRadius: 10,
         borderColor: '#E60965',
         paddingVertical: 10,
         backgroundColor: "#FFFFFF",
-        elevation: 5
+        elevation: 7,
+        fontFamily: "Open-Sans-SemiBold"
       }
    
 

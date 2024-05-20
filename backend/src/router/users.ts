@@ -9,7 +9,7 @@ import {createRequest} from "../controllers/Requestor/RequestController";
 import {getAppointmentByUsertype} from '../controllers/Admin/Appointment/getAppointmentByUsertype';
 import { getRequestByID } from '../controllers/Admin/Appointment/getMakeRequest';
 import { getRequestByUserType } from '../controllers/Admin/Appointment/getRequestByUserType';
-import { logInUser, logOutUser } from '../controllers/LogInUser';
+import { logInUser, logOutUser, checkIfBlock } from '../controllers/LogInUser';
 import { isApproved } from '../controllers/isApproved';
 import { updateUserDetails } from '../controllers/updateUser';
 import { updateDonationStatus } from '../controllers/Admin/Appointment/updateAppointmentStatus';
@@ -63,7 +63,7 @@ export default (router: express.Router) => {
     router.post('/kalinga/setPassword', registerUserOrSetNewPassword); // Do not delete, capable of Setting new password
     
     router.post('/kalinga/registerRequestor', registerRequestor);
-    router.post('/kalinga/userLogin', logInUser)
+    router.post('/kalinga/userLogin', checkIfBlock, logInUser)
     router.get('/kalinga/userLogout/:token', logOutUser)
     router.post('/kalinga/superAdminLogin', superAdminLogIn)
     router.post('/kalinga/adminLogin', AdminLogIn)
