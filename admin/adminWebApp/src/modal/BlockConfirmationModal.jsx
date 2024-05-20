@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const DeclineModal = ({ isOpen, message, onConfirm, onCancel }) => {
+const BlockConfirmationModal = ({ isOpen, message, onConfirm, onCancel }) => {
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
 
   const handleConfirm = () => {
@@ -37,7 +37,7 @@ const DeclineModal = ({ isOpen, message, onConfirm, onCancel }) => {
               </button>
               <button
                 className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
-                onClick={onCancel}
+                onClick={handleCancel}
               >
                 No
               </button>
@@ -53,8 +53,9 @@ const DeclineModal = ({ isOpen, message, onConfirm, onCancel }) => {
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
             <div className="border-2 border-pink-800 bg-white p-12 rounded-lg shadow-lg max-w-lg">
               <p className="text-xl">
-                The appointment has been successfully declined, and the user
-                will receive a notification about its status.
+                The account has been successfully blocked, and the user will
+                receive a notification about its status. If you want to unblock
+                the account, kindly contact the admin for more details.
               </p>
               <div className="mt-8 flex justify-end">
                 <button
@@ -72,4 +73,4 @@ const DeclineModal = ({ isOpen, message, onConfirm, onCancel }) => {
   );
 };
 
-export default DeclineModal;
+export default BlockConfirmationModal;

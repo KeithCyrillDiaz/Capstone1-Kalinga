@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { formatDate } from "./formatDateFunction";
+import { formatDate } from "../../components/Verification/formatDateFunction";
 import { WebHost } from "../../../MyConstantAdmin";
 import axios from "axios";
 import { DeleteScreeningFormModal } from "../../modal/Verification/DeleteScreeningFormModal";
