@@ -39,9 +39,9 @@ const SplashScreen = ({ navigation }) => {
                 console.log("Message: ",result.data.messages.message)
                 if((result.data.messages.message === "Non existing Applicant" || result.data.messages.message === "Applicant is Deleted") && DonorApplicant_ID === Applicant_ID) await AsyncStorage.removeItem('DonorApplicant_ID')
                 else if((result.data.messages.message === "Non existing Applicant" || result.data.messages.message === "Applicant is Deleted") && RequestorApplicant_ID === Applicant_ID) await AsyncStorage.removeItem('RequestorApplicant_ID')
-                const checkDonorID = await AsyncStorage.getItem('DonorApplicant_ID')
-                const checkRequestorID = await AsyncStorage.getItem('RequestorApplicant_ID')
-                if(!checkDonorID && !checkRequestorID) await AsyncStorage.removeItem('Pending')
+                // const checkDonorID = await AsyncStorage.getItem('DonorApplicant_ID')
+                // const checkRequestorID = await AsyncStorage.getItem('RequestorApplicant_ID')
+                // if(!checkDonorID && !checkRequestorID) await AsyncStorage.removeItem('Pending')
                 if(result.data.messages.code === 0){
                   console.log(result.data.messages.message)
                   console.log("result.data.userType: ", result.data.userType)
