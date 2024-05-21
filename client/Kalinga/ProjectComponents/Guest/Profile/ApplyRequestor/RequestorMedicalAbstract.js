@@ -156,7 +156,7 @@ const handleFileUpload = async (attachmentType) => {
 
   return (
 
-      <SafeAreaView style = {styles.SafeArea}>
+      <SafeAreaView style = {globalStyles.defaultBackgroundColor}>
           <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style = {globalHeader.SmallHeader}>
               <Text style = {globalHeader.SmallHeaderTitle}>Apply as Requestor</Text>
@@ -174,7 +174,7 @@ const handleFileUpload = async (attachmentType) => {
                     <View style = {styles.pageIndicator}/>
                 </View>
                
-                <Text style = {styles.MainTitle}>Medical Abstract of Infant</Text>
+                <Text style = {[styles.MainTitle, {marginVertical: 20,}]}>Medical Abstract of Infant</Text>
               </View>
               
               <View style = {styles. attachmentContainer}>
@@ -184,11 +184,11 @@ const handleFileUpload = async (attachmentType) => {
                   <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                      <TouchableOpacity onPress={()=>handleImageUpload('Clinical History')}>
+                      <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('Clinical History')}>
                         <AntDesign name="picture" size={27} color="#E60965" />
                       </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>
-                        <TouchableOpacity onPress={()=>handleFileUpload('Clinical History')}>
+                        <TouchableOpacity style = {{ backgroundColor: "pink", padding: 5, borderRadius: 7}} onPress={()=>handleFileUpload('Clinical History')}>
                         <AntDesign name="file1" size={24} color="#E60965" />
                       </TouchableOpacity>
                   </View>
@@ -203,11 +203,11 @@ const handleFileUpload = async (attachmentType) => {
                   <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                      <TouchableOpacity onPress={()=>handleImageUpload('Presenting Complaint')}>
+                      <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('Presenting Complaint')}>
                         <AntDesign name="picture" size={27} color="#E60965" />
                       </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>
-                        <TouchableOpacity onPress={()=>handleFileUpload('Presenting Complaint')}>
+                        <TouchableOpacity style = {{ backgroundColor: "pink", padding: 5, borderRadius: 7}} onPress={()=>handleFileUpload('Presenting Complaint')}>
                         <AntDesign name="file1" size={24} color="#E60965" />
                       </TouchableOpacity>
                   </View>
@@ -222,11 +222,11 @@ const handleFileUpload = async (attachmentType) => {
                   <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                      <TouchableOpacity onPress={()=>handleImageUpload('Clinical Findings')}>
+                      <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('Clinical Findings')}>
                         <AntDesign name="picture" size={27} color="#E60965" />
                       </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>
-                        <TouchableOpacity onPress={()=>handleFileUpload('Clinical Findings')}>
+                        <TouchableOpacity style = {{ backgroundColor: "pink", padding: 5, borderRadius: 7}} onPress={()=>handleFileUpload('Clinical Findings')}>
                         <AntDesign name="file1" size={24} color="#E60965" />
                       </TouchableOpacity>
                   </View>
@@ -241,11 +241,11 @@ const handleFileUpload = async (attachmentType) => {
                   <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                      <TouchableOpacity onPress={()=>handleImageUpload('Diagnosis')}>
+                      <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('Diagnosis')}>
                         <AntDesign name="picture" size={27} color="#E60965" />
                       </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>
-                        <TouchableOpacity onPress={()=>handleFileUpload('Diagnosis')}>
+                        <TouchableOpacity style = {{ backgroundColor: "pink", padding: 5, borderRadius: 7}} onPress={()=>handleFileUpload('Diagnosis')}>
                         <AntDesign name="file1" size={24} color="#E60965" />
                       </TouchableOpacity>
                   </View>
@@ -253,18 +253,18 @@ const handleFileUpload = async (attachmentType) => {
                 </View>
             </View>
 
-            <View style = {styles. attachmentContainer}>
-                <Text style={styles.newLabel}>
+            <View style = {[styles. attachmentContainer, {}]}>
+                <Text style={[styles.newLabel,{}]}>
                     Treatments and Intervensions
                 </Text>
-                  <View style={styles.rowAlignment}>
+                  <View style={[styles.rowAlignment]}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
-                    <View style={styles.iconContainer}>
-                      <TouchableOpacity onPress={()=>handleImageUpload('Treatments and Intervensions')}>
+                    <View style={[styles.iconContainer]}>
+                      <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('Treatments and Intervensions')}>
                         <AntDesign name="picture" size={27} color="#E60965" />
                       </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>
-                        <TouchableOpacity onPress={()=>handleFileUpload('Treatments and Intervensions')}>
+                        <TouchableOpacity style = {{ backgroundColor: "pink", padding: 5, borderRadius: 7}} onPress={()=>handleFileUpload('Treatments and Intervensions')}>
                         <AntDesign name="file1" size={24} color="#E60965" />
                       </TouchableOpacity>
                   </View>
@@ -279,11 +279,11 @@ const handleFileUpload = async (attachmentType) => {
                   <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                      <TouchableOpacity onPress={()=>handleImageUpload('Prescription')}>
+                      <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('Prescription')}>
                         <AntDesign name="picture" size={27} color="#E60965" />
                       </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>
-                        <TouchableOpacity onPress={()=>handleFileUpload('Prescription')}>
+                        <TouchableOpacity style = {{ backgroundColor: "pink", padding: 5, borderRadius: 7}} onPress={()=>handleFileUpload('Prescription')}>
                         <AntDesign name="file1" size={24} color="#E60965" />
                       </TouchableOpacity>
                   </View>
@@ -299,11 +299,11 @@ const handleFileUpload = async (attachmentType) => {
                   <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                      <TouchableOpacity onPress={()=>handleImageUpload('Government_ID')}>
+                      <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('Government_ID')}>
                         <AntDesign name="picture" size={27} color="#E60965" />
                       </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>
-                        <TouchableOpacity onPress={()=>handleFileUpload('Government_ID')}>
+                        <TouchableOpacity style = {{ backgroundColor: "pink", padding: 5, borderRadius: 7}} onPress={()=>handleFileUpload('Government_ID')}>
                         <AntDesign name="file1" size={24} color="#E60965" />
                       </TouchableOpacity>
                   </View>
@@ -314,13 +314,12 @@ const handleFileUpload = async (attachmentType) => {
                   <View  style = {{
                     height: 150,
                     marginBottom: 20,
-                    borderWidth: 1,
                     backgroundColor: "white",
                     paddingLeft: 10,
                     paddingRight: 10,
                     borderColor: "#E60965",
                     borderRadius: 15,
-                    elevation: 5,
+                    elevation: 7,
                     marginTop: 20,
                     marginHorizontal: "5%",
                     alignItems: "center"
@@ -362,11 +361,10 @@ const handleFileUpload = async (attachmentType) => {
             <View  style={{ 
               paddingVertical: 20,
               borderColor: "#E60965",
-              borderWidth: 1,
               backgroundColor: "white",
               width: "80%",
               borderRadius: 15,
-              elevation: 5,
+              elevation: 7,
               alignSelf: "center",
               alignItems: "center",
               
@@ -381,7 +379,7 @@ const handleFileUpload = async (attachmentType) => {
                       marginVertical: 10,
                       gap: 10
                       }}>
-                      <Text style = {{textAlign: "left", fontWeight: "bold", width: 100}}>{attachmentType} </Text>
+                      <Text style = {{textAlign: "left", fontWeight: "bold", width: 100, color: "#E60965",}}>{attachmentType} </Text>
                       <Text style= {{flex: 1}}>{file.name}</Text>
 
                     </View>
@@ -466,7 +464,6 @@ const handleFileUpload = async (attachmentType) => {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: 'space-between',
-      borderWidth: 1,
       borderColor: "#E60965",
       borderRadius: 10,
       paddingVertical: 10,
@@ -474,6 +471,8 @@ const handleFileUpload = async (attachmentType) => {
       marginBottom: 17,
       width: "90%",
       alignSelf: "center",
+      backgroundColor: "white",
+      elevation: 7
    
   },
 
@@ -486,8 +485,6 @@ const handleFileUpload = async (attachmentType) => {
   iconContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFEECC",
-    paddingHorizontal: 5,
     marginLeft: 10,
   },
 
@@ -523,21 +520,24 @@ const handleFileUpload = async (attachmentType) => {
     },
 
     IndicatedPage: {
-        height: 4,
-        width: 50,
-        backgroundColor: "#F94892",
-        marginTop: "10%",
-        marginHorizontal: "1%",
-    },
+      height: 7,
+      borderRadius: 7,
+      width: 50,
+      backgroundColor: "#F94892",
+      marginTop: "10%",
+      marginHorizontal: "1%",
+      elevation:7
+  },
 
-    pageIndicator: {
-        height: 4,
-        width: 50,
-        backgroundColor: "#FFEECC",
-        marginTop: "10%",
-        marginHorizontal: "1%",
-    },
-
+  pageIndicator: {
+      height: 7,
+      borderRadius: 7,
+      width: 50,
+      backgroundColor: "white",
+      marginTop: "10%",
+      marginHorizontal: "1%",
+      elevation:7
+  },
     MainTitle: {
         fontFamily: 'Open-Sans-Bold',
         fontSize: 20,

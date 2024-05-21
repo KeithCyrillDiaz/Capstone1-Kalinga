@@ -16,11 +16,12 @@ import JeannahImage from '../../../../assets/Developers/Jana.jpg'
 import BeverlyImage from '../../../../assets/Developers/Beverly.jpg'
 import KeithImage1 from '../../../../assets/Developers/Keith1.jpg'
 import KeithImage2 from '../../../../assets/Developers/Keith2.jpg'
+import { globalStyles } from "../../../../styles_kit/globalStyles";
 
 export default function AboutUs() {
 
   return (
-    <SafeAreaView style={bodyStyle.main}>
+    <SafeAreaView style={globalStyles.defaultBackgroundColor}>
       <ScrollView stickyHeaderIndices={[1]}>
         <StatusBar />
         <Header title="About Us" />
@@ -106,7 +107,6 @@ const DeveloperProfile = ({ name, role, image }) => {
           style={{
             backgroundColor: "#FFACC7",
             elevation: 8,
-
             width: 125,
             height: 125,
             borderRadius: 100,

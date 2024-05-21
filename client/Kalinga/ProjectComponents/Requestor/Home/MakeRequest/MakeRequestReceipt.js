@@ -22,6 +22,7 @@ import { BASED_URL } from '../../../../MyConstants.js';
 import ImageZoom from 'react-native-image-pan-zoom';
 import { Uploading } from "../../../uploader/Uploading.js";
 import { UploadImageOrFileToFirebase } from '../../../uploader/fireBaseUploader.js'
+import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 
 const MakeRequestReceipt = () => {
   const navigation = useNavigation();
@@ -89,6 +90,10 @@ const MakeRequestReceipt = () => {
   );
 }
 
+useEffect(() => {
+  setUploadingImage(false)
+},[])
+
     const handleRequestCreation = async () => {
       try {
         const response = await fetch(`${BASED_URL}/kalinga/createRequest`, {
@@ -143,10 +148,9 @@ const MakeRequestReceipt = () => {
       if(Object.keys(selectedFile).length !== 0){
         for (const key in selectedFile) {
           const fileData = selectedFile[key];
-          
           await UploadImageOrFileToFirebase({
             URI: fileData.uri, 
-            requirmentType: fileData.requirmentType,
+            requirmentType: fileData.requirementType,
             purpose: "Request",
             type: "File",
             userType: "Requestor", 
@@ -168,7 +172,7 @@ const MakeRequestReceipt = () => {
   }
 
     return (
-			<SafeAreaView style = {styles.container}>
+			<SafeAreaView style = {globalStyles.defaultBackgroundColor}>
 				<StatusBar barStyle="dark-content" translucent backgroundColor="white" />
 				<View style = {globalHeader.SmallHeader}>
 						
@@ -191,16 +195,16 @@ const MakeRequestReceipt = () => {
           )}
 
 						<View style={styles.body}>
-                        <View style={styles.Title}>
+                <View style={styles.Title}>
 									<Text style={styles.TitleText}>Request Confirmation</Text>
-                        </View>
+                </View>
 							<View style={{marginTop: 15}}>
-              <View style={styles.boxContainer}>
-            <View style={styles.boxContentContainer}>
-              <Text style={styles.boxLabel}>Full Name:</Text>
-              <Text style={[styles.boxContent, styles.limitText]}>{formData.fullName}</Text>
-            </View>
-          </View>
+                <View style={styles.boxContainer}>
+                  <View style={styles.boxContentContainer}>
+                    <Text style={styles.boxLabel}>Full Name:</Text>
+                    <Text style={[styles.boxContent, styles.limitText]}>{formData.fullName}</Text>
+                  </View>
+             </View>
 
           <View style={styles.boxContainer}>
             <View style={styles.boxContentContainer}>
@@ -252,13 +256,6 @@ const MakeRequestReceipt = () => {
                   placeholderTextColor="#E60965"
                   editable={false}
                   />
-
-            <View style={styles.bodyForm2}>
-                <View style={[styles.form4, {flexDirection: "row"}]}>
-                    <Text style={styles.boxLabel}>Baby Category:</Text>
-                    <Text style={[styles.boxContent, styles.limitText]}>{formData.BabyCategory}</Text>
-                </View>
-            </View>
           </View>
 
           <View style={styles.boxContainer2}>
@@ -272,13 +269,12 @@ const MakeRequestReceipt = () => {
                       <View  style = {{
                         height: 150,
                         marginBottom: 20,
-                        borderWidth: 1,
                         backgroundColor: "white",
                         paddingLeft: 10,
                         paddingRight: 10,
                         borderColor: "#E60965",
                         borderRadius: 15,
-                        elevation: 5,
+                        elevation: 7,
                         marginTop: 20,
                         marginHorizontal: "5%",
                         alignItems: "center"
@@ -320,11 +316,10 @@ const MakeRequestReceipt = () => {
             <View  style={{ 
               paddingVertical: 20,
               borderColor: "#E60965",
-              borderWidth: 1,
               backgroundColor: "white",
               width: "80%",
               borderRadius: 15,
-              elevation: 5,
+              elevation: 7,
               alignSelf: "center",
               alignItems: "center",
               marginBottom: 20
@@ -339,7 +334,7 @@ const MakeRequestReceipt = () => {
                       marginVertical: 10,
                       gap: 10
                       }}>
-                      <Text style = {{textAlign: "left", fontWeight: "bold", width: 100}}>{attachmentType} </Text>
+                      <Text style = {{textAlign: "left", fontWeight: "bold", width: 100, color: "#E60965"}}>{attachmentType} </Text>
                       <Text style= {{flex: 1}}>{file.name}</Text>
 
                     </View>
@@ -354,12 +349,12 @@ const MakeRequestReceipt = () => {
           <View style={styles.DonorButton}>
             <TouchableOpacity onPress={() => confirmation("Confirm")}>
               <View style={styles.ConfirmbuttonContainer}>
-                <Text style={styles.label}>Approve</Text>
+                <Text style={styles.label}>Confirm</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => confirmation("Decline")}>
               <View style={styles.CancelbuttonContainer}>
-                <Text style={styles.label}>Decline</Text>
+                <Text style={styles.label}>Cancel</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -436,13 +431,13 @@ const styles = StyleSheet.create ({
     height: 52,
     fontFamily: "OpenSans-Regular",
     borderColor: '#E60965', // Border color
-    borderWidth: 1, // Border width
     borderRadius: 10, // Border radius
     paddingLeft: 25,
     marginBottom: 5,
     width: '98%',
     alignSelf: 'center', // Center the input horizontally
     backgroundColor: '#fff',
+    elevation: 7,
   },
 
     
@@ -522,13 +517,13 @@ const styles = StyleSheet.create ({
 		height: 45,
 		fontFamily: "OpenSans-Regular",
 		borderColor: '#E60965', // Border color
-		borderWidth: 1, // Border width
 		borderRadius: 10, // Border radius
 		paddingHorizontal: 12,
 		marginBottom: 15,
 		width: '88%',
 		alignSelf: 'center', // Center the input horizontally
 		backgroundColor: '#fff', // Background color
+    elevation: 7,
 	},
   
 
@@ -536,13 +531,13 @@ const styles = StyleSheet.create ({
 		height: 70,
 		fontFamily: "OpenSans-Regular",
 		borderColor: '#E60965', // Border color
-		borderWidth: 1, // Border width
 		borderRadius: 10, // Border radius
 		paddingHorizontal: 12,
 		marginBottom: 15,
 		width: '88%',
 		alignSelf: 'center', // Center the input horizontally
 		backgroundColor: '#fff', // Background color
+    elevation:7,
 	},
     Title:{
         marginLeft: 25,

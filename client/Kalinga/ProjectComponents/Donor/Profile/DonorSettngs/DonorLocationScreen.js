@@ -14,6 +14,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import * as Location from 'expo-location';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation, CommonActions } from '@react-navigation/native';
+import { globalStyles } from "../../../../styles_kit/globalStyles";
 
 export default function LocationScreen() {
 
@@ -71,7 +72,7 @@ useEffect(() => {
 
 
   return (
-    <SafeAreaView style={bodyStyle.main}>
+    <SafeAreaView style={globalStyles.defaultBackgroundColor}>
       <ScrollView contentContainerStyle={bodyStyle.container}>
         <StatusBar />
         <Header title="Location" />
@@ -103,12 +104,12 @@ useEffect(() => {
 
         <View
           style={{
-            backgroundColor: "#FFF4DD",
+            backgroundColor: "white",
             opacity: 1,
             marginHorizontal: 24,
-            elevation: 5,
+            elevation: 10,
             padding: 24,
-            borderRadius: 10,
+            borderRadius: 17,
           }}>
           <View style={{ alignItems: "center", flexDirection: "row", gap: 24 }}>
             <Switch

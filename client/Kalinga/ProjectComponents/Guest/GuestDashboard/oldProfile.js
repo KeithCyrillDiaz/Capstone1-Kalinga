@@ -26,6 +26,13 @@ export default function GuestProfile() {
   const [requestor_ID, setRequestor_ID] = useState('')
   const navigation = useNavigation();
 
+  const handleHomePress = () => {
+    console.log("Home button pressed");
+  };
+  const handleProfilePress = () => {
+    console.log("Profile button pressed");
+  };
+
   const navigatePage = (Page) => {
     if(Page === "LogIn"){
       navigation.dispatch(
@@ -72,20 +79,21 @@ const getData = async () => {
 
 
     return (
-      <SafeAreaView style={[styles.container,{backgroundColor: "#f5f5f5"}]}>
+      <SafeAreaView style={styles.container}>
           <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style={globalHeader.SmallHeader}>
                 <Text style={globalHeader.SmallHeaderTitle}>Profile</Text>
             </View>
             <View style={{ flex: 1 }}>
             <View style={styles.profileIcon}>
-              <Ionicons name="person-circle-outline" size={170} color="#E60965"  />
+              <Ionicons name="person-circle-outline" size={150} color="#E60965"  />
+              <MaterialIcons name="verified" size={35} color="#E60965" style={{position: 'absolute', top: 110, right: 130}}/>
             </View>
             <View style={styles.profileText}>
               <Text style={styles.userText}>Guest User</Text>
             </View>
 
-            {/* <TouchableOpacity style={styles.menuContainer} onPress={() => navigatePage("ApplyAsRequestorStack")} >
+            <TouchableOpacity style={styles.menuContainer} onPress={() => navigatePage("ApplyAsRequestorStack")} >
                 <FontAwesome style={{flexShrink: 0, marginRight: "4%"}} name="handshake-o" size={24} color="#E60965" />   
                 <View style = {styles.labelAndArrowCont}>
                   <Text style={[styles.menuText, {marginRight: -10}]}>{userType !== "Requestor" ? "Apply as Requestor" : "You're already a Requestor"}</Text>
@@ -104,11 +112,11 @@ const getData = async () => {
                   </View>
                
                 </TouchableOpacity>
-              <View style={styles.line}></View> */}
+              <View style={styles.line}></View>
             
          
             <TouchableOpacity style={styles.menuContainer} onPress={() => navigatePage("LogIn")} >
-                <FontAwesome5 style={{flexShrink: 0}} name="hand-holding-water" size={30} color="#E60965"/>   
+                <Entypo style={{flexShrink: 0, marginRight: "4%"}}  name="log-out" size={30} color="#E60965" />            
                 <View style = {styles.labelAndArrowCont}>
                   <Text style={styles.menuText}>Sign In</Text>
                   <FontAwesome name="chevron-right" size={24} color="#E60965" />
@@ -129,7 +137,7 @@ const styles = StyleSheet.create({
   labelAndArrowCont:{
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "75%",
+    width: "85%",
   },
 
   profileIcon: {
@@ -157,9 +165,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: "center",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     marginTop: 20,
     width: "75%",
+
   },
 
   iconContainer: {

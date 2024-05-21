@@ -22,7 +22,8 @@ import * as ImagePicker from 'expo-image-picker';
 import ImageZoom from 'react-native-image-pan-zoom';
 import { AntDesign } from '@expo/vector-icons';
 import { BASED_URL } from "../../../../MyConstants";
-
+import { Entypo } from '@expo/vector-icons';
+import { globalStyles } from "../../../../styles_kit/globalStyles";
 
 export default function ReportBug({route}) {
 
@@ -170,7 +171,7 @@ const submit = async () => {
 }
 
   return (
-    <SafeAreaView style={bodyStyle.main}>
+    <SafeAreaView style={globalStyles.defaultBackgroundColor}>
       <ScrollView stickyHeaderIndices={[1]}>
         <StatusBar />
         <Header title="Report a Bug" />
@@ -234,13 +235,12 @@ const submit = async () => {
           <TextInput
             style={{
               backgroundColor: "#FFFFFF",
-              elevation: 5,
-              borderWidth: 1,
-              borderColor: "#E60965",
+              elevation: 7,
               minHeight: 52,
               paddingHorizontal: 16,
               fontSize: 16,
               color: "#E60965",
+              borderRadius: 17
             }}
             placeholder="Enter your topic"
             onChangeText={(text) => handleChange("title", text)}
@@ -262,12 +262,11 @@ const submit = async () => {
           <View
             style={{
               backgroundColor: "#FFFFFF",
-              elevation: 5,
-              borderWidth: 1,
-              borderColor: "#E60965",
+              elevation: 7,
               padding: 16,
               fontSize: 16,
               color: "#E60965",
+              borderRadius: 17
             }}>
             <TextInput
               numberOfLines={10}
@@ -334,15 +333,15 @@ const submit = async () => {
             alignItems: "center",
             marginBottom: 24,
           }}>
-          <TouchableOpacity onPress={() => uploadPhoto()}>
+          {/* <TouchableOpacity onPress={() => uploadPhoto()}>
             <View style={buttonStyle.primary}>
-              <MaterialIcons name="upload" size={24} color={"white"} />
+              <Entypo name="upload" size={24} color="white" />
               <Text
                 style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
                 Upload a photo
               </Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         <View

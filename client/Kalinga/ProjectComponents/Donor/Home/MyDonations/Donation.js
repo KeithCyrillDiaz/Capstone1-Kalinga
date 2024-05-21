@@ -27,7 +27,7 @@ const MyDonationTabs = ({route}) => {
                             borderBottomColor:  "#E60965",
                         },
                         tabBarItemStyle: {
-                            backgroundColor: "#FFF8EB",
+                            backgroundColor: "#f5f5f5",
                         },
                         tabBarLabelStyle: {
                             fontFamily: "Open-Sans-Bold",
@@ -37,7 +37,6 @@ const MyDonationTabs = ({route}) => {
                             borderColor: "#E60965",
                             fontSize: 12,
                             borderRadius: 10,
-                            backgroundColor:"#FFE5EC",
                         },
                         tabBarActiveTintColor: "black",
                         tabBarInactiveTintColor: "#E60965",

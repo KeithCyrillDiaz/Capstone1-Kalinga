@@ -15,6 +15,7 @@ import { useNavigation, CommonActions, useFocusEffect} from '@react-navigation/n
 import axios from 'axios'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASED_URL } from "../../../../MyConstants";
+import { globalStyles } from "../../../../styles_kit/globalStyles";
 export default function SettingScreen({route}) {
 
   const userInformation = route.params.userInformation
@@ -87,7 +88,7 @@ export default function SettingScreen({route}) {
   );
 
   return (
-    <SafeAreaView style={bodyStyle.main}>
+    <SafeAreaView style={globalStyles.defaultBackgroundColor}>
       <ScrollView contentContainerStyle={bodyStyle.container}>
         <StatusBar />
         <Header title="Settings" />
@@ -129,10 +130,10 @@ export default function SettingScreen({route}) {
           <Text style={fontStyle.title}>General</Text>
           <View style={cardStyle.navContainer}>
             {/* Notification */}
-            <TouchableOpacity onPress={() => navigatePage("DonorNotification")} style={cardStyle.link}>
+            {/* <TouchableOpacity onPress={() => navigatePage("DonorNotification")} style={cardStyle.link}>
               <Text style={cardStyle.linkTitle}>Notification</Text>
               <Entypo name="chevron-right" size={24} color="#E60965" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             {/* Location */}
             <TouchableOpacity onPress={() => navigatePage("DonorLocationScreen")} style={cardStyle.link}>              
@@ -215,24 +216,20 @@ const bodyStyle = StyleSheet.create({
 
 const cardStyle = StyleSheet.create({
   container: {
-    backgroundColor: "#FFE5EC",
+    backgroundColor: "white",
     minHeight: 100,
     padding: 12,
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
-    borderWidth: 0.5,
     borderRadius: 10,
-    borderColor: "#E60965",
     elevation: 10,
   },
 
   navContainer: {
-    backgroundColor: "#FFE5EC",
+    backgroundColor: "white",
     minHeight: 100,
-    borderWidth: 1,
     borderRadius: 10,
-    borderColor: "#E60965",
     paddingVertical: 12,
     paddingHorizontal: 16,
     gap: 12,
@@ -282,7 +279,7 @@ const buttonStyle = StyleSheet.create({
   },
 
   iconBtn: {
-    backgroundColor: "#FFEECC",
+    backgroundColor: "#FFE5EC",
     width: 48,
     height: 48,
     borderRadius: 10,

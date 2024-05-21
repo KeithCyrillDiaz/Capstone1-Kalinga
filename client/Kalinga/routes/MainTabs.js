@@ -8,6 +8,7 @@ import { Ionicons } from '@expo/vector-icons';;
 import DonorHome from '../ProjectComponents/Donor/Dashboard/Home.js';
 import DonorProfile from '../ProjectComponents/Donor/Dashboard/DonorProfile.js';
 import DonorNotification from '../ProjectComponents/Donor/Dashboard/Notifications.js';
+import DonorSettingScreen from '../ProjectComponents/Donor/Profile/DonorSettngs/DonorSettingScreen.js'
 
 import RequestorHome from '../ProjectComponents/Requestor/Dashboard/Home.js';
 import RequestorProfile from '../ProjectComponents/Requestor/Dashboard/Profile.js';

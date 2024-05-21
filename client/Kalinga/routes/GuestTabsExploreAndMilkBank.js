@@ -1,8 +1,8 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialIcons, AntDesign } from '@expo/vector-icons';
-import GuestMilkBank from '../ProjectComponents/Guest/GuestDashboard/Explore/GuestMilkBank.js';
-import GuestExplore from '../ProjectComponents/Guest/GuestDashboard/Explore/ExploreFinal.js';
+// import GuestMilkBank from '../ProjectComponents/Guest/GuestDashboard/Explore/GuestMilkBank.js';
+// import GuestExplore from '../ProjectComponents/Guest/GuestDashboard/Explore/ExploreFinal.js';
 
 const Tab = createBottomTabNavigator();
 
