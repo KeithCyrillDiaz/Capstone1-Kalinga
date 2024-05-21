@@ -3,10 +3,7 @@ import axios from "axios";
 import { WebHost } from "../../../MyConstantAdmin";
 import { PieChart, LoadPercentage, RequestPieChart } from "@components";
 import {
-  DonatePerMonth,
-  RequestPerMonth,
-  BarDonatePerMonth,
-  BarRequestPerMonth,
+  BarangayGraph,
 } from "../../components";
 import { AdminLogin } from "../../api/AdminLogin";
 import { useParams } from "react-router-dom";
@@ -20,7 +17,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { useUser } from "../UserContext";
 //require("dotenv").config(); // Load environment variables
 
 //const user = process.env.REACT_APP_ADMIN_USERNAME;
@@ -30,6 +26,10 @@ export default function Dashboard() {
   const [totalRequestors, setTotalRequestors] = useState(0);
   const [totalUsers, setTotalUsers] = useState(0);
   const [usersPerCity, setUsersPerCity] = useState([]);
+  const [totalRequestorsPerBarangay, setTotalRequestorsPerBarangay] = useState([]);
+  const [totalDonorsPerBarangay, setTotalDonorsPerBarangay] = useState([]);
+  const [barangaysData, setBarangaysData] = useState([]);
+
 
   useEffect(() => {
     console.log("Fetching data...");
@@ -79,6 +79,31 @@ export default function Dashboard() {
     };
 
     fetchUsersPerCity();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${WebHost}/kalinga/getTotalUsersPerBarangay`
+        );
+        const { totalRequestorsPerBarangay, totalDonorsPerBarangay } = response.data;
+        
+        // Merge data for each barangay
+        const mergedData = totalRequestorsPerBarangay.map(requestor => ({
+          ...requestor,
+          totalDonors: totalDonorsPerBarangay.find(donor => donor._id === requestor._id)?.totalDonors || 0
+        }));
+  
+        setBarangaysData(mergedData); // Set barangaysData state
+        console.log("Barangays Data:", mergedData); // Log the merged data
+        console.log("response Data:", response.data); // Log the response data
+      } catch (error) {
+        console.error('Error fetching total users per barangay:', error);
+      }
+    };
+  
+    fetchData();
   }, []);
 
   return (
@@ -274,78 +299,34 @@ export default function Dashboard() {
               <h2 className="text-2xl text-center text-primary-default mt-2 ">
                 QCGH Human Milk Bank User Demographics
               </h2>
-              <p className="text-md text-center text-primary-default font-sans ">
-                Participating Barangays: 3
+              <p className="text-md text-center text-primary-default font-sans">
+                Participating Barangays: {barangaysData.length}
               </p>
-              <div class="grid grid-flow-row-dense grid-cols-3 grid-rows-3 gap-x-2 mt-10 px-10">
-                <div class="col-span-3">
-                  <span className="text-lg text-primary-default font-bold mt-6">
-                    Commonwealth
-                  </span>
-                </div>
-                <div class="col-span-2">
-                  <span className="text-md text-primary-default font-sans">
-                    Requestor
-                  </span>
-                </div>
-                <div class="col-span-2">
-                  <span className="text-md text-primary-default font-sans">
-                    Donor
-                  </span>
-                </div>
-                <div className="text-md text-primary-default font-sans text-right">
-                  {totalRequestors}
-                </div>
-                <div className="text-md text-primary-default font-sans text-right">
-                  {totalDonors}
-                </div>
-              </div>
-              <div class="grid grid-flow-row-dense grid-cols-3 grid-rows-3 gap-x-2 mt-2 px-10">
-                <div class="col-span-3">
-                  <span className="text-lg text-primary-default font-bold mt-6">
-                    Tandang Sora
-                  </span>
-                </div>
-                <div class="col-span-2">
-                  <span className="text-md text-primary-default font-sans">
-                    Requestor
-                  </span>
-                </div>
-                <div class="col-span-2">
-                  <span className="text-md text-primary-default font-sans">
-                    Donor
-                  </span>
-                </div>
-                <div className="text-md text-primary-default font-sans text-right">
-                  {totalRequestors}
-                </div>
-                <div className="text-md text-primary-default font-sans text-right">
-                  {totalDonors}
-                </div>
-              </div>
-              <div class="grid grid-flow-row-dense grid-cols-3 grid-rows-3 gap-x-2 mt-2 px-10">
-                <div class="col-span-3">
-                  <span className="text-lg text-primary-default font-bold mt-6">
-                    San Bartolome
-                  </span>
-                </div>
-                <div class="col-span-2">
-                  <span className="text-md text-primary-default font-sans">
-                    Requestor
-                  </span>
-                </div>
-                <div class="col-span-2">
-                  <span className="text-md text-primary-default font-sans">
-                    Donor
-                  </span>
-                </div>
-                <div className="text-md text-primary-default font-sans text-right">
-                  {totalRequestors}
-                </div>
-                <div className="text-md text-primary-default font-sans text-right">
-                  {totalDonors}
-                </div>
-              </div>
+              {barangaysData && barangaysData.map((barangayData) => (
+                  <div key={barangayData._id} className="grid grid-flow-row-dense grid-cols-3 grid-rows-3 gap-x-2 mt-10 px-10">
+                    <div className="col-span-3">
+                      <span className="text-lg text-primary-default font-bold mt-6">
+                        {barangayData._id}
+                      </span>
+                    </div>
+                    <div className="col-span-2">
+                      <span className="text-md text-primary-default font-sans">
+                        Requestor
+                      </span>
+                    </div>
+                    <div className="col-span-2">
+                      <span className="text-md text-primary-default font-sans">
+                        Donor
+                      </span>
+                    </div>
+                    <div className="text-md text-primary-default font-sans text-right">
+                      {barangayData.totalRequestors || 0}
+                    </div>
+                    <div className="text-md text-primary-default font-sans text-right">
+                      {barangayData.totalDonors || 0}
+                    </div>
+                  </div>
+                ))}
             </div>
 
             <div className="col-span-3 px-8 py-8 bg-white rounded-lg shadow-md">
@@ -355,7 +336,7 @@ export default function Dashboard() {
               <div class="w-full p-4">
                 <div class="py-3 bg-white rounded-2xl ">
                   <span className="lg:pt-4 lg:pb-8 xl:p-0 mt-8">
-                    <BarDonatePerMonth name="Total Donation" />
+                    <BarangayGraph name="" />
                   </span>
                 </div>
               </div>
