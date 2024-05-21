@@ -300,7 +300,7 @@ export default function Dashboard() {
 
             {/* Third Row */}
             <div className="flex w-full justify-center gap-4">
-              <div className="flex flex-col items-center justify-center col-span-2 px-8 py-8 bg-white rounded-lg shadow-md w-1/5">
+              <div className="flex flex-col items-center justify-center col-span-2 px-8 py-2 bg-white rounded-lg shadow-md w-1.5/5">
                 <h2 className="text-2xl text-center text-primary-default mt-2">
                   QCGH Human Milk Bank User Demographics
                 </h2>
@@ -333,17 +333,16 @@ export default function Dashboard() {
                       </div>
                     </div>
                   ))}
-
-                <div className="flex flex-col items-center justify-center col-span-3 px-8 py-8 bg-white rounded-lg shadow-md w-4/5">
-                  <h2 className="text-2xl text-primary-default text-center mb-4">
-                    App Users per Barangay
-                  </h2>
-                  <div className="w-full p-4">
-                    <div className="py-3 bg-white rounded-2xl">
-                      <span className="lg:pt-4 lg:pb-8 xl:p-0 mt-8">
-                        <BarangayGraph name="" />
-                      </span>
-                    </div>
+              </div>
+              <div className="flex flex-col items-center justify-center col-span-3 px-8 py-8 bg-white rounded-lg shadow-md w-4/5">
+                <h2 className="text-2xl text-primary-default text-center mb-4">
+                  App Users per Barangay
+                </h2>
+                <div className="w-full p-4">
+                  <div className="py-3 bg-white rounded-2xl">
+                    <span className="lg:pt-4 lg:pb-8 xl:p-0 mt-8">
+                      <BarangayGraph name="" />
+                    </span>
                   </div>
                 </div>
               </div>

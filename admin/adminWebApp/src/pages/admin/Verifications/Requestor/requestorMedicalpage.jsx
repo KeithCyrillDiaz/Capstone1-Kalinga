@@ -123,7 +123,7 @@ const RequestorMedicalPage = ({ currentPage, id }) => {
         )}
 
         <div className="p-2">
-          <div className="px-32">
+          <div className="px-20">
             <div className="my-[-10]">
               <div className="flex flex-wrap justify-center">
                 {[
@@ -133,8 +133,9 @@ const RequestorMedicalPage = ({ currentPage, id }) => {
                   "Diagnosis",
                   "Treatments and Intervensions",
                   "Prescription",
-                  "Government_ID",
-                  "Medical Abstract of the Infant",
+                  "Quezon City ID",
+                  "Government ID",
+                  "Government ID",
                 ].map((requirement) => (
                   <div
                     key={requirement}
@@ -155,7 +156,7 @@ const RequestorMedicalPage = ({ currentPage, id }) => {
                 ))}
               </div>
             </div>
-            <div className="mt-4 mx-20 border-b border-primary-default">
+            {/* <div className="mt-4 mx-20 border-b border-primary-default">
               <label
                 htmlFor="babyCategorization"
                 className="block text-lg text-primary-default"
@@ -173,7 +174,7 @@ const RequestorMedicalPage = ({ currentPage, id }) => {
                 <option value="Sick Baby">Sick Baby</option>
                 <option value="Sick Baby">Medically Fragile Baby</option>
               </select>
-            </div>
+            </div> */}
           </div>
         </div>
       </>
