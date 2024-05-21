@@ -285,19 +285,22 @@ const checkForm = (value) => {
 
     rectangle: {
       width: 50,
-      height: 4, 
-      backgroundColor: '#FFEECC', // Color for Rectangle F94892
+      height: 7, 
+      backgroundColor: 'white', // Color for Rectangle F94892
       borderRadius: 10,
       marginHorizontal: 5,
+      elevation: 7
     },
 
     rectangleIndicator: {
       width: 50,
-      height: 4, 
+      height: 7, 
       backgroundColor: '#F94892', // Color for Rectangle F94892
       borderRadius: 10,
       marginHorizontal: 5,
+      elevation: 7
     },
+
 
     title: {
       textAlign: 'center', // Center align the text
@@ -317,12 +320,11 @@ const checkForm = (value) => {
     
     form: {
 
-      borderWidth: 1,
       borderRadius: 10,
       borderColor: '#E60965',
       height: 500,
       backgroundColor: "#FFFFFF",
-      elevation: 5,
+      elevation: 7,
       margin: 10
     },
 
@@ -344,6 +346,7 @@ const checkForm = (value) => {
       marginLeft: 30,
       marginTop: 10,
       color: "#E60965",
+      fontFamily: "Open-Sans-SemiBold"
     },
 
     circle: {
@@ -363,6 +366,7 @@ const checkForm = (value) => {
       //backgroundColor: "gray",
       width: 220,
       marginLeft: 20,
+      fontFamily: "Open-Sans-SemiBold"
     }
 
    

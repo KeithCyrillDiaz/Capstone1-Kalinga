@@ -10,7 +10,8 @@ import axios from 'axios';
 import { BASED_URL } from '../../../../MyConstants.js';
 import phil from "philippine-location-json-for-geer";
 import ProvincesData from '../Provinces.json'
-import {GestationData, GestationExplanation, sexData, medicalConditionData} from '../ageofGestationData.js'
+import { sexData, medicalConditionData} from '../ageofGestationData.js'
+import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 
 const ApplyAs_DonorISF = () => {
 
@@ -71,7 +72,6 @@ const ApplyAs_DonorISF = () => {
     childAge: '',
     childBirthDate: '',
     birthWeight: '',
-    ageOfGestation: '',
     medicalCondition:'',
     RFR: '',
 });
@@ -94,7 +94,6 @@ const checkForm= (value) => {
     'childBirthDate',
     'birthWeight',
     'medicalCondition',
-    'ageOfGestation',
     ];
 
     if(value === "Address") {
@@ -404,7 +403,7 @@ const formatCity = (city) => {
 useEffect(() => {
   //checkForm
   checkForm("Screening Form")
-}, [screeningFormData.ageOfGestation])
+}, [screeningFormData.medicalCondition])
 
 useEffect(() => {
   checkAgeValidity()
@@ -433,7 +432,7 @@ useEffect(() => {
 
   return (
     
-    <View style={styles.container}>
+    <View style={globalStyles.defaultBackgroundColor}>
       <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
      
 
@@ -465,53 +464,57 @@ useEffect(() => {
         <Text style={styles.personalinfoText}>Personal Information</Text>
 
         
-        <View style={[styles.inputFullNameContainer, { elevation: 5 }]}>
+        <View style={[styles.inputFullNameContainer]}>
           <TextInput
             placeholder="Full name"
+            placeholderTextColor={"#E60965"}
             style={styles.inputField}
             onChangeText={(value) => handleChangeText('fullName', value)}
           />
         </View>
 
         <View style={styles.inputRowContainer}>
-        <View style={[styles.inputAgeContainer, { elevation: 5 }]}>
-            <TextInput
-              placeholder="Age"
-              style={{
-                flex: 1,
-                color: userAge === "" ? 'gray': '#E60965', // Text color
-                fontSize: 16, // Font size
-                paddingVertical: 10, // Vertical padding
-                textAlign: "center",
-              }}
-              editable={false}
-              keyboardType="numeric"
-              value={"Age: " + screeningFormData.Age}
-            />
-          </View>
+            <View style={[styles.inputAgeContainer]}>
+              <TextInput
+                placeholder="Age"
+                style={{
+                  flex: 1,
+                  color: '#E60965', // Text color
+                  fontSize: 16, // Font size
+                  paddingVertical: 10,
+                  marginLeft: 10, // Vertical padding
+                  textAlign: "left",
+                  fontFamily: "Open-Sans-Regular"
+                }}
+                editable={false}
+                keyboardType="numeric"
+                value={"Age: " + screeningFormData.Age}
+              />
+            </View>
 
-          <View style={[styles.inputBirthdayContainer, { elevation: 5 }]}> 
-          {showDatePicker && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={dateSelected === new Date() ? dateToday : dateSelected}
-              mode="date"
-              display="spinner"
-              onChange={(event, value) => handleDateChange(event, value, "Personal")}
-            />
-            )}
-            <TextInput 
-              placeholder="Birthdate"
-              style={[styles.inputField, {color: userBirthday === "" ? 'gray': '#E60965',}]}
-              editable={false}
-              value = {userBirthday}
-            />
-            <AntDesign 
-            onPress={() => setShowDatePicker(true)} 
-            style = {{position: "absolute", right: 10}} 
-            name="calendar" size={24} 
-            color="black" />
-          </View>
+            <View style={[styles.inputBirthdayContainer]}> 
+            {showDatePicker && (
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={dateSelected === new Date() ? dateToday : dateSelected}
+                mode="date"
+                display="spinner"
+                onChange={(event, value) => handleDateChange(event, value, "Personal")}
+              />
+              )}
+              <TextInput 
+                placeholder="Birthdate"
+                placeholderTextColor={"#E60965"}
+                style={[styles.inputField, {color: userBirthday === "" ? 'gray': '#E60965',}]}
+                editable={false}
+                value = {userBirthday}
+              />
+              <AntDesign 
+              onPress={() => setShowDatePicker(true)} 
+              style = {{position: "absolute", right: 10}} 
+              name="calendar" size={24} 
+              color="#E60965" />
+            </View>
         </View>
         {!isAgeValid && screeningFormData.birthDate !=="" && (
             <Text 
@@ -520,9 +523,10 @@ useEffect(() => {
               marginRight: "20%",
               color: "red"}}>Please enter a valid Birthday</Text>
           )}
-        <View style={[styles.inputEmailAddressContainer, { elevation: 5 }]}>
+        <View style={[styles.inputEmailAddressContainer]}>
           <TextInput
             placeholder="Email Address"
+            placeholderTextColor={"#E60965"}
             style={styles.inputField}
             onChangeText={(value) => handleChangeText('email', value)}
             keyboardType="email-address"
@@ -545,9 +549,10 @@ useEffect(() => {
             marginBottom: -10, 
             color: "red"}}>Please enter a valid email address </Text>
         )}
-        <View style={[styles.inputPhoneNumberContainer, { elevation: 5 }]}>
+        <View style={[styles.inputPhoneNumberContainer]}>
           <TextInput
             placeholder="Phone Number"
+            placeholderTextColor={"#E60965"}
             style={styles.inputField}
             
             onChangeText={(value) => handleChangeText('contactNumber', value)}
@@ -667,6 +672,7 @@ useEffect(() => {
         <View style={[styles.inputHomeAddressContainer, { elevation: 5 }]}>
             <TextInput
             placeholder="Home Address"
+            placeholderTextColor={"#E60965"}
             style={styles.inputHomeAddressField}
             multiline={true}
             onChangeText={(value) => {
@@ -685,6 +691,7 @@ useEffect(() => {
         <View style={[styles.inputPhoneNumberContainer, { elevation: 5 }]}>
           <TextInput
             placeholder="Name of Child"
+            placeholderTextColor={"#E60965"}
             style={styles.inputField}
             onChangeText={(value) => handleChangeText('childName', value)}
           />
@@ -694,6 +701,7 @@ useEffect(() => {
             <View style={[styles.inputBirthWeightContainer, { elevation: 5 }]}>
             <TextInput
               placeholder="Birth Weight (kg)"
+              placeholderTextColor={"#E60965"}
               style={styles.inputField}
               
               onChangeText={(value) => handleChangeText('birthWeight', value)}
@@ -739,6 +747,7 @@ useEffect(() => {
             }}>
               <TextInput
                 placeholder="Birthdate"
+                placeholderTextColor={"#E60965"}
                 style={[styles.inputField]}
                 editable={false}
                 value = {screeningFormData.childBirthDate}
@@ -747,7 +756,7 @@ useEffect(() => {
                 onPress={() => setShowDate1Picker(true)} 
                 style = {{position: "absolute", right: 10}} 
                 name="calendar" size={24} 
-                color="black"
+                color="#E60965"
               />
             </View>
             
@@ -755,6 +764,7 @@ useEffect(() => {
           <View style={[styles.inputAgeContainer1, { elevation: 5 }]}>
             <TextInput
                 placeholder="Age"
+                placeholderTextColor={"#E60965"}
                 style={styles.inputField}
                 onChangeText={(value) => handleChangeText('childAge', value)}
                 value = {screeningFormData.childAge}
@@ -784,10 +794,9 @@ useEffect(() => {
           alignSelf: "center",
           marginLeft: -10,
           paddingRight: "5%",
-          borderWidth: 1,
-          elevation:5
+          elevation:7
           }}>
-          <View style={styles.inputAgeOfGestationContainer}>
+          {/* <View style={styles.inputAgeOfGestationContainer}>
             <Dropdown
                 style={[{marginTop: 5, marginRight: 10}, isGestationFocus && { borderColor: 'blue'}]}
                 placeholderStyle={styles.placeholderStyle}
@@ -825,9 +834,9 @@ useEffect(() => {
               size={24} 
               color="#EB7AA9" 
               />
-            </TouchableOpacity>
+            </TouchableOpacity>*/}
    
-        </View>
+        </View> 
 
         <View style={styles.medicalConditionStyle} >
                            <Dropdown
@@ -860,7 +869,6 @@ useEffect(() => {
           <TouchableOpacity style={[
             styles.nextButton, 
               { 
-                width: 150,
                 opacity: isEmailExisted || !isFormFilled || isChildTooOld ? 0.5 : 1
               }
             ]}
@@ -890,9 +898,10 @@ useEffect(() => {
             backgroundColor: "white",
             height: "60%",
             width: "80%",
-            borderWidth: 1,
+            // borderWidth: 1,
             borderColor: "#E60965",
-            borderRadius: 17
+            borderRadius: 17,
+            elevation: 7
           }}>
             <TouchableOpacity
              onPress={() => setOpenGestationInfo(false)}
@@ -943,7 +952,6 @@ const styles = StyleSheet.create({
   },
 
   medicalConditionStyle: {
-    borderWidth: 1,
     borderRadius: 20,
     borderColor: "#E60965",
     backgroundColor:"white",
@@ -953,7 +961,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     elevation: 5,
     alignSelf: "center",
-    marginLeft: -10
+    marginLeft: -10,
+    elevation: 7,
   },
 
 
@@ -964,16 +973,17 @@ const styles = StyleSheet.create({
   addressDropdown: {
     backgroundColor: '#FFFFFF',
     marginRight: "12%", 
-    marginLeft: "9%",
+    marginLeft: "7%",
     marginTop: "5%",
     flex: 1,
     paddingVertical: 10,
-    borderWidth: 1,
     borderRadius: 18,
     borderColor: '#E60965',
     elevation: 5,
     justifyContent: "center",
-    paddingRight: "3%"
+    paddingRight: "3%",
+    elevation: 7,
+    width:"81%"
   },
  
   label: {
@@ -987,7 +997,9 @@ const styles = StyleSheet.create({
   },
   placeholderStyle: {
     fontSize: 16,
-    marginLeft: 10
+    marginLeft: 10,
+    color: '#E60965',
+    fontFamily: "Open-Sans-Regular"
   },
 
   selectedTextStyle: {
@@ -997,6 +1009,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     color: '#E60965',
+    fontFamily: "Open-Sans-Regular"
   },
 
   inputSearchStyle: {
@@ -1005,19 +1018,23 @@ const styles = StyleSheet.create({
   },
 
     IndicatedPage: {
-      height: 4,
+      height: 7,
+      borderRadius: 7,
       width: 50,
       backgroundColor: "#F94892",
       marginTop: "10%",
       marginHorizontal: "1%",
+      elevation:7
   },
 
   pageIndicator: {
-      height: 4,
+      height: 7,
+      borderRadius: 7,
       width: 50,
-      backgroundColor: "#FFEECC",
+      backgroundColor: "white",
       marginTop: "10%",
       marginHorizontal: "1%",
+      elevation:7
   },
 
   title: {
@@ -1110,6 +1127,7 @@ const styles = StyleSheet.create({
     fontSize: 16, // Font size
     paddingVertical: 10, // Vertical padding
     paddingLeft: 10, // Add padding on the left to move text to the right
+    fontFamily: "Open-Sans-Regular"
   },
   inputHomeAddressField:{
     flex: 1,
@@ -1118,9 +1136,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10, // Vertical padding
     paddingLeft: 10, // Add padding on the left to move text to the right
     textAlignVertical: 'top', // Position the text at the top of the input field
+    fontFamily: "Open-Sans-Regular"
   },
   inputFullNameContainer: {
-    borderWidth: 1, // Border width
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
@@ -1128,7 +1146,7 @@ const styles = StyleSheet.create({
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 45, // Adjust height
     marginLeft: 30, // Move the input field to the right
-    elevation:5
+    elevation:7
   },
   inputRowContainer: {
     flexDirection: 'row',
@@ -1137,7 +1155,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   inputAgeContainer: {
-    borderWidth: 1, // Border width
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
@@ -1145,13 +1162,12 @@ const styles = StyleSheet.create({
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 45, // Adjust height
     marginLeft: -15, // Move the input field to the right
-    elevation:5
+    elevation:7
   },
   inputBirthdayContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1, // Border width
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
@@ -1159,10 +1175,9 @@ const styles = StyleSheet.create({
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 45, // Adjust height
     marginLeft: 15, // Move the input field to the right
-    elevation:5
+    elevation:7
   },
   inputEmailAddressContainer: {
-    borderWidth: 1, // Border width
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
@@ -1170,10 +1185,9 @@ const styles = StyleSheet.create({
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 45, // Adjust height
     marginLeft: 30, // Move the input field to the right
-    elevation:5
+    elevation:7
   },
   inputPhoneNumberContainer: {
-    borderWidth: 1, // Border width
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
@@ -1181,10 +1195,10 @@ const styles = StyleSheet.create({
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 45, // Adjust height
     marginLeft: 30, // Move the input field to the right
-    elevation:5
+    elevation:7,
+    fontFamily: "Open-Sans-Regular",
   },
   inputHomeAddressContainer: {
-    borderWidth: 1, // Border width
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
@@ -1192,7 +1206,7 @@ const styles = StyleSheet.create({
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 90, // Adjust height
     marginLeft: 30, // Move the input field to the right
-    elevation:5
+    elevation:7
   },
   infantinfoText:{
     textAlign: 'left', // Center align the text
@@ -1209,7 +1223,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
 inputAgeContainer1: {
-    borderWidth: 1, // Border width
     borderRadius: 18, // Border radius
     borderColor: '#E60965', // Border color
     backgroundColor: '#FFFFFF', // Background color
@@ -1217,10 +1230,9 @@ inputAgeContainer1: {
     marginTop: 15, // Adjust margin top to reduce the space between the text and the input field
     height: 45, // Adjust height
     marginLeft: 20, // Move the input field to the right
-    elevation:5
+    elevation:7
   },
 inputSexContainer: {
-  borderWidth: 1, // Border width
   borderRadius: 18, // Border radius
   borderColor: '#E60965', // Border color
   backgroundColor: '#FFFFFF', // Background color
@@ -1229,7 +1241,7 @@ inputSexContainer: {
   height: 45, // Adjust height
   marginLeft: 20, // Move the input field to the right
   justifyContent: "center",
-  elevation:5
+  elevation:7
 },
 inputRowContainer2: {
   flexDirection: 'row',
@@ -1238,7 +1250,6 @@ inputRowContainer2: {
   marginTop: 5,
 },
 inputBirthdateContainer1: {
-  borderWidth: 1,
   borderRadius: 18,
   borderColor: '#E60965',
   backgroundColor: '#FFFFFF',
@@ -1246,10 +1257,9 @@ inputBirthdateContainer1: {
   marginTop: 15,
   height: 45, // Adjust height
   marginLeft: -15,
-  elevation:5
+  elevation:7
 },
   inputBirthWeightContainer: {
-  borderWidth: 1,
   borderRadius: 18,
   borderColor: '#E60965',
   backgroundColor: '#FFFFFF',
@@ -1257,7 +1267,7 @@ inputBirthdateContainer1: {
   marginTop: 15,
   height: 45, // Adjust height,
   marginLeft: -15,
-  elevation:5
+  elevation:7
 },
   inputAgeOfGestationContainer: {
   width: '95%',
@@ -1274,19 +1284,18 @@ buttonContainer: {
 },
 
 nextButton: {
-  paddingVertical: 10,
-  paddingHorizontal: 20,
+  paddingHorizontal: 35,
+  paddingVertical: 5,
   borderRadius: 20,
   backgroundColor: '#E60965',
-  marginTop: 20,
+  marginVertical: 20,
   alignItems: 'center',
 },
 nextButtonText: {
   fontWeight: 'bold',
-  paddingBottom: 5,
-  fontSize: 20,
-  alignItems: 'center',
+  fontSize: 14,
   color: 'white',
+  textAlign: "center"
 },
 });
 

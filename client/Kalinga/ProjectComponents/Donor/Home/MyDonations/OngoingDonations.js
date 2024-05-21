@@ -17,6 +17,7 @@ import { BASED_URL } from '../../../../MyConstants.js';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
+import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 
 
 const OngoingDonations = ({route}) => {
@@ -86,7 +87,7 @@ const OngoingDonations = ({route}) => {
     }, [])
   );
     return (
-             <SafeAreaView style = {styles.container}>
+             <SafeAreaView style = {globalStyles.defaultBackgroundColor}>
                 <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
                
                 <ScrollView
@@ -199,7 +200,7 @@ const styles = StyleSheet.create ({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FFF8EB'
+    backgroundColor: '#f5f5f5'
 },
     
   center: {
@@ -231,15 +232,14 @@ AdminMilkLocation:{
    BiginputField: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 1,
     backgroundColor:'white',
-    borderWidth: 1,
     borderRadius: 10,
     borderColor: '#E60965',
     paddingVertical: 5,
     paddingHorizontal: 20,
     width: 320,
-    marginBottom: 15
+    marginBottom: 15,
+    elevation:10
 },
 BiginputFieldHome: {
     flexDirection: 'row',

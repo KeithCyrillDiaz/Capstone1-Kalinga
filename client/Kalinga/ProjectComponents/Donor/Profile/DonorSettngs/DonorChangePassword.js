@@ -16,6 +16,7 @@ import { BASED_URL } from '../../../../MyConstants'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from "axios";
+import { globalStyles } from "../../../../styles_kit/globalStyles";
 
 export default function ChangePasswordScreen({route}) {
 
@@ -124,7 +125,7 @@ export default function ChangePasswordScreen({route}) {
   }
 
   return (
-    <SafeAreaView style={bodyStyle.main}>
+    <SafeAreaView style={globalStyles.defaultBackgroundColor}>
       <ScrollView contentContainerStyle={bodyStyle.container}>
         <StatusBar />
         <Header title="Change Password" />
@@ -245,11 +246,9 @@ export default function ChangePasswordScreen({route}) {
 const passwordStyle = StyleSheet.create({
   container: {
     flexDirection: "row",
-      backgroundColor: "#FFF1EB",
-      elevation: 5,
-      borderWidth: 1,
-      borderColor: "#E60965",
-      borderRadius: 5,
+      backgroundColor: "white",
+      elevation: 10,
+      borderRadius: 17,
       minHeight: 52,
       paddingHorizontal: 16,
       fontSize: 16,
@@ -281,5 +280,6 @@ const buttonStyle = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 100,
+    marginBottom: 40
   },
 });

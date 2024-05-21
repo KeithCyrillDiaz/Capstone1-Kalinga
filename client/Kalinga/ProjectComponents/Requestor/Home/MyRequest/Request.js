@@ -31,20 +31,22 @@ const RequestTab = ({route}) => {
                             borderBottomColor:  "#E60965",
                         },
                         tabBarItemStyle: {
-                            backgroundColor: "#FFF8EB",
+                            backgroundColor: "#f5f5f5",
                         },
                         tabBarLabelStyle: {
                             fontFamily: "Open-Sans-Bold",
-                            paddingHorizontal: 10,
-                            paddingVertical: 14,
+                            paddingHorizontal: 20,
+                            paddingVertical: 10,
                             borderWidth: 1,
                             borderColor: "#E60965",
-                            fontSize: 15,
+                            fontSize: 12,
                             borderRadius: 10,
-                            backgroundColor:"#FFE5EC",
+                            backgroundColor:"white",
+                        
                         },
                         tabBarActiveTintColor: "black",
                         tabBarInactiveTintColor: "#E60965",
+                        
                     }}
                 >
                     <Tab.Screen 

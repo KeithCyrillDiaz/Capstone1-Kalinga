@@ -16,6 +16,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { BASED_URL } from '../../../../MyConstants.js';
 import axios from 'axios'
 import { useFocusEffect } from '@react-navigation/native';
+import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 
 
 const Tab = createBottomTabNavigator()
@@ -62,7 +63,7 @@ const MyDonation = ({route}) => {
 
   
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={globalStyles.defaultBackgroundColor}>
       <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
      
       <ScrollView
@@ -95,9 +96,9 @@ const MyDonation = ({route}) => {
 
           
           </View>
-          <TouchableOpacity onPress={() => Alert.alert("Sorry, this feature is not yet available right now. ", "Rest assured, our team is hard at work developing new features to better serve our community. Your continued support means the world to us. Thank you for your patience!")} style={styles.downloadButton}>
+          {/* <TouchableOpacity onPress={() => Alert.alert("Sorry, this feature is not yet available right now. ", "Rest assured, our team is hard at work developing new features to better serve our community. Your continued support means the world to us. Thank you for your patience!")} style={styles.downloadButton}>
               <Text style={styles.buttonText}>Download as PDF</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             <View>
             <Text style = {styles.bottomText}>Your generosity is changing lives. Thank you for making a difference with your valuable contribution.
@@ -166,15 +167,16 @@ const styles = StyleSheet.create({
 
   contentContainer: {
     paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingTop: 70,
   },
 
   boxContainer: {
-    borderWidth: 3,
     borderRadius: 20,
     borderColor: "#E60965",
     padding: 20,
     marginBottom: 20,
+    backgroundColor: "white",
+    elevation:17,
   },
 
   row: {

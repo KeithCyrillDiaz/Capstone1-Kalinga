@@ -14,6 +14,7 @@ import {
 import { useNavigation, useFocusEffect} from '@react-navigation/native';
 import axios from 'axios'; // Import axios for API requests
 import { BASED_URL } from '../../../../MyConstants.js';
+import { globalStyles } from '../../../../styles_kit/globalStyles.js';
  
 
 const ApprovedTabRequest = ({route}) => {
@@ -91,7 +92,7 @@ const ApprovedTabRequest = ({route}) => {
 	  }
 	
     return (
-			<SafeAreaView style = {styles.container}>
+			<SafeAreaView style = {globalStyles.defaultBackgroundColor}>
 				<StatusBar barStyle="dark-content" translucent backgroundColor="white" />
 				
 
@@ -216,7 +217,7 @@ const styles = StyleSheet.create ({
 	boxContainer: {
 		alignSelf:"center",
 		width: "80%",
-		backgroundColor: "#FFE5EC",
+		backgroundColor: "white",
 		marginTop: 30,
 		borderRadius: 18,
 		elevation: 10,

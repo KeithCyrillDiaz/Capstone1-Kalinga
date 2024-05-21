@@ -133,7 +133,7 @@ import MakeRequestUploadMedicalAbstract from './ProjectComponents/Requestor/Home
 import GuestTabs from './routes/MainTabsGuest.js'
 import MainTabs from './routes/MainTabs.js'
 import SetPassword from './ProjectComponents/Guest/Profile/ApplyDonor/SetPasswordDonor.js';
-import GuestTabsExploreAndMilkBank from './routes/GuestTabsExploreAndMilkBank.js'
+// import GuestTabsExploreAndMilkBank from './routes/GuestTabsExploreAndMilkBank.js'
 
 
 //Admin
@@ -197,24 +197,18 @@ export default function App() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
-  const checkPermission = async () => {
-    const permission = await AsyncStorage.getItem("LocationPermission")
-    console.log("permission: ", permission)
-    if(permission === "true"){
-      await AsyncStorage.setItem("LocationPermission", "true")
-      try{
-        let location = await Location.getCurrentPositionAsync({});
-        setLocation(location);
-      } catch (error) {
-        console.log("error Location permission", error)
-        await AsyncStorage.setItem("LocationPermission", "false")
-      }
-     
-    }
-  }
-
   useEffect(() => {
-    checkPermission()
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+
+    })();
   }, []);
 
   if (fontsLoaded) {
@@ -235,7 +229,7 @@ export default function App() {
       
 
             {/*Routes*/}
-            <Stack.Screen name="GuestTabsExploreAndMilkBank" component={GuestTabsExploreAndMilkBank} />
+            {/* <Stack.Screen name="GuestTabsExploreAndMilkBank" component={GuestTabsExploreAndMilkBank} /> */}
             <Stack.Screen name="MainTabs" component = {MainTabs}/>
 
             <Stack.Screen name="SetPassword" component={SetPassword} />

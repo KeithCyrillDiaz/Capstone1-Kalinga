@@ -34,13 +34,12 @@ const RequestorDataPrivacy = () => {
 
   return (
 
-    <SafeAreaView style = {styles.SafeArea}>
+    <SafeAreaView style = {globalStyles.defaultBackgroundColor}>
         <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
           <View style = {globalHeader.SmallHeader}>
             <Text style = {globalHeader.SmallHeaderTitle}>Apply as Requestor</Text>
           </View>
         <ScrollView 
-          style = {globalStyles.ScrollView}
           overScrollMode='never'
           nestedScrollEnabled={true}
       
@@ -124,14 +123,15 @@ const styles = StyleSheet.create ({
 
   container: {
     flex: 1,
-    backgroundColor: '#FFE5EC',
+    backgroundColor: 'white',
     alignItems: 'center',
-    marginHorizontal: "4%",
+    marginHorizontal: "7%",
     marginTop: "5%",
     marginBottom: "-20%",
     paddingVertical: "5%",
     paddingHorizontal: "5%",
     borderRadius: 27,
+    elevation: 7
 
   },
 

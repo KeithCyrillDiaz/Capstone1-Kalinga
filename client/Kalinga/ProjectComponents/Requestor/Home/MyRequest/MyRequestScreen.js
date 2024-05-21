@@ -16,6 +16,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { BASED_URL } from '../../../../MyConstants.js';
+import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 
 
 const Tab = createBottomTabNavigator()
@@ -51,7 +52,7 @@ const MyRequestScreen = ({route}) => {
 		}, [])
 	);
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={globalStyles.defaultBackgroundColor}>
       <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
      
       <ScrollView
@@ -84,9 +85,9 @@ const MyRequestScreen = ({route}) => {
 
           
           </View>
-          <TouchableOpacity onPress={() => Alert.alert("Sorry, this feature is not yet available right now. ", "Rest assured, our team is hard at work developing new features to better serve our community. Your continued support means the world to us. Thank you for your patience!")}  style={styles.downloadButton}>
+          {/* <TouchableOpacity onPress={() => Alert.alert("Sorry, this feature is not yet available right now. ", "Rest assured, our team is hard at work developing new features to better serve our community. Your continued support means the world to us. Thank you for your patience!")}  style={styles.downloadButton}>
               <Text style={styles.buttonText}>Download as PDF</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             <View>
             <Text style = {styles.bottomText}>Your generosity is changing lives. Thank you for making a difference with your valuable contribution.
@@ -159,11 +160,12 @@ const styles = StyleSheet.create({
   },
 
   boxContainer: {
-    borderWidth: 3,
     borderRadius: 20,
     borderColor: "#E60965",
     padding: 20,
     marginBottom: 20,
+    backgroundColor: "white",
+    elevation:7
   },
 
   row: {

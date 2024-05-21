@@ -282,15 +282,14 @@
         BiginputField: {
             flexDirection: 'row',
             alignItems: 'center',
-            borderWidth: 1,
             backgroundColor:'white',
-            borderWidth: 1,
             borderRadius: 10,
             borderColor: '#E60965',
             paddingVertical: 5,
             paddingHorizontal: 20,
             width: 320,
-            marginBottom: 15
+            marginBottom: 15,
+            elevation: 5
         },
         BiginputFieldHome: {
             flexDirection: 'row',

@@ -78,9 +78,7 @@ export default function RequestorProfile({route}) {
       medicalCondition: '',
       milkBank: "",
       milkAmount: '',
-      BabyCategory: '',
       ReasonForRequesting: userInformation.RFR,
-      
   });
 
   const getCity = () => {
@@ -115,9 +113,7 @@ export default function RequestorProfile({route}) {
       'medicalCondition',
       'milkBank',
       'milkAmount',
-      'BabyCategory',
       'ReasonForRequesting',
- 
       ];
       const isFormDataValid = keysToCheck.every(key => formData[key].trim() !== '');
   
@@ -133,13 +129,10 @@ export default function RequestorProfile({route}) {
 
   useEffect(()=> {
     checkForm()
-  },[formData.ReasonForRequesting, selectedImage])
+  },[formData.milkAmount])
 
   const handleInputChange = (field, value) => {
-    if (field === 'BabyCategory') {
-      console.log("Baby Category Value:", value);
-      setFormData({ ...formData, BabyCategory: value }); // Update only BabyCategory
-    } else if (field === 'city') {
+   if (field === 'city') {
       setFormData({ ...formData, city: value }); // Update only city
     } else {
       setFormData({ ...formData, [field]: value });
@@ -194,65 +187,6 @@ const handleChange = (name, value) => {
   }));
 };
 
-
-const handleImageUpload = async (attachmentType) => {
-  try {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== 'granted') {
-          Alert.alert('Permission Denied', 'Sorry, we need camera roll permissions to make this work!');
-          return;
-      }
-
-      const result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.Images,
-          allowsEditing: true,
-          aspect: [Dimensions.get('window').width, Dimensions.get('window').height],
-          quality: 1,
-          multiple: true, 
-      });
-
-      if (!result.canceled && result.assets && result.assets.length > 0) {
-          let fileType = ''
-        result.assets.forEach(image => {
-
-          if (image.type === 'image' || !image.type.includes('/')) {
-                    fileType = image.type + "/jpeg"
-
-          } else {
-
-            fileType = image.type
-
-          }
-        });
-        
-        setSelectedImage(prevState => ({
-            ...prevState,
-          
-        
-            [attachmentType]: ({
-              uri: result.assets[0].uri,
-              name: `${attachmentType}.png`, 
-              type: fileType,
-              userType: "Requestor",
-              owner: userInformation.fullName,
-              ownerID: userInformation.Requestor_ID
-          
-            })
-            
-        }));
-
-        const numberOfObjects = Object.keys(selectedImage).length;
-        if (numberOfObjects >= 3) setScrollableHorizontal(true);
-
-        setImageContainer(true)
-    }
-        
-      
-  } catch (error) {
-      Alert.alert('Error', 'Failed to pick an image.');
-  }
-
-}
 
     return (
       <SafeAreaView style={globalStyles.container}>
@@ -324,8 +258,8 @@ const handleImageUpload = async (attachmentType) => {
                   <View style={styles.dropdownContainer1}>
                     <Picker
                       selectedValue={formData.ageOfGestation}
-                      style={{ height: 30, width: "100%", color: '#E60965'}}
-                      onValueChange={(text) => handleInputChange('ageOfGestation', text)} // Update BabyCategory state
+                      style={{ height: 30, width: "100%", color: '#E60965',}}
+                      onValueChange={(text) => handleInputChange('ageOfGestation', text)} 
                     >
                       <Picker.Item label="Select Age of Gestation" value="" />
                       <Picker.Item label="Early Term" value="Early Term" />
@@ -340,7 +274,7 @@ const handleImageUpload = async (attachmentType) => {
                       <Picker
                         selectedValue={formData.city}
                         style={{ height: 30, width: "100%", color: '#E60965'}}
-                        onValueChange={(text) => handleInputChange('city', text)} // Update BabyCategory state
+                        onValueChange={(text) => handleInputChange('city', text)} 
 
                       >
                         <Picker.Item label="Select City" value="" />
@@ -367,19 +301,7 @@ const handleImageUpload = async (attachmentType) => {
                     placeholderTextColor="#E60965"
                     onChangeText={(text) => handleInputChange('emailAddress', text)}
                 />         
-                  <View
-                    style={{
-                      fontFamily: "OpenSans-Regular",
-                      borderColor: '#E60965', // Border color
-                      borderWidth: 1, // Border width
-                      borderRadius: 10, // Border radius
-                      paddingHorizontal: 10,
-                      marginBottom: 5,
-                      width: '90%',
-                      alignSelf: 'center', // Center the input horizontally
-                      backgroundColor: '#fff', // Background color
-                    }}
-                  >
+                  <View style={styles.dropDown}>
                       <Picker
                         selectedValue={formData.medicalCondition}
                         style ={{color: '#E60965',}}
@@ -392,37 +314,15 @@ const handleImageUpload = async (attachmentType) => {
                         <Picker.Item label="Sick" value="Sick" />
                     </Picker>
                   </View>
-                  <View style={styles.dropdownContainer}>
-                    <Picker
-                      selectedValue={formData.BabyCategory} // Use formData.BabyCategory as the selected value
-                      onValueChange={(text) => handleInputChange('BabyCategory', text)} // Update BabyCategory state
-                      style={styles.dropdown}
-                    >
-                      <Picker.Item label="Baby Category" value="Baby Category" />
-                      <Picker.Item label="Well Baby" value="Well Baby " style={styles.dropdownItem} />
-                      <Picker.Item label="Sick Baby" value="Sick " style={styles.dropdownItem} />
-                      <Picker.Item label="Medically Fragile Baby" value="Medically Fragile" style={styles.dropdownItem} />
-                    </Picker>
-                   </View> 
+                
 
-                    <View
-                    style={{
-                      fontFamily: "OpenSans-Regular",
-                      borderColor: '#E60965', // Border color
-                      borderWidth: 1, // Border width
-                      borderRadius: 10, // Border radius
-                      paddingHorizontal: 10,
-                      marginBottom: 5,
-                      width: '90%',
-                      alignSelf: 'center', // Center the input horizontally
-                      backgroundColor: '#fff', // Background color
-                    }}
-                  >
+                    <View style={styles.dropDown}>
                       <Picker
                         selectedValue={formData.milkBank}
-                        style ={{color: '#E60965',}}
+                        style ={{color: '#E60965'}}
                         onValueChange={(itemValue) =>
                           handleChange("milkBank", itemValue)
+                    
                         }
                         >
                         <Picker.Item label="Choose Milk Bank" value="" />
@@ -430,14 +330,7 @@ const handleImageUpload = async (attachmentType) => {
                     </Picker>
                   </View>   
                   
-              <View style={[styles.bodyForm1, 
-                          {borderWidth: 1,
-                          borderColor: '#E60965', 
-                          borderRadius: 12,
-                          backgroundColor: "white",
-                          marginBottom:5,
-                          paddingHorizontal: 10,
-                          }]}>
+              <View style={styles.dropDown}>
                     <Picker
                         selectedValue={formData.milkAmount}
                         style ={{
@@ -563,6 +456,19 @@ const handleImageUpload = async (attachmentType) => {
 }
 
 const styles = StyleSheet.create({
+
+  dropDown: {
+    fontFamily: "OpenSans-Regular",
+    borderColor: '#E60965', // Border color
+    borderRadius: 10, // Border radius
+    paddingHorizontal: 10,
+    marginBottom: 5,
+    width: '90%',
+    alignSelf: 'center', // Center the input horizontally
+    backgroundColor: '#fff', // Background color
+    elevation:7,
+    marginVertical: 7,
+  },
   container: {
     flex: 1,
     backgroundColor: '#FFF8EB',
@@ -628,43 +534,36 @@ const styles = StyleSheet.create({
 
  
   form1: {
-    height: 35,
-    fontFamily: "OpenSans-Regular",
+    paddingVertical:7,
     borderColor: '#E60965', // Border color
-    borderWidth: 1, // Border width
     borderRadius: 10, // Border radius
     paddingHorizontal: 10,
     marginBottom: 5,
     width: '90%',
     alignSelf: 'center', // Center the input horizontally
     backgroundColor: '#fff', // Background color
+    elevation: 7,
+    color: '#E60965',
+    fontFamily: "OpenSans-Regular",
+    marginVertical: 7,
   },
 
   form2: {
     height: 70,
     fontFamily: "OpenSans-Regular",
     borderColor: '#E60965', // Border color
-    borderWidth: 1, // Border width
     borderRadius: 10, // Border radius
     paddingHorizontal: 10,
     marginBottom: 5,
     width: '90%',
     alignSelf: 'center', // Center the input horizontally
-    backgroundColor: '#fff', // Background color
+    backgroundColor: 'white', // Background color
+    color: '#E60965',
+    fontFamily: "OpenSans-Regular",
+    elevation:7,
+    marginVertical: 7,
   },
 
-  form3:{
-    height: 52,
-    fontFamily: "OpenSans-Regular",
-    borderColor: '#E60965', // Border color
-    borderWidth: 1, // Border width
-    borderRadius: 10, // Border radius
-    paddingHorizontal: 10,
-    marginBottom: 5,
-    width: '100%',
-    alignSelf: 'center', // Center the input horizontally
-    backgroundColor: '#fff',
-  },
   
   uploadContainer: {
     fontFamily: "OpenSans-Regular",
@@ -705,12 +604,11 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         backgroundColor: '#fff',
         height:10,
-        paddingBottom: 50
-
+        paddingBottom: 50,
+        marginVertical: 7,
 },
 
 dropdownContainer1: {
-  borderWidth: 1,
   borderColor: '#E60965',
   borderRadius: 10,
   paddingHorizontal: 10,
@@ -719,17 +617,17 @@ dropdownContainer1: {
   alignSelf: 'center',
   backgroundColor: '#fff',
   height:10,
-  paddingBottom: 50
-
+  paddingBottom: 50,
+  elevation:7,
+  color: '#E60965',
+  fontFamily: "OpenSans-Regular",
+  marginVertical:7,
 },
 
 
 dropdown: {
   height: 10,
   color: '#E60965',
-
-
-
 },
 
 dropdownItem: {

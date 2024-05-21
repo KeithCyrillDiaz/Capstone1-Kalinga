@@ -19,7 +19,7 @@ const SplashScreen = ({ navigation }) => {
           // Navigate to onboard screen
           navigation.replace('Onboard');
         } else {
-            Alert.alert("Running Server", `Your app is running at ${BASED_URL}`)
+            // Alert.alert("Running Server", `Your app is running at ${BASED_URL}`)
           const pending = await AsyncStorage.getItem('Pending')
           const userType = await AsyncStorage.getItem('userType')
             console.log("userType: ", userType)

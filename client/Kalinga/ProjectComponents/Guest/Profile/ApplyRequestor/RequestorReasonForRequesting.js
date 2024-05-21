@@ -133,7 +133,7 @@ const ReasonForRequesting = ({route}) => {
           
           await UploadImageOrFileToFirebase({
             URI: fileData.uri, 
-            requirmentType: fileData.requirmentType,
+            requirmentType: fileData.requirementType,
             purpose: "Application",
             type: "File",
             userType: "Requestor", 
@@ -182,7 +182,7 @@ const ReasonForRequesting = ({route}) => {
 
   return (
 
-      <SafeAreaView style = {styles.SafeArea}>
+      <SafeAreaView style = {globalStyles.defaultBackgroundColor}>
           <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style = {globalHeader.SmallHeader}>
               <Text style = {globalHeader.SmallHeaderTitle}>Apply as Requestor</Text>
@@ -227,13 +227,12 @@ const ReasonForRequesting = ({route}) => {
                   <View  style = {{
                     height: 150,
                     marginBottom: 20,
-                    borderWidth: 1,
                     backgroundColor: "white",
                     paddingLeft: 10,
                     paddingRight: 10,
                     borderColor: "#E60965",
                     borderRadius: 15,
-                    elevation: 5,
+                    elevation: 7,
                     marginTop: 20,
                     marginHorizontal: "5%",
                     alignItems: "center"
@@ -275,11 +274,10 @@ const ReasonForRequesting = ({route}) => {
             <View  style={{ 
               paddingVertical: 20,
               borderColor: "#E60965",
-              borderWidth: 1,
               backgroundColor: "white",
               width: "80%",
               borderRadius: 15,
-              elevation: 5,
+              elevation: 7,
               alignSelf: "center",
               alignItems: "center",
               }}>
@@ -293,7 +291,7 @@ const ReasonForRequesting = ({route}) => {
                     marginVertical: 10,
                     gap: 10
                     }}>
-                    <Text style = {{textAlign: "left", fontWeight: "bold", width: 100}}>{attachmentType} </Text>
+                    <Text style = {{textAlign: "left", fontWeight: "bold", width: 100, color: "#E60965"}}>{attachmentType} </Text>
                     <Text style= {{flex: 1}}>{file.name}</Text>
 
                   </View>
@@ -436,20 +434,24 @@ const ReasonForRequesting = ({route}) => {
     },
 
     IndicatedPage: {
-        height: 4,
-        width: 50,
-        backgroundColor: "#F94892",
-        marginTop: "10%",
-        marginHorizontal: "1%",
-    },
+      height: 7,
+      borderRadius: 7,
+      width: 50,
+      backgroundColor: "#F94892",
+      marginTop: "10%",
+      marginHorizontal: "1%",
+      elevation:7
+  },
 
-    pageIndicator: {
-        height: 4,
-        width: 50,
-        backgroundColor: "#FFEECC",
-        marginTop: "10%",
-        marginHorizontal: "1%",
-    },
+  pageIndicator: {
+      height: 7,
+      borderRadius: 7,
+      width: 50,
+      backgroundColor: "white",
+      marginTop: "10%",
+      marginHorizontal: "1%",
+      elevation:7
+  },
 
     MainTitle: {
         fontFamily: 'Open-Sans-Bold',
@@ -476,7 +478,6 @@ const ReasonForRequesting = ({route}) => {
     },
 
     BiginputField: {
-        borderWidth: 1,
         borderRadius: 10,
         borderColor: "#E60965",
         paddingVertical: 10,
@@ -486,7 +487,7 @@ const ReasonForRequesting = ({route}) => {
         marginVertical: "1.5%",
         color: "#E60965",
         backgroundColor: "white",
-        elevation: 5,
+        elevation: 7,
     },
 
   })

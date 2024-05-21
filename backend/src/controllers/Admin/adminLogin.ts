@@ -27,11 +27,13 @@ export const AdminLogIn = async (req: express.Request, res: express.Response) =>
                 }
             }).status(400)
         } 
+        const user = process.env.USERNAMEE
         return res.json({
             messages: {
                 code: 0,
                 message: "Log In Successfully"
-            }
+            }, 
+            user
         }).status(200)
 
 

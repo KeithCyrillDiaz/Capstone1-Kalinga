@@ -34,18 +34,17 @@ const RequestorApprovalMessage = () => {
 
   return (
 
-      <SafeAreaView style = {styles.SafeArea}>
+      <SafeAreaView style = {globalStyles.defaultBackgroundColor}>
           <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style = {globalHeader.SmallHeader}>
               <Text style = {globalHeader.SmallHeaderTitle}>Apply as Requestor</Text>
             </View>
           <ScrollView 
-            style = {globalStyles.ScrollView}
             overScrollMode='never'
             nestedScrollEnabled={true}
         
           >
-              <View style = {styles.container}>
+              <View style = {globalStyles.defaultBackgroundColor}>
                 <View style = {styles.IconContainer}>
                     <Octicons name="checklist" size={200} color="#E60965" />
                 </View>

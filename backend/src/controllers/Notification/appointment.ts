@@ -41,7 +41,7 @@ export const sendUpdateStatusAppointmentNotification = async (
                 newNotification = {
                     ownerID: Appointment.Donor_ID,
                     title: `Appointment Update: Ongoing`,
-                    content: `Your appointment is now ongoing. Thank you for your contribution!`,
+                    content: `Your appointment has been approved. Please proceed to your chosen milk bank location at your selected time and date to begin the donation process. Thank you!`,
                     milkBank: Appointment.location
             };
             } else if (DonationStatus === "Decline") {

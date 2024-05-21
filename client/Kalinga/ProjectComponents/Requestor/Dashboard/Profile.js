@@ -20,6 +20,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { Entypo } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { globalStyles } from '../../../styles_kit/globalStyles.js';
 
 
 const RequestorProfile = ({route}) => {
@@ -91,7 +92,7 @@ const [profilePic, setProfilePic] = useState("")
 
     return (
         
-        <SafeAreaView style = {styles.safeArea}>
+        <SafeAreaView style = {globalStyles.defaultBackgroundColor}>
             <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style = {globalHeader.SmallHeader}>
               <Text style = {globalHeader.SmallHeaderTitle}>Profile</Text>
@@ -136,7 +137,7 @@ const [profilePic, setProfilePic] = useState("")
 
                   <View style = {styles.box}>
                     
-                      <TouchableOpacity onPress={() => navigatePage("RequestorSavedArticles")} >
+                      {/* <TouchableOpacity onPress={() => navigatePage("RequestorSavedArticles")} >
                         <View style = {styles.rowBox}>
                           <View style = {styles.rowMenu}>
                             <FontAwesome5 style = {styles.iconBookmark} name="bookmark" size={30} color="#E60965" />
@@ -147,10 +148,10 @@ const [profilePic, setProfilePic] = useState("")
                           
                           <Entypo name="chevron-right" size={30} color="#E60965" />
                         </View>
-                      </TouchableOpacity>
+                      </TouchableOpacity> */}
                        
                  
-                  <TouchableOpacity onPress={() => navigatePage("RequestorFavoriteArticles")}>
+                  {/* <TouchableOpacity onPress={() => navigatePage("RequestorFavoriteArticles")}>
                       <View style = {styles.rowBox}>
                           <View style = {styles.rowMenu}>
                             <MaterialCommunityIcons style = {styles.iconBabyBottle} name="baby-bottle-outline" size={38} color="#E60965"/>
@@ -162,7 +163,7 @@ const [profilePic, setProfilePic] = useState("")
                           <Entypo name="chevron-right" size={30} color="#E60965" />
                       </View>
 
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     
                     <TouchableOpacity onPress={() => navigatePage("RequestorSettingScreen")}>
                       <View style = {styles.rowBox}>
