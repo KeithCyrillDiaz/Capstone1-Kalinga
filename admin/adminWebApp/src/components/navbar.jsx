@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function () {
   const navigate = useNavigate();
@@ -8,7 +8,6 @@ export default function () {
   const currentDate = new Date();
   const options = { month: "long", day: "numeric", year: "numeric" };
   const formattedDate = currentDate.toLocaleDateString("en-US", options);
-  const { username } = useParams();
 
   useEffect(() => {
     // Function to update current time every second
@@ -108,7 +107,7 @@ export default function () {
                 </svg>
                 <div className="flex flex-col">
                   <span className="text-primary-default text-md pr-2">
-                    {username}
+                    Admin
                   </span>
                   <span className="text-primary-default text-sm italic">
                     Role - Admin

@@ -4,13 +4,10 @@ import { useNavigate, NavLink, useParams } from "react-router-dom";
 
 export default function () {
   const navigate = useNavigate();
-  const { username } = useParams();
   const [showReportsDropdown, setShowReportsDropdown] = useState(false);
   const [showVerificationDropdown, setVerificationDropdown] = useState(false);
   const [showAppointmentsDropdown, setShowAppointmentsDropdown] =
     useState(false);
-  const [showUtilitiesDropdown, setShowUtilitiesDropdown] = useState(false);
-  const [showUsersDropdown, setShowUsersDropdown] = useState(false);
 
   const isActiveRoute = (route) => {
     const currentPath = window.location.pathname;
@@ -44,7 +41,7 @@ export default function () {
           </div>
           {/* DASHBOARD */}
           <NavLink
-            to={`/admin/${username}`}
+            to={`/admin`}
             className={`flex items-center cursor-pointer w-full rounded-2xl py-1 mb-1 ${
               isActiveRoute("admin")
                 ? "bg-secondary-default"
