@@ -64,7 +64,6 @@ export default function ({ remarks }) {
 
   const [filters, setFilters] = useState({
     monthOfCreation: "",
-    monthScheduled: "",
     status: "",
     remarks: "",
   });
@@ -84,11 +83,6 @@ export default function ({ remarks }) {
             month: "long",
           }) === filters.monthOfCreation
         : true;
-      const matchMonthScheduled = filters.monthScheduled
-        ? new Date(appointment.selectedDate).toLocaleString("default", {
-            month: "long",
-          }) === filters.monthScheduled
-        : true;
       const matchStatus = filters.status
         ? appointment.DonationStatus === filters.status
         : true;
@@ -97,7 +91,6 @@ export default function ({ remarks }) {
         : true;
       return (
         matchMonthOfCreation &&
-        matchMonthScheduled &&
         matchStatus &&
         matchRemarks
       );
@@ -216,24 +209,6 @@ export default function ({ remarks }) {
                     </div>
                     <div className="border-b border-primary-default">
                       <label className="text-xs text-primary-default">
-                        Month Scheduled
-                      </label>
-                      <select
-                        className="bg-white text-primary-default text-lg py-1 pl-2 rounded-sm hover:cursor-pointer w-full"
-                        name="monthScheduled"
-                        value={filters.monthScheduled}
-                        onChange={handleFilterChange}
-                      >
-                        <option value="">Select Month Scheduled</option>
-                        {months.map((month) => (
-                          <option key={month.id} value={month.name}>
-                            {month.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="border-b border-primary-default">
-                      <label className="text-xs text-primary-default">
                         Status
                       </label>
                       <select
@@ -310,7 +285,7 @@ export default function ({ remarks }) {
                               scope="col"
                               className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider "
                             >
-                              Scheduled Date and Time
+                              Method
                             </th>
                             <th
                               scope="col"
@@ -367,15 +342,7 @@ export default function ({ remarks }) {
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
                                 <div className="text-center text-sm text-gray-500 flex items-center justify-center">
-                                  {new Date(
-                                    appointment.selectedDate
-                                  ).toLocaleDateString()}{" "}
-                                  {new Date(
-                                    appointment.selectedTime
-                                  ).toLocaleTimeString([], {
-                                    hour: "numeric",
-                                    minute: "2-digit",
-                                  })}
+                                {appointment.method}
                                 </div>
                               </td>
                               <td className="px-6 py-1 whitespace-nowrap">

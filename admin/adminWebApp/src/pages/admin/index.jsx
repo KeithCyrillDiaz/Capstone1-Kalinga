@@ -2,12 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { WebHost } from "../../../MyConstantAdmin";
 import { PieChart, LoadPercentage, RequestPieChart } from "@components";
-import {
-  DonatePerMonth,
-  RequestPerMonth,
-  BarDonatePerMonth,
-  BarRequestPerMonth,
-} from "../../components";
+import { BarangayGraph } from "../../components";
 import { AdminLogin } from "../../api/AdminLogin";
 import { useParams } from "react-router-dom";
 import {
@@ -20,7 +15,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-
 //require("dotenv").config(); // Load environment variables
 
 //const user = process.env.REACT_APP_ADMIN_USERNAME;
@@ -30,6 +24,11 @@ export default function Dashboard() {
   const [totalRequestors, setTotalRequestors] = useState(0);
   const [totalUsers, setTotalUsers] = useState(0);
   const [usersPerCity, setUsersPerCity] = useState([]);
+  const [totalRequestorsPerBarangay, setTotalRequestorsPerBarangay] = useState(
+    []
+  );
+  const [totalDonorsPerBarangay, setTotalDonorsPerBarangay] = useState([]);
+  const [barangaysData, setBarangaysData] = useState([]);
 
   useEffect(() => {
     console.log("Fetching data...");
@@ -79,6 +78,34 @@ export default function Dashboard() {
     };
 
     fetchUsersPerCity();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${WebHost}/kalinga/getTotalUsersPerBarangay`
+        );
+        const { totalRequestorsPerBarangay, totalDonorsPerBarangay } =
+          response.data;
+
+        // Merge data for each barangay
+        const mergedData = totalRequestorsPerBarangay.map((requestor) => ({
+          ...requestor,
+          totalDonors:
+            totalDonorsPerBarangay.find((donor) => donor._id === requestor._id)
+              ?.totalDonors || 0,
+        }));
+
+        setBarangaysData(mergedData); // Set barangaysData state
+        console.log("Barangays Data:", mergedData); // Log the merged data
+        console.log("response Data:", response.data); // Log the response data
+      } catch (error) {
+        console.error("Error fetching total users per barangay:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
@@ -278,87 +305,45 @@ export default function Dashboard() {
                   QCGH Human Milk Bank User Demographics
                 </h2>
                 <p className="text-md text-center text-primary-default font-sans">
-                  Participating Barangays: 3
+                  Participating Barangays: {barangaysData.length}
                 </p>
-                <div className="grid grid-flow-row-dense grid-cols-3 grid-rows-3 gap-x-2 mt-10 px-10">
-                  <div className="col-span-3">
-                    <span className="text-lg text-primary-default font-bold mt-6">
-                      Commonwealth
-                    </span>
-                  </div>
-                  <div className="col-span-2">
-                    <span className="text-md text-primary-default font-sans">
-                      Requestor
-                    </span>
-                  </div>
-                  <div className="col-span-2">
-                    <span className="text-md text-primary-default font-sans">
-                      Donor
-                    </span>
-                  </div>
-                  <div className="text-md text-primary-default font-sans text-right">
-                    {totalRequestors}
-                  </div>
-                  <div className="text-md text-primary-default font-sans text-right">
-                    {totalDonors}
-                  </div>
-                </div>
-                <div className="grid grid-flow-row-dense grid-cols-3 grid-rows-3 gap-x-2 mt-2 px-10">
-                  <div className="col-span-3">
-                    <span className="text-lg text-primary-default font-bold mt-6">
-                      Tandang Sora
-                    </span>
-                  </div>
-                  <div className="col-span-2">
-                    <span className="text-md text-primary-default font-sans">
-                      Requestor
-                    </span>
-                  </div>
-                  <div className="col-span-2">
-                    <span className="text-md text-primary-default font-sans">
-                      Donor
-                    </span>
-                  </div>
-                  <div className="text-md text-primary-default font-sans text-right">
-                    {totalRequestors}
-                  </div>
-                  <div className="text-md text-primary-default font-sans text-right">
-                    {totalDonors}
-                  </div>
-                </div>
-                <div className="grid grid-flow-row-dense grid-cols-3 grid-rows-3 gap-x-2 mt-2 px-10">
-                  <div className="col-span-3">
-                    <span className="text-lg text-primary-default font-bold mt-6">
-                      San Bartolome
-                    </span>
-                  </div>
-                  <div className="col-span-2">
-                    <span className="text-md text-primary-default font-sans">
-                      Requestor
-                    </span>
-                  </div>
-                  <div className="col-span-2">
-                    <span className="text-md text-primary-default font-sans">
-                      Donor
-                    </span>
-                  </div>
-                  <div className="text-md text-primary-default font-sans text-right">
-                    {totalRequestors}
-                  </div>
-                  <div className="text-md text-primary-default font-sans text-right">
-                    {totalDonors}
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col items-center justify-center col-span-3 px-8 py-8 bg-white rounded-lg shadow-md w-4/5">
-                <h2 className="text-2xl text-primary-default text-center mb-4">
-                  App Users per Barangay
-                </h2>
-                <div className="w-full p-4">
-                  <div className="py-3 bg-white rounded-2xl">
-                    <span className="lg:pt-4 lg:pb-8 xl:p-0 mt-8">
-                      <BarDonatePerMonth name="Total Donation" />
-                    </span>
+                {barangaysData &&
+                  barangaysData.map((barangayData) => (
+                    <div className="grid grid-flow-row-dense grid-cols-3 grid-rows-3 gap-x-2 mt-10 px-10">
+                      <div className="col-span-3">
+                        <span className="text-lg text-primary-default font-bold mt-6">
+                          {barangayData._id}
+                        </span>
+                      </div>
+                      <div className="col-span-2">
+                        <span className="text-md text-primary-default font-sans">
+                          Requestor
+                        </span>
+                      </div>
+                      <div className="col-span-2">
+                        <span className="text-md text-primary-default font-sans">
+                          Donor
+                        </span>
+                      </div>
+                      <div className="text-md text-primary-default font-sans text-right">
+                        {barangayData.totalRequestors || 0}
+                      </div>
+                      <div className="text-md text-primary-default font-sans text-right">
+                        {barangayData.totalDonors || 0}
+                      </div>
+                    </div>
+                  ))}
+
+                <div className="flex flex-col items-center justify-center col-span-3 px-8 py-8 bg-white rounded-lg shadow-md w-4/5">
+                  <h2 className="text-2xl text-primary-default text-center mb-4">
+                    App Users per Barangay
+                  </h2>
+                  <div className="w-full p-4">
+                    <div className="py-3 bg-white rounded-2xl">
+                      <span className="lg:pt-4 lg:pb-8 xl:p-0 mt-8">
+                        <BarangayGraph name="" />
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
