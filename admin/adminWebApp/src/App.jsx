@@ -9,20 +9,25 @@ import {
   Login,
   AdminDashboard,
   City,
-  Chart,
   DonorVerifPendings,
   DonorVerification,
   RequestorVerification,
   RequestorVerifPendings,
+  Chart,
   Forum,
   Approved,
   Rejected,
+  Bugs,
+  BugReport,
+  BugResolve,
+  Feedback,
+  FeedbackReport,
+  DonorAppointmentConfirmation,
+  RequestorAppointmentConfirmation,
   Milkbanks,
+  Users,
   DonorAppointManage,
   RequestorManagement,
-  DonorAppointmentConfirmation,
-  RequestorAppointmentConfirmation
-
 } from "@/pages";
 import { RootLayout, NotFound, MainLayout, AdminLayout } from "@/layouts";
 import { MobileChecker } from "@/components";
@@ -40,24 +45,42 @@ const router = createBrowserRouter(
       </Route>
 
       {/* Private Routes */}
+
       <Route path="admin" element={<AdminLayout />}>
         <Route index element={<AdminDashboard />} />
-        <Route path="milkbanks" element={<Milkbanks />} />
+        <Route path="/admin/:username" element={<AdminDashboard />} />
         <Route path="city" element={<City />} />
-        <Route path="chart" element={<Chart />} />
         <Route path="DonorVerifPendings" element={<DonorVerifPendings />} />
         <Route path="DonorVerification/:id" element={<DonorVerification />} />
-        <Route path="requestorVerifPendings" element={<RequestorVerifPendings/>} />
-        <Route path="requestorVerification/:id" element={<RequestorVerification/>} />
+        <Route
+          path="RequestorVerifPendings"
+          element={<RequestorVerifPendings />}
+        />
+        <Route
+          path="requestorVerification/:id"
+          element={<RequestorVerification />}
+        />
+        <Route path="chart" element={<Chart />} />
         <Route path="forum" element={<Forum />} />
         <Route path="approved" element={<Approved />} />
         <Route path="rejected" element={<Rejected />} />
+        <Route path="bugs" element={<Bugs />} />
+        <Route path="bugReport/:ReportBugID" element={<BugReport />} />
+        <Route path="bugResolve" element={<BugResolve />} />
+        <Route path="feedback" element={<Feedback />} />
+        <Route path="feedbackReport" element={<FeedbackReport />} />
+        <Route
+          path="donorAppointmentConfirmation/:AppointmentDonorID"
+          element={<DonorAppointmentConfirmation />}
+        />
+        <Route
+          path="requestorAppointmentConfirmation/:RequestID"
+          element={<RequestorAppointmentConfirmation />}
+        />
+        <Route path="milkbanks" element={<Milkbanks />} />
+        <Route path="users" element={<Users />} />
         <Route path="DonorAppointManage" element={<DonorAppointManage />} />
         <Route path="requestorManagement" element={<RequestorManagement />} />
-        <Route path="donorAppointmentConfirmation/:AppointmentDonorID" element={<DonorAppointmentConfirmation />} />
-        <Route path="requestorAppointmentConfirmation/:RequestID" element={<RequestorAppointmentConfirmation />} />
-        <Route path="requestorAppointmentConfirmation/:RequestID" element={<DonorVerifPendings />} />
-        <Route path="requestorAppointmentConfirmation/:RequestID" element={<DonorVerification />} />
       </Route>
 
       {/* 404 */}

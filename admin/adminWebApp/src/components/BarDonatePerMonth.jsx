@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { WebHost } from '../../MyConstantAdmin';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { WebHost } from "../../MyConstantAdmin";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 export default function BarDonatePerMonth({ name }) {
   const [monthlyData, setMonthlyData] = useState([]);
@@ -14,15 +23,22 @@ export default function BarDonatePerMonth({ name }) {
       setError(null);
       try {
         // Fetch total complete donations
-        const responseComplete = await axios.get(`${WebHost}/kalinga/getTotalCompleteDonationsAllMonths`);
+        const responseComplete = await axios.get(
+          `${WebHost}/kalinga/getTotalCompleteDonationsAllMonths`
+        );
         // Fetch total decline donations
-        const responseDecline = await axios.get(`${WebHost}/kalinga/getTotalDeclineDonationsAllMonths`);
+        const responseDecline = await axios.get(
+          `${WebHost}/kalinga/getTotalDeclineDonationsAllMonths`
+        );
         // Merge the data from both responses
-        const mergedData = mergeData(responseComplete.data, responseDecline.data);
+        const mergedData = mergeData(
+          responseComplete.data,
+          responseDecline.data
+        );
         setMonthlyData(mergedData);
       } catch (error) {
-        console.error('Error fetching donations:', error);
-        setError('Error fetching data');
+        console.error("Error fetching donations:", error);
+        setError("Error fetching data");
       } finally {
         setLoading(false);
       }
@@ -32,10 +48,12 @@ export default function BarDonatePerMonth({ name }) {
   }, []);
 
   const mergeData = (completeData, declineData) => {
-    return completeData.map(completeItem => ({
+    return completeData.map((completeItem) => ({
       month: completeItem.month,
       totalCompleteDonations: completeItem.totalCompleteDonations,
-      totalDeclineDonations: declineData.find(item => item.month === completeItem.month)?.totalDeclineDonations || 0
+      totalDeclineDonations:
+        declineData.find((item) => item.month === completeItem.month)
+          ?.totalDeclineDonations || 0,
     }));
   };
 
@@ -49,7 +67,7 @@ export default function BarDonatePerMonth({ name }) {
     return <div>Error: {error}</div>;
   }
 
-  console.log('Monthly data:', monthlyData); // Log monthly data for debugging
+  console.log("Monthly data:", monthlyData); // Log monthly data for debugging
 
   return (
     <div>
@@ -63,11 +81,19 @@ export default function BarDonatePerMonth({ name }) {
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="month" />
-          <YAxis domain={[0, 'auto']} /> {/* Adjust the YAxis domain */}
+          <YAxis domain={[0, "auto"]} /> {/* Adjust the YAxis domain */}
           <Tooltip />
           <Legend />
-          <Bar dataKey="totalCompleteDonations" fill={COLORS[0]} name="Total Complete Donations" />
-          <Bar dataKey="totalDeclineDonations" fill={COLORS[1]} name="Total Decline Donations" />
+          <Bar
+            dataKey="totalCompleteDonations"
+            fill={COLORS[0]}
+            name="Total Complete Donations"
+          />
+          <Bar
+            dataKey="totalDeclineDonations"
+            fill={COLORS[1]}
+            name="Total Decline Donations"
+          />
         </BarChart>
       </ResponsiveContainer>
     </div>

@@ -31,28 +31,30 @@ const BugReport = () => {
     setIsModalOpen(true);
   };
 
-const handleConfirm = async () => {
-  try {
-    const response = await axios.patch(`${WebHost}/kalinga/updateResolved/${ReportBugID}`);
-
-    if (response.status === 200) {
-      setIsModalOpen(false); // Close the first modal
-      alert("Great! The bug has been marked as resolved, and the user has already been notified."); // Show the second modal
-      navigate('/admin/bugs'); // Redirect to bugs list or another page
-    } else {
-      console.error("Failed to update bug report");
-      // Handle the case where the API request was successful but the status code is not 200
+  const handleConfirm = async () => {
+    try {
+      const response = await axios.patch(`${WebHost}/kalinga/updateResolved/${ReportBugID}`);
+  
+      console.log("Patch Response:", response); // Log the response for debugging
+  
+      if (response.status === 200) {
+        setIsModalOpen(false); // Close the first modal
+        alert("Great! The bug has been marked as resolved, and the user has already been notified."); // Show the second modal
+        navigate('/admin/bugs'); // Redirect to bugs list or another page
+      } else {
+        console.error("Failed to update bug report");
+        // Handle the case where the API request was successful but the status code is not 200
+        // You can show an error message to the user or handle it based on your UI/UX flow
+      }
+    } catch (error) {
+      console.error("Error updating bug report:", error);
+      // Handle the API request failure, such as network error or server error
       // You can show an error message to the user or handle it based on your UI/UX flow
+    } finally {
+      setIsModalOpen(false); // Ensure the modal is closed regardless of success or failure
     }
-  } catch (error) {
-    console.error("Error updating bug report:", error);
-    // Handle the API request failure, such as network error or server error
-    // You can show an error message to the user or handle it based on your UI/UX flow
-  } finally {
-    setIsModalOpen(false); // Ensure the modal is closed regardless of success or failure
-  }
-};
-
+  };
+  
   const handleCancel = () => {
     setIsModalOpen(false);
   };
