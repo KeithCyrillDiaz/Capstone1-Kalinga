@@ -64,7 +64,6 @@ export default function ({ remarks }) {
 
   const [filters, setFilters] = useState({
     monthOfCreation: "",
-    monthScheduled: "",
     status: "",
     remarks: "",
   });
@@ -84,11 +83,6 @@ export default function ({ remarks }) {
             month: "long",
           }) === filters.monthOfCreation
         : true;
-      const matchMonthScheduled = filters.monthScheduled
-        ? new Date(appointment.selectedDate).toLocaleString("default", {
-            month: "long",
-          }) === filters.monthScheduled
-        : true;
       const matchStatus = filters.status
         ? appointment.DonationStatus === filters.status
         : true;
@@ -97,7 +91,6 @@ export default function ({ remarks }) {
         : true;
       return (
         matchMonthOfCreation &&
-        matchMonthScheduled &&
         matchStatus &&
         matchRemarks
       );
@@ -207,24 +200,6 @@ export default function ({ remarks }) {
                         onChange={handleFilterChange}
                       >
                         <option value="">Select Month Created</option>
-                        {months.map((month) => (
-                          <option key={month.id} value={month.name}>
-                            {month.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="border-b border-primary-default">
-                      <label className="text-xs text-primary-default">
-                        Month Scheduled
-                      </label>
-                      <select
-                        className="bg-white text-primary-default text-lg py-1 pl-2 rounded-sm hover:cursor-pointer w-full"
-                        name="monthScheduled"
-                        value={filters.monthScheduled}
-                        onChange={handleFilterChange}
-                      >
-                        <option value="">Select Month Scheduled</option>
                         {months.map((month) => (
                           <option key={month.id} value={month.name}>
                             {month.name}
