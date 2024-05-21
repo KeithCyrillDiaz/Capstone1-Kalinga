@@ -46,7 +46,7 @@ export default function Login() {
         setInvalidCredentials(true);
         return;
       } else {
-        navigate(`/admin/${username}`); // Pass username as a parameter
+        navigate("/admin");
       }
     } catch (error) {
       console.log("Failed Admin Login", error);

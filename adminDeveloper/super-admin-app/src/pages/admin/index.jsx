@@ -72,20 +72,18 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    const fetchUsersPerCity = async () => {
-      try {
-        const response = await axios.get(
-          `${WebHost}/kalinga/getTotalUsersPerCity`
-        );
-        console.log("Users Per City Response:", response.data); // Log the response data
-        setUsersPerCity(response.data);
-      } catch (error) {
-        console.error("Error fetching users per city:", error);
-        if (error.response) {
-          console.log("Response data:", error.response.data);
-        }
-      }
-    };
+ const fetchUsersPerCity = async () => {
+  try {
+    const response = await axios.get(`${WebHost}/kalinga/getTotalUsersPerCity`);
+    console.log("Users Per City Response:", response.data); // Log the response data
+    setUsersPerCity(response.data);
+  } catch (error) {
+    console.error("Error fetching users per city:", error);
+    if (error.response) {
+      console.log("Response data:", error.response.data);
+    }
+  }
+}
 
     fetchUsersPerCity();
   }, []);
