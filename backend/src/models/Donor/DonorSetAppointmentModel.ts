@@ -24,6 +24,7 @@
     location: string;
     createdAt: Date;
     DonorRemark: string;
+    method: string;
     
   }
 
@@ -43,7 +44,9 @@
     selectedTime: { type: String, required: true },
     location: { type: String, required: true },
     createdAt: {type: Date, default: Date.now},
-    DonorRemark: { type: String }
+    DonorRemark: { type: String },
+    method: { type: String }
+
   });
 
   const AppointmentModel = mongoose.model<Appointment>('Appointment', AppointmentSchema);
