@@ -160,7 +160,7 @@ export default function ({ remarks }) {
 
   return (
     <>
-      <section className="w-full h-screen bg-primary-body overflow-hidden">
+      <section className="w-full h-full bg-primary-body overflow-hidden">
         <div className="p-8 pt-1">
           <div>
             <h1 className="text-3xl text-primary-default font-bold font-sans my-4 mb-4">
