@@ -7,7 +7,7 @@ const screeningFormSchema = new mongoose.Schema({
     Screening_ID: {type: String},
     userType: {type: String},
     isDeleted: {type: String, default: "notDeleted"},
-    isApproved: {type: String},
+    isApproved: {type: String, default: "No"},
     
     fullName: {type: String},
     Age: {type: String},
@@ -16,6 +16,7 @@ const screeningFormSchema = new mongoose.Schema({
     contactNumber: {type: String},
     homeAddress: {type: String},
     Municipality:{type: String},
+    barangay:{type: String},
 
     //Infant Information
     childName: {type: String},
