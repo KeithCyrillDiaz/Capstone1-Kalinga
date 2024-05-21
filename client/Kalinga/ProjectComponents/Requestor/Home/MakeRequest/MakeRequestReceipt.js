@@ -64,7 +64,7 @@ const MakeRequestReceipt = () => {
         [
           {
             text: 'Yes',
-            onPress: () =>  navigatePage("MakeRequest")
+            onPress: () =>  navigation.goBack()
           },
           {
             text: 'Cancel',
@@ -354,7 +354,7 @@ useEffect(() => {
             </TouchableOpacity>
             <TouchableOpacity onPress={() => confirmation("Decline")}>
               <View style={styles.CancelbuttonContainer}>
-                <Text style={styles.label}>Cancel</Text>
+                <Text style={[styles.label, {color: '#E60965'}]}>Cancel</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -611,13 +611,13 @@ const styles = StyleSheet.create ({
     
 },
     CancelbuttonContainer: {
-    backgroundColor: '#E60965',
+    backgroundColor: 'white',
     paddingHorizontal: 37,
     borderRadius: 20,
     paddingVertical: 5,
-    marginHorizontal: 10
+    marginHorizontal: 10,
+    elevation:7,
 
- 
 },
 DonorButton:{
     flexDirection: "row",

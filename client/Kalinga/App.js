@@ -35,6 +35,7 @@ import FacebookContinue from './ProjectComponents/InitialScreenPages/FacebookCon
 //import ApplyAsDonor from './screens/Guest/Apply_As_Donor/Approved.js'
 //import Approved from './screens/Guest/Apply_As_Requestor/Approved.js' <Stack.Screen name="Approved" component={Approved} />
 import DonorApproved from './ProjectComponents/Guest/Profile/ApplyDonor/DonorApproved.js'  
+import RequestorApproved from './ProjectComponents/Guest/Profile/ApplyRequestor/RequestorApproved.js'
 // import ApprovalMessage from './ProjectComponents/Guest/Profile/ApplyRequestor/ApprovalMessage.js'
 // import MedicalAbstract from './ProjectComponents/Guest/Profile/ApplyRequestor/MedicalAbstract.js'
 // import ReasonForRequesting from './ProjectComponents/Guest/Profile/ApplyRequestor/ReasonForRequesting.js'
@@ -256,9 +257,11 @@ export default function App() {
              <Stack.Screen name="Guest Educational Library" component={GuestEducLibrary} />
              <Stack.Screen name="GuestTabs" component={GuestTabs} />
              <Stack.Screen name="DonorApproved" component={DonorApproved} />
+             <Stack.Screen name="RequestorApproved" component={RequestorApproved} />
              <Stack.Screen name="ApplyAsDonorStack" component={ApplyAsDonorStack} />
              <Stack.Screen name="ApplyAsRequestorStack" component={ApplyAsRequestorStack}/>
              <Stack.Screen name="Instant Messages" component={InstantMess} />
+         
 
 
              {/*Donor*/}

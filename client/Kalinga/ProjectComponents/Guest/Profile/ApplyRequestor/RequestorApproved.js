@@ -8,64 +8,52 @@ import {
   StatusBar,
   StyleSheet,
   TouchableOpacity,
-  TextInput, 
 } from 'react-native';
 import { globalStyles } from "../../../../styles_kit/globalStyles.js"
 import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { Octicons } from '@expo/vector-icons';
-import { useNavigation, CommonActions } from '@react-navigation/native';
+import { useNavigation , CommonActions } from '@react-navigation/native';
 
+const RequestorApproved = () => {
 
-const RequestorApprovalMessage = () => {
+  const navigation = useNavigation();
+
+  const navigatePage = (Page) => {
+    // Navigate to the next screen by route name
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0, //Reset the stack to 0 so the user cannot go back
+        routes: [{ name: Page }], // Replace 'Login' with the name of your login screen
+      })
+    );
+  }
 
     const FirstParagraph = 'Thank you for submitting request form! Your information has been received. We will carefully review your details and notify you of the qualification status soon. Stay tuned for updates!'
-    const navigation = useNavigation();
-
-    const navigatePage = (Page) => {
-      // Navigate to the next screen by route name
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0, //Reset the stack to 0 so the user cannot go back
-          routes: [{ name: Page }], 
-        })
-      );
-
-    };
 
   return (
 
-      <SafeAreaView style = {globalStyles.defaultBackgroundColor}>
+      <SafeAreaView style = {[globalStyles.defaultBackgroundColor, {
+        alignItems: 'center',
+        justifyContent: 'center',
+      }]}>
           <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style = {globalHeader.SmallHeader}>
               <Text style = {globalHeader.SmallHeaderTitle}>Apply as Requestor</Text>
             </View>
-          <ScrollView 
-            overScrollMode='never'
-            nestedScrollEnabled={true}
-        
-          >
-              <View style = {globalStyles.defaultBackgroundColor}>
-                <View style = {styles.IconContainer}>
-                    <Octicons name="checklist" size={200} color="#E60965" />
-                </View>
-              
+            <View style ={styles.container}>
+                <Octicons name="checklist" size={200} color="#F94892" />
                 <View style = {styles.labelContainer}>
-                 <Text style = {styles.mess}>{FirstParagraph}</Text>
+                  <Text style = {styles.mess}>{FirstParagraph}</Text>
                 </View>
-              </View>
-              
-              
-
-              <View style = {globalStyles.center}>
-                    <TouchableOpacity style = {styles.AgreebuttonContainer} onPress={() => navigatePage("GuestTabs")}>
-                        <Text style = {styles.label}>Done</Text>
-                    </TouchableOpacity>
             </View>
-
-        </ScrollView>
-
-           
-            
+              
+              
+              
+            <TouchableOpacity style = {globalStyles.center} onPress={() => navigatePage("GuestTabs")}>
+                  <View style = {styles.AgreebuttonContainer} >
+                      <Text style = {styles.label}>Done</Text>
+                  </View>
+            </TouchableOpacity>
 
       </SafeAreaView>
 
@@ -75,43 +63,30 @@ const RequestorApprovalMessage = () => {
   const styles = StyleSheet.create ({
     SafeArea: {
         flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: '#FFF8EB',
-        
-        width: '100%',
-        height: "100%"
     },
-
 
     container: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        //backgroundColor: "yellow"
-
+        //backgroundColor: "pink",
+        marginTop: "50%",
+        width: " 70%"
       },
-
-    IconContainer:{
-        flex: 1,
-        alignItems: "center",
-        marginTop: "40%",
-        marginBottom: "5%",
-        marginLeft: "11%"
-    },
   
     labelContainer:{
-
-        flex: 1,
-        //backgroundColor: "pink",
-        width: "80%",
+        //backgroundColor: "red",
         alignItems: "center",
-       
     },
 
     mess: {
         color: "#E60965",
         fontFamily: "Open-Sans-Bold",
-        fontSize: 15,
-        textAlign: "justify"
+        fontSize: 20,
+        textAlign: "center"
     },
 
     label: {
@@ -127,7 +102,7 @@ const RequestorApprovalMessage = () => {
         borderRadius: 20,
         justifyContent: "center",
         paddingVertical: 5,
-        marginTop: "-5%"
+        marginTop: "-20%"
     },
 
     BiginputField: {
@@ -144,6 +119,6 @@ const RequestorApprovalMessage = () => {
 
   })
 
-  export default RequestorApprovalMessage;
+  export default RequestorApproved;
 
   

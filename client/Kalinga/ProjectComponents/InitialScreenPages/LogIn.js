@@ -27,7 +27,7 @@ const LogIn = () => {
         }
         console.log("No existing Token")
     }
-    
+
     useEffect(()=>{
         checkToken();
     },[])
