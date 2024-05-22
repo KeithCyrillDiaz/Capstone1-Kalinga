@@ -138,6 +138,8 @@ const DonorUploadMedicalRequirements = ({route}) => {
         });
 
         if (!result.canceled && result.assets && result.assets.length > 0) {
+          delete selectedFile[attachmentType]
+          if(Object.keys(selectedFile).length===0)setFileContainer(false)
             let fileType = ''
           result.assets.forEach(image => {
 
@@ -183,7 +185,8 @@ const handleFileUpload = async (attachmentType) => {
   try {
     const result = await DocumentPicker.getDocumentAsync();
     if (!result.canceled && result.assets && result.assets.length > 0) {
-
+        delete selectedImage[attachmentType]
+        if(Object.keys(selectedImage).length===0)setImageContainer(false)
         let fileName
             if (
               result.assets[0].mimeType === "application/pdf" ||
@@ -278,7 +281,7 @@ const handleFileUpload = async (attachmentType) => {
             </View>
 
             <Text style = {styles.title}> Upload Medical Requirements </Text>
-            <Text style = {styles.note}> Note: Select your answer by clicking either the Icon</Text>
+            <Text style = {styles.note}> Note: Please make sure that your images are clear</Text>
             
 
             <View style = {styles. attachmentContainer}>
@@ -292,7 +295,7 @@ const handleFileUpload = async (attachmentType) => {
                           <AntDesign name="picture" size={27} color="#E60965" />
                         </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>
-                        <TouchableOpacity style = {{ backgroundColor: "pink", padding: 5, borderRadius: 7}} onPress={()=> handleFileUpload('hepaB')}>
+                        <TouchableOpacity style = {{ backgroundColor: "pink", padding: 5, borderRadius: 7}} onPress={()=> handleFileUpload('HepaB')}>
                           <AntDesign name="file1" size={24} color="#E60965"/>
                         </TouchableOpacity>
                     </View>
@@ -450,7 +453,7 @@ const handleFileUpload = async (attachmentType) => {
                                 }}>
 
                                   <View style = {styles.fileType}>
-                                    <Text>{attachmentType}: </Text>
+                                    <Text style = {{color: "#E60965", fontFamily: "Open-Sans-Bold"}}>{attachmentType}: </Text>
                                   </View>
                                   <View style = {styles.fileName}>
                                     <Text style= {{width: 170}}>{file.name}</Text>
@@ -594,7 +597,7 @@ const handleFileUpload = async (attachmentType) => {
 
     note: {
       color: '#E60965',
-      fontFamily: "Open-Sans-Light",
+      fontFamily: "Open-Sans-SemiBold",
       marginBottom: 10,
       fontSize: 13
     },

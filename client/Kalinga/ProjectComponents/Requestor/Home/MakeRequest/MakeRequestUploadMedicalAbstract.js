@@ -1,6 +1,6 @@
 
 //Guest EducLibrary
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
   ScrollView, 
   Text, 
@@ -23,6 +23,10 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
 import ImageZoom from 'react-native-image-pan-zoom';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { ValidIdInfoModal } from "./ValidIdInfoModal.js";
+
+
 
 const UploadMedicalAbstract = ({route}) => {
 
@@ -35,9 +39,34 @@ const UploadMedicalAbstract = ({route}) => {
   const [fileContainer, setFileContainer] = useState(false)
   const [scrollableHorizontal, setScrollableHorizontal] = useState(false)
   const [imageContainer, setImageContainer] = useState(false)
+  const [noQuezonCityId, setNoQuezonCityId] = useState(false)
+  const [isChecked, setIsChecked] = useState(false)
+  const [showValidID, setShowValidId] = useState(false)
+
+//   const noQuezonCityID = [
+//     'Clinical History',
+//     'Presenting Complaint',
+//     'Clinical Findings',
+//     'Diagnosis',
+//     'Treatments and Intervensions',
+//     'Prescription',
+//     'Government_ID',
+//     'Other Valid ID'
+// ];
+
+// const withQuezonCityID = [
+//   'Clinical History',
+//   'Presenting Complaint',
+//   'Clinical Findings',
+//   'Diagnosis',
+//   'Treatments and Intervensions',
+//   'Prescription',
+//   'Quezon City ID',
+// ];
 
   const navigatePage = (Page, Data, SI, SF) => {
-    if(Object.keys(selectedImage).length + Object.keys(selectedFile).length < 7){
+    if(noQuezonCityId && Object.keys(selectedImage).length + Object.keys(selectedFile).length < 8
+      || !noQuezonCityId && Object.keys(selectedImage).length + Object.keys(selectedFile).length < 7){
         Alert.alert(
           "Incomplete Medical Requirements",
           "Please upload all the required documents to proceed."
@@ -65,6 +94,8 @@ const UploadMedicalAbstract = ({route}) => {
         });
 
         if (!result.canceled && result.assets && result.assets.length > 0) {
+          delete selectedFile[attachmentType]
+          if(Object.keys(selectedFile).length===0)setFileContainer(false)
             let fileType = ''
           result.assets.forEach(image => {
 
@@ -77,7 +108,6 @@ const UploadMedicalAbstract = ({route}) => {
 
             }
           });
-          
           setSelectedImage(prevState => ({
               ...prevState,
             
@@ -94,6 +124,7 @@ const UploadMedicalAbstract = ({route}) => {
               
           }));
 
+          
           const numberOfObjects = Object.keys(selectedImage).length;
           console.log("numberOfObjects: ", numberOfObjects)
           if (numberOfObjects >= 2) setScrollableHorizontal(true);
@@ -109,10 +140,14 @@ const UploadMedicalAbstract = ({route}) => {
     // console.log("selectedImage:", JSON.stringify(selectedImage, null, 2));
 };
 
+
 const handleFileUpload = async (attachmentType) => {
+
   try {
     const result = await DocumentPicker.getDocumentAsync();
     if (!result.canceled && result.assets && result.assets.length > 0) {
+      delete selectedImage[attachmentType]
+      if(Object.keys(selectedImage).length===0)setImageContainer(false)
             if (
               result.assets[0].mimeType === "application/pdf" ||
               result.assets[0].mimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -145,6 +180,9 @@ const handleFileUpload = async (attachmentType) => {
         };
         // Update the selectedFile state
         setSelectedFile(updatedSelectedFile);
+  
+   
+
         // console.log("updatedSelectedFile:", updatedSelectedFile)
         setFileContainer(true)
     }
@@ -154,6 +192,15 @@ const handleFileUpload = async (attachmentType) => {
 };
 
 
+// useEffect(()=> {
+//   delete selectedFile[attachment]
+//   if(Object.keys(selectedFile).length===0)setFileContainer(false)
+// },[selectedImage])
+
+// useEffect(()=> {
+//   delete selectedImage[attachment]
+
+// },[selectedFile])
 
   return (
 
@@ -291,25 +338,110 @@ const handleFileUpload = async (attachmentType) => {
                 </View>
             </View>
 
+            <Text style = {[styles.MainTitle, 
+              {
+                textAlign: "center",
+                marginBottom: 10
+              }
+            ]}>Required Valid ID</Text>
 
-            <View style = {styles. attachmentContainer}>
-                <Text style={styles.newLabel}>
-                    Government ID
-                </Text>
-                  <View style={styles.rowAlignment}>
-                    <FontAwesome5 name="asterisk" size={12} color="#E60965" />
-                    <View style={styles.iconContainer}>
-                      <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('Government_ID')}>
-                        <AntDesign name="picture" size={27} color="#E60965" />
-                      </TouchableOpacity>
-                        <Text style={styles.verticalLine}>|</Text>
-                        <TouchableOpacity style = {{ backgroundColor: "pink", padding: 5, borderRadius: 7}} onPress={()=>handleFileUpload('Government_ID')}>
-                        <AntDesign name="file1" size={24} color="#E60965" />
-                      </TouchableOpacity>
-                  </View>
-                    
-                </View>
+            <View style={{flexDirection: "row", alignItems: "center", alignSelf: "center", marginBottom: 15}}>
+              <TouchableOpacity style ={styles.checkBox} onPress={()=> {
+                    setIsChecked(!isChecked);
+                    setNoQuezonCityId(!noQuezonCityId)
+                    if(!noQuezonCityId){
+                        delete selectedImage["Quezon City ID"] 
+                        delete selectedFile["Quezon City ID"]
+                        if(Object.keys(selectedFile).length===0)setFileContainer(false)
+                        if(Object.keys(selectedImage).length===0)setImageContainer(false)
+                    }
+                     
+                    else {
+                      delete selectedImage["Government_ID"] 
+                      delete selectedImage["Other Valid ID"] 
+                      delete selectedFile["Government_ID"] 
+                      delete selectedFile["Other Valid ID"] 
+                      if(Object.keys(selectedFile).length===0)setFileContainer(false)
+                      if(Object.keys(selectedImage).length===0)setImageContainer(false)
+                    } 
+                    }}>
+                <Ionicons 
+                name={ isChecked ? "checkbox" :"checkbox-outline"}
+                size={24} 
+                color="#E60965" />
+              </TouchableOpacity>
+              <Text style={ styles.checkBoxLabel}> Dont Have a Quezon City ID ? </Text>
             </View>
+             {!noQuezonCityId && (
+               <View style = {styles. attachmentContainer}>
+               <Text style={styles.newLabel}>
+                   Quezon City ID
+               </Text>
+                 <View style={styles.rowAlignment}>
+                   <FontAwesome5 name="asterisk" size={12} color="#E60965" />
+                   <View style={styles.iconContainer}>
+                     <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('Quezon City ID')}>
+                       <AntDesign name="picture" size={27} color="#E60965" />
+                     </TouchableOpacity>
+                       <Text style={styles.verticalLine}>|</Text>
+                       <TouchableOpacity style = {{ backgroundColor: "pink", padding: 5, borderRadius: 7}} onPress={()=>handleFileUpload('Quezon City ID')}>
+                       <AntDesign name="file1" size={24} color="#E60965" />
+                     </TouchableOpacity>
+                 </View>
+                   
+               </View>
+             </View>
+             )}
+            
+
+             
+             
+            {noQuezonCityId && (
+              <> 
+                <View style = {styles. attachmentContainer}>
+                  <Text style={styles.newLabel}>
+                      Government ID
+                  </Text>
+                    <View style={styles.rowAlignment}>
+                      <FontAwesome5 name="asterisk" size={12} color="#E60965" />
+                      <View style={styles.iconContainer}>
+                        <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('Government_ID')}>
+                          <AntDesign name="picture" size={27} color="#E60965" />
+                        </TouchableOpacity>
+                          <Text style={styles.verticalLine}>|</Text>
+                          <TouchableOpacity style = {{ backgroundColor: "pink", padding: 5, borderRadius: 7}} onPress={()=>handleFileUpload('Government_ID')}>
+                          <AntDesign name="file1" size={24} color="#E60965" />
+                        </TouchableOpacity>
+                    </View>
+                      
+                  </View>
+              </View>
+
+              <View style = {styles. attachmentContainer}>
+                  <Text style={styles.newLabel}>
+                      Any Valid ID
+                  </Text>
+                    <View style={styles.rowAlignment}>
+                      <TouchableOpacity onPress={() => setShowValidId(true)} style={{marginRight: 10}}>
+                       <AntDesign  name="questioncircle" size={24} color="#EB7AA9" />
+                      </TouchableOpacity>
+                      <FontAwesome5 name="asterisk" size={12} color="#E60965" />
+                      <View style={styles.iconContainer}>
+                        <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('Other Valid ID')}>
+                          <AntDesign name="picture" size={27} color="#E60965" />
+                        </TouchableOpacity>
+                          <Text style={styles.verticalLine}>|</Text>
+                          <TouchableOpacity style = {{ backgroundColor: "pink", padding: 5, borderRadius: 7}} onPress={()=>handleFileUpload('Other Valid ID')}>
+                          <AntDesign name="file1" size={24} color="#E60965" />
+                        </TouchableOpacity>
+                    </View>
+                      
+                  </View>
+              </View>
+              <Text style={{textAlign: "center", fontFamily: "Open-Sans-Regular", color:"#E60965"}}>Note: Make sure that the Valid ID's are goverment Issued</Text>
+              </> 
+            )}
+            
             {imageContainer && (
                   <View  style = {{
                     marginBottom: 20,
@@ -368,7 +500,7 @@ const handleFileUpload = async (attachmentType) => {
               elevation: 7,
               alignSelf: "center",
               alignItems: "center",
-              
+              marginTop: 10
               }}>
                 {Object.entries(selectedFile).map(([attachmentType,  file]) => {
                 if (attachmentType !== "uri" && attachmentType !== "type") {
@@ -429,7 +561,9 @@ const handleFileUpload = async (attachmentType) => {
               <View style = {globalStyles.center}>
             
                     <TouchableOpacity style = {[styles.AgreebuttonContainer,
-                      {opacity: Object.keys(selectedImage).length + Object.keys(selectedFile).length < 7 ? 0.5 : 1}
+                      {opacity: !noQuezonCityId && Object.keys(selectedImage).length + Object.keys(selectedFile).length < 7 
+                        || noQuezonCityId && Object.keys(selectedImage).length + Object.keys(selectedFile).length < 8
+                        ? 0.5 : 1}
                     ]} 
                     onPress={() => navigatePage("MakeRequestReceipt", 
                     {
@@ -442,6 +576,17 @@ const handleFileUpload = async (attachmentType) => {
 
                         <Text style = {styles.label}>Next</Text>
                     </TouchableOpacity>
+
+              <Modal
+              animationType="slide"
+              transparent={true}
+              visible={showValidID}
+              onRequestClose={() => {
+                setShowValidId(!showValidID);
+            }}
+              >
+                <ValidIdInfoModal onClose={()=> setShowValidId(false)}/>
+              </Modal>
                
             </View>
         </ScrollView>
@@ -455,6 +600,13 @@ const handleFileUpload = async (attachmentType) => {
   }
 
   const styles = StyleSheet.create ({
+    checkBox: {
+
+    },
+    checkBoxLabel: {
+      fontFamily: "Open-Sans-SemiBold",
+      color: "#E60965",
+    },
 
     rowAlignment: {
       flexDirection: "row",

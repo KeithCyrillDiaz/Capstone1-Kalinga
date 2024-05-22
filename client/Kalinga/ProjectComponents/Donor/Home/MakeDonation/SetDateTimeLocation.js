@@ -115,8 +115,10 @@ const SetDateTimeLocation = () => {
     
     const checkForm = () => {
         // console.log("Test", newForm.location
-        if(!checkTime(selectedTime)) return
-        if(!checkDate(selectedDate)) return
+        if (newForm.method === "") {
+            Alert.alert('Missing Information', 'Please input a delivery method.');
+            return;
+        }
         if(invalidDate) {
             Alert.alert(
                 "Milk Banks Availability",
@@ -170,9 +172,24 @@ const SetDateTimeLocation = () => {
 
             <ScrollView overScrollMode='never' nestedScrollEnabled={true}>
                 <View style={styles.container}>
-                    <View>
-                        <Text style={styles.AdminDate}>Choose Date</Text>
+                    
+                    <Text style={[styles.AdminDate,{width: "100%", marginLeft: 5,}]}>Delivery Method</Text>
+                    <View style={styles.BiginputField}>
+                        <Picker
+                        selectedValue={newForm.method}
+                        style={{ height: 30, width: "100%", color: '#E60965'}}
+                        onValueChange={(itemValue) =>
+                        handleChange("method", itemValue)
+                        }
+                        >
+                        <Picker.Item label="Method of Delivery" value="" />
+                        <Picker.Item label="Delivery" value="Delivery" />
+                        <Picker.Item label="Pick-up" value="Pick-up" />
+                    </Picker>
                     </View>
+
+
+                    {/* <Text style={[styles.AdminDate,{width: "100%", marginLeft: 5,}]}>Method of Delivery</Text>
                     <TouchableOpacity onPress={() => setShowDatePicker(true)}>
                     
                     <View style={styles.BiginputField}>
@@ -196,9 +213,9 @@ const SetDateTimeLocation = () => {
                             display="default"
                             onChange={handleDateChange}
                         />
-                    )}
+                    )} */}
 
-                    <View>
+                    {/* <View>
                         <Text style={styles.AdminTime}>Choose Time</Text>
                     </View>
 
@@ -222,11 +239,9 @@ const SetDateTimeLocation = () => {
                             display="default"
                             onChange={handleTimeChange}
                         />
-                    )}
+                    )} */}
 
-                    <View>
-                        <Text style={styles.AdminMilkLocation}>Milk Bank Location</Text>
-                    </View>
+                    <Text style={[styles.AdminMilkLocation]}>Milk Bank Location</Text>
                     <View style={[styles.BiginputField, {paddingLeft: 0,}]}>
                          <Picker
                             selectedValue={newForm.location}
@@ -254,6 +269,7 @@ const SetDateTimeLocation = () => {
         </View>
     );
 };
+export default SetDateTimeLocation;
 
 
 const styles = StyleSheet.create({
@@ -295,8 +311,7 @@ const styles = StyleSheet.create({
         marginTop: '5%',
     },
     AdminDate:{
-    marginTop: 50,
-    marginRight: '60%',   
+    marginTop: 50,  
     paddingVertical: 15 ,
     color: '#E60965',
     fontSize: 25,
@@ -344,4 +359,3 @@ const styles = StyleSheet.create({
     },
 });
 
-export default SetDateTimeLocation;

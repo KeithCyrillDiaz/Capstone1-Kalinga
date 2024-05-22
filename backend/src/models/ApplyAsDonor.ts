@@ -7,7 +7,7 @@ const screeningFormSchema = new mongoose.Schema({
     Screening_ID: {type: String},
     userType: {type: String},
     isDeleted: {type: String, default: "notDeleted"},
-    isApproved: {type: String},
+    status: {type: String, default: "Pending"},
     
     fullName: {type: String},
     Age: {type: String},
@@ -16,6 +16,7 @@ const screeningFormSchema = new mongoose.Schema({
     contactNumber: {type: String},
     homeAddress: {type: String},
     Municipality:{type: String},
+    barangay:{type: String},
 
     //Infant Information
     childName: {type: String},
@@ -126,9 +127,12 @@ export const getScreeningFormByName = (fullName: string) => screeningFormModel.f
 export const getScreeningFormByApplicantID = (Applicant_ID: string) => screeningFormModel.findOne({Applicant_ID})
 export const getScreeningFormByEmail = (email: string) => screeningFormModel.findOne({email})
 export const getEmailValidity = (email: string, status: string) => screeningFormModel.findOne({email, status})
-export const updateIsApprovedScreeningForm = (Applicant_ID: string, Status: string) => screeningFormModel.findOneAndUpdate({Applicant_ID}, {$set: {isApproved: Status}}, {new: true})
-export const isDeleteScreeningForm = (Applicant_ID: string, Status: string) => screeningFormModel.findOneAndUpdate({Applicant_ID}, {$set: {isDeleted: Status}}, { new: true } ).then((ScreeningForm) => ScreeningForm.toObject())
+export const updateStatusScreeningForm = (Applicant_ID: string, Status: string) => screeningFormModel.findOneAndUpdate({Applicant_ID}, {$set: {status: Status}}, {new: true})
+export const softDeleteScreeningForm = (Applicant_ID: string, Status: string) => screeningFormModel.findOneAndUpdate({Applicant_ID}, {$set: {isDeleted: Status}}, { new: true } ).then((ScreeningForm) => ScreeningForm.toObject())
 export const getScreeningFormByMaxApplicantID = () => screeningFormModel.findOne({}).sort({ Applicant_ID: -1 }).limit(1).select('Applicant_ID');
 export const getScreeningFormByMaxScreeningID = () => screeningFormModel.findOne({}).sort({ Screening_ID: -1 }).limit(1).select('Screening_ID');
 export const getScreeningFormByScreeningID = (Screening_ID: string) => screeningFormModel.findOne({Screening_ID})
+export const getScreeningFormByStatusAndUserType = (userType: string, status: string) => screeningFormModel.find({userType, status})
+
+
 //export const deleteUserById = (id: string) => userModel.findOneAndDelete({_id: id})

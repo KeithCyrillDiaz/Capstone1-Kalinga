@@ -15,6 +15,7 @@ try {
         contactNumber,
         homeAddress,
         Municipality,
+        barangay,
         //Infant Information
         childName,
         birthWeight,
@@ -95,7 +96,7 @@ try {
         contactNumber,
         homeAddress,
         Municipality,
-        
+        barangay,
         //Infant Information
         childName,
         birthWeight,

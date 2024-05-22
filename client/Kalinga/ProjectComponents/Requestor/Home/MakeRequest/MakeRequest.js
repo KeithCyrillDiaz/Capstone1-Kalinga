@@ -217,13 +217,14 @@ const handleChange = (name, value) => {
 
                   }}
                   >Personal Information</Text>
-                    <Text style={styles.bodyNote}>Note: All fields marked with (*) are required</Text>
+                    <Text style={styles.bodyNote}>Note: Bold fields are not editable.</Text>
                     <TextInput
-                    style={styles.form1}
+                    style={[styles.form1, {fontFamily:"Open-Sans-SemiBold"}]}
                     value={formData.fullName}
                     placeholder="Full Name *"
                     placeholderTextColor="#E60965"
                     onChangeText={(text) => handleInputChange('fullName', text)}
+                    editable={false}
                 />
                 <TextInput
                     style={styles.form1}
@@ -231,21 +232,24 @@ const handleChange = (name, value) => {
                     placeholder="Phone Number *"
                     placeholderTextColor="#E60965"
                     onChangeText={(text) => handleInputChange('phoneNumber', text)}
+                    
                 />
                 <TextInput
-                    style={styles.form1}
+                    style={[styles.form1, {fontFamily:"Open-Sans-SemiBold"}]}
                     value={formData.emailAddress}
                     placeholder="Email Address *"
                     placeholderTextColor="#E60965"
                     onChangeText={(text) => handleInputChange('emailAddress', text)}
+                    editable={false}
                 />
                 <TextInput
-                    style={styles.form2}
+                    style={[styles.form2, {fontFamily:"Open-Sans-SemiBold"}]}
                     value={formData.homeAddress}
                     multiline={true}
                     placeholder="Home Address *"
                     placeholderTextColor="#E60965"
                     onChangeText={(text) => handleInputChange('homeAddress', text)}
+                    editable={false}
                 />
                  
                 <TextInput
@@ -255,7 +259,7 @@ const handleChange = (name, value) => {
                         placeholderTextColor="#E60965"
                         onChangeText={(text) => handleInputChange('ReasonForRequesting', text)}
                         /> 
-                  <View style={styles.dropdownContainer1}>
+                  {/* <View style={styles.dropdownContainer1}>
                     <Picker
                       selectedValue={formData.ageOfGestation}
                       style={{ height: 30, width: "100%", color: '#E60965',}}
@@ -267,7 +271,7 @@ const handleChange = (name, value) => {
                       <Picker.Item label="Late Term" value="Late Term" />
                       <Picker.Item label="Post Term" value="Post Term" />
                     </Picker>
-                </View>
+                </View> */}
          
 
                   <View style={styles.dropdownContainer1}>
@@ -295,27 +299,14 @@ const handleChange = (name, value) => {
                   }}
                   >Infant Information</Text>
                   <TextInput
-                    style={[styles.form1, {paddingLeft: 25}]}
+                    style={[styles.form1, {paddingLeft: 25, fontFamily: "Open-Sans-SemiBold"}]}
                     value={formData.childBirthDate}
                     placeholder="Child Birthday *"
                     placeholderTextColor="#E60965"
                     onChangeText={(text) => handleInputChange('emailAddress', text)}
+                    editable={false}
                 />         
-                  <View style={styles.dropDown}>
-                      <Picker
-                        selectedValue={formData.medicalCondition}
-                        style ={{color: '#E60965',}}
-                        onValueChange={(itemValue) =>
-                          handleChange("medicalCondition", itemValue)
-                        }
-                        >
-                        <Picker.Item label="Medical Condition" value="" />
-                        <Picker.Item label="Normal" value="Normal" />
-                        <Picker.Item label="Sick" value="Sick" />
-                    </Picker>
-                  </View>
-                
-
+      
                     <View style={styles.dropDown}>
                       <Picker
                         selectedValue={formData.milkBank}
@@ -514,7 +505,7 @@ const styles = StyleSheet.create({
   },
 
   bodyNote: {
-    fontSize: 10,
+    fontSize: 12,
     fontFamily: 'OpenSans-Regular',
     color: '#E60965',
     marginLeft: 30,

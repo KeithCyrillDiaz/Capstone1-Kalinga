@@ -1,9 +1,9 @@
 import express from 'express'
-import { isDeleteScreeningForm } from '../../models/ApplyAsDonor'
+import { softDeleteScreeningForm } from '../../models/ApplyAsDonor'
 export const retrieveSoftDeletedForm = async (req: express.Request, res: express.Response) => {
     try{
         console.log(req.params.Applicant_ID)
-        const retrieveScreeningForm = await isDeleteScreeningForm(req.params.Applicant_ID, "notDeleted")
+        const retrieveScreeningForm = await softDeleteScreeningForm(req.params.Applicant_ID, "notDeleted")
         if(!retrieveScreeningForm){
             return res.json({
                 messages: {

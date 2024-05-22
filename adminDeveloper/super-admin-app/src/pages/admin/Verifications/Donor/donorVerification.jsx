@@ -10,7 +10,7 @@ import {
   ShowImage,
   MissingRequirements,
 } from "../../../../Modal/Verification/ImageModals";
-import ConfirmationModal from "../../../../Modal/ConfirmationModal";
+import { Confirmation, VerificationModal } from "../../../../Modal/Verification/VerificationModal";
 
 export default function () {
   const [activeTab, setActiveTab] = useState("screening");
@@ -22,6 +22,7 @@ export default function () {
 
   //Modals
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [approvalMessage, setApprovalMessage] = useState(false)
   const [openNoRequirementModal, setOpenNoRequirementModal] = useState(false);
   const [openMissingRequirements, setOpenMissingRequirements] = useState(false);
   const [showImage, setShowImage] = useState(false);
@@ -56,34 +57,38 @@ export default function () {
           ? await axios.post(`${WebHost}/kalinga/sendApprovedEmail/${id}`)
           : await axios.post(`${WebHost}/kalinga/sendDeclinedEmail/${id}`);
       console.log(response.data.messages.message);
-      if (response.data.messages.code === 0) deleteScreeningForm(status);
     } catch (error) {
       console.log("Error Sending Email", error);
     }
   };
 
-  const deleteScreeningForm = async (data) => {
-    const formatStatus = data === "declined" ? "Declined" : "Approved";
+  const updateStatus = async (data) => {
+    setIsConfirmationModalOpen(false)
+    const formatStatus = data === "declined" ? "Rejected" : "Approved";
     console.log("formatStatus: ", formatStatus);
     try {
-      console.log("Deleting Screening Form");
+      setLoading(true)
+      console.log("Updating Screening Form Status to ", data);
       const response = await axios.patch(
-        `${WebHost}/kalinga/deleteScreeningFormByID/${id}`,
+        `${WebHost}/kalinga/updateScreeningFormStatus/${id}`,
         { status: formatStatus }
       );
       console.log("response: ", response.data.messages.message);
+      if (response.data.messages.code === 0) sendEmail(data);
     } catch (error) {
       console.log("Error Deleting ScreeningForm", error);
+    } finally {
+      setLoading(false)
+      setApprovalMessage(true)
     }
   };
 
+  
   const fetchData = async () => {
     try {
       setLoading(true);
       //axiosToken
-      const response = await axios.get(
-        `${WebHost}/kalinga/getScreeningFormsApplicant_ID/${id}`
-      );
+      const response = await axios.get(`${WebHost}/kalinga/getScreeningFormsApplicant_ID/${id}`,)
 
       if (!response.data.screeningForms) {
         console.log("Error fetching Screening forms");
@@ -270,7 +275,7 @@ export default function () {
                         className="hover:bg-primary-default hover:text-white bg-neutral-default text-primary-default font-bold w-32 p-2 border border-primary-default rounded-full"
                         onClick={() => {
                           setStatus("approved");
-                          sendEmail("approved");
+                          // updateStatus("approved");
                           setIsConfirmationModalOpen(true);
                         }}
                       >
@@ -285,7 +290,7 @@ export default function () {
                         className="hover:bg-primary-default hover:text-white bg-neutral-default text-primary-default font-bold w-32 p-2 border border-primary-default rounded-full mt-4 md:mt-0"
                         onClick={() => {
                           setStatus("declined");
-                          sendEmail("declined");
+                          // updateStatus("declined");
                           setIsConfirmationModalOpen(true);
                         }}
                       >
@@ -301,21 +306,24 @@ export default function () {
           )}
         </div>
       </section>
-      {}
       {isConfirmationModalOpen && (
         <>
-          <ConfirmationModal
-            isOpen={isConfirmationModalOpen}
-            confirmMessage={() =>
-              status === "approved"
-                ? "Are you sure you want to approve?"
-                : "Are you sure you want to reject?"
-            }
-            onCancel={() => setIsConfirmationModalOpen(false)}
-            userType={form.userType}
-            name={form.fullName}
+            <Confirmation
             status={status}
+            name={form.fullName}
+            userType={form.userType}
             onClose={() => setIsConfirmationModalOpen(false)}
+            onConfirm = {() => updateStatus(status)}
+          />
+        </>
+      )}
+      {approvalMessage && (
+        <>
+            <VerificationModal
+            status={status}
+            name={form.fullName}
+            userType={form.userType}
+            onClose={() => setApprovalMessage(false)}
           />
         </>
       )}

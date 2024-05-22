@@ -29,6 +29,14 @@ const SplashScreen = ({ navigation }) => {
               console.log("DonorApplicant_ID: ", DonorApplicant_ID)
               const RequestorApplicant_ID = await AsyncStorage.getItem('RequestorApplicant_ID')
               console.log("RequestorApplicant_ID: ", RequestorApplicant_ID)
+              // if(DonorApplicant_ID && RequestorApplicant_ID){
+              //   try{
+              //     const donorApplication = await axios.get(`${BASED_URL}/kalinga/isApproved/${DonorApplicant_ID}`)
+              //     if()
+              //   }catch(error){
+              //     console.log("Error Checking Application")
+              //   }
+              // }
               let Applicant_ID = "";
               if(DonorApplicant_ID !== null && DonorApplicant_ID !== undefined) Applicant_ID = DonorApplicant_ID
               else Applicant_ID = RequestorApplicant_ID
@@ -39,18 +47,38 @@ const SplashScreen = ({ navigation }) => {
                 console.log("Message: ",result.data.messages.message)
                 if((result.data.messages.message === "Non existing Applicant" || result.data.messages.message === "Applicant is Deleted") && DonorApplicant_ID === Applicant_ID) await AsyncStorage.removeItem('DonorApplicant_ID')
                 else if((result.data.messages.message === "Non existing Applicant" || result.data.messages.message === "Applicant is Deleted") && RequestorApplicant_ID === Applicant_ID) await AsyncStorage.removeItem('RequestorApplicant_ID')
+                if(result.data.messages.code === 0){
+                    console.log(result.data.messages.message)
+                    console.log("result.data.userType: ", result.data.userType)
+                    Alert.alert(`Congratulations!`, `You have been approved as ${result.data.userType}!`,
+                    [{text: 'Ok', onPress: () => navigation.replace('SetPassword', {email: null, Applicant_ID: null, userType: result.data.userType})}])
+                    return
+                  }else{
+                    console.log(result.data.messages.message)
+                    checkToken()
+                  }
                 const checkDonorID = await AsyncStorage.getItem('DonorApplicant_ID')
                 const checkRequestorID = await AsyncStorage.getItem('RequestorApplicant_ID')
-                if(!checkDonorID && !checkRequestorID) await AsyncStorage.removeItem('Pending')
-                if(result.data.messages.code === 0){
-                  console.log(result.data.messages.message)
-                  console.log("result.data.userType: ", result.data.userType)
-                  Alert.alert(`Congratulations!`, `You have been approved as ${result.data.userType}!`,
-                  [{text: 'Ok', onPress: () => navigation.replace('SetPassword', {email: null, Applicant_ID: null, userType: result.data.userType})}])
-                } else{
-                  console.log(result.data.messages.message)
-                  checkToken()
+                if(checkRequestorID){
+                  try{
+                    const result = await axios.get(`${BASED_URL}/kalinga/isApproved/${checkRequestorID}`)
+                    console.log("Message: ",result.data.messages.message)
+                    if((result.data.messages.message === "Non existing Applicant" || result.data.messages.message === "Applicant is Deleted") && DonorApplicant_ID === Applicant_ID) await AsyncStorage.removeItem('RequestorApplicant_ID')
+                      if(result.data.messages.code === 0){
+                        console.log(result.data.messages.message)
+                        console.log("result.data.userType: ", result.data.userType)
+                        Alert.alert(`Congratulations!`, `You have been approved as ${result.data.userType}!`,
+                        [{text: 'Ok', onPress: () => navigation.replace('SetPassword', {email: null, Applicant_ID: null, userType: result.data.userType})}])
+                        return
+                      } else{
+                        console.log(result.data.messages.message)
+                        checkToken()
+                      }
+                  } catch(error){
+                    console.log("Error checking Requestor Application")
+                  }
                 }
+                if(!checkDonorID && !checkRequestorID) await AsyncStorage.removeItem('Pending')
               }catch (error) {
                 checkToken()
               }

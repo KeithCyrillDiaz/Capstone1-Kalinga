@@ -7,11 +7,16 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 
 
-const DoneEmailVerification = () => {
+const DoneEmailVerification = ({route}) => {
     const navigation = useNavigation(); 
 
+    const {data, status} = route.params
+
     const handleHomeButton = () => {
-        navigation.navigate('DonorApproved'); 
+        if(status === "Applicant")
+        if(data.userType === "Donor")navigation.navigate('DonorApproved'); 
+        else navigation.navigate("RequestorApproved"); 
+        
     };
 
     return (
