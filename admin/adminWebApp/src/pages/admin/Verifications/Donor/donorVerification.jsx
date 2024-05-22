@@ -108,8 +108,9 @@ export default function () {
     try {
       console.log("Fetching Files and Images in database");
       //getFileData in Database
-      const getFilesResponse = await axios.get(
-        `${WebHost}/kalinga/getMedicalRequirementFile/${id}`
+      const getFilesResponse = await axios.post(
+        `${WebHost}/kalinga/getMedicalRequirementFile/${id}`,
+        {purpose: "Application"}
       );
       console.log(getFilesResponse.data.messages.message);
       if (getFilesResponse.data.messages.code === 0) {
@@ -117,8 +118,9 @@ export default function () {
       }
 
       //getImageData in Database
-      const getImagesResponse = await axios.get(
-        `${WebHost}/kalinga/getMedicalRequirementImage/${id}`
+      const getImagesResponse = await axios.post(
+        `${WebHost}/kalinga/getMedicalRequirementImage/${id}`,
+        {purpose: "Application"}
       );
       console.log(getImagesResponse.data.messages.message);
       if (getImagesResponse.data.messages.code === 0) {

@@ -49,8 +49,9 @@ const DonorMedicalPage = ({ currentPage, id, form }) => {
       setLoading(true);
       console.log("Fetching Files and Images in database");
 
-      const getFilesResponse = await axios.get(
-        `${WebHost}/kalinga/getMedicalRequirementFile/${id}`
+      const getFilesResponse = await axios.post(
+        `${WebHost}/kalinga/getMedicalRequirementFile/${id}`,
+        {purpose: "Application"}
       );
       console.log(getFilesResponse.data.messages.message);
       if (getFilesResponse.data.messages.code === 0) {
@@ -60,10 +61,9 @@ const DonorMedicalPage = ({ currentPage, id, form }) => {
         });
         setFiles(filesObj)
       }
-
-      const getImagesResponse = await axios.get(
-        `${WebHost}/kalinga/getMedicalRequirementImage/${id}`
-      );
+      const getImagesResponse = await axios.post(`${WebHost}/kalinga/getMedicalRequirementImage/${id}`,
+      {purpose: "Application"}
+    )
       console.log(getImagesResponse.data.messages.message);
       if (getImagesResponse.data.messages.code === 0) {
         const imagesObj = {};

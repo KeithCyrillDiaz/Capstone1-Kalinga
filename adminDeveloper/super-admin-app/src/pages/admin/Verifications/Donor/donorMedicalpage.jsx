@@ -12,7 +12,7 @@ const DonorMedicalPage = ({ currentPage, id, form }) => {
   const totalPages = 5;
   const [images, setImages] = useState({});
   const [files, setFiles] = useState({});
-
+  console.log( "id: ", id )
   // Modals
 
   const [openNoRequirementModal, setOpenNoRequirementModal] = useState(false);
@@ -36,7 +36,6 @@ const DonorMedicalPage = ({ currentPage, id, form }) => {
       }
 
       console.log("Successfully retrieved screeningForms");
-      setForm(response.data.screeningForms);
     } catch (error) {
       console.log("Something went wrong", error);
     } finally {
@@ -44,13 +43,14 @@ const DonorMedicalPage = ({ currentPage, id, form }) => {
     }
   };
 
-  const fetchImagesAndFiles = async () => {
+   const fetchImagesAndFiles = async () => {
     try {
       setLoading(true);
       console.log("Fetching Files and Images in database");
 
-      const getFilesResponse = await axios.get(
-        `${WebHost}/kalinga/getMedicalRequirementFile/${id}`
+      const getFilesResponse = await axios.post(
+        `${WebHost}/kalinga/getMedicalRequirementFile/${id}`,
+        {purpose: "Application"}
       );
       console.log(getFilesResponse.data.messages.message);
       if (getFilesResponse.data.messages.code === 0) {
@@ -60,10 +60,9 @@ const DonorMedicalPage = ({ currentPage, id, form }) => {
         });
         setFiles(filesObj)
       }
-
-      const getImagesResponse = await axios.get(
-        `${WebHost}/kalinga/getMedicalRequirementImage/${id}`
-      );
+      const getImagesResponse = await axios.post(`${WebHost}/kalinga/getMedicalRequirementImage/${id}`,
+      {purpose: "Application"}
+    )
       console.log(getImagesResponse.data.messages.message);
       if (getImagesResponse.data.messages.code === 0) {
         const imagesObj = {};
