@@ -124,7 +124,7 @@ const RequestorMedicalPage = ({ currentPage, id }) => {
                         <a href ={`${files[requirement]}`} target="_blank">
                            <button 
                             className="bg-primary-default px-4 py-2 m-7 text-white rounded-lg">
-                            Download {requirement}
+                             View {requirement} File
                           </button>
                         </a>
                        
