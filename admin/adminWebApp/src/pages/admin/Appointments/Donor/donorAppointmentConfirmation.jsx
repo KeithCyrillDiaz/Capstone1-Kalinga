@@ -7,6 +7,8 @@ import axios from "axios";
 import { WebHost } from "../../../../../MyConstantAdmin";
 import CompleteModal from "../../../../modal/CompleteModal";
 import AppointmentDeclineModal from "../../../../modal/AppointmentDeclineModal";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const donorAppointmentConfirmation = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -149,13 +151,20 @@ const donorAppointmentConfirmation = () => {
     setIsCompleteModalOpen(false); // Close the modal
   };
 
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
+  const handleTimeChange = (time) => {
+    setSelectedTime(time);
+  };
+
   return (
     <section className="w-full h-screen bg-primary-body overflow-hidden relative px-4">
       <div className="p-12 pt-1">
         <h1 className="mt-8 text-3xl text-primary-default font-bold font-sans">
           Appointment Confirmation
         </h1>
-
         {/* Full Name Input */}
         <div className="mt-8">
           <input
@@ -166,116 +175,181 @@ const donorAppointmentConfirmation = () => {
               appointmentData ? appointmentData.fullName : ""
             }`}
             onChange={handleChange}
-            className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-primary-default"
+            className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+            disabled
             placeholder="Full Name"
           />
         </div>
-
-        {/* Phone Number Input */}
-        <div className="mt-4">
-          <input
-            type="tel"
-            id="phoneNumber"
-            name="phoneNumber"
-            value={`Phone Number: ${
-              appointmentData ? appointmentData.phoneNumber : ""
-            }`}
-            onChange={handleChange}
-            className="w-3/4 md:w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-primary-default"
-            placeholder="Phone Number"
-          />
+        {/* Phone Number and Email Address  */}
+        <div className="flex gap-x-2">
+          <div className="w-2/3 mt-4">
+            <input
+              type="email"
+              id="emailAddress"
+              name="emailAddress"
+              value={`Phone Number: ${
+                appointmentData ? appointmentData.phoneNumber : ""
+              }`}
+              onChange={handleChange}
+              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+              disabled
+              placeholder="Email Address"
+            />
+          </div>
+          <div className="w-1/3 mt-4">
+            <input
+              type="tel"
+              id="phoneNumber"
+              name="phoneNumber"
+              value={`Email Address: ${
+                appointmentData ? appointmentData.emailAddress : ""
+              }`}
+              onChange={handleChange}
+              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+              disabled
+              placeholder="Phone Number"
+            />
+          </div>
+        </div>
+        {/* Home Address and City Input */}
+        <div className="flex gap-x-2">
+          <div className="w-2/3 mt-4">
+            <input
+              type="text"
+              id="homeAddress"
+              name="homeAddress"
+              value={`Home Address: ${
+                appointmentData ? appointmentData.homeAddress : ""
+              }`}
+              onChange={handleChange}
+              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+              disabled
+              placeholder="Home Address"
+            />
+          </div>
+          <div className="w-1/3 mt-4">
+            <input
+              type="text"
+              id="city"
+              name="city"
+              value={`City: ${appointmentData ? appointmentData.city : ""}`}
+              onChange={handleChange}
+              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+              disabled
+              placeholder="City"
+            />
+          </div>
+        </div>
+        {/* Medical Condition and Amount Donated Input */}
+        <div className="flex gap-x-2">
+          <div className="w-2/3 mt-4">
+            <input
+              type="text"
+              id="medicalCondition"
+              name="medicalCondition"
+              value={`Medical Condition: ${
+                appointmentData ? appointmentData.medicalCondition : ""
+              }`}
+              onChange={handleChange}
+              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+              disabled
+              placeholder="Medical Condition"
+            />
+          </div>
+          <div className="w-1/3 mt-4">
+            <input
+              type="text"
+              id="amountDonated"
+              name="amountDonated"
+              value={`Donated Milk Amount (in mL): ${
+                appointmentData ? appointmentData.milkAmount : ""
+              }`}
+              onChange={handleChange}
+              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+              disabled
+              placeholder="Amount of Milk Donated"
+            />
+          </div>
         </div>
 
-        {/* Email Address Input */}
-        <div className="mt-4">
-          <input
-            type="email"
-            id="emailAddress"
-            name="emailAddress"
-            value={`Email Address: ${
-              appointmentData ? appointmentData.emailAddress : ""
-            }`}
-            onChange={handleChange}
-            className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-primary-default"
-            placeholder="Email Address"
-          />
+        <div className="flex gap-x-2">
+          {appointmentData && (
+            <>
+              <div className="w-1/2 mt-4">
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="date"
+                    className="text-md font-medium font-bold text-primary-default ml-2"
+                  >
+                    Scheduled Date
+                  </label>
+                  <DatePicker
+                    selected={selectedDate}
+                    onChange={handleDateChange}
+                    dateFormat="dd/MM/yyyy"
+                    className={`bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default ${
+                      appointmentData.DonationStatus === "Pending"
+                        ? "focus: text-primary-default"
+                        : "bg-gray-100 cursor-not-allowed"
+                    }`}
+                    // Disable date selection if not pending
+                    disabled={appointmentData.DonationStatus !== "Pending"}
+                  />
+                </div>
+              </div>
+              <div className="w-1/2 mt-4">
+                <label
+                  htmlFor="time"
+                  className="text-md font-medium font-bold text-primary-default ml-2"
+                >
+                  Scheduled Time
+                </label>
+                <input
+                  type="time"
+                  id="time"
+                  value={
+                    selectedTime
+                      ? selectedTime.toISOString().substring(11, 16)
+                      : ""
+                  }
+                  onChange={(e) => {
+                    const [hours, minutes] = e.target.value.split(":");
+                    const newTime = new Date(selectedTime);
+                    newTime.setHours(hours);
+                    newTime.setMinutes(minutes);
+                    setSelectedTime(newTime);
+                  }}
+                  className={`bg-white w-full py-2 h-14 px-4 shadow-md rounded-lg focus:outline-none focus: text-primary-default ${
+                    appointmentData.DonationStatus === "Pending"
+                      ? "focus: text-primary-default"
+                      : "bg-gray-100 cursor-not-allowed"
+                  }`}
+                  // Disable time selection if not pending
+                  disabled={appointmentData.DonationStatus !== "Pending"}
+                />
+              </div>
+            </>
+          )}
         </div>
 
-        {/* Home Address Input */}
-        <div className="mt-4">
-          <input
-            type="text"
-            id="homeAddress"
-            name="homeAddress"
-            value={`Home Address: ${
-              appointmentData ? appointmentData.homeAddress : ""
-            }`}
-            onChange={handleChange}
-            className="w-full px-4 py-2 h-20 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-primary-default"
-            placeholder="Home Address"
-          />
-        </div>
-
-        {/* City Input */}
-        <div className="mt-4">
-          <input
-            type="text"
-            id="city"
-            name="city"
-            value={`City: ${appointmentData ? appointmentData.city : ""}`}
-            onChange={handleChange}
-            className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-primary-default"
-            placeholder="City"
-          />
-        </div>
-
-        {/* Medical Condition Input */}
-        <div className="mt-4">
-          <input
-            type="text"
-            id="medicalCondition"
-            name="medicalCondition"
-            value={`Medical Condition: ${
-              appointmentData ? appointmentData.medicalCondition : ""
-            }`}
-            onChange={handleChange}
-            className="w-full px-4 py-2  h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-primary-default"
-            placeholder="Medical Condition"
-          />
-        </div>
-
-        {/* Amount Donated Input */}
-        <div className="mt-4">
-          <input
-            type="text"
-            id="amountDonated"
-            name="amountDonated"
-            value={`Milk Amount: ${
-              appointmentData ? appointmentData.milkAmount : ""
-            }`}
-            onChange={handleChange}
-            className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-primary-default"
-            placeholder="Amount of Milk Donated"
-          />
-        </div>
-
-        {/* Date and Time Inputs */}
-        <div className="flex mt-4">
-          <div className="mr-4 w-1/2 relative">
+        <div className="flex gap-x-2">
+          <div className="w-1/2 mt-4">
             <label
-              htmlFor="appointmentDate"
-              className="block text-primary-default font-bold mb-2 text-primary-default"
+              htmlFor="milkBankLocation"
+              className="block text-primary-default text-md text-primary-default ml-2"
             >
-              Date
+              Milk Bank Location
             </label>
             <div className="relative">
               <input
-                id="appointmentDate"
-                name="appointmentDate"
-                value={appointmentData ? appointmentData.selectedDate : ""}
+                type="text"
+                id="milkBankLocation"
+                name="milkBankLocation"
+                value={appointmentData ? appointmentData.location : ""}
                 onChange={handleChange}
-                placeholder="Date"
-                className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-primary-default pl-8"
+                className="bg-white w-full px-4 text-sm py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+                disabled
+                placeholder="Milkbank Location"
               />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -286,24 +360,19 @@ const donorAppointmentConfirmation = () => {
               >
                 <path
                   fill="currentColor"
-                  d="M7.75 2.5a.75.75 0 0 0-1.5 0v1.58c-1.44.115-2.384.397-3.078 1.092c-.695.694-.977 1.639-1.093 3.078h19.842c-.116-1.44-.398-2.384-1.093-3.078c-.694-.695-1.639-.977-3.078-1.093V2.5a.75.75 0 0 0-1.5 0v1.513C15.585 4 14.839 4 14 4h-4c-.839 0-1.585 0-2.25.013z"
-                />
-                <path
-                  fill="currentColor"
                   fill-rule="evenodd"
-                  d="M2 12c0-.839 0-1.585.013-2.25h19.974C22 10.415 22 11.161 22 12v2c0 3.771 0 5.657-1.172 6.828C19.657 22 17.771 22 14 22h-4c-3.771 0-5.657 0-6.828-1.172C2 19.657 2 17.771 2 14zm15 2a1 1 0 1 0 0-2a1 1 0 0 0 0 2m0 4a1 1 0 1 0 0-2a1 1 0 0 0 0 2m-4-5a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-6-3a1 1 0 1 0 0-2a1 1 0 0 0 0 2m0 4a1 1 0 1 0 0-2a1 1 0 0 0 0 2m-6-3a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0"
+                  d="M21.5 8.5c0-1.404 0-2.107-.337-2.611a2 2 0 0 0-.552-.552c-.441-.295-1.034-.332-2.115-.336c.004.291.004.596.004.91V7.25h1a.75.75 0 0 1 0 1.5h-1v1.5h1a.75.75 0 0 1 0 1.5h-1v1.5h1a.75.75 0 0 1 0 1.5h-1v6.5H17V6c0-1.886 0-2.828-.586-3.414C15.828 2 14.886 2 13 2h-2c-1.886 0-2.828 0-3.414.586C7 3.172 7 4.114 7 6v15.25H5.5v-6.5h-1a.75.75 0 0 1 0-1.5h1v-1.5h-1a.75.75 0 0 1 0-1.5h1v-1.5h-1a.75.75 0 0 1 0-1.5h1V5.91c0-.313 0-.618.004-.91c-1.081.005-1.674.042-2.115.337a2 2 0 0 0-.552.552C2.5 6.393 2.5 7.096 2.5 8.5v12.75H2a.75.75 0 0 0 0 1.5h20a.75.75 0 0 0 0-1.5h-.5zM12 4.25a.75.75 0 0 1 .75.75v1.25H14a.75.75 0 0 1 0 1.5h-1.25V9a.75.75 0 0 1-1.5 0V7.75H10a.75.75 0 0 1 0-1.5h1.25V5a.75.75 0 0 1 .75-.75M9.25 12a.75.75 0 0 1 .75-.75h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75m0 3a.75.75 0 0 1 .75-.75h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75M12 18.25a.75.75 0 0 1 .75.75v2.25h-1.5V19a.75.75 0 0 1 .75-.75"
                   clip-rule="evenodd"
                 />
               </svg>
             </div>
           </div>
-
-          <div className="w-1/2 relative">
+          <div className="w-1/2 mt-4">
             <label
               htmlFor="appointmentTime"
-              className="block text-primary-default font-bold mb-2 text-primary-default"
+              className="block text-primary-default text-md text-primary-default ml-2"
             >
-              Method
+              Method of obtaining
             </label>
             <div className="relative">
               <input
@@ -312,69 +381,36 @@ const donorAppointmentConfirmation = () => {
                 value={appointmentData ? appointmentData.method : ""}
                 onChange={handleChange}
                 placeholder="Time"
-                className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-primary-default pl-8"
+                className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+                disabled
               />
             </div>
           </div>
         </div>
 
-        {/* Milk Bank Location Input */}
-        <div className="mt-4 relative">
-          <label
-            htmlFor="milkBankLocation"
-            className="block text-primary-default font-bold mb-2 text-primary-default"
-          >
-            Milk Bank Location
-          </label>
-          <div className="relative">
-            <input
-              type="text"
-              id="milkBankLocation"
-              name="milkBankLocation"
-              value={appointmentData ? appointmentData.location : ""}
-              onChange={handleChange}
-              className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-primary-default pl-8"
-              placeholder="Milkbank Location"
-            />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
-              viewBox="0 0 24 24"
-              className="absolute top-0 right-2 mt-3 ml-3 text-primary-default"
-            >
-              <path
-                fill="currentColor"
-                fill-rule="evenodd"
-                d="M21.5 8.5c0-1.404 0-2.107-.337-2.611a2 2 0 0 0-.552-.552c-.441-.295-1.034-.332-2.115-.336c.004.291.004.596.004.91V7.25h1a.75.75 0 0 1 0 1.5h-1v1.5h1a.75.75 0 0 1 0 1.5h-1v1.5h1a.75.75 0 0 1 0 1.5h-1v6.5H17V6c0-1.886 0-2.828-.586-3.414C15.828 2 14.886 2 13 2h-2c-1.886 0-2.828 0-3.414.586C7 3.172 7 4.114 7 6v15.25H5.5v-6.5h-1a.75.75 0 0 1 0-1.5h1v-1.5h-1a.75.75 0 0 1 0-1.5h1v-1.5h-1a.75.75 0 0 1 0-1.5h1V5.91c0-.313 0-.618.004-.91c-1.081.005-1.674.042-2.115.337a2 2 0 0 0-.552.552C2.5 6.393 2.5 7.096 2.5 8.5v12.75H2a.75.75 0 0 0 0 1.5h20a.75.75 0 0 0 0-1.5h-.5zM12 4.25a.75.75 0 0 1 .75.75v1.25H14a.75.75 0 0 1 0 1.5h-1.25V9a.75.75 0 0 1-1.5 0V7.75H10a.75.75 0 0 1 0-1.5h1.25V5a.75.75 0 0 1 .75-.75M9.25 12a.75.75 0 0 1 .75-.75h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75m0 3a.75.75 0 0 1 .75-.75h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75M12 18.25a.75.75 0 0 1 .75.75v2.25h-1.5V19a.75.75 0 0 1 .75-.75"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </div>
-        </div>
-
         {appointmentData && appointmentData.DonationStatus === "Pending" && (
-          <div className="absolute bottom-0 right-0 mb-8 mr-8 flex flex-col">
-            <button
-              onClick={handleApproved}
-              className="bg-pink-500 text-white px-4 py-2 rounded-full mb-4"
-            >
-              Approved
-            </button>
-            <button
-              onClick={handleDecline}
-              className="bg-white text-primary-default px-4 py-2 rounded-full border border-pink-500"
-            >
-              Decline
-            </button>
+          <div className="flex justify-end mr-4 mt-10">
+            <div className="flex flex-col gap-y-2">
+              <button
+                onClick={handleApproved}
+                className="flex justify-end bg-primary-default text-white px-4 py-2 rounded-full hover:bg-pink-600 shadow-md"
+              >
+                Approved
+              </button>
+              <button
+                onClick={handleDecline}
+                className="bg-white text-primary-default px-4 py-2 rounded-full border border-pink-500 hover:bg-primary-default hover:text-white"
+              >
+                Decline
+              </button>
+            </div>
           </div>
         )}
-
         {appointmentData && appointmentData.DonationStatus === "Ongoing" && (
-          <div className="absolute bottom-0 right-0 mb-8 mr-8 flex flex-col">
+          <div className="flex justify-end mr-4 mt-10">
             <button
               onClick={handleComplete}
-              className="bg-pink-500 text-white px-4 py-2 rounded-full mb-10 mr-8"
+              className="flex justify-end bg-primary-default text-white px-4 py-2 rounded-full hover:bg-pink-600 shadow-md"
             >
               Complete
             </button>
@@ -387,7 +423,6 @@ const donorAppointmentConfirmation = () => {
           onConfirm={handleApproveCancel}
           message="Are you sure you want to approve this appointment? Once approved, the appointment will be scheduled."
         />
-
         <AppointmentDeclineModal
           isOpen={isDeclineModalOpen}
           onConfirm={handleDeclineConfirm}
@@ -395,7 +430,6 @@ const donorAppointmentConfirmation = () => {
           message="Are you sure you want to decline this appointment? Once declined, the request process will not proceed."
           AppointmentDonorID={AppointmentDonorID}
         />
-
         <CompleteModal
           isOpen={isCompleteModalOpen}
           onConfirm={handleCompleteConfirm}
