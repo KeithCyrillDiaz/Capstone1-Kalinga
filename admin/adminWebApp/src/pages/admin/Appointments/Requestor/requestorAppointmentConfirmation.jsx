@@ -227,27 +227,61 @@ const requestorAppointmentConfirmation = () => {
         </div>
 
         {/* Reason */}
-        <div className="mt-4 relative">
-          <div className="relative">
-            <input
-              type="text"
-              id="reasonRequest"
-              name="reasonRequest"
-              value={`Reason for Requesting: ${
-                requestData ? requestData.Request.ReasonForRequesting : ""
-              }`}
-              onChange={handleChange}
-              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
-              disabled
-              placeholder="Reason for Requesting"
-            />
+        <div className="flex gap-x-2">
+          <div className="w-2/3 mt-4">
+            <div className="relative">
+              <input
+                type="text"
+                id="reasonRequest"
+                name="reasonRequest"
+                value={`Reason for Requesting: ${
+                  requestData ? requestData.Request.ReasonForRequesting : ""
+                }`}
+                onChange={handleChange}
+                className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+                disabled
+                placeholder="Reason for Requesting"
+              />
+            </div>
+          </div>
+          <div className="w-1/3 mt-4">
+            <div className="relative">
+              <input
+                type="text"
+                id="reasonRequest"
+                name="MethodforObtaining"
+                value={`Method for Obtaining: Authorized Person`}
+                onChange={handleChange}
+                className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+                disabled
+                placeholder="Reason for Requesting"
+              />
+            </div>
           </div>
         </div>
 
-        <div className="mt-4 relative">
-          <div className="bg-white px-4 py-2 w-1/3 h-72 shadow-md  rounded-lg focus:outline-none focus: text-primary-default">
+        <div className="mt-4 flex flex-cols gap-4">
+          <div className="bg-white px-4 py-2 w-1/4 h-72 shadow-md  rounded-lg focus:outline-none focus: text-primary-default">
             <span className="flex justify-center text-primary-default text-lg text-center">
               Medical Abstract
+            </span>
+          </div>
+
+          <div className="bg-white px-4 py-2 w-1/4 h-72 shadow-md  rounded-lg focus:outline-none focus: text-primary-default">
+            <span className="flex justify-center text-primary-default text-lg text-center">
+              QC Citizen ID / 2 Government ID
+            </span>
+          </div>
+
+          <div className="bg-white px-4 py-2 w-1/4 h-72 shadow-md  rounded-lg focus:outline-none focus: text-primary-default">
+            <span className="flex justify-center text-primary-default text-lg text-center">
+              Authorization Letter (if applicable)
+            </span>
+          </div>
+
+          <div className="bg-white px-4 py-2 w-1/4 h-72 shadow-md  rounded-lg focus:outline-none focus: text-primary-default">
+            <span className="flex justify-center text-primary-default text-lg text-center">
+              Authorized Person's ID
             </span>
           </div>
         </div>

@@ -1,33 +1,40 @@
-import React, { useState,  useEffect} from 'react'
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ForumModal } from '../../modal/forum/ForumModal';
-import { approvedPost, deletePost } from '../../api/Forum/forum';
+import { ForumModal } from "../../modal/forum/ForumModal";
+import { approvedPost, deletePost } from "../../api/Forum/forum";
 
-export const RenderPosts = ({data}) => {
-    console.log("Data: ", data)
-    const [modal, setModal]=useState(false)
-    const [status, setStatus] = useState("")
-    const [id, setId] = useState("")
+export const RenderPosts = ({ data }) => {
+  console.log("Data: ", data);
+  const [modal, setModal] = useState(false);
+  const [status, setStatus] = useState("");
+  const [id, setId] = useState("");
 
-    const updatePost = async () => {
-        try{
-            console.log("updating post")
-            if(status === "approved") await approvedPost(id)
-                else await deletePost(id)
-        } catch (error) {
-            console.log("Error updating status Posts", error)
-        }
-       
+  const updatePost = async () => {
+    try {
+      console.log("updating post");
+      if (status === "approved") await approvedPost(id);
+      else await deletePost(id);
+    } catch (error) {
+      console.log("Error updating status Posts", error);
     }
-    return (
-        <>
-        {modal && (
-              <ForumModal status={status} updateStatus={() => updatePost()} onClose={() => setModal(false)}/>
-        )}
-      
-         {data.length === 0 && <div> No Forum post at this Moment </div>}
-         {data.length !== 0 && data.map((post, index) => (
-            <div key={post.id} className="bg-white rounded-2xl mb-4 flex items-center border border-primary-default py-2">
+  };
+  return (
+    <>
+      {modal && (
+        <ForumModal
+          status={status}
+          updateStatus={() => updatePost()}
+          onClose={() => setModal(false)}
+        />
+      )}
+
+      {data.length === 0 && <div> No Forum post at this Moment </div>}
+      {data.length !== 0 &&
+        data.map((post, index) => (
+          <div
+            key={post.id}
+            className="bg-white rounded-2xl flex items-center border border-primary-default py-2"
+          >
             <div className="ml-8">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -48,40 +55,50 @@ export const RenderPosts = ({data}) => {
             {/* Details */}
             <div className="flex-grow ml-8">
               <div>
-              <h3>{`Post ${index + 1}`}</h3>
-                <p> <strong>Content: </strong>{post.content}</p>
-                <p><strong>Author:</strong> { post.DonorOwnerID && post.DonorOwnerID.fullName ? post.DonorOwnerID.fullName
-                    : post.RequestorOwnerID && post.RequestorOwnerID.fullName}</p>
-                <p> <strong>Status: </strong>{post.status}</p>
+                <h3>{`Post ${index + 1}`}</h3>
+                <p>
+                  {" "}
+                  <strong>Content: </strong>
+                  {post.content}
+                </p>
+                <p>
+                  <strong>Author:</strong>{" "}
+                  {post.DonorOwnerID && post.DonorOwnerID.fullName
+                    ? post.DonorOwnerID.fullName
+                    : post.RequestorOwnerID && post.RequestorOwnerID.fullName}
+                </p>
+                <p>
+                  {" "}
+                  <strong>Status: </strong>
+                  {post.status}
+                </p>
               </div>
             </div>
             {/* Button */}
             <div className="flex flex-col gap-y-2 mr-14 p-2">
-                <button 
-                  onClick={() => {
-                    setStatus("approved")
-                    setId(post.post_ID)
-                    setModal(true)
-
-                  }}
-                className="w-full h-8 px-12 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default">
-                  Approve
-                </button>
               <button
-                 onClick={() => {
-                    setStatus("reject")
-                    setId(post.post_ID)
-                    setModal(true)
-                  }}
+                onClick={() => {
+                  setStatus("approved");
+                  setId(post.post_ID);
+                  setModal(true);
+                }}
+                className="w-full h-8 px-12 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default"
+              >
+                Approve
+              </button>
+              <button
+                onClick={() => {
+                  setStatus("reject");
+                  setId(post.post_ID);
+                  setModal(true);
+                }}
                 className="w-full h-8 px-12 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default"
               >
                 Reject
               </button>
             </div>
           </div>
-         ))}
-        </>
-       
-       
-    )
-}
+        ))}
+    </>
+  );
+};
