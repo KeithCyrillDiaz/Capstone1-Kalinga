@@ -303,32 +303,17 @@ const donorAppointmentConfirmation = () => {
               htmlFor="appointmentTime"
               className="block text-primary-default font-bold mb-2 text-primary-default"
             >
-              Time
+              Method
             </label>
             <div className="relative">
               <input
                 id="appointmentTime"
                 name="appointmentTime"
-                value={appointmentData ? appointmentData.selectedTime : ""}
+                value={appointmentData ? appointmentData.method : ""}
                 onChange={handleChange}
                 placeholder="Time"
                 className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-primary-default pl-8"
               />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="30"
-                height="30"
-                viewBox="0 0 24 24"
-                className="absolute top-0 right-2 mt-3 ml-3 text-primary-default"
-              >
-                <g fill="none">
-                  <path d="M24 0v24H0V0z" />
-                  <path
-                    fill="currentColor"
-                    d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2m0 4a1 1 0 0 0-1 1v5a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V7a1 1 0 0 0-1-1"
-                  />
-                </g>
-              </svg>
             </div>
           </div>
         </div>

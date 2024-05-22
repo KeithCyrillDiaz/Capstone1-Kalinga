@@ -29,6 +29,10 @@ export default function Dashboard() {
   );
   const [totalDonorsPerBarangay, setTotalDonorsPerBarangay] = useState([]);
   const [barangaysData, setBarangaysData] = useState([]);
+  const [totalPendingAppointments, setTotalPendingAppointments] = useState(0);
+  const [totalPendingRequest, setTotalPendingRequest] = useState(0);
+
+
 
   useEffect(() => {
     console.log("Fetching data...");
@@ -59,7 +63,29 @@ export default function Dashboard() {
       } catch (error) {
         console.error("Error fetching total users:", error);
       }
+    
+
+    try {
+      const responsePendingAppointments = await axios.get(
+        `${WebHost}/kalinga/getTotalPendingAppointment`
+      );
+      setTotalPendingAppointments(responsePendingAppointments.data.totalPendingAppointments || 0);
+    } catch (error) {
+      console.error("Error fetching total pending appointments:", error);
+    }
+    
+    
+    try {
+      const responsePendingRequest = await axios.get(
+        `${WebHost}/kalinga/getTotalPendingRequest`
+      );
+      setTotalPendingRequest(responsePendingRequest.data.totalPendingRequest || 0);
+    } catch (error) {
+      console.error("Error fetching total pending appointments:", error);
+    }
     };
+
+
 
     fetchCounts();
   }, []);
@@ -237,7 +263,7 @@ export default function Dashboard() {
                       Pending Appointment
                     </span>
                     <span className="text-5xl font-semibold text-primary-default pb-4">
-                      {totalDonors}
+                    {totalPendingAppointments}
                     </span>
                   </div>
                 </div>
@@ -268,7 +294,7 @@ export default function Dashboard() {
                     </span>
 
                     <span className="text-5xl font-semibold text-primary-default pb-4">
-                      {totalDonors}
+                    {totalPendingRequest}
                     </span>
                   </div>
                 </div>
