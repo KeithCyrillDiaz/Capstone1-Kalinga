@@ -11,7 +11,7 @@ import {
 const DonorMedicalPage = ({ currentPage, id, form }) => {
   const totalPages = 5;
   const [images, setImages] = useState({});
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState({});
 
   // Modals
 
@@ -54,7 +54,11 @@ const DonorMedicalPage = ({ currentPage, id, form }) => {
       );
       console.log(getFilesResponse.data.messages.message);
       if (getFilesResponse.data.messages.code === 0) {
-        setFiles(getFilesResponse.data.files);
+        const filesObj = {};
+        getFilesResponse.data.files.forEach((file) => {
+          filesObj[file.originalname] = file.link
+        });
+        setFiles(filesObj)
       }
 
       const getImagesResponse = await axios.get(
@@ -75,50 +79,10 @@ const DonorMedicalPage = ({ currentPage, id, form }) => {
     }
   };
 
-  const getImageByOriginalName = (name) => images[name];
-  const getFileByOriginalName = (name) =>
-    files.find((file) => file.originalname === name);
-
-  const getImageUri = (requirement) => {
-    if (Object.keys(files).length === 0 && Object.keys(images).length === 0) {
-      console.log("No Requirements found");
-      setOpenMissingRequirements(true);
-      return;
-    }
-    console.log("Files: ", files)
-    const file = getFileByOriginalName(requirement);
-    const image = getImageByOriginalName(requirement);
-    console.log("file: ", file)
-    console.log("image: ", image)
-    if (!file && !image) {
-      console.log("Check");
-      return;
-    }
-
-    if (image) {
-      console.log(`${requirement} link: `, image);
-      if (!image) {
-        console.log("Error: Image link is Missing");
-      } else {
-        setImageLink(image);
-        setShowImage(true);
-        setFileName(requirement);
-      }
-    }
-
-    if (file) {
-      const { link } = file;
-      console.log(`${requirement} link: `, link);
-      if (!link) {
-        console.log("Error: File link is Missing");
-      } else {
-        console.log("Opening Link", link);
-        window.open(link, "_blank");
-      }
-    } else {
-      console.log("No File Found");
-    }
-  };
+  const getImageUri = (link) => {
+    setImageLink(link);
+    setShowImage(true);
+};
 
   useEffect(() => {
     fetchData();
@@ -155,32 +119,36 @@ const DonorMedicalPage = ({ currentPage, id, form }) => {
               "Pregnancy Book",
               "Government_ID",
             ].map((requirement) => (
-              <div
-                key={requirement}
-                onClick={() => getImageUri(requirement)}
-                className="relative border rounded-md border-primary-default bg-white px-4 py-4 my-4 mx-2 w-60 h-60"
-              >
-                <span className="flex justify-center font-sans text-primary-default text-lg font-bold text-center">
-                  {requirement.replace(/_/g, " ")}
-                </span>
+             <>
                 {images[requirement] && (
-                  <img
-                    src={images[requirement]}
-                    alt={requirement}
-                    className="w-50 h-40 mt-2 mx-auto py-2 hover: cursor-pointer"
-                  />
+                  <div
+                    key={requirement}
+                    onClick={() => getImageUri(requirement)}
+                    className=" relative border rounded-md border-primary-default bg-white px-4 py-4 my-4 mx-2 w-60 h-60"
+                  >
+                    <span className="flex justify-center font-sans text-primary-default text-lg font-bold text-center">
+                      {requirement.replace(/_/g, " ")}
+                    </span>
+                      {/* <a href={`${images[requirement]}`} target="_blank"> */}
+                        <img
+                          src={images[requirement]}
+                          alt={requirement}
+                          className="w-50 h-40 mt-2 mx-auto py-2 hover: cursor-pointer"
+                        />
+                      {/* </a> */}
+                  </div>
                 )}
-                  {!images[requirement] && (
-                    <a href="https://firebasestorage.googleapis.com/v0/b/kalinga-storage.appspot.com/o/Donor%2FJoshua%20Keith%20Rawr%2FApplication%2FFiles%2F1716366665084?alt=media&token=6a3907b5-89ee-4e1d-9d53-309efeff3d65"
-                      target="_blank"
-                    >
-                       <button>
-                        Download {requirement}
-                        </button>
-                    </a>
-                   
-                  )}
-              </div>
+
+              {files[requirement] && (
+                <a href ={`${files[requirement]}`} target="_blank">
+                    <button 
+                    className="bg-primary-default px-4 py-2 m-7 text-white rounded-lg">
+                    View {requirement} File
+                  </button>
+                </a>
+                
+              )}
+             </>
             ))}
           </div>
         </div>
