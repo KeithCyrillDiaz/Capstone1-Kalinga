@@ -22,9 +22,9 @@ export default function () {
     try {
       setLoading(true);
       console.log("Fetching Data");
-      const response = await axios.get(
-        `${WebHost}/kalinga/getScreeningFormsUserType/${userType}`
-      );
+      const response = await axios.post(`${WebHost}/kalinga/fetchPendingScreeningFormByUserType/${userType}`,
+      { status: "Pending"}
+    )
       // console.log("response: ", response.data.screeningForms)
       if (!response.data.screeningForms) {
         console.log("Error fetching Screening Forms");

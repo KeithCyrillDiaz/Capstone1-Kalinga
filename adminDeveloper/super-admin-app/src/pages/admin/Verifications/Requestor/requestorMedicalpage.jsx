@@ -133,29 +133,57 @@ const RequestorMedicalPage = ({ currentPage, id }) => {
                   "Diagnosis",
                   "Treatments and Intervensions",
                   "Prescription",
-                  "Quezon City ID",
-                  "Government ID",
-                  "Government ID",
+                  "Government_ID",
                 ].map((requirement) => (
-                  <div
-                    key={requirement}
-                    onClick={() => getImageUri(requirement)}
-                    className="relative border rounded-md border-primary-default bg-white px-4 py-4 my-4 mx-2 w-60 h-60"
-                  >
-                    <span className="flex justify-center font-sans text-primary-default text-lg font-bold text-center">
-                      {requirement.replace(/_/g, " ")}
-                    </span>
-                    {images[requirement] && (
-                      <img
-                        src={images[requirement]}
-                        alt={requirement}
-                        className="w-50 h-40 mt-2 mx-auto py-2 hover: cursor-pointer"
-                      />
-                    )}
-                  </div>
+                  <>
+                    <div
+                      key={requirement}
+                      onClick={() => getImageUri(requirement)}
+                      className="relative border rounded-md border-primary-default bg-white px-4 py-4 my-4 mx-2 w-60 h-60"
+                    >
+                      <span className="flex justify-center font-sans text-primary-default text-lg font-bold text-center">
+                        {requirement.replace(/_/g, " ")}
+                      </span>
+                      {images[requirement] && (
+                        <img
+                          src={images[requirement]}
+                          alt={requirement}
+                          className="w-50 h-40 mt-2 mx-auto py-2 hover: cursor-pointer"
+                        />
+                      )}
+                      {!images[requirement] && (
+                          <button>
+                          Download {requirement}
+                         </button>
+                        )}
+                     
+                        
+                    </div>
+                   
+                  </>
+                 
                 ))}
               </div>
             </div>
+            {/* <div className="mt-4 mx-20 border-b border-primary-default">
+              <label
+                htmlFor="babyCategorization"
+                className="block text-lg text-primary-default"
+              >
+                Baby Categorization: (based on Medical Abstract)
+              </label>
+              <select
+                id="babyCategorization"
+                name="babyCategorization"
+                className="mt-2 block w-full rounded-sm shadow-sm p-2 focus:outline-none focus:ring-primary-default focus:border-primary-default sm:text-md text-primary-default"
+                onChange={(e) => console.log(e.target.value)}
+              >
+                <option value="">Select Baby Category</option>
+                <option value="Well baby">Well baby</option>
+                <option value="Sick Baby">Sick Baby</option>
+                <option value="Sick Baby">Medically Fragile Baby</option>
+              </select>
+            </div> */}
           </div>
         </div>
       </>

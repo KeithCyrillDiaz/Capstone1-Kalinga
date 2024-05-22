@@ -19,7 +19,6 @@
     homeAddress: string;
     medicalCondition?: string;
     milkAmount?: string; // Changed from String to { type: String, required: true, validate: numericValidator }
-    medthod: string;
     selectedDate: string; 
     selectedTime: string;
     location: string;
@@ -41,7 +40,6 @@
     city: { type: String, required: true },
     medicalCondition: String,
     milkAmount: { type: String, required: true, validate: numericValidator },
-    method: {type: String},
     selectedDate: { type: String, required: true },
     selectedTime: { type: String, required: true },
     location: { type: String, required: true },

@@ -133,26 +133,35 @@ const RequestorMedicalPage = ({ currentPage, id }) => {
                   "Diagnosis",
                   "Treatments and Intervensions",
                   "Prescription",
-                  "Quezon City ID",
-                  "Government ID",
-                  "Government ID",
+                  "Government_ID",
                 ].map((requirement) => (
-                  <div
-                    key={requirement}
-                    onClick={() => getImageUri(requirement)}
-                    className="relative border rounded-md border-primary-default bg-white px-4 py-4 my-4 mx-2 w-60 h-60"
-                  >
-                    <span className="flex justify-center font-sans text-primary-default text-lg font-bold text-center">
-                      {requirement.replace(/_/g, " ")}
-                    </span>
-                    {images[requirement] && (
-                      <img
-                        src={images[requirement]}
-                        alt={requirement}
-                        className="w-50 h-40 mt-2 mx-auto py-2 hover: cursor-pointer"
-                      />
-                    )}
-                  </div>
+                  <>
+                    <div
+                      key={requirement}
+                      onClick={() => getImageUri(requirement)}
+                      className="relative border rounded-md border-primary-default bg-white px-4 py-4 my-4 mx-2 w-60 h-60"
+                    >
+                      <span className="flex justify-center font-sans text-primary-default text-lg font-bold text-center">
+                        {requirement.replace(/_/g, " ")}
+                      </span>
+                      {images[requirement] && (
+                        <img
+                          src={images[requirement]}
+                          alt={requirement}
+                          className="w-50 h-40 mt-2 mx-auto py-2 hover: cursor-pointer"
+                        />
+                      )}
+                      {!images[requirement] && (
+                          <button>
+                          Download {requirement}
+                         </button>
+                        )}
+                     
+                        
+                    </div>
+                   
+                  </>
+                 
                 ))}
               </div>
             </div>

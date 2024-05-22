@@ -8,7 +8,7 @@ import {
   MissingRequirements,
 } from "../../../../modal/Verification/ImageModals";
 
-const DonorMedicalPage = ({ currentPage, id }) => {
+const DonorMedicalPage = ({ currentPage, id, form }) => {
   const totalPages = 5;
   const [images, setImages] = useState({});
   const [files, setFiles] = useState([]);
@@ -27,10 +27,9 @@ const DonorMedicalPage = ({ currentPage, id }) => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `${WebHost}/kalinga/getScreeningFormsApplicant_ID/${id}`
-      );
-
+      const response = await axios.post(`${WebHost}/kalinga/fetchPendingScreeningFormByUserType/${form.userType}`,
+      { status: "Pending"}
+    )
       if (!response.data.screeningForms) {
         console.log("Error fetching Screening forms");
         return;
@@ -86,13 +85,13 @@ const DonorMedicalPage = ({ currentPage, id }) => {
       setOpenMissingRequirements(true);
       return;
     }
-
+    console.log("Files: ", files)
     const file = getFileByOriginalName(requirement);
     const image = getImageByOriginalName(requirement);
-
+    console.log("file: ", file)
+    console.log("image: ", image)
     if (!file && !image) {
-      console.log("No Requirements Found");
-      setOpenNoRequirementModal(true);
+      console.log("Check");
       return;
     }
 
@@ -171,6 +170,16 @@ const DonorMedicalPage = ({ currentPage, id }) => {
                     className="w-50 h-40 mt-2 mx-auto py-2 hover: cursor-pointer"
                   />
                 )}
+                  {!images[requirement] && (
+                    <a href="https://firebasestorage.googleapis.com/v0/b/kalinga-storage.appspot.com/o/Donor%2FJoshua%20Keith%20Rawr%2FApplication%2FFiles%2F1716366665084?alt=media&token=6a3907b5-89ee-4e1d-9d53-309efeff3d65"
+                      target="_blank"
+                    >
+                       <button>
+                        Download {requirement}
+                        </button>
+                    </a>
+                   
+                  )}
               </div>
             ))}
           </div>

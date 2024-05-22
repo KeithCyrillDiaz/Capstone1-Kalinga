@@ -57,12 +57,6 @@ const RequestorPages = ({ currentPage, form }) => {
               Birth Weight (kg): {form.birthWeight}
             </div>
           </div>
-          <div className=" relative border rounded-md border-primary-default bg-white px-3 py-2 my-4 font-sans text-primary-disabled">
-            Age of Gestation: {form.ageOfGestation}
-          </div>
-          <div className=" relative border rounded-md border-primary-default bg-white px-3 py-2 my-4 font-sans text-primary-disabled">
-            Medical Condition: {form.medicalCondition}
-          </div>
         </div>
       </div>
     ),

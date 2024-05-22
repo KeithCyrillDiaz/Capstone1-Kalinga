@@ -6,6 +6,10 @@ import { WebHost } from "../../../MyConstantSuperAdmin";
 import { Loader } from "../../components/loader";
 import axios from "axios";
 import BlockConfirmationModal from "../../Modal/BlockConfirmationModal";
+import { CgUnblock } from "react-icons/cg";
+
+//API
+import { BlockdUser } from "../../api/blockUsers/BlockUsers";
 
 export default function UserManagement() {
   const navigate = useNavigate();
@@ -18,6 +22,13 @@ export default function UserManagement() {
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [userType, setUserType] = useState("");
   const [form, setForms] = useState([]);
+  const [modalMessage, setModalMessage] = useState("")
+
+  //Blocked User
+const [id, setId] = useState("")
+const [userTypeToBeBlocked, setUserTypeToBeBlocked] = useState("")
+const [status, setStatus] = useState("")
+
   const [filters, setFilters] = useState({
     monthOfCreation: "",
     monthScheduled: "",
@@ -160,12 +171,42 @@ export default function UserManagement() {
     }
   };
 
-  const handleBlock = () => {
+  const handleBlock = (id, userType, status) => {
+    console.log("id: ", id)
+    console.log("userType: ", userType)
+    setId(id)
+    setUserTypeToBeBlocked(userType)
+    setStatus(status)
+    setModalMessage(
+      <>
+      Are you sure you want to <span style={{ fontWeight: 'bold' }} >block</span> this account? Once <span style={{ fontWeight: 'bold' }} >blocked</span>, the account will be permanently not be able to use the app's features.
+      </>
+    )
     setShowModal(true);
+
   };
 
-  const handleApproveConfirm = () => {
-    // Add your logic for handling the "Solved" button action here
+  const handleUnBlock = (id, userType, status) => {
+    console.log("id: ", id)
+    console.log("userType: ", userType)
+    setId(id)
+    setUserTypeToBeBlocked(userType)
+    setStatus(status)
+    setModalMessage(
+      <>
+        Are you sure you want to <span style={{ fontWeight: 'bold' }}>unblock</span> this account? 
+        Once <span style={{ fontWeight: 'bold' }} >unblocked</span>, the account will regain full access to all app features.
+      </>
+    );
+    setShowModal(true);
+  };
+  const handleApproveConfirm = async () => {
+      await BlockdUser({
+        id: id,
+        userType: userTypeToBeBlocked,
+        status: status
+      })
+      window.location.reload() // reload the currect page after block update
     setShowModal(false); // Close the modal
   };
 
@@ -259,32 +300,37 @@ export default function UserManagement() {
                           <tr>
                             <th
                               scope="col"
-                              className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                              className="text-center px-6 py-2 text-md font-sans text-primary-default uppercase tracking-wider"
                             >
                               Created On
                             </th>
                             <th
                               scope="col"
-                              className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                              className="text-center px-6 py-2 text-md font-sans text-primary-default uppercase tracking-wider"
                             >
                               Name
                             </th>
                             <th
                               scope="col"
-                              className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                              className="text-center px-6 py-2 text-md font-sans text-primary-default uppercase tracking-wider"
                             >
                               Email
                             </th>
                             <th
                               scope="col"
-                              className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                              className="text-center px-6 py-2 text-md font-sans text-primary-default uppercase tracking-wider"
                             >
                               Role
                             </th>
-
                             <th
                               scope="col"
-                              className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                              className="text-center px-6 py-2  text-md font-sans text-primary-default uppercase tracking-wider"
+                            >
+                              Blocked
+                            </th>
+                            <th
+                              scope="col"
+                              className="text-center px-6 py-2 text-md font-sans text-primary-default uppercase tracking-wider"
                             >
                               Actions
                             </th>
@@ -315,17 +361,21 @@ export default function UserManagement() {
                                   {user.userType}
                                 </div>
                               </td>
-
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-center text-sm text-gray-500">
+                                  {user.Blocked}
+                                </div>
+                              </td>
                               <td className="text-center py-4 whitespace-nowrap text-sm font-medium flex items-center justify-center ">
                                 {/* VIEW */}
-                                {/* <Link
+                                <Link
                                   to={{
                                     pathname:
-                                      userType === "Donor"
-                                        ? `/admin/DonorVerification/${form.Applicant_ID}`
-                                        : `/admin/requestorVerification/${form.Applicant_ID}`,
+                                      user.userType === "Donor"
+                                        ? `/admin/DonorVerification/${user.Donor_ID}`
+                                        : `/admin/requestorVerification/${user.Requestor_ID}`,
                                   }}
-                                > */}
+                                >
                                 <button
                                   onClick={""}
                                   className="px-3  rounded-full hover:bg-neutral-variant"
@@ -348,26 +398,38 @@ export default function UserManagement() {
                                     ></path>
                                   </svg>
                                 </button>
-                                {/* BLOCK */}
-                                <button
-                                  onClick={handleBlock}
-                                  className="px-3  rounded-full hover:bg-neutral-variant"
-                                >
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="21"
-                                    height="21"
-                                    viewBox="0 0 24 24"
+                                </Link>
+                                 {/* BLOCK */}
+                                 {user.Blocked === "No" && (
+                                  <button
+                                    onClick={()=> handleBlock(user.userType === "Donor" ? user.Donor_ID : user.Requestor_ID, user.userType, "Yes")}
+                                    className="px-3  rounded-full hover:bg-neutral-variant"
                                   >
-                                    <path
-                                      fill="#E60965"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth="1.5"
-                                      d="M12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22m0-2q1.35 0 2.6-.437t2.3-1.263L5.7 7.1q-.825 1.05-1.263 2.3T4 12q0 3.35 2.325 5.675T12 20m6.3-3.1q.825-1.05 1.263-2.3T20 12q0-3.35-2.325-5.675T12 4q-1.35 0-2.6.437T7.1 5.7z"
-                                    ></path>
-                                  </svg>
-                                </button>
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="21"
+                                      height="21"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        fill="#E60965"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="1.5"
+                                        d="M12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22m0-2q1.35 0 2.6-.437t2.3-1.263L5.7 7.1q-.825 1.05-1.263 2.3T4 12q0 3.35 2.325 5.675T12 20m6.3-3.1q.825-1.05 1.263-2.3T20 12q0-3.35-2.325-5.675T12 4q-1.35 0-2.6.437T7.1 5.7z"
+                                      ></path>
+                                    </svg>
+                                  </button>
+                                )}
+                                  {/* UNBLOCK */}
+                                 {user.Blocked === "Yes" && (
+                                 <button
+                                    onClick={()=> handleUnBlock(user.userType === "Donor" ? user.Donor_ID : user.Requestor_ID, user.userType, "No")}
+                                    className="px-3  rounded-full hover:bg-neutral-variant"
+                                  >
+                                    <CgUnblock size={24} color="#E60965" style={{flexShrink: 0}}/>
+                                  </button>
+                                )}
                                 {/* DELETE */}
                                 <button
                                   onClick={() =>
@@ -438,9 +500,9 @@ export default function UserManagement() {
             </div>
             <BlockConfirmationModal
               isOpen={showModal}
-              onCancel={handleApproveConfirm}
-              onConfirm={handleApproveCancel}
-              message="Are you sure you want to block this account? Once blocked, the account will be permanently not be able to use the app's features."
+              onCancel={handleApproveCancel}
+              onConfirm={()=> handleApproveConfirm()}
+              message={modalMessage}
             />
           </div>
         </div>

@@ -36,6 +36,22 @@ export const getPosts = () => PostModel.find({status: "Approved"})
         ]
     });
 
+    export const getAllPosts = () => PostModel.find()
+    .populate('DonorOwnerID')
+    .populate('RequestorOwnerID')
+    .populate('DonorLikes')
+    .populate('RequestorLikes')
+    .populate({
+        path: 'comments_ID',
+        populate: [
+            { path: 'DonorOwnerID' },
+            { path: 'RequestorOwnerID' },
+            { path: 'DonorLikes' },
+            { path: 'RequestorLikes' }
+        ]
+    });
+
+
 export const getPostsById = (post_ID: string) => PostModel.findOne({post_ID})
 export const updateDonorLikes = (post_ID: string, Donor_id: mongoose.Types.ObjectId, time: Date) => PostModel.findOneAndUpdate({post_ID}, {$push: {DonorLikes: Donor_id}, $set: {updatedAt: time}}, {new:true})
 export const removeDonorLikes = (post_ID: string, Donor_id: mongoose.Types.ObjectId, time: Date) => PostModel.findOneAndUpdate({post_ID}, {$pull: {DonorLikes: Donor_id}, $set: {updatedAt: time}}, {new:true})
@@ -43,8 +59,6 @@ export const updateRequestorLikes = (post_ID: string, Requestor_id: mongoose.Typ
 export const removeRequestorLikes = (post_ID: string, Requestor_id: mongoose.Types.ObjectId, time: Date) => PostModel.findOneAndUpdate({post_ID}, {$pull: {RequestorLikes: Requestor_id}, $set: {updatedAt: time}}, {new:true})
 export const updateCommentOnPost = (post_ID: string, comment_id: mongoose.Types.ObjectId, time: Date) => PostModel.findOneAndUpdate({post_ID}, {$push:{comments_ID: comment_id}, $set: {updatedAt: time}}, {new: true})
 export const removeCommentOnPost = (post_ID: string, comment_id: mongoose.Types.ObjectId, time: Date) => PostModel.findOneAndUpdate({post_ID}, {$pull: {comments_ID: comment_id}, $set: {updatedAt: time}}, {new: true})
-
-
 
 const CommentSchema = new mongoose.Schema ({
     

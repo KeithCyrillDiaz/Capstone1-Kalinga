@@ -6,6 +6,7 @@ const ConfirmationModal = ({
   onConfirm,
   onCancel,
   isApproved,
+  confirm
 }) => {
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
 
