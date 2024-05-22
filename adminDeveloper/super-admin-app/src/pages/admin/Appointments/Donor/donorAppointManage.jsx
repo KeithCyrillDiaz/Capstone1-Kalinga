@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { WebHost } from "../../../../../MyConstantSuperAdmin";
 import DeleteModal from "../../../../Modal/deleteModal";
+import { Loader } from "../../../../components/loader";
 
 export default function ({ remarks }) {
   const navigate = useNavigate();
@@ -11,10 +12,12 @@ export default function ({ remarks }) {
   const [appointments, setAppointments] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   const appointmentsPerPage = 10;
 
   useEffect(() => {
+    setLoading(true);
     const fetchAppointments = async () => {
       try {
         const response = await axios.get(
@@ -25,6 +28,7 @@ export default function ({ remarks }) {
       } catch (error) {
         console.error("Error fetching appointments:", error);
       }
+      setLoading(false);
     };
 
     fetchAppointments();
@@ -60,7 +64,6 @@ export default function ({ remarks }) {
 
   const [filters, setFilters] = useState({
     monthOfCreation: "",
-    monthScheduled: "",
     status: "",
     remarks: "",
   });
@@ -80,11 +83,6 @@ export default function ({ remarks }) {
             month: "long",
           }) === filters.monthOfCreation
         : true;
-      const matchMonthScheduled = filters.monthScheduled
-        ? new Date(appointment.selectedDate).toLocaleString("default", {
-            month: "long",
-          }) === filters.monthScheduled
-        : true;
       const matchStatus = filters.status
         ? appointment.DonationStatus === filters.status
         : true;
@@ -93,7 +91,6 @@ export default function ({ remarks }) {
         : true;
       return (
         matchMonthOfCreation &&
-        matchMonthScheduled &&
         matchStatus &&
         matchRemarks
       );
@@ -156,10 +153,10 @@ export default function ({ remarks }) {
 
   return (
     <>
-      <section className="w-full h-screen bg-primary-body overflow-hidden">
+      <section className="w-full h-full bg-primary-body overflow-hidden">
         <div className="p-8 pt-1">
           <div>
-            <h1 className="text-3xl text-primary-default font-bold font-sans my-4 mb-6">
+            <h1 className="text-3xl text-primary-default font-bold font-sans my-4 mb-4">
               Donor Appointments
             </h1>
             <div className="px-8 mb-4">
@@ -212,24 +209,6 @@ export default function ({ remarks }) {
                     </div>
                     <div className="border-b border-primary-default">
                       <label className="text-xs text-primary-default">
-                        Month Scheduled
-                      </label>
-                      <select
-                        className="bg-white text-primary-default text-lg py-1 pl-2 rounded-sm hover:cursor-pointer w-full"
-                        name="monthScheduled"
-                        value={filters.monthScheduled}
-                        onChange={handleFilterChange}
-                      >
-                        <option value="">Select Month Scheduled</option>
-                        {months.map((month) => (
-                          <option key={month.id} value={month.name}>
-                            {month.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="border-b border-primary-default">
-                      <label className="text-xs text-primary-default">
                         Status
                       </label>
                       <select
@@ -271,184 +250,180 @@ export default function ({ remarks }) {
             <div className="flex flex-col">
               <div className="my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div className="align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                  <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                    <table className="min-w-full divide-y divide-primary-default border">
-                      <thead className="bg-neutral-variant">
-                        <tr>
-                          <th
-                            scope="col"
-                            className="text-center px-4 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
-                          >
-                            Index
-                          </th>
-                          <th
-                            scope="col"
-                            className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
-                          >
-                            Created on
-                          </th>
-                          <th
-                            scope="col"
-                            className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
-                          >
-                            Name
-                          </th>
-                          <th
-                            scope="col"
-                            className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
-                          >
-                            Email
-                          </th>
-                          <th
-                            scope="col"
-                            className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider "
-                          >
-                            Scheduled Date and Time
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
-                          >
-                            Status
-                          </th>
-                          <th
-                            scope="col"
-                            className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
-                          >
-                            Remarks
-                          </th>
-                          <th
-                            scope="col"
-                            className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
-                          >
-                            Actions
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-primary-default">
-                        {currentAppointments.map((appointment, index) => (
-                          <tr key={appointment._id}>
-                            <td className="px-2 py-1 whitespace-nowrap">
-                              <div className="text-center text-sm font-medium text-gray-900">
-                                {index +
-                                  1 +
-                                  (currentPage - 1) * appointmentsPerPage}
-                              </div>
-                            </td>
-                            <td className="px-2 py-4 whitespace-nowrap">
-                              <div className="text-center text-sm font-medium text-gray-900">
-                                {new Date(
-                                  appointment.createdAt
-                                ).toLocaleDateString()}{" "}
-                                {new Date(
-                                  appointment.createdAt
-                                ).toLocaleTimeString([], {
-                                  hour: "numeric",
-                                  minute: "2-digit",
-                                })}
-                              </div>
-                            </td>
-                            <td className="px-4 py-4 whitespace-nowrap">
-                              <div className="text-center text-sm font-medium text-gray-900 flex items-center justify-center">
-                                {appointment.fullName}
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-center text-sm text-gray-500 flex items-center justify-center">
-                                {appointment.emailAddress}
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-center text-sm text-gray-500 flex items-center justify-center">
-                                {new Date(
-                                  appointment.selectedDate
-                                ).toLocaleDateString()}{" "}
-                                {new Date(
-                                  appointment.selectedTime
-                                ).toLocaleTimeString([], {
-                                  hour: "numeric",
-                                  minute: "2-digit",
-                                })}
-                              </div>
-                            </td>
-                            <td className="px-6 py-1 whitespace-nowrap">
-                              <span
-                                className={`flex justify-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                  appointment.DonationStatus === "Complete"
-                                    ? "bg-lime-200 text-green-800"
-                                    : appointment.DonationStatus === "Pending"
-                                    ? "bg-orange-300 text-red-800"
-                                    : appointment.DonationStatus === "Ongoing"
-                                    ? "bg-yellow-200 text-red-800"
-                                    : "bg-red-200 text-red-800"
-                                }`}
-                              >
-                                {appointment.DonationStatus}
-                              </span>
-                            </td>
-                            {/*DONATION REMARKS*/}
-                            <td className="text-center px-6 py-4 whitespace-nowrap text-sm font-medium">
-                              <div>
-                                {appointment.DonationStatus === "Complete"
-                                  ? "This appointment is Complete."
-                                  : appointment.DonationStatus === "Pending"
-                                  ? "This appointment is still pending."
-                                  : appointment.DonationStatus === "Ongoing"
-                                  ? "This appointment is now ongoing."
-                                  : `This appointment is declined due to ${appointment.DonorRemark}`}
-                              </div>
-                            </td>
-
-                            <td className="text-center  py-4 whitespace-nowrap text-sm font-medium flex items-center justify-center gap-2">
-                              <Link
-                                to={`/admin/donorAppointmentConfirmation/${appointment.AppointmentDonorID}`}
-                                className=" px-3 py-1 rounded-full hover:bg-neutral-variant mr-1"
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="24"
-                                  height="24"
-                                  viewBox="0 0 32 32"
-                                >
-                                  <circle
-                                    cx={16}
-                                    cy={16}
-                                    r={4}
-                                    fill="#E60965"
-                                  ></circle>
-                                  <path
-                                    fill="#E60965"
-                                    d="M30.94 15.66A16.69 16.69 0 0 0 16 5A16.69 16.69 0 0 0 1.06 15.66a1 1 0 0 0 0 .68A16.69 16.69 0 0 0 16 27a16.69 16.69 0 0 0 14.94-10.66a1 1 0 0 0 0-.68M16 22.5a6.5 6.5 0 1 1 6.5-6.5a6.51 6.51 0 0 1-6.5 6.5"
-                                  ></path>
-                                </svg>
-                              </Link>
-                              <button
-                                onClick={() =>
-                                  handleDelete(appointment.AppointmentDonorID)
-                                }
-                                className="px-3 py-1 rounded-full hover:bg-neutral-variant"
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="21"
-                                  height="21"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    fill="#E60965"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="1.5"
-                                    d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zM17 6H7v13h10zM9 17h2V8H9zm4 0h2V8h-2zM7 6v13z"
-                                  ></path>
-                                </svg>
-                              </button>
-                            </td>
+                  {loading ? (
+                    <Loader isLoading={loading} />
+                  ) : (
+                    <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                      <table className="min-w-full divide-y divide-primary-default border">
+                        <thead className="bg-neutral-variant">
+                          <tr>
+                            <th
+                              scope="col"
+                              className="text-center px-4 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                            >
+                              Index
+                            </th>
+                            <th
+                              scope="col"
+                              className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                            >
+                              Created on
+                            </th>
+                            <th
+                              scope="col"
+                              className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                            >
+                              Name
+                            </th>
+                            <th
+                              scope="col"
+                              className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                            >
+                              Email
+                            </th>
+                            <th
+                              scope="col"
+                              className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider "
+                            >
+                              Method
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                            >
+                              Status
+                            </th>
+                            <th
+                              scope="col"
+                              className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                            >
+                              Remarks
+                            </th>
+                            <th
+                              scope="col"
+                              className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                            >
+                              Actions
+                            </th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-primary-default">
+                          {currentAppointments.map((appointment, index) => (
+                            <tr key={appointment._id}>
+                              <td className="px-2 py-1 whitespace-nowrap">
+                                <div className="text-center text-sm font-medium text-gray-900">
+                                  {index +
+                                    1 +
+                                    (currentPage - 1) * appointmentsPerPage}
+                                </div>
+                              </td>
+                              <td className="px-2 py-4 whitespace-nowrap">
+                                <div className="text-center text-sm font-medium text-gray-900">
+                                  {new Date(
+                                    appointment.createdAt
+                                  ).toLocaleDateString()}{" "}
+                                  {new Date(
+                                    appointment.createdAt
+                                  ).toLocaleTimeString([], {
+                                    hour: "numeric",
+                                    minute: "2-digit",
+                                  })}
+                                </div>
+                              </td>
+                              <td className="px-4 py-4 whitespace-nowrap">
+                                <div className="text-center text-sm font-medium text-gray-900 flex items-center justify-center">
+                                  {appointment.fullName}
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-center text-sm text-gray-500 flex items-center justify-center">
+                                  {appointment.emailAddress}
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-center text-sm text-gray-500 flex items-center justify-center">
+                                {appointment.method}
+                                </div>
+                              </td>
+                              <td className="px-6 py-1 whitespace-nowrap">
+                                <span
+                                  className={`flex justify-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                    appointment.DonationStatus === "Complete"
+                                      ? "bg-lime-200 text-green-800"
+                                      : appointment.DonationStatus === "Pending"
+                                      ? "bg-orange-300 text-red-800"
+                                      : appointment.DonationStatus === "Ongoing"
+                                      ? "bg-yellow-200 text-red-800"
+                                      : "bg-red-200 text-red-800"
+                                  }`}
+                                >
+                                  {appointment.DonationStatus}
+                                </span>
+                              </td>
+                              {/*DONATION REMARKS*/}
+                              <td className="text-center px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <div>
+                                  {appointment.DonationStatus === "Complete"
+                                    ? "This appointment is Complete."
+                                    : appointment.DonationStatus === "Pending"
+                                    ? "This appointment is still pending."
+                                    : appointment.DonationStatus === "Ongoing"
+                                    ? "This appointment is now ongoing."
+                                    : `This appointment is declined due to ${appointment.DonorRemark}`}
+                                </div>
+                              </td>
+
+                              <td className="text-center  py-4 whitespace-nowrap text-sm font-medium flex items-center justify-center">
+                                <Link
+                                  to={`/admin/donorAppointmentConfirmation/${appointment.AppointmentDonorID}`}
+                                  className=" px-3 py-1 rounded-full hover:bg-neutral-variant mr-1"
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 32 32"
+                                  >
+                                    <circle
+                                      cx={16}
+                                      cy={16}
+                                      r={4}
+                                      fill="#E60965"
+                                    ></circle>
+                                    <path
+                                      fill="#E60965"
+                                      d="M30.94 15.66A16.69 16.69 0 0 0 16 5A16.69 16.69 0 0 0 1.06 15.66a1 1 0 0 0 0 .68A16.69 16.69 0 0 0 16 27a16.69 16.69 0 0 0 14.94-10.66a1 1 0 0 0 0-.68M16 22.5a6.5 6.5 0 1 1 6.5-6.5a6.51 6.51 0 0 1-6.5 6.5"
+                                    ></path>
+                                  </svg>
+                                </Link>
+                                <button
+                                  onClick={() =>
+                                    handleDelete(appointment.AppointmentDonorID)
+                                  }
+                                  className="px-3 py-1 rounded-full hover:bg-neutral-variant"
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="21"
+                                    height="21"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      fill="#E60965"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth="1.5"
+                                      d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zM17 6H7v13h10zM9 17h2V8H9zm4 0h2V8h-2zM7 6v13z"
+                                    ></path>
+                                  </svg>
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="flex justify-end">

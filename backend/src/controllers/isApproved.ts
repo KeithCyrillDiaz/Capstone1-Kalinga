@@ -16,17 +16,17 @@ export const isApproved = async (req: express.Request, res: express.Response) =>
             }).status(400)
         }
         const userType = exisitingUser.userType
-        if(exisitingUser.isDeleted === "Deleted" && exisitingUser.isApproved !== "Yes"){
+        if(exisitingUser.status === "Rejected"){
             return res.json({
                 messages: {
                     code: 1,
-                    message: "Applicant is Deleted"
+                    message: "Applicant is Rejected"
                 },
           
             })
         }
         
-        if(exisitingUser.isApproved === "Yes"){
+        if(exisitingUser.status === "Approved"){
             console.log(`${exisitingUser.userType} is Approved`)
             return res.json({
                 messages: {

@@ -37,6 +37,7 @@ const DonorScreeningForm = () => {
     Applicant_ID: applicantId ,
     userType: "Donor",
     Municipality: '',
+    barangay: '',
     fullName: '',
     Age: '',
     birthDate: '',
@@ -129,6 +130,7 @@ const checkForm = (value) => {
     'Applicant_ID',
     'userType',
     'Municipality',
+    'barangay',
     'fullName',
     'Age',
     'birthDate',
@@ -225,6 +227,14 @@ const updateAddress = (label, name) => {
       [name]: result
     }))
   }
+  if(name === "Barangay"){
+    console.log("Barangay: ", result)
+    setScreeningFormData(prevFormData => ({
+      ...prevFormData,
+      barangay: result
+    }))
+  }
+
   setAddress(prevAddress => {
     const updatedAddress = {
       ...prevAddress,
@@ -242,8 +252,9 @@ const uncapitalizedString = (string) => {
 }
 
 const formatCity = (city) => {
-  if(!city) return
-  if(!city.toLowerCase().includes("city")) return
+  console.log("city: ", city)
+  if(!city.toLowerCase().includes("city")) return city
+  if(!city.toLowerCase().includes("of")) return city
   const cityArray = city.toLowerCase().split("of")
   if(cityArray[0].includes("city")){
     const cityName = cityArray[1] + " " + cityArray[0]
@@ -759,7 +770,7 @@ useEffect(() => {
                       flexDirection: "row",
                       justifyContent: "space-between",
                       alignItems: "center",
-                      width: "92%",
+                      width: "91%",
                      
                       }}>
                     <TextInput

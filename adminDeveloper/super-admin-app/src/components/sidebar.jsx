@@ -353,7 +353,7 @@ export default function () {
                     }`}
                   >
                     <h1 className="text-md text-neutral-primary">
-                      Requestor Mamangement
+                      Requestor Manangement
                     </h1>
                   </NavLink>
                 </div>

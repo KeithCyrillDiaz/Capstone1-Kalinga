@@ -123,7 +123,7 @@ const RequestorMedicalPage = ({ currentPage, id }) => {
         )}
 
         <div className="p-2">
-          <div className="px-32">
+          <div className="px-20">
             <div className="my-[-10]">
               <div className="flex flex-wrap justify-center">
                 {[
@@ -134,28 +134,38 @@ const RequestorMedicalPage = ({ currentPage, id }) => {
                   "Treatments and Intervensions",
                   "Prescription",
                   "Government_ID",
-                  "Medical Abstract of the Infant",
                 ].map((requirement) => (
-                  <div
-                    key={requirement}
-                    onClick={() => getImageUri(requirement)}
-                    className="relative border rounded-md border-primary-default bg-white px-4 py-4 my-4 mx-2 w-60 h-60"
-                  >
-                    <span className="flex justify-center font-sans text-primary-default text-lg font-bold text-center">
-                      {requirement.replace(/_/g, " ")}
-                    </span>
-                    {images[requirement] && (
-                      <img
-                        src={images[requirement]}
-                        alt={requirement}
-                        className="w-50 h-40 mt-2 mx-auto py-2 hover: cursor-pointer"
-                      />
-                    )}
-                  </div>
+                  <>
+                    <div
+                      key={requirement}
+                      onClick={() => getImageUri(requirement)}
+                      className="relative border rounded-md border-primary-default bg-white px-4 py-4 my-4 mx-2 w-60 h-60"
+                    >
+                      <span className="flex justify-center font-sans text-primary-default text-lg font-bold text-center">
+                        {requirement.replace(/_/g, " ")}
+                      </span>
+                      {images[requirement] && (
+                        <img
+                          src={images[requirement]}
+                          alt={requirement}
+                          className="w-50 h-40 mt-2 mx-auto py-2 hover: cursor-pointer"
+                        />
+                      )}
+                      {!images[requirement] && (
+                          <button>
+                          Download {requirement}
+                         </button>
+                        )}
+                     
+                        
+                    </div>
+                   
+                  </>
+                 
                 ))}
               </div>
             </div>
-            <div className="mt-4 mx-20 border-b border-primary-default">
+            {/* <div className="mt-4 mx-20 border-b border-primary-default">
               <label
                 htmlFor="babyCategorization"
                 className="block text-lg text-primary-default"
@@ -173,7 +183,7 @@ const RequestorMedicalPage = ({ currentPage, id }) => {
                 <option value="Sick Baby">Sick Baby</option>
                 <option value="Sick Baby">Medically Fragile Baby</option>
               </select>
-            </div>
+            </div> */}
           </div>
         </div>
       </>

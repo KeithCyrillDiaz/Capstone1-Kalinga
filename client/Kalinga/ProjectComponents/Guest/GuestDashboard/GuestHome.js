@@ -87,12 +87,12 @@ const getData = async () => {
         <TouchableOpacity style={styles.box} onPress={() => navigatePage("ApplyAsRequestorStack")} >
               <FontAwesome5 style={{flexShrink: 0}} name="hand-holding-water" size={70} color="#E60965" />   
               <Text style={styles.boxTitle}>{userType !== "Requestor" ? "Apply as Requestor" : "You're already a Requestor"}</Text>     
-              <Text style={styles.boxMinitext}>Ready to donate? Set an appointment</Text>
+              <Text style={styles.boxMinitext}>Request breast milk for your infant's needs.</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.box} onPress={() => navigatePage("ApplyAsDonorStack")} >
               <FontAwesome style={{flexShrink: 0}} name="handshake-o" size={70} color="#E60965" />               
-              <Text style={styles.boxTitle}> {userType !== "Donor" ? "Apply as Donor" : "You're already a Donor"}</Text>
-              <Text style={styles.boxMinitext}>View Milk Donation History</Text>
+              <Text style={styles.boxTitle}>{userType !== "Donor" ? "Apply as Donor" : "You're already a Donor"}</Text>
+              <Text style={styles.boxMinitext}>Offer your surplus breast milk for donation.</Text>
         </TouchableOpacity>
       </View>
 

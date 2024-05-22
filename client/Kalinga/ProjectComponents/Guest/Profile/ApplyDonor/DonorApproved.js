@@ -32,18 +32,21 @@ const DonorApproved = () => {
 
   return (
 
-      <SafeAreaView style = {globalStyles.defaultBackgroundColor}>
+      <SafeAreaView style = {[globalStyles.defaultBackgroundColor, {
+        alignItems: 'center',
+        justifyContent: 'center',
+      }]}>
           <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style = {globalHeader.SmallHeader}>
               <Text style = {globalHeader.SmallHeaderTitle}>Apply as Donor</Text>
             </View>
-
-            <View style = {globalStyles.defaultBackgroundColor}>
-              <Octicons name="checklist" size={200} color="#F94892" />
-              <View style = {styles.labelContainer}>
-                <Text style = {styles.mess}>{FirstParagraph}</Text>
-              </View>
+            <View style ={styles.container}>
+                <Octicons name="checklist" size={200} color="#F94892" />
+                <View style = {styles.labelContainer}>
+                  <Text style = {styles.mess}>{FirstParagraph}</Text>
+                </View>
             </View>
+              
               
               
             <TouchableOpacity style = {globalStyles.center} onPress={() => navigatePage("GuestTabs")}>

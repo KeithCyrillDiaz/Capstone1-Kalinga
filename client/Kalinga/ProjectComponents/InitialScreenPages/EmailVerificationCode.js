@@ -52,7 +52,7 @@ const EmailVerificationCode = ({route}) => {
             navigation.dispatch(
                 CommonActions.reset({
                   index: 0, //Reset the stack to 0 so the user cannot go back
-                  routes: [{ name: "DoneEmailVerification"} ], // Replace 'Login' with the name of your login screen
+                  routes: [{ name: "DoneEmailVerification", params: {data: screeningForm, status:"Applicant"}}], // Replace 'Login' with the name of your login screen
                 })
               );
         }

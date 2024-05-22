@@ -1,5 +1,5 @@
 import express from 'express'
-import { createPost, deletePost, getPosts, getPostsById } from '../../models/forum/forum';
+import { createPost, deletePost, getPosts, getAllPosts, getPostsById, approvedPost } from '../../models/forum/forum';
 import randomatic from 'randomatic'
 import { getDonorById, getRequestorById } from '../../models/users';
 import mongoose from 'mongoose';
@@ -192,3 +192,83 @@ export const fetchposts = async (req: express.Request, res: express.Response) =>
 }
 
 
+export const approvedPosts = async (req: express.Request, res: express.Response) => {
+    try {   
+        const { id } = req.params
+        if( !id ){
+            console.log("No Post Id, Bad Request")
+            return res.json({
+                messages: {
+                    code: 1,
+                    message: "No Post Id, Bad Request"
+                }
+            }).status(400)
+        }
+
+        const result = await approvedPost(id)
+        if (!result) {
+            console.log("Error approving posts")
+            return res.json({
+                messages: {
+                    code: 1,
+                    message: "Error approving posts"
+                }
+            }).status(400)
+        }
+        console.log("Results: ", result)
+        console.log("Successfully approved posts")
+        return res.json({
+            messages:{
+                code: 0,
+                message: "Successfully approved posts"
+            },
+            result
+           
+        }).status(200)
+
+    } catch(error) {    
+        console.log("Error: ", error)
+        return res.json({
+            messages: {
+                code: 1,
+                message: "Internal Server Error"
+            },
+            error
+        }).status(500)
+    }
+}
+
+export const fetchAllposts = async (req: express.Request, res: express.Response) => {
+    try {   
+        const posts = await getAllPosts()
+        if (!posts) {
+            console.log("Error fetching posts")
+            return res.json({
+                messages: {
+                    code: 1,
+                    message: "Error fetching posts"
+                }
+            }).status(400)
+        }
+        console.log("Results: ", posts)
+        console.log("Successfully fetch posts")
+        return res.json({
+            messages:{
+                code: 0,
+                message: "Successfully fetch posts"
+            },
+            posts
+           
+        }).status(200)
+
+    } catch(error) {    
+        console.log("Error: ", error)
+        return res.json({
+            messages: {
+                code: 1,
+                message: "Internal Server Error"
+            },
+            error
+        }).status(500)
+    }
+}

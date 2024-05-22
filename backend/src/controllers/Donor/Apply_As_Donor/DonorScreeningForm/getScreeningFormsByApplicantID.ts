@@ -6,7 +6,6 @@ export const getScreeningFormByID = async (req: express.Request, res: express.Re
   try {
     console.log(req.params.Applicant_ID)
     const screeningForms = await getScreeningFormByApplicantID(req.params.Applicant_ID);
-    console.log("form", screeningForms)
     return res.status(200).json({ 
       messages: {
         code: 0,

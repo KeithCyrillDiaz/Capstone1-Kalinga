@@ -1,15 +1,10 @@
 import React from "react";
 
-
 const DonorPages = ({ currentPage, form }) => {
-
   const pageContents = {
-    
     1: (
       <div>
-         <div className="px-16 my-6 ">
-          
-        
+        <div className="px-16 my-6 ">
           <div className="flex font-sans font-bold justify-center text-3xl text-primary-default">
             Initial Screening Form
           </div>
@@ -60,9 +55,6 @@ const DonorPages = ({ currentPage, form }) => {
               Birth Weight (kg): {form.birthWeight}
             </div>
           </div>
-          <div className=" relative border rounded-md border-primary-default bg-white px-3 py-2 my-4 font-sans text-primary-disabled">
-            Age of Gestation: {form.ageOfGestation}
-          </div>
         </div>
       </div>
     ),
@@ -84,7 +76,13 @@ const DonorPages = ({ currentPage, form }) => {
                 for="myCheckbox"
                 className="flex items-center cursor-not-allowed"
               >
-                <div className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 mr-2 my-4 ${form.typeOfDonor === "Community" ? 'bg-primary-default' :'bg-white'}`}></div>
+                <div
+                  className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 mr-2 my-4 ${
+                    form.typeOfDonor === "Community"
+                      ? "bg-primary-default"
+                      : "bg-white"
+                  }`}
+                ></div>
                 <span className="font-sans font-bold">Community</span>
               </label>
               <input type="checkbox" id="myCheckbox" class="hidden" checked />{" "}
@@ -92,7 +90,13 @@ const DonorPages = ({ currentPage, form }) => {
                 for="myCheckbox"
                 className="flex items-center cursor-not-allowed"
               >
-                 <div className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 mr-2 my-4 ${form.typeOfDonor === "Private" ? 'bg-primary-default' :'bg-white'}`}></div>
+                <div
+                  className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 mr-2 my-4 ${
+                    form.typeOfDonor === "Private"
+                      ? "bg-primary-default"
+                      : "bg-white"
+                  }`}
+                ></div>
                 <span className="font-sans font-bold">Private</span>
               </label>
             </div>
@@ -107,7 +111,13 @@ const DonorPages = ({ currentPage, form }) => {
                 for="myCheckbox"
                 className="flex items-center cursor-not-allowed"
               >
-                <div className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 mr-2 my-4 ${form.typeOfDonor === "Employee" ? 'bg-primary-default' :'bg-white'}`}></div>
+                <div
+                  className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 mr-2 my-4 ${
+                    form.typeOfDonor === "Employee"
+                      ? "bg-primary-default"
+                      : "bg-white"
+                  }`}
+                ></div>
                 <span className="font-sans font-bold">Employee</span>
               </label>
               <input
@@ -120,7 +130,13 @@ const DonorPages = ({ currentPage, form }) => {
                 for="myCheckbox"
                 className="flex items-center cursor-not-allowed"
               >
-                 <div className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 mr-2 my-4 ${form.typeOfDonor === "Network Office / Agency" ? 'bg-primary-default' :'bg-white'}`}></div>
+                <div
+                  className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 mr-2 my-4 ${
+                    form.typeOfDonor === "Network Office / Agency"
+                      ? "bg-primary-default"
+                      : "bg-white"
+                  }`}
+                ></div>
                 <span className="font-sans font-bold">
                   Network Office / Agency
                 </span>
@@ -129,17 +145,15 @@ const DonorPages = ({ currentPage, form }) => {
           </div>
         </div>
 
-        <div className= {`relative border rounded-md border-primary-default bg-white px-3 py-2 my-4 h-32 font-sans text-primary-disabled flex flex-col`}>
+        <div
+          className={`relative border rounded-md border-primary-default bg-white px-3 py-2 my-4 h-32 font-sans text-primary-disabled flex flex-col`}
+        >
           Bakit mo gusto magbigay ng iyong gatas/breastmilk?
-          <span className=" mt-2">
-            Answer: {form.QA}
-          </span>
+          <span className=" mt-2">Answer: {form.QA}</span>
         </div>
         <div className=" relative border rounded-md border-primary-default bg-white px-3 py-2 my-4 h-32 font-sans text-primary-disabled flex flex-col">
           Paano mo nalaman ang tungkol sa Quezon City Hospital Human Milk Bank ?
-          <span className=" mt-2">
-            Answer: {form.QB}
-          </span>
+          <span className=" mt-2">Answer: {form.QB}</span>
         </div>
 
         <div className="font-sans text-primary-disabled my-2">
@@ -159,7 +173,11 @@ const DonorPages = ({ currentPage, form }) => {
                   for="myCheckbox"
                   className="flex items-center cursor-not-allowed"
                 >
-                  <div className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 ml-2 my-4 ${form.MH1 === "Yes" ? 'bg-primary-default' : 'bg-white'}`}></div>
+                  <div
+                    className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 ml-2 my-4 ${
+                      form.MH1 === "Yes" ? "bg-primary-default" : "bg-white"
+                    }`}
+                  ></div>
                 </label>
               </div>
               <div className="flex justify-center">
@@ -168,7 +186,11 @@ const DonorPages = ({ currentPage, form }) => {
                   for="myCheckbox"
                   className="flex items-center cursor-not-allowed"
                 >
-                  <div className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 ml-2 my-4 ${form.MH2 === "Yes" ? 'bg-primary-default' : 'bg-white'}`}></div>
+                  <div
+                    className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 ml-2 my-4 ${
+                      form.MH2 === "Yes" ? "bg-primary-default" : "bg-white"
+                    }`}
+                  ></div>
                 </label>
               </div>
             </div>
@@ -184,7 +206,11 @@ const DonorPages = ({ currentPage, form }) => {
                   for="myCheckbox"
                   className="flex items-center cursor-not-allowed"
                 >
-                  <div className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 mr-2 my-4 ${form.MH1 === "No" ? 'bg-primary-default' : 'bg-white'}`}></div>
+                  <div
+                    className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 mr-2 my-4 ${
+                      form.MH1 === "No" ? "bg-primary-default" : "bg-white"
+                    }`}
+                  ></div>
                 </label>
               </div>
               <div className="flex justify-center">
@@ -193,7 +219,11 @@ const DonorPages = ({ currentPage, form }) => {
                   for="myCheckbox"
                   className="flex items-center cursor-not-allowed"
                 >
-                  <div className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 mr-2 my-4 ${form.MH2 === "No" ? 'bg-primary-default' : 'bg-white'}`}></div>
+                  <div
+                    className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 mr-2 my-4 ${
+                      form.MH2 === "No" ? "bg-primary-default" : "bg-white"
+                    }`}
+                  ></div>
                 </label>
               </div>
             </div>
@@ -214,7 +244,7 @@ const DonorPages = ({ currentPage, form }) => {
     ),
 
     3: (
-      <div className=" my-6 bg-red-300 w-auto 2xl:mx-[7%] mx-0">
+      <div className=" my-6 w-auto 2xl:mx-[7%] mx-0">
         <div className="flex font-sans font-bold justify-center text-2xl text-primary-default">
           Medical History
         </div>
@@ -240,7 +270,13 @@ const DonorPages = ({ currentPage, form }) => {
                     htmlFor={`myCheckboxYes${index}`}
                     className="flex items-center cursor-not-allowed"
                   >
-                  <div className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 ml-2 my-4 ${form[`MH${index + 1}`] === "Yes" ? 'bg-primary-default' : 'bg-white'}`}></div>
+                    <div
+                      className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 ml-2 my-4 ${
+                        form[`MH${index + 1}`] === "Yes"
+                          ? "bg-primary-default"
+                          : "bg-white"
+                      }`}
+                    ></div>
                   </label>
                 </div>
               ))}
@@ -262,7 +298,13 @@ const DonorPages = ({ currentPage, form }) => {
                     htmlFor={`myCheckboxNo${index}`}
                     className="flex items-center cursor-not-allowed"
                   >
-                    <div className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 mr-2 my-4 ${form[`MH${index + 1}`] === "No" ? 'bg-primary-default' : 'bg-white'}`}></div>
+                    <div
+                      className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 mr-2 my-4 ${
+                        form[`MH${index + 1}`] === "No"
+                          ? "bg-primary-default"
+                          : "bg-white"
+                      }`}
+                    ></div>
                   </label>
                 </div>
               ))}
@@ -275,13 +317,12 @@ const DonorPages = ({ currentPage, form }) => {
                 </span>
                 <span className="font-sans">
                   Ikaw ba ay natanggihan na magbigay ng iyong gatas/breastmilk?
-                  Kung oo, sa anong dahilan? 
+                  Kung oo, sa anong dahilan?
                   {form.MH2_Reason && (
                     <div className="border-b-[1px] border-primary-default w-auto px-2 absolute">
                       <span>{form.MH2_Reason}</span>
-                     </div>
+                    </div>
                   )}
-                 
                 </span>
                 <span className="font-sans">
                   Nakapagbigay ka na ba ng iyong gatas dati?
@@ -304,11 +345,10 @@ const DonorPages = ({ currentPage, form }) => {
                   Nakainom ka ba ng alak nitong nakaraang 24 oras? Kung oo,
                   gaano karami?
                   {form.MH8_Reason && (
-                     <div className="border-b-[1px] border-primary-default w-auto px-2 absolute">
-                     <span>{form.MH8_Reason}</span>
-                     </div>
+                    <div className="border-b-[1px] border-primary-default w-auto px-2 absolute">
+                      <span>{form.MH8_Reason}</span>
+                    </div>
                   )}
-                 
                 </span>
                 <span className="font-sans">
                   Regular ka bang gumagamit ng mga gamot gaya ng
@@ -358,7 +398,13 @@ const DonorPages = ({ currentPage, form }) => {
                     htmlFor={`myCheckboxYes${index}`}
                     className="flex items-center cursor-not-allowed"
                   >
-                    <div className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 ml-2 my-4 ${form[`MH${index + 12}`] === "Yes" ? 'bg-primary-default' : 'bg-white'}`}></div>
+                    <div
+                      className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 ml-2 my-4 ${
+                        form[`MH${index + 12}`] === "Yes"
+                          ? "bg-primary-default"
+                          : "bg-white"
+                      }`}
+                    ></div>
                   </label>
                 </div>
               ))}
@@ -380,7 +426,13 @@ const DonorPages = ({ currentPage, form }) => {
                     htmlFor={`myCheckboxNo${index}`}
                     className="flex items-center cursor-not-allowed"
                   >
-                  <div className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 ml-2 my-4 ${form[`MH${index + 12}`] === "No" ? 'bg-primary-default' : 'bg-white'}`}></div>
+                    <div
+                      className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 ml-2 my-4 ${
+                        form[`MH${index + 12}`] === "No"
+                          ? "bg-primary-default"
+                          : "bg-white"
+                      }`}
+                    ></div>
                   </label>
                 </div>
               ))}
@@ -431,7 +483,13 @@ const DonorPages = ({ currentPage, form }) => {
                     htmlFor={`myCheckboxYes${index}`}
                     className="flex items-center cursor-not-allowed"
                   >
-                      <div className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 ml-2 my-4 ${form[`MH${index + 12}`] === "Yes" ? 'bg-primary-default' : 'bg-white'}`}></div>
+                    <div
+                      className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 ml-2 my-4 ${
+                        form[`MH${index + 12}`] === "Yes"
+                          ? "bg-primary-default"
+                          : "bg-white"
+                      }`}
+                    ></div>
                   </label>
                 </div>
               ))}
@@ -453,7 +511,13 @@ const DonorPages = ({ currentPage, form }) => {
                     htmlFor={`myCheckboxNo${index}`}
                     className="flex items-center cursor-not-allowed"
                   >
-                      <div className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 ml-2 my-4 ${form[`MH${index + 12}`] === "No" ? 'bg-primary-default' : 'bg-white'}`}></div>
+                    <div
+                      className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 ml-2 my-4 ${
+                        form[`MH${index + 12}`] === "No"
+                          ? "bg-primary-default"
+                          : "bg-white"
+                      }`}
+                    ></div>
                   </label>
                 </div>
               ))}

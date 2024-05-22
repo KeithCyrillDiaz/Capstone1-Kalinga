@@ -7,6 +7,7 @@ import forms from './forms';
 import forum from './forum'
 import settings from './settings';
 import notification from './notification';
+import admin from './admin'
 
 const router = express.Router();
 
@@ -20,5 +21,6 @@ export default(): express.Router => {
     forum(router);
     settings(router)
     notification(router)
+    admin(router)
     return router;
 }

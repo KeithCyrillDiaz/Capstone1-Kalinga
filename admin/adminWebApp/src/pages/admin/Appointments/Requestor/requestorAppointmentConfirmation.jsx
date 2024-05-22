@@ -62,12 +62,12 @@ const requestorAppointmentConfirmation = () => {
     try {
       await axios.put(`${WebHost}/kalinga/updateRequestStatus/${RequestID}`, {
         RequestStatus: "Ongoing",
+        BabyCategory: formData.BabyCategory,
       });
     } catch (error) {
       console.error("Error updating request status:", error);
     }
   };
-
   const handleApprovedConfirm = () => {
     setShowModal(false);
   };
@@ -101,212 +101,235 @@ const requestorAppointmentConfirmation = () => {
     { label: "Toddler", value: "toddler" },
     { label: "Other", value: "other" },
   ];
+
+  const handleBabyCategoryChange = (e) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      BabyCategory: e.target.value,
+    }));
+  };
+
   return (
     <section className="w-full h-screen bg-primary-body overflow-hidden px-4">
-      <h1 className="mt-8 text-3xl text-pink-500 font-bold">
-        Request Confirmation
-      </h1>
+      <div className="p-10 pt-1">
+        <h1 className="text-3xl text-primary-default font-bold font-sans py-4 pb-2">
+          Request Confirmation
+        </h1>
 
-      {/* Full Name Input */}
-      <div className="mt-8">
-        <input
-          type="text"
-          id="fullName"
-          name="fullName"
-          value={`Full Name: ${
-            requestData ? requestData.Request.fullName : ""
-          }`}
-          onChange={handleChange}
-          className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
-          placeholder="Full Name"
-        />
-      </div>
-
-      {/* Phone Number Input */}
-      <div className="mt-4">
-        <input
-          type="tel"
-          id="phoneNumber"
-          name="phoneNumber"
-          value={`Phone Number: ${
-            requestData ? requestData.Request.phoneNumber : ""
-          }`}
-          onChange={handleChange}
-          className="w-3/4 md:w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
-          placeholder="Phone Number"
-        />
-      </div>
-
-      {/* Email Address Input */}
-      <div className="mt-4">
-        <input
-          type="email"
-          id="emailAddress"
-          name="emailAddress"
-          value={`Email Address: ${
-            requestData ? requestData.Request.emailAddress : ""
-          }`}
-          onChange={handleChange}
-          className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
-          placeholder="Email Address"
-        />
-      </div>
-
-      {/* Home Address Input */}
-      <div className="mt-4">
-        <input
-          type="text"
-          id="homeAddress"
-          name="homeAddress"
-          value={`Home Address: ${
-            requestData ? requestData.Request.homeAddress : ""
-          }`}
-          onChange={handleChange}
-          className="w-full px-4 py-2 h-20 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
-          placeholder="Home Address"
-        />
-      </div>
-
-      {/* City Input */}
-      <div className="mt-4">
-        <input
-          type="text"
-          id="city"
-          name="city"
-          value={`City: ${requestData ? requestData.Request.city : ""}`}
-          onChange={handleChange}
-          className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
-          placeholder="City"
-        />
-      </div>
-
-      {/* Medical Condition Input */}
-      <div className="mt-4">
-        <input
-          type="text"
-          id="medicalCondition"
-          name="medicalCondition"
-          value={`Medical Condition: ${
-            requestData ? requestData.Request.medicalCondition : ""
-          }`}
-          onChange={handleChange}
-          className="w-full px-4 py-2  h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
-          placeholder="Medical Condition"
-        />
-      </div>
-
-      {/* Amount Donated Input */}
-      <div className="flex mt-4">
-        <div className="w-1/2 mr-4">
+        {/* Full Name Input */}
+        <div className="mt-2">
           <input
             type="text"
-            id="amountDonated"
-            name="amountDonated"
-            value={`Milk Amount: ${
-              requestData ? requestData.Request.milkAmount : ""
+            id="fullName"
+            name="fullName"
+            value={`Full Name: ${
+              requestData ? requestData.Request.fullName : ""
             }`}
             onChange={handleChange}
-            className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
-            placeholder="Amount of Milk Donated"
+            className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+            disabled
+            placeholder="Full Name"
           />
         </div>
-        <div className="w-1/2">
-          <input
-            type="text"
-            id="amountDonated"
-            name="amountDonated"
-            value={`Baby Category: ${
-              requestData ? requestData.Request.BabyCategory : ""
-            }`}
-            onChange={handleChange}
-            className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500"
-            placeholder="Amount of Milk Donated"
-          />
-        </div>
-      </div>
 
-      <div className="mt-4 relative">
-        <div className="relative">
-          <input
-            type="text"
-            id="reasonRequest"
-            name="reasonRequest"
-            value={`Reason for Requesting: ${
-              requestData ? requestData.Request.ReasonForRequesting : ""
-            }`}
-            onChange={handleChange}
-            className="w-full px-4 py-2 h-20 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500 pl-8"
-            placeholder="Reason for Requesting"
-          />
+        {/* Phone Number and Email Address  */}
+        <div className="flex gap-x-2">
+          <div className="w-2/3 mt-4">
+            <input
+              type="email"
+              id="emailAddress"
+              name="emailAddress"
+              value={`Email Address: ${
+                requestData ? requestData.Request.emailAddress : ""
+              }`}
+              onChange={handleChange}
+              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+              disabled
+              placeholder="Email Address"
+            />
+          </div>
+          <div className="w-1/3 mt-4">
+            <input
+              type="tel"
+              id="phoneNumber"
+              name="phoneNumber"
+              value={`Phone Number: ${
+                requestData ? requestData.Request.phoneNumber : ""
+              }`}
+              onChange={handleChange}
+              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+              disabled
+              placeholder="Phone Number"
+            />
+          </div>
         </div>
-      </div>
 
-      <div className="mt-4 relative">
-        <label
-          htmlFor="milkBankLocation"
-          className="block text-pink-500 font-bold mb-2 text-pink-500"
-        >
-          Note: Maximum of 3 images or files per field.
-        </label>
-        <div className="relative">
-          <input
-            type="text"
-            id="reasonRequest"
-            name="reasonRequest"
-            value={`Reason For Requesting: ${
-              requestData ? requestData.ReasonForRequesting : ""
-            }`}
-            onChange={handleChange}
-            className="w-full px-4 py-2 h-14 border border-pink-500 rounded-lg focus:outline-none focus:border-pink-500 text-pink-500 pl-8"
-            placeholder=""
-          />
+        {/* Home Address and City Input */}
+        <div className="flex gap-x-2">
+          <div className="w-2/3 mt-4">
+            <input
+              type="text"
+              id="homeAddress"
+              name="homeAddress"
+              value={`Home Address: ${
+                requestData ? requestData.Request.homeAddress : ""
+              }`}
+              onChange={handleChange}
+              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+              disabled
+              placeholder="Home Address"
+            />
+          </div>
+          <div className="w-1/3 mt-4">
+            <input
+              type="text"
+              id="city"
+              name="city"
+              value={`City: ${requestData ? requestData.Request.city : ""}`}
+              onChange={handleChange}
+              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+              disabled
+              placeholder="City"
+            />
+          </div>
         </div>
-      </div>
 
-      <div className="absolute bottom-0 right-0 mb-8 mr-8 flex flex-col">
-        {requestData &&
-          requestData.Request &&
-          requestData.Request.RequestStatus !== "Approved" &&
-          requestData.Request.RequestStatus !== "Decline" &&
-          requestData.Request.RequestStatus !== "Complete" && (
-            <>
-              <button
-                onClick={handleApproved}
-                className="bg-pink-500 text-white px-4 py-2 rounded-full mb-4"
+        {/* Medical Condition and Milk Requested Input */}
+        <div className="flex gap-x-2">
+          <div className="w-2/3 mt-4">
+            <input
+              type="text"
+              id="medicalCondition"
+              name="medicalCondition"
+              value={`Medical Condition: ${
+                requestData ? requestData.Request.medicalCondition : ""
+              }`}
+              onChange={handleChange}
+              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+              disabled
+              placeholder="Medical Condition"
+            />
+          </div>
+          <div className="w-1/3 mt-4">
+            <input
+              type="text"
+              id="amountDonated"
+              name="amountDonated"
+              value={`Requested Milk Amount (in mL): ${
+                requestData ? requestData.Request.milkAmount : ""
+              }`}
+              onChange={handleChange}
+              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+              disabled
+              placeholder="Amount of Milk Donated"
+            />
+          </div>
+        </div>
+
+        {/* Reason */}
+        <div className="mt-4 relative">
+          <div className="relative">
+            <input
+              type="text"
+              id="reasonRequest"
+              name="reasonRequest"
+              value={`Reason for Requesting: ${
+                requestData ? requestData.Request.ReasonForRequesting : ""
+              }`}
+              onChange={handleChange}
+              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+              disabled
+              placeholder="Reason for Requesting"
+            />
+          </div>
+        </div>
+
+        <div className="mt-4 relative">
+          <div className="bg-white px-4 py-2 w-1/3 h-72 shadow-md  rounded-lg focus:outline-none focus: text-primary-default">
+            <span className="flex justify-center text-primary-default text-lg text-center">
+              Medical Abstract
+            </span>
+          </div>
+        </div>
+
+        <div className="mt-4 ">
+          <div className="flex bg-white w-full px-4 py-2 h-30 shadow-md  rounded-lg focus:outline-none focus: text-primary-default">
+            <div>
+              <label
+                htmlFor="babyCategorization"
+                className="block text-md text-primary-default"
               >
-                Approved
-              </button>
-              <button
-                onClick={handleDecline}
-                className="bg-white text-pink-500 px-4 py-2 rounded-full border border-pink-500"
-              >
-                Decline
-              </button>
-            </>
-          )}
+                Baby Categorization: (based on Medical Abstract)
+              </label>
+              {requestData &&
+                requestData.Request &&
+                requestData.Request.RequestStatus !== "Ongoing" &&
+                requestData.Request.RequestStatus !== "Decline" &&
+                requestData.Request.RequestStatus !== "Complete" && (
+                  <select
+                    id="babyCategorization"
+                    name="babyCategorization"
+                    value={formData.BabyCategory}
+                    onChange={handleBabyCategoryChange}
+                    className="mt-2 bg-white w-full rounded-lg shadow-md p-2 focus:outline-none focus:ring-primary-default focus:border-primary-default sm:text-md text-primary-default"
+                  >
+                    <option value="">Select Baby Category</option>
+                    <option value="Well baby">Well baby</option>
+                    <option value="Sick Baby">Sick Baby</option>
+                    <option value="Medically Fragile Baby">
+                      Medically Fragile Baby
+                    </option>
+                  </select>
+                )}
+            </div>
+          </div>
+        </div>
+
+        <div className="absolute  right-0 mt-8 mr-16 flex flex-col">
+          {requestData &&
+            requestData.Request &&
+            requestData.Request.RequestStatus !== "Ongoing" &&
+            requestData.Request.RequestStatus !== "Decline" &&
+            requestData.Request.RequestStatus !== "Complete" && (
+              <>
+                <button
+                  onClick={handleApproved}
+                  className="bg-primary-default text-white px-4 py-2 rounded-full mb-4"
+                >
+                  Approved
+                </button>
+                <button
+                  onClick={handleDecline}
+                  className="bg-white text-primary-default px-4 py-2 rounded-full border border-primary-default"
+                >
+                  Decline
+                </button>
+              </>
+            )}
+        </div>
+
+        <RequestConfirmModal
+          isOpen={showModal}
+          onConfirm={handleApprovedCancel}
+          onCancel={handleApprovedConfirm}
+          message="Are you sure you want to approve this request? Once approved, the request process will proceed."
+        />
+
+        <RequestDeclineModal
+          isOpen={isDeclineModalOpen}
+          onConfirm={handleDeclineConfirm}
+          onCancel={handleDeclineCancel}
+          message="Are you sure you want to decline this request? Once declined, the request process will not proceed."
+        />
+
+        <AppointmentRequestDeclineModal
+          isOpen={isDeclineModalOpen}
+          onConfirm={handleDeclineConfirm}
+          onCancel={handleDeclineCancel}
+          message="Are you sure you want to decline this appointment? Once declined, the request process will not proceed."
+          RequestID={RequestID}
+        />
       </div>
-
-      <RequestConfirmModal
-        isOpen={showModal}
-        onConfirm={handleApprovedCancel}
-        onCancel={handleApprovedConfirm}
-        message="Are you sure you want to approve this request? Once approved, the request process will proceed."
-      />
-
-      <RequestDeclineModal
-        isOpen={isDeclineModalOpen}
-        onConfirm={handleDeclineConfirm}
-        onCancel={handleDeclineCancel}
-        message="Are you sure you want to decline this request? Once declined, the request process will not proceed."
-      />
-
-      <AppointmentRequestDeclineModal
-        isOpen={isDeclineModalOpen}
-        onConfirm={handleDeclineConfirm}
-        onCancel={handleDeclineCancel}
-        message="Are you sure you want to decline this appointment? Once declined, the request process will not proceed."
-        RequestID={RequestID}
-      />
     </section>
   );
 };

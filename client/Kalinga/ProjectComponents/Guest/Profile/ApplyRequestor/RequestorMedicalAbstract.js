@@ -64,6 +64,8 @@ const RequestorMedicalAbstract = ({route}) => {
         });
 
         if (!result.canceled && result.assets && result.assets.length > 0) {
+          delete selectedFile[attachmentType]
+          if(Object.keys(selectedFile).length===0)setFileContainer(false)
             let fileType = ''
           result.assets.forEach(image => {
 
@@ -112,6 +114,8 @@ const handleFileUpload = async (attachmentType) => {
   try {
     const result = await DocumentPicker.getDocumentAsync();
     if (!result.canceled && result.assets && result.assets.length > 0) {
+      delete selectedImage[attachmentType]
+      if(Object.keys(selectedImage).length===0)setImageContainer(false)
             if (
               result.assets[0].mimeType === "application/pdf" ||
               result.assets[0].mimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"

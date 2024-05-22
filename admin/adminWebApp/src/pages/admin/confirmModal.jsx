@@ -1,14 +1,12 @@
 import React, { useState } from "react";
-import { FaCheck } from "react-icons/fa";
-import { RiCloseFill } from "react-icons/ri";
+
 const ConfirmationModal = ({
   isOpen,
   confirmMessage,
+  onConfirm,
   onCancel,
-  status,
-  userType,
-  onClose,
-  name
+  isApproved,
+  confirm
 }) => {
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
 
@@ -16,8 +14,17 @@ const ConfirmationModal = ({
     setIsSecondModalOpen(true); // Open the second modal
   };
 
+  const handleSecondModalConfirm = (isApproved) => {
+    setIsSecondModalOpen(isApproved); // Close the second modal
+    onConfirm(); // Call the original onConfirm function
+  };
+
+  const handleCancel = () => {
+    setIsSecondModalOpen(false); // Close the second modal
+    onCancel(); // Call the original onCancel function
+  };
+
   return (
-    
     <div
       className={`fixed inset-0 flex items-center justify-center z-50 ${
         isOpen ? "block" : "hidden"
@@ -26,7 +33,7 @@ const ConfirmationModal = ({
       <div className="fixed inset-0 bg-gray-800 opacity-50 z-40"></div>
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
         <div className="bg-white rounded-xl shadow-lg max-w-lg">
-          <div className="border-2 border-pink-800 p-12 px-8 rounded-xl">
+          <div className="border-2 border-pink-800 p-12 rounded-xl">
             <p className="text-xl font-sans text-primary-default">
               {confirmMessage()}
             </p>
@@ -53,19 +60,21 @@ const ConfirmationModal = ({
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="fixed inset-0 bg-gray-800 opacity-50 z-40"></div>
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
-            <div className="  rounded-xl border-2 border-[#E60965] max-w-[400px] p-7 flex flex-col justify-center items-center bg-white ">
-              <div className="items-center justify-center mb-7">
-                {status === "approved" && (<FaCheck size = {100} color= "#E60965"/>)}
-                {status === "declined" && (<RiCloseFill size = {100} color= "#E60965"/>)}
+            <div className="border-2 border-pink-800 bg-white p-12 rounded-lg shadow-lg max-w-lg">
+              <div className="flex justify-center items-center"></div>
+              <p className="text-xl font-sans text-primary-default flex text-center items-center">
+                {isApproved
+                  ? "The appointment has been successfully approved, and the user will receive a notification about its status."
+                  : "The appointment has been rejected."}
+              </p>
+              <div className="mt-8 flex justify-center">
+                <button
+                  className="px-6 py-2 bg-pink-500 text-white text-xl font-sans rounded-full hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onClick={handleSecondModalConfirm}
+                >
+                  OK
+                </button>
               </div>
-              <div className="font-open-sans text-lg text-center text-[#E60965]">
-                You've <span className="font-bold">{status}</span> {name} as a {userType}. An email has been sent to notify them of their approval. Thank you for your diligence and dedication in the approval process.
-              </div>
-              <button
-                onClick = {onClose}
-              className=" transition duration-300 hover:bg-opacity-80 bg-[#E60965] rounded-lg text-white px-8 py-2 mt-4"> 
-                Done
-              </button>
             </div>
           </div>
         </div>

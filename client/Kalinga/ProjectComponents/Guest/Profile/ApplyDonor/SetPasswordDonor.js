@@ -109,6 +109,9 @@ const SetPasswordDonor = ({route}) => {
                 return
             }
             console.log("no token")
+            const checkDonorID = await AsyncStorage.getItem('DonorApplicant_ID')
+            const checkRequestorID = await AsyncStorage.getItem('RequestorApplicant_ID')
+                if(!checkDonorID && !checkRequestorID) await AsyncStorage.removeItem('Pending')
             navigation.dispatch(
                 CommonActions.reset({
                     index: 0,

@@ -56,6 +56,7 @@ import { updateRequestRemark} from '../controllers/Admin/Appointment/updateReque
 import { getDonationStatus, getDonationStatusOfMother } from '../controllers/Donor/getDonationStatus'
 import { getAllUsers } from '../controllers/SuperAdmin/getAllUser'
 import { deleteUser } from '../controllers/SuperAdmin/deleteUser'
+import { getTotalUsersPerBarangay } from '../controllers/Admin/Reports/getTotalUserBarangay'
 
 export default (router: express.Router) => {
   
@@ -126,6 +127,7 @@ export default (router: express.Router) => {
     router.put ('/kalinga/updateRequestRemark/:RequestID', updateRequestRemark)
     router.get ('/kalinga/getAllUsers', getAllUsers)
     router.delete ('/kalinga/deleteUser/:id/:userType', deleteUser)
+    router.get ('/kalinga/getTotalUsersPerBarangay', getTotalUsersPerBarangay)
 
 
 

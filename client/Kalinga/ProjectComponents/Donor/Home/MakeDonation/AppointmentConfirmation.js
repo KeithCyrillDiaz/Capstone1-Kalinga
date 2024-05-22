@@ -124,6 +124,7 @@
                     style={[styles.BiginputField, { color: '#E60965' }]}
                     placeholder="Home Address"
                     placeholderTextColor="#E60965"
+                    multiline={true}
                     value={`Home Address: ${formData.homeAddress || ''}`}
                     editable={false}
                   />
@@ -138,45 +139,25 @@
 
                   <TextInput
                     style={[styles.BiginputField, { color: '#E60965' }]}
-                    placeholder="Medical Condition (If Applicable)"
-                    placeholderTextColor="#E60965"
-                    value={`Medical Condition (If Applicable): ${formData.medicalCondition || ''}`}
-                    editable={false}
-                  />
-                  <TextInput
-                    style={[styles.BiginputField, { color: '#E60965' }]}
                     placeholder="Amount of Milk to be Donated"
                     placeholderTextColor="#E60965"
                     value={`Amount of Milk to be Donated: ${formData.milkAmount || ''}` + " ml"}
                     editable={false}
                   />
                   <View>
-                  <Text style={styles.AdminDate}>Date</Text>
-                  </View>
-                  <View style={styles.BiginputField}>
-                            <TextInput
-                                style={{ flex: 1, color: '#E60965' }}
-                                placeholder="Date"
-                                placeholderTextColor="#E60965"
-                                value={format(new Date(formData.selectedDate), 'MM/dd/yyyy') || ''}
-                                editable={false}
-                            />
-                            <FontAwesome5 name="calendar-alt" size={20} color="#E60965" style={styles.icon} />
-                        </View>
-
-                        <View>
-                            <Text style={styles.AdminTime}>Time</Text>
-                        </View>
-                        <View style={styles.BiginputField}>
-                            <TextInput
-                                style={{ flex: 1, color: '#E60965' }}
-                                placeholder="Time"
-                                placeholderTextColor="#E60965"
-                                value={format(new Date(formData.selectedTime), 'HH:mm') || ''}
-                                editable={false}
-                            />
-                            <MaterialIcons name="access-time-filled" size={24} color="#E60965" style={styles.icon2} />
-                        </View>
+                        <Text style={[styles.AdminMilkLocation, {marginLeft: "-7%"}]}>Delivery Method</Text>
+                    </View>
+                    <View style={styles.BiginputField}>
+                    <TextInput
+                        style={{ flex: 1, color: '#E60965' }} // Set flex to 1 to allow TextInput to take up remaining space
+                        placeholder="Location"
+                        multiline={true}
+                        placeholderTextColor="#E60965"
+                        value={formData.method}
+                        editable={false}
+                    />
+                    <FontAwesome6 name="hospital" size={24} color="#E60965" style={styles.icon3} />
+                    </View>
                   <View>
                         <Text style={styles.AdminMilkLocation}>Milk Bank Location</Text>
                     </View>
@@ -199,7 +180,7 @@
                       </TouchableOpacity>
                       <TouchableOpacity onPress={() => confirmation("Cancel")}>
                       <View style={styles.CancelbuttonContainer}>
-                          <Text style={styles.label}>Cancel</Text>
+                          <Text style={[styles.label, {color: '#E60965'}]}>Cancel</Text>
                       </View>
               </TouchableOpacity>
                 </View>
@@ -230,18 +211,17 @@
             paddingHorizontal: 37,
             borderRadius: 20,
             paddingVertical: 5,
-            marginHorizontal: 10
-
+            marginHorizontal: 10,
+            elevation: 7,
             
         },
         CancelbuttonContainer: {
-            backgroundColor: '#E60965',
+            backgroundColor: 'white',
             paddingHorizontal: 37,
             borderRadius: 20,
             paddingVertical: 5,
-            marginHorizontal: 10
-
-        
+            marginHorizontal: 10,
+            elevation: 7,
         },
         AdminButton:{
             flexDirection: "row",

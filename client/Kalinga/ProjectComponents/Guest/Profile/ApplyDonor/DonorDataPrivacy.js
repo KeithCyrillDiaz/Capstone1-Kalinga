@@ -45,7 +45,7 @@ const DonorDataPrivacy = () => {
                         <Text style = {styles.Alabel}>Agree</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style = {styles.DisagreebuttonContainer} onPress={() => navigatePage("GuestTabs")}>
-                        <Text style = {styles.Dlabel}>Diagree</Text>
+                        <Text style = {styles.Dlabel}>Disgree</Text>
                     </TouchableOpacity>
                    
                 </View>
@@ -106,7 +106,7 @@ const DonorDataPrivacy = () => {
         borderRadius: 20,
         justifyContent: "center",
         marginBottom: "10%",
-        borderWidth: 1,
+        elevation:7,
         borderColor: "#E60965",
         marginHorizontal: "5%"
     },

@@ -53,7 +53,7 @@ const SetAppointment = ({route}) => {
     emailAddress: userInformation.email,
     homeAddress: userInformation.homeAddress,
     city: city,
-    medicalCondition: '',
+    method: '',
     milkAmount: '',
 
   });
@@ -65,7 +65,7 @@ const SetAppointment = ({route}) => {
       'emailAddress',
       'phoneNumber',
       'homeAddress',
-      'milkAmount'
+      'milkAmount',
       ];
 
       const isFormDataValid = keysToCheck.every(key => formData[key].trim() !== '');
@@ -156,6 +156,7 @@ const SetAppointment = ({route}) => {
                 placeholderTextColor="#E60965"
                 onChangeText={(text) => handleChange("fullName", text)}
                 value = {formData.fullName}
+                editable={false}
               />
             </View>
                     <Text style = {styles.asterix}>
@@ -170,6 +171,7 @@ const SetAppointment = ({route}) => {
                       placeholderTextColor="#E60965"
                       onChangeText={(text) => validatePhoneNumber(text)}
                       value={formData.phoneNumber}
+                      
                       />
                   </View>
                       
@@ -185,6 +187,7 @@ const SetAppointment = ({route}) => {
                       placeholderTextColor="#E60965"
                       onChangeText={(text) => handleChange("emailAddress", text)}
                       value={formData.emailAddress}
+                      editable={false}
                     />
                   </View>
                  
@@ -226,25 +229,7 @@ const SetAppointment = ({route}) => {
                       *
                     </Text>
                 </View>
-                <View style={styles.inputField}>
-                  <View style={styles.spaceBetween}>
-                    <Picker
-                    selectedValue={formData.medicalCondition}
-                    style={{ height: 30, width: "100%", color: '#E60965'}}
-                    onValueChange={(itemValue) =>
-                      handleChange("medicalCondition", itemValue)
-                    }
-                    >
-                    <Picker.Item label="Medical Condition" value="" />
-                    <Picker.Item label="Normal" value="Normal" />
-                    <Picker.Item label="Sick" value="Sick" />
-                  </Picker>
-                  </View>
-                 
-                    <Text style = {styles.asterix}>
-                      *
-                    </Text>
-                </View>
+               
                 <View style={styles.inputField}>
                   <View style={styles.spaceBetween}>
                     <TextInput
@@ -334,7 +319,7 @@ const SetAppointment = ({route}) => {
     },
 
     placeholderDesign: {
-      fontFamily: "Kurale",
+      fontFamily: "Open-Sans-Regular",
       color: "#E60965",
     },
 
