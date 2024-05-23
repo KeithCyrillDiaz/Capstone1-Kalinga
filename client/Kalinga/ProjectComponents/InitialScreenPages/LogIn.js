@@ -23,7 +23,7 @@ const LogIn = () => {
     const checkToken = async () =>{
         const token = await AsyncStorage.getItem('token')
         if (token) {
-            console.log("token: ", token)
+            console.log("token Existing ")
         }
         console.log("No existing Token")
     }
@@ -85,7 +85,6 @@ const LogIn = () => {
             } else{
                 const userInformation = result.data.userInformation
                 const token = result.data.token
-                console.log("token: ", result.data.token)
                 console.log("User is a " + result.data.userInformation.userType);
                 const registeredUserType = result.data.userInformation.userType
                 await AsyncStorage.setItem('userType', registeredUserType)
@@ -209,7 +208,7 @@ const LogIn = () => {
                     <Text style = {styles.guest}>Log In as Guest?</Text>
                 </TouchableOpacity>
 
-                <View style={styles.lineContainer}>
+                {/* <View style={styles.lineContainer}>
                     <View style={styles.line} />
                     <Text style={styles.lineText}>Or connect with</Text>
                     <View style={styles.line} />
@@ -228,7 +227,7 @@ const LogIn = () => {
                             style={styles.socialImage}
                         />
                     </TouchableOpacity>
-                </View>
+                </View> */}
                
                 </KeyboardAvoidingView>
             </ScrollView>

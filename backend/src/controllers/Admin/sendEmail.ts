@@ -136,6 +136,101 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
 }
 
 
+export const sendBlockedEmail = async (req: express.Request, res: express.Response) => {
+    try{
+
+        const { email, userType, status } = req.body
+
+        const result = await transporter.sendMail({
+            from: process.env.NM_EMAIL,
+            to: email,
+            subject: status === "Yes" ? "Your Account Has Been Blocked" : "Your Account Is Now Unblocked",
+            html: `
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Account Notification</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        margin: 0;
+                        padding: 0;
+                        background-color: #f4f4f4;
+                    }
+                    .container {
+                        max-width: 600px;
+                        margin: 0 auto;
+                        padding: 20px;
+                        background-color: #fff;
+                        border-radius: 10px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    }
+                    h2 {
+                        color: #333;
+                    }
+                    p {
+                        margin-bottom: 20px;
+                        line-height: 1.6;
+                    }
+                    .button {
+                        display: inline-block;
+                        background-color: #E60965;
+                        color: #fff;
+                        text-decoration: none;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        transition-duration: 0.3s;
+                        border: none;
+                    }
+                    .button:hover {
+                        cursor: pointer;
+                        background-color: #c10756;
+                    }
+                    .footer {
+                        margin-top: 20px;
+                        text-align: left;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <p>Hi there,</p>
+                    <p>${status === "Yes" 
+                        ? "Unfortunately, your account has been blocked by the admin due to violations. If you have any questions, please contact us by clicking the button below." 
+                        : "Good news! Your account has been unblocked, and you now have access to all features of the Kalinga app. If you have any questions or concerns, please contact us by clicking the button below."}</p>
+                    <a href="mailto:no.reply.kalingabreastmilkapp@gmail.com" target="_blank">
+                        <button class="button">Contact Us</button>
+                    </a>
+                    <div class="footer">
+                        <p>Best Regards,</p>
+                        <p>Kalinga Team</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+            `
+          });
+        console.log("Email Sent Successfully")
+        return res.status(200).json({
+            messages: {
+                code: 0,
+                message: "Email Sent Successfully"
+            },
+        })
+
+    } catch (error){
+        return res.status(400).json({
+            messages: {
+                code: 1,
+                message: error
+            },
+            
+        })
+    }
+}
+
 
 export const sendApprovedEmail = async (req: express.Request, res: express.Response) => {
     try{

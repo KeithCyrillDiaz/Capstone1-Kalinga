@@ -12,13 +12,11 @@ import * as DocumentPicker from 'expo-document-picker';
 import axios from 'axios';
 import { CommonActions } from '@react-navigation/native';
 import ImageZoom from 'react-native-image-pan-zoom';
-import { BASED_URL } from '../../../../MyConstants.js';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Uploading } from '../../../uploader/Uploading.js';
 import { UploadImageOrFileToFirebase } from '../../../uploader/fireBaseUploader.js'
-const DonorUploadMedicalRequirements = ({route}) => {
+const AppointmentUploads = ({route}) => {
 
-  const { screeningFormData } = route.params;
+  const { formData } = route.params;
 
   const [selectedImage, setSelectedImage] = useState({});
   const [selectedFile, setSelectedFile] = useState({});
@@ -35,23 +33,8 @@ const DonorUploadMedicalRequirements = ({route}) => {
   const [imageUri, setIMageUri] = useState("")
   const [loaderLabel, setLoaderLabel] = useState("")
 
-  const confirmation = () => {
-    Alert.alert('Confirmation','Are you sure you want to submit your Application?',
-    [
-      {
-        text: 'No',
-      },
-      {
-        text: 'Yes',
-        onPress: () =>  navigatePage("EmailVerification", screeningFormData),
-      },
-    ]
-  )
-    
- }
 
-
-  const navigatePage = async (Page, Data) => {
+  const navigatePage = async () => {
     try {
      if(Object.keys(selectedImage).length + Object.keys(selectedFile).length < 5){
       Alert.alert(
@@ -60,62 +43,8 @@ const DonorUploadMedicalRequirements = ({route}) => {
       );
       return
      }
-     
-     setUploadingImage(true)
-        // Send POST request to the specified URL with the form data
-        const postScreeningForm = await axios.post(`${BASED_URL}/kalinga/addScreeningForm`, 
-              screeningFormData,
-        );
-        // Log successful response from the backend
-
-        console.log('Data saved successfully:', postScreeningForm.data);
-
-        for (const key in selectedImage) {
-          const imageData = selectedImage[key];
-          
-        await UploadImageOrFileToFirebase({
-          URI: imageData.uri, 
-          requirmentType: imageData.name,
-          purpose: "Application",
-          type: "Image",
-          userType: "Donor", 
-          userId: screeningFormData.Applicant_ID,
-          nameOfUser: screeningFormData.fullName,
-          percent: setProgressBar, // for uploading with loader
-          setImage: setIMageUri, // for uploading with loader
-          setLabel: setLoaderLabel  // for uploading with loader
-        });
-        }
-
-
-        for (const key in selectedFile) {
-          const fileData = selectedFile[key];
-          
-          await UploadImageOrFileToFirebase({
-            URI: fileData.uri, 
-            requirmentType: fileData.requirementType,
-            purpose: "Application",
-            type: "File",
-            userType: "Donor", 
-            userId:screeningFormData.Applicant_ID,
-            nameOfUser: screeningFormData.fullName,
-            percent: setProgressBar,// for uploading with loader
-            setImage: setIMageUri, // for uploading modal
-            setLabel: setLoaderLabel // for uploading with loader
-          });
-        }
-
-          await AsyncStorage.setItem('Pending', 'True')
-          await AsyncStorage.setItem('DonorApplicant_ID', screeningFormData.Applicant_ID)
-          setUploadingImage(false)
-
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [{ name: Page, params: Data } ], 
-            })
-          );
-          return
+     navigation.navigate('AppointmentConfirmation', { formData: formData, selectedImage: selectedImage, selectedFile: selectedFile });
+     return
     } catch (error) {
         // Handle error if the request fails
         console.error('Error saving data:', error);
@@ -162,8 +91,8 @@ const DonorUploadMedicalRequirements = ({route}) => {
                 name: attachmentType, 
                 type: fileType,
                 userType: "Donor",
-                owner: screeningFormData.fullName,
-                ownerID: screeningFormData.Applicant_ID
+                owner: formData.fullName,
+                ownerID: formData.Donor_ID
             
               })
               
@@ -213,10 +142,10 @@ const handleFileUpload = async (attachmentType) => {
                 uri: result.assets[0].uri,
                 type: fileType,
                 userType: "Donor",
-                owner: screeningFormData.fullName,
+                owner: formData.fullName,
                 size: result.assets[0].size,
                 requirementType: attachmentType,
-                ownerID: screeningFormData.Applicant_ID
+                ownerID: formData.Donor_ID
             }
         };
         // Update the selectedFile state
@@ -245,14 +174,6 @@ const handleFileUpload = async (attachmentType) => {
 // }, [uploadedFiles]);
 
 
-  const [isChecked, setIsChecked] = useState(false);
-
-  const toggleCheckbox = () => {
-    setIsChecked(!isChecked);
-  
-};
-
-
     return (
       <View style={globalStyles.container}>
          <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
@@ -272,14 +193,6 @@ const handleFileUpload = async (attachmentType) => {
             //  onClose = {() => setUploadingImage(false)}
             />
           )}
-
-            <View style={styles.rectanglesContainer}>
-                <View style={styles.rectangle}></View>
-                <View style={styles.rectangle}></View>
-                <View style={styles.rectangle}></View>
-                <View style={styles.rectangle}></View>
-                <View style={styles.rectangleIndicator}></View>
-            </View>
 
             <Text style = {styles.title}> Upload Medical Requirements </Text>
             <Text style = {styles.note}> Note: Please make sure that your images are clear</Text>
@@ -504,22 +417,15 @@ const handleFileUpload = async (attachmentType) => {
                   </View>
               </Modal>
 
-            <TouchableOpacity onPress={toggleCheckbox} style={styles.checkbox}>
-                {isChecked ? <AntDesign name="checksquare" size={17} color="#E60965" /> 
-                : <Fontisto name="checkbox-passive" size={17} color="#E60965" />}
-                <Text style={styles.checkBoxLabel}>I have read the Donation Terms and Condition</Text>
-            </TouchableOpacity>
-
             {/*Approved.js*/}
             <TouchableOpacity 
             style={[
               styles.button, 
-              { opacity: (isChecked && Object.keys(selectedImage).length + Object.keys(selectedFile).length >= 5) ? 1 : 0.5 } // Apply opacity based on conditions
+              { opacity: (Object.keys(selectedImage).length + Object.keys(selectedFile).length >= 5) ? 1 : 0.5 } // Apply opacity based on conditions
             ]}
-            disabled={!isChecked} // Disable the button based on conditions
-            onPress={() =>confirmation()}
+            onPress={() =>navigatePage()}
           > 
-            <Text style={styles.buttonTitle}>Submit</Text>
+            <Text style={styles.buttonTitle}>Next</Text>
           </TouchableOpacity>
 
            
@@ -689,5 +595,5 @@ const handleFileUpload = async (attachmentType) => {
 
   })
   
-export default DonorUploadMedicalRequirements;
+export default AppointmentUploads;
 

@@ -1,6 +1,7 @@
 // Import necessary modules
 import { Request, Response } from 'express';
 import RequestModel from '../../models/Requestor/RequestorRequestModel';
+import app from '../../../api';
 
 // Controller function to fetch request status
 export const getRequestStatus = async (req: Request, res: Response): Promise<void> => {
@@ -40,7 +41,7 @@ export const getRequestStatusOfMother = async (req: Request, res: Response) => {
       }
 
       const appointments = await RequestModel.findOne({Requestor_ID: id, $or: [{RequestStatus: "Pending"}, {RequestStatus: "Ongoing"}]})
-
+      console.log("Yow:", appointments)
       if(appointments){
         console.log("There still Ongoing Or Pending Request")
         return res.json({

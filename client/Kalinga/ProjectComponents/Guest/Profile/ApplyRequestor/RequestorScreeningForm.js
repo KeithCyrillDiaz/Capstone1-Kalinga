@@ -213,9 +213,10 @@ const checkForm= (value) => {
         }
         if(result === 0 ){
           const childAge = dayToday - childDay
-  
+          setChildIsTooOld(false)
           if( childAge === 0) return finalAge = "New Born"
           else return finalAge = childAge + " days"
+    
         }
         setChildIsTooOld(false)
     }
@@ -246,6 +247,7 @@ const checkForm= (value) => {
 // }, [screeningFormData]);
 
 const handleChangeText = (name, value) => {
+  if (name === "contactNumber" && /[^a-zA-Z0-9]/.test(value))return;
   setScreeningFormData({ ...screeningFormData, [name]: value });
     if(name === "email" && value.includes("@") && (value.endsWith("com") || value.endsWith("ph"))){
       console.log("Email: ", value)
@@ -564,9 +566,10 @@ useEffect(() => {
             placeholder="Phone Number"
             placeholderTextColor={"#E60965"}
             style={styles.inputField}
-            
+            maxLength={11}
             onChangeText={(value) => handleChangeText('contactNumber', value)}
-            keyboardType="phone-pad"
+            keyboardType="numeric"
+            value={screeningFormData.contactNumber}
           />
         </View>
         

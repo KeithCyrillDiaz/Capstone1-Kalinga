@@ -174,7 +174,8 @@ const checkForm = (value) => {
                   maxWidth:210,
                   marginLeft: 20,
                   color: "black",
-                  paddingBottom: 2
+                  paddingBottom: 2,
+                  fontFamily: "Open-Sans-SemiBold"
                 }}
                 multiline={true}
                 textAlignVertical="bottom" // Align text to the top vertically

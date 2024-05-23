@@ -49,6 +49,18 @@ const DonorHome = ({route}) => {
         );
         return
       }
+      if(Page === "DonorForum"){
+        Alert.alert(
+          "Sorry, this feature is not yet available right now.",
+          "Rest assured, our team is hard at work developing new features to better serve our community. Your continued support means the world to us. Thank you for your patience!",
+          [
+            {
+              text: "Okay",
+            }
+          ]
+        );
+        return
+      }
       if(Page === "ValidUserExplore"){
         const result = await checkLocationPermission()
         console.log("result: ", result)
@@ -125,7 +137,7 @@ const DonorHome = ({route}) => {
         if(response.data.messages.message !== "No pending or ongoing Donation Appointment"){
           console.log("Donation Status:", response.data.appointments.DonationStatus)
           setDonationStatus(response.data.appointments.DonationStatus);
-        }
+        } else setDonationStatus(null)
         // console.log('Updated Donation Status:', data.DonationStatus);
     } catch (error) {
         console.error('Error fetching Donation status:', error);

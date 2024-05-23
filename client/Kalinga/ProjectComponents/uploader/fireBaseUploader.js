@@ -1,9 +1,29 @@
 
 import React, { useState } from 'react'
 import { storage } from '../../fireBaseConfig'; 
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytesResumable, getDownloadURL, listAll, deleteObject } from 'firebase/storage';
 import axios from 'axios';
 import { BASED_URL } from '../../MyConstants';
+
+
+export const deleteFolderContents = async ({folderPath}) => {
+  const folderRef = ref(storage, folderPath);
+
+  try {
+    // List all files and folders in the specified folder path
+    const listResult = await listAll(folderRef);
+
+    // Create an array of promises to delete each file
+    const deletePromises = listResult.items.map(itemRef => deleteObject(itemRef));
+    await Promise.all(deletePromises);
+
+    console.log(`All files in folder ${folderPath} have been deleted.`);
+  } catch (error) {
+    console.error('Error deleting folder contents: ', error);
+    throw error;
+  }
+};
+
 
 export const UploadImageOrFileToFirebase = ({
     URI, //Image or File URI
@@ -20,6 +40,7 @@ export const UploadImageOrFileToFirebase = ({
   }) => {
     return new Promise(async (resolve, reject) => {
       try {
+        console.log("userId", userId)
         if(setImage && setLabel && percent){
             const uri = type === "File" ? "" : URI
             const label = type === "File" ? "Uploading Files..." : "Uploading Images..."
@@ -35,12 +56,13 @@ export const UploadImageOrFileToFirebase = ({
           ? "Profile-Pictures/"
           : purpose === "Request" 
           ? "Request/"
+          : purpose === "Donate" 
+          ? "Donate/"
           : "BugReports/";
         
         const fileName = new Date().getTime();
         const filePath = userType + "/" + nameOfUser + "/" + secondFolder + fileType;
-        
-      
+
         const response = await fetch(URI);
         const blob = await response.blob();
         
@@ -59,7 +81,7 @@ export const UploadImageOrFileToFirebase = ({
             const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
             await uploadImageOrFileDataToDatabase({
               id: userId,
-              purpose: "Application",
+              purpose: purpose,
               path: filePath + fileName, 
               url: downloadURL,
               name: requirmentType, 

@@ -55,7 +55,7 @@ const RequestorDataPrivacy = () => {
                       <Text style = {styles.Alabel}>Agree</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style = {styles.DisagreebuttonContainer} onPress={() => navigatePage("Guest Profile")}>
-                      <Text style = {styles.Dlabel}>Disgree</Text>
+                      <Text style = {styles.Dlabel}>Disagree</Text>
                   </TouchableOpacity>
                  
               </View>

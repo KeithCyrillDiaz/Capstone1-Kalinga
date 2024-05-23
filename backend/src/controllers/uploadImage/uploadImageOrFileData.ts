@@ -1,11 +1,12 @@
 import express from 'express'
-import { createMedicalRequirementFiles, createMedicalRequirementImages, getScreeningFormByApplicantID } from '../../models/ApplyAsDonor'
+import { createMedicalRequirementFiles, createMedicalRequirementImages, deleteMRFiles, deleteMRImages, getScreeningFormByApplicantID } from '../../models/ApplyAsDonor'
 
 
 export const uploadImageOrFileData = async (req: express.Request, res: express.Response) => {
     try {
 
         const { id } = req.params
+    
         const { url, path, purpose, name, type } = req.body
 
         if(!id || !url || !path ||!purpose || !name) {
@@ -17,6 +18,8 @@ export const uploadImageOrFileData = async (req: express.Request, res: express.R
                 }
             }).status(400)
         }
+        console.log("id: ", id)
+
 
         const existingApplicant = await getScreeningFormByApplicantID(id)
 
@@ -75,3 +78,54 @@ export const uploadImageOrFileData = async (req: express.Request, res: express.R
     }
 }
 
+
+export const deleteImageFileData = async (req: express.Request, res: express.Response) => {
+    try {
+        const { id } = req.params
+        const { purpose } = req.body
+        
+        if(!id || !purpose){
+            console.log("Bad Request")
+            return res.status(400).json({
+                messages: {
+                    code: 1,
+                    message: "Bad Request"
+                }
+            })
+        }
+        
+        if(purpose !== "Request" &&  purpose !== "Donate"){
+            console.log("No Changes")
+            return res.status(304).json({
+                messages: {
+                    code: 1,
+                    message: "No Changes"
+                }
+            })
+        }
+           
+
+        const resultImages = await deleteMRFiles(id, purpose)
+        const resultFiles = await deleteMRImages(id, purpose)
+
+        if(resultImages && resultFiles){
+            console.log("Successfully Deleted Data")
+            res.status(200).json({
+                messages: {
+                    code: 0,
+                    message: "Successfully Deleted Data"
+                }
+            })
+        }
+        
+
+    } catch(error){
+        console.log("Internal Server Error")
+        return res.status(500).json({
+            messages: {
+                code: 1,
+                message: "Internal Server Error"
+            }
+        })
+    }
+}

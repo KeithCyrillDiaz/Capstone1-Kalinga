@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import { SafeAreaView, Text, View,ScrollView, StatusBar, StyleSheet, TouchableOpacity, Image, ActivityIndicator, TextInput} from 'react-native';
+import { SafeAreaView, Text, View,ScrollView, StatusBar, StyleSheet, Alert, TouchableOpacity, Image, ActivityIndicator, TextInput} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import axios from 'axios'; // Import axios for API requests
@@ -44,9 +44,10 @@ const CompleteDonations = ({route}) => {
                 selectedDate: format(new Date(item.selectedDate), 'EEE MMM dd yyyy HH:mm:ss'),
                 selectedTime: format(new Date(item.selectedTime), 'EEE MMM dd yyyy HH:mm:ss'),
             }));
-
+            
             setFormData(formattedData);
         } else {
+            Alert.alert("No Ongoing Donation", "You currently don't have any ongoing donations.");
             console.log('No completed donations found for the specified Donor_ID.');
         }
 
@@ -71,11 +72,16 @@ const CompleteDonations = ({route}) => {
                 >
             <View style={styles.columnContainer}>
             {formData.length === 0 && (
+                
                 <View style = {{
                     justifyContent: "center",
-                    alignItems: "center"
+                    alignItems: "center",
+                    marginTop: 20
                 }}>
-                    <Text>You Currently Dont Have any Completed Donations</Text>
+                    <Text style ={{
+                        fontFamily: "Open-Sans-Regular",
+                        color:  '#E60965',
+                    }}>No completed donations at the moment</Text>
                 </View>
               
             )}

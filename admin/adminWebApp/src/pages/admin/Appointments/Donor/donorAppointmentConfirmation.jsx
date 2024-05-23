@@ -9,6 +9,7 @@ import CompleteModal from "../../../../modal/CompleteModal";
 import AppointmentDeclineModal from "../../../../modal/AppointmentDeclineModal";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { getMedicalAbstractsFiles, getMedicalAbstractsImages } from "../../../../api/Appointments/Request";
 
 const donorAppointmentConfirmation = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -17,6 +18,8 @@ const donorAppointmentConfirmation = () => {
   const [showModal, setShowModal] = useState(false);
   const [isDeclineModalOpen, setIsDeclineModalOpen] = useState(false);
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
+  const [images, setImages] = useState([])
+  const [files, setFiles] = useState([])
 
   const [formData, setFormData] = useState({
     DonationStatus: "",
@@ -49,6 +52,7 @@ const donorAppointmentConfirmation = () => {
         );
         console.log("Response:", response.data);
         setAppointmentData(response.data.Appointment);
+        await fetchRequirements(response.data.Appointment.Donor_ID)
       } catch (error) {
         console.error("Error fetching appointment data:", error);
       }
@@ -158,6 +162,17 @@ const donorAppointmentConfirmation = () => {
   const handleTimeChange = (time) => {
     setSelectedTime(time);
   };
+
+   //fetch Image requirements
+  const fetchRequirements = async (id) => {
+    const Donor_ID = id
+    console.log("id: ", id)
+    const files = await getMedicalAbstractsFiles({id: Donor_ID, purpose: "Donate"})
+    const images = await getMedicalAbstractsImages({id: Donor_ID, purpose: "Donate"})
+    setFiles(files)
+    setImages(images)
+    console.l0g("images: ", images)
+  }
 
   return (
     <section className="w-full h-screen bg-primary-body overflow-hidden relative px-4">
@@ -387,6 +402,43 @@ const donorAppointmentConfirmation = () => {
             </div>
           </div>
         </div>
+      
+          <div
+          className="flex flex-row"
+          >
+            {images.map(requirement => (
+              <>
+                <div key={requirement.originalname} className="bg-white px-4 py-2 w-full h-72 shadow-md rounded-lg focus:outline-none focus: text-primary-default">
+                  <span className="flex justify-center text-primary-default text-lg text-center">
+                  {requirement.originalname}
+                  </span>
+                  <img
+                      className="w-[80%] h-[80%] mt-2 mx-auto py-2 hover: cursor-pointer object-contain"
+                    src={requirement.link}
+                    alt={requirement.originalname}
+                    />
+                </div>
+              </>
+              
+            ))}
+              {files.map(requirement => (
+              <div key={requirement.originalname} className="bg-white px-4 py-2 w-[40%] h-72 shadow-md items-center justify-center rounded-lg focus:outline-none focus: text-primary-default">
+                <span className="flex justify-center text-primary-default text-lg text-center">
+                  {requirement.originalname}
+                </span>
+                <a href ={`${requirement.link}`} target="_blank">
+                      <button 
+                      className="bg-primary-default px-4 py-2 text-white rounded-lg text-xs">
+                      Download {requirement.originalname} File
+                    </button>
+                  </a>
+              </div>
+            ))}
+          </div>
+          
+
+       
+        
 
         {appointmentData && appointmentData.DonationStatus === "Pending" && (
           <div className="flex justify-end mr-4 mt-10">

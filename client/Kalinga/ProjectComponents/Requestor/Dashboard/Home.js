@@ -18,7 +18,6 @@ export default function RequestorHome({route}) {
     const token = route.params.token
     
     const [userInformation, setUserInformation] = useState(route.params.userInformation)
-
     const storeInAsync = async () => {
       await AsyncStorage.setItem('userInformation', JSON.stringify(userInformation))
       await AsyncStorage.setItem('token', token)
@@ -33,7 +32,6 @@ export default function RequestorHome({route}) {
       UserName = nameArray[0];
     }
     
-    console.log("Name: ",UserName )
     const navigation = useNavigation();
 
     const [requestStatus, setRequestStatus] = useState('empty'); // State to hold request status
@@ -52,6 +50,18 @@ export default function RequestorHome({route}) {
           );
           return
       }
+      if(Page === "RequestorForum"){
+        Alert.alert(
+          "Sorry, this feature is not yet available right now.",
+          "Rest assured, our team is hard at work developing new features to better serve our community. Your continued support means the world to us. Thank you for your patience!",
+          [
+            {
+              text: "Okay",
+            }
+          ]
+        );
+        return
+    }
         if(Page === "ValidUserExplore"){
           const result = await checkLocationPermission()
           console.log("result: ", result)
@@ -129,25 +139,21 @@ export default function RequestorHome({route}) {
             console.log("Request Status:", response.data.appointments.RequestStatus)
             setRequestStatus(response.data.appointments.RequestStatus);
           }
+          else setRequestStatus(null)
+
       } catch (error) {
           console.error('Error fetching request status:', error);
       }
   };
 
-    useFocusEffect(
-      React.useCallback(() => {
-        fetchUpdateduserInfo()
-        storeInAsync()
-        simulateFetchRequestStatus();
-      }, [])
-  );
+
  
   const handleMakeRequest = () => {
       console.log('Current Request Status:', requestStatus);
   
       const canMakeRequest = requestStatus !== 'Pending' && requestStatus !== 'Ongoing';
       console.log('Can Make Request:', canMakeRequest); // Log the evaluation result
-  
+      navigatePage('MakeRequest'); // delete after testing
       if (canMakeRequest) {
           console.log('Navigating to MakeRequest');
           navigatePage('MakeRequest');
@@ -160,6 +166,13 @@ export default function RequestorHome({route}) {
           );
       }
   };
+  useFocusEffect(
+    React.useCallback(() => {
+      simulateFetchRequestStatus();
+      fetchUpdateduserInfo()
+      storeInAsync()
+    }, [])
+);
 
     return (
       <View style={[globalStyles.container, {marginTop: "-5%"}]}>

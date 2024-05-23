@@ -8,6 +8,10 @@
       TouchableOpacity, 
       TextInput, 
       Alert,
+      Dimensions, 
+      Image, 
+      Modal, 
+      TouchableHighlight
     } from 'react-native';
     import { globalHeader } from '../../../../styles_kit/globalHeader.js';
     import { globalStyles } from '../../../../styles_kit/globalStyles.js';
@@ -16,14 +20,26 @@
     import { MaterialIcons } from '@expo/vector-icons';
     import { FontAwesome6 } from '@expo/vector-icons';
     import { format } from 'date-fns';
+    import { MaterialCommunityIcons } from '@expo/vector-icons';
     import { BASED_URL } from '../../../../MyConstants.js';
-
+    import { Uploading } from '../../../uploader/Uploading.js';
+    import { UploadImageOrFileToFirebase, deleteFolderContents } from '../../../uploader/fireBaseUploader.js'
+    import ImageZoom from 'react-native-image-pan-zoom';
+    import { AntDesign } from '@expo/vector-icons';
+    import axios from 'axios'
 
     const AppointmentConfirmation = () => {
 
         const navigation = useNavigation();
         const route = useRoute();
-        const { formData } = route.params || {};
+        const { formData, selectedFile, selectedImage } = route.params;
+        const [modalVisible, setModalVisible] = useState(false);
+        const [selectedImageUrl, setSelectedImageUrl] = useState('');
+          //uploaderModal
+      const [progressBar, setProgressBar] = useState(0)
+      const [uploadingImage, setUploadingImage] = useState(false)
+      const [imageUri, setIMageUri] = useState("")
+      const [loaderLabel, setLoaderLabel] = useState("")
         
         const navigatePage = (Page) => {
           navigation.navigate(Page, {data: formData})
@@ -80,20 +96,100 @@
               if (!response.ok) {
                 throw new Error('Network response was not ok.');
               }
-        
+               await handleFileDataUpload()
               navigation.navigate('AppointmentConfirmationMessage'); // Redirect to AppointmentConfirmationMessage
             } catch (error) {
               console.error('Error creating appointment:', error);
             }
           };
+
+          const handleFileDataUpload = async () => {
+            try{
+                setUploadingImage(true)
+
+                const filesToBeDeleted = formData.userType + "/" + formData.fullName + "/" + "Donate/" + "Files"
+                const imagesToBeDeleted = formData.userType + "/" + formData.fullName + "/" + "Donate/" + "Images"
+          
+              // Delete old files to overwrite
+                if(filesToBeDeleted && imagesToBeDeleted){
+                  await deleteFolderContents({
+                    folderPath: filesToBeDeleted
+                  })
+                  await deleteFolderContents({
+                    folderPath: imagesToBeDeleted
+                  })
+                }
+
+                const response = await axios.post(`${BASED_URL}/kalinga/deleteFiledata/${formData.Donor_ID}`,
+                {purpose: "Donate"}
+              )
+              console.log(response.data.messages.message)
+        
+
+              //upload new files
+                for (const key in selectedImage) {
+                  const imageData = selectedImage[key];
+                  
+                await UploadImageOrFileToFirebase({
+                  URI: imageData.uri, 
+                  requirmentType: imageData.name,
+                  purpose: "Donate",
+                  type: "Image",
+                  userType: "Donor", 
+                  userId: formData.Donor_ID,
+                  nameOfUser: formData.fullName,
+                  percent: setProgressBar, // for uploading with loader
+                  setImage: setIMageUri, // for uploading with loader
+                  setLabel: setLoaderLabel  // for uploading with loader
+                });
+                }
+        
+        
+                for (const key in selectedFile) {
+                  const fileData = selectedFile[key];
+                  
+                  await UploadImageOrFileToFirebase({
+                    URI: fileData.uri, 
+                    requirmentType: fileData.requirementType,
+                    purpose: "Donate",
+                    type: "File",
+                    userType: "Donor", 
+                    userId: formData.Donor_ID,
+                    nameOfUser: formData.fullName,
+                    percent: setProgressBar,// for uploading with loader
+                    setImage: setIMageUri, // for uploading modal
+                    setLabel: setLoaderLabel // for uploading with loader
+                  });
+                }
+            }catch(error) {
+              console.log("ErrorUploading Image", error)
+            } finally {
+              setUploadingImage(false)
+            }
+           
+     
+
+          }
         return (
+          
             <View style={globalStyles.container}>
             <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style={globalHeader.SmallHeader}>
                 <Text style={globalHeader.SmallHeaderTitle}>Set Appointment</Text>
             </View>
 
-            <ScrollView overScrollMode='never' nestedScrollEnabled={true}>
+            <ScrollView 
+            overScrollMode='never' 
+            showsVerticalScrollIndicator={false}
+            nestedScrollEnabled={true}>
+            {uploadingImage && (
+             <Uploading 
+             progress={progressBar} 
+             Image={imageUri}
+             label={loaderLabel}
+            //  onClose = {() => setUploadingImage(false)}
+            />
+          )}
                 <Text style={styles.title}>Appointment Confirmation</Text>
                
               {formData && (
@@ -156,7 +252,7 @@
                         value={formData.method}
                         editable={false}
                     />
-                    <FontAwesome6 name="hospital" size={24} color="#E60965" style={styles.icon3} />
+                     <MaterialCommunityIcons name="truck-delivery" size={30} style={{flexShrink:0}} color='#E60965' />
                     </View>
                   <View>
                         <Text style={styles.AdminMilkLocation}>Milk Bank Location</Text>
@@ -172,6 +268,127 @@
                     />
                     <FontAwesome6 name="hospital" size={24} color="#E60965" style={styles.icon3} />
                     </View>
+                    
+          {Object.keys(selectedImage).length !== 0  && (
+            <View  style = {{
+              height: 150,
+              marginBottom: 20,
+              backgroundColor: "white",
+              paddingLeft: 10,
+              paddingRight: 10,
+              borderColor: "#E60965",
+              borderRadius: 15,
+              elevation: 7,
+              marginTop: 20,
+              }}>
+              <ScrollView 
+                showsHorizontalScrollIndicator={true}
+                overScrollMode='never'
+              horizontal={Object.keys(selectedImage).length >3 }
+              contentContainerStyle={{ flexDirection: 'row', }}
+            >
+              {Object.entries(selectedImage).map(([attachmentType, value]) => (
+                                <TouchableOpacity
+                                    key={attachmentType}
+                                    onPress={() => {
+                                        setSelectedImageUrl(value.uri);
+                                        setModalVisible(true);
+                                    }}
+                                >
+                                    <View style={{ marginHorizontal: 5 , alignItems: "center"}}>
+                                        <Text style ={{
+                                          textAlign: "center",
+                                          color: "#E60965",
+                                          marginTop: 7,
+                                      
+                                        }}>{attachmentType}</Text>
+                                        <Image
+                                            source={{ uri: value.uri }}
+                                            style={{ width: 100, height: 100, marginTop: 7, resizeMode: 'cover',}}
+                                        />
+                                    </View>
+                                </TouchableOpacity>
+                            ))}
+
+                    </ScrollView>
+                </View>
+            )}
+            
+           
+
+            {Object.keys(selectedFile).length !== 0 && (
+                      <View  style={{ 
+                        paddingVertical: 20,
+                        borderColor: "#E60965",
+                        backgroundColor: "white",
+                        width: "90%",
+                        borderRadius: 15,
+                        elevation: 7,
+
+                        }}>
+                          {Object.entries(selectedFile).map(([attachmentType,  file]) => {
+                          if (attachmentType !== "uri" && attachmentType !== "type") {
+                          return (
+                              <View key={attachmentType} 
+                              style={{ 
+                                flexDirection: "row", 
+                                width: "100%",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                paddingHorizontal: 17,
+                                gap:10
+                                }}>
+
+                                  <View style = {styles.fileType}>
+                                    <Text style = {{color: "#E60965", fontFamily: "Open-Sans-Bold"}}>{attachmentType}: </Text>
+                                  </View>
+                                  <View style = {styles.fileName}>
+                                    <Text style= {{width: 170}}>{file.name}</Text>
+                                  </View>
+                              </View>
+                          );
+                          }
+                          return null; // Return null for other entries
+                          })}
+
+                       </View>
+            )}
+           
+          
+
+            <Modal
+                  animationType="slide"
+                  transparent={true}
+                  visible={modalVisible}
+                  onRequestClose={() => {
+                      setModalVisible(!modalVisible);
+                  }}
+              >
+                  <View style={styles.modalContainer}>
+                  <ImageZoom
+                      cropWidth={Dimensions.get('window').width}
+                      cropHeight={Dimensions.get('window').height}
+                      imageWidth={Dimensions.get('window').width}
+                      imageHeight={Dimensions.get('window').height * 1} // Adjust the height as needed
+                      enableSwipeDown={true}
+                      onSwipeDown={() => setModalVisible(false)} // Close modal on swipe down
+                      style={{ backgroundColor: 'black' }} // Set background color to black to avoid seeing the underlying content
+                  >
+                      <Image
+                          source={{ uri: selectedImageUrl }}
+                          style={{ width: '100%', height: '100%' }}
+                      />
+                  </ImageZoom>
+                      <TouchableHighlight
+                          style={styles.closeButton}
+                          onPress={() => {
+                              setModalVisible(!modalVisible);
+                          }}
+                      >
+                          <AntDesign name="close" size={24} color="black" />
+                      </TouchableHighlight>
+                  </View>
+              </Modal>
              <View style={[styles.AdminButton, {marginBottom: 40}]}>
               <TouchableOpacity onPress={() => confirmation("Confirm")}>
                       <View style={styles.ConfirmbuttonContainer}>

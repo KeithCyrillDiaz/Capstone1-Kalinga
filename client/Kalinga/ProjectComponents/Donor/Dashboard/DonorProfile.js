@@ -102,7 +102,6 @@ const DonorProfile = ({route}) => {
                       ) : (
                         <Image
                         style = {{
-                          marginRight: -30,
                           width: 157,
                           height: 157,
                           borderWidth: 1,
@@ -114,15 +113,15 @@ const DonorProfile = ({route}) => {
                         />
                       )
                     }
-                      
-                      <View>
-                        <MaterialIcons name="verified" size={24} color="#E60965" />
-                      </View>
                      
                     </View>
 
                     <Text style = {styles.name}>{UserName}</Text>
-                    <Text style = {styles.userType}>Donor</Text>
+                    <View style={{gap: 3, flexDirection: "row", alignSelf: "center", alignItems: "center", marginBottom: 30}}>
+                      <MaterialIcons name="verified" size={17} color="#E60965" />
+                      <Text style = {styles.userType}>Donor</Text>
+                    </View> 
+                 
 
                   </View>
 
@@ -231,12 +230,6 @@ const DonorProfile = ({route}) => {
       
     },
 
-    profilePic: {
-      marginRight: -20,
-
-    },
-
-
     text: {
 
       //backgroundColor: "gray",
@@ -269,7 +262,6 @@ const DonorProfile = ({route}) => {
       color: "#E60965",
       fontFamily: "Open-Sans-SemiBold",
       fontSize: 15,
-      marginBottom: 30
     },
 
     iconBookmark: {

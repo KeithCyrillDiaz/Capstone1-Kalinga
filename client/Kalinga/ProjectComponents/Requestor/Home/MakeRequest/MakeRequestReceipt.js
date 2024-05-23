@@ -21,8 +21,9 @@ import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import { BASED_URL } from '../../../../MyConstants.js';
 import ImageZoom from 'react-native-image-pan-zoom';
 import { Uploading } from "../../../uploader/Uploading.js";
-import { UploadImageOrFileToFirebase } from '../../../uploader/fireBaseUploader.js'
+import { UploadImageOrFileToFirebase, deleteFolderContents } from '../../../uploader/fireBaseUploader.js'
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
+import axios from 'axios';
 
 const MakeRequestReceipt = () => {
   const navigation = useNavigation();
@@ -124,6 +125,23 @@ useEffect(() => {
 
       setUploadingImage(true)
       console.log("Uploading Files in Firebase")
+      const filesToBeDeleted = screeningFormData.userType + "/" + screeningFormData.fullName + "/" + "Request/" + "Files"
+      const imagesToBeDeleted = screeningFormData.userType + "/" + screeningFormData.fullName + "/" + "Request/" + "Images"
+
+      if(filesToBeDeleted && imagesToBeDeleted){
+        await deleteFolderContents({
+          folderPath: filesToBeDeleted
+        })
+        await deleteFolderContents({
+          folderPath: imagesToBeDeleted
+        })
+      }
+
+      const response = await axios.post(`${BASED_URL}/kalinga/deleteFiledata/${screeningFormData.Requestor_ID}`,
+        {purpose: "Request"}
+      )
+      console.log(response.data.messages.message)
+
 
       if(Object.keys(selectedImage).length !== 0){
         for (const key in selectedImage) {
@@ -135,7 +153,7 @@ useEffect(() => {
           purpose: "Request",
           type: "Image",
           userType: "Requestor", 
-          userId:screeningFormData.Applicant_ID,
+          userId:screeningFormData.Requestor_ID,
           nameOfUser: screeningFormData.fullName,
           percent: setProgressBar, // for uploading with loader
           setImage: setIMageUri, // for uploading with loader
@@ -154,7 +172,7 @@ useEffect(() => {
             purpose: "Request",
             type: "File",
             userType: "Requestor", 
-            userId:screeningFormData.Applicant_ID,
+            userId:screeningFormData.Requestor_ID,
             nameOfUser: screeningFormData.fullName,
             percent: setProgressBar,// for uploading with loader
             setImage: setIMageUri, // for uploading modal
@@ -234,17 +252,16 @@ useEffect(() => {
             </View>
           </View>
 
-          <View style={styles.boxContainer}>
-            <View style={styles.boxContentContainer}>
-              <Text style={styles.boxLabel}>Medical Condition: </Text>
-              <Text style={[styles.boxContent, styles.limitText]}>{formData.medicalCondition}</Text>
-            </View>
-          </View>
-
           <View style={[styles.boxContainer, {height: 60}]}>
             <View style={styles.boxContentContainer}>
               <Text style={styles.boxLabel}>Milk Bank: </Text>
               <Text style={[styles.boxContent, styles.limitText]}>{formData.milkBank}</Text>
+            </View>
+          </View>
+          <View style={[styles.boxContainer, {height: 60}]}>
+            <View style={styles.boxContentContainer}>
+              <Text style={styles.boxLabel}>Method of Obtaining: </Text>
+              <Text style={[styles.boxContent, styles.limitText]}>{formData.method}</Text>
             </View>
           </View>
 

@@ -11,7 +11,7 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import randomatic from 'randomatic';
 import { format } from 'date-fns';
 import { Picker } from '@react-native-picker/picker';
-
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
 const SetDateTimeLocation = () => {
@@ -148,7 +148,7 @@ const SetDateTimeLocation = () => {
         try {
             // Simulate API call or any processing
             console.log('Appointment data:', appointmentData);
-            navigation.navigate('AppointmentConfirmation', { formData: appointmentData });
+            navigation.navigate('AppointmentUploads', { formData: appointmentData });
             return
           } catch (error) {
             console.error('Error creating appointment:', error);
@@ -177,17 +177,19 @@ const SetDateTimeLocation = () => {
                     <View style={styles.BiginputField}>
                         <Picker
                         selectedValue={newForm.method}
-                        style={{ height: 30, width: "100%", color: '#E60965'}}
+                        style={{ height: 30, width: "90%", color: '#E60965'}}
                         onValueChange={(itemValue) =>
                         handleChange("method", itemValue)
                         }
                         >
                         <Picker.Item label="Method of Delivery" value="" />
-                        <Picker.Item label="Delivery" value="Delivery" />
+                        <Picker.Item label="In house" value="In house" />
                         <Picker.Item label="Pick-up" value="Pick-up" />
                     </Picker>
+                        <MaterialCommunityIcons name="truck-delivery" size={30} style={{flexShrink:0}} color='#E60965' />
                     </View>
-
+                    
+           
 
                     {/* <Text style={[styles.AdminDate,{width: "100%", marginLeft: 5,}]}>Method of Delivery</Text>
                     <TouchableOpacity onPress={() => setShowDatePicker(true)}>
