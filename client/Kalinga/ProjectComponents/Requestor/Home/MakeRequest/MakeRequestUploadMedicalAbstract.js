@@ -30,10 +30,10 @@ import { ValidIdInfoModal } from "./ValidIdInfoModal.js";
 
 const UploadMedicalAbstract = ({route}) => {
 
-  const { screeningFormData, formData } = route.params;
+  const { screeningFormData, methodImage, methodFile } = route.params;
   const navigation = useNavigation();
-  const [selectedImage, setSelectedImage] = useState({});
-  const [selectedFile, setSelectedFile] = useState({});
+  const [selectedImage, setSelectedImage] = useState(methodImage);
+  const [selectedFile, setSelectedFile] = useState(methodFile);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState('');
   const [fileContainer, setFileContainer] = useState(false)
@@ -64,16 +64,18 @@ const UploadMedicalAbstract = ({route}) => {
 //   'Quezon City ID',
 // ];
 
-  const navigatePage = (Page, Data, SI, SF) => {
-    if(noQuezonCityId && Object.keys(selectedImage).length + Object.keys(selectedFile).length < 8
-      || !noQuezonCityId && Object.keys(selectedImage).length + Object.keys(selectedFile).length < 7){
+  const navigatePage = (Page, Data, SI, SF, form) => {
+    if(noQuezonCityId && Object.keys(selectedImage).length + Object.keys(selectedFile).length 
+    - Object.keys(methodImage).length - Object.keys(methodFile).length < 8
+      || !noQuezonCityId && Object.keys(selectedImage).length + Object.keys(selectedFile).length
+      - Object.keys(methodImage).length - Object.keys(methodFile).length  < 7){
         Alert.alert(
           "Incomplete Medical Requirements",
           "Please upload all the required documents to proceed."
         );
         return
     }
-    navigation.navigate(Page, Data, SI, SF);
+    navigation.navigate(Page, Data, SI, SF, form);
 
   };
 
@@ -148,6 +150,7 @@ const handleFileUpload = async (attachmentType) => {
     if (!result.canceled && result.assets && result.assets.length > 0) {
       delete selectedImage[attachmentType]
       if(Object.keys(selectedImage).length===0)setImageContainer(false)
+      if(Object.keys(selectedImage).length < 3)setScrollableHorizontal(false)
             if (
               result.assets[0].mimeType === "application/pdf" ||
               result.assets[0].mimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -442,7 +445,7 @@ const handleFileUpload = async (attachmentType) => {
               </> 
             )}
             
-            {imageContainer && (
+            {Object.keys(selectedImage).length !==0 && (
                   <View  style = {{
                     marginBottom: 20,
                     backgroundColor: "white",
@@ -490,7 +493,7 @@ const handleFileUpload = async (attachmentType) => {
                 </View>
             )}
 
-            {fileContainer && (
+            {Object.keys(selectedFile).length !==0 && (
             <View  style={{ 
               paddingVertical: 20,
               borderColor: "#E60965",
@@ -561,8 +564,10 @@ const handleFileUpload = async (attachmentType) => {
               <View style = {globalStyles.center}>
             
                     <TouchableOpacity style = {[styles.AgreebuttonContainer,
-                      {opacity: !noQuezonCityId && Object.keys(selectedImage).length + Object.keys(selectedFile).length < 7 
-                        || noQuezonCityId && Object.keys(selectedImage).length + Object.keys(selectedFile).length < 8
+                      {opacity: !noQuezonCityId && Object.keys(selectedImage).length + Object.keys(selectedFile).length
+                        - Object.keys(methodImage).length - Object.keys(methodFile).length < 7 
+                        || noQuezonCityId && Object.keys(selectedImage).length + Object.keys(selectedFile).length 
+                        - Object.keys(methodImage).length - Object.keys(methodFile).length < 8
                         ? 0.5 : 1}
                     ]} 
                     onPress={() => navigatePage("MakeRequestReceipt", 
@@ -570,7 +575,7 @@ const handleFileUpload = async (attachmentType) => {
                       screeningFormData: screeningFormData, 
                       selectedImage: selectedImage,
                       selectedFile: selectedFile,
-                      formData: formData
+                      formData: screeningFormData
                     }
                     )}>
 

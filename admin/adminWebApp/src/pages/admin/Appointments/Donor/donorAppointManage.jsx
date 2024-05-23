@@ -11,6 +11,8 @@ export default function ({ remarks }) {
   const [appointments, setAppointments] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [files, setFiles] = useState([])
+  const [images, setImages] = useState([])
 
   const appointmentsPerPage = 10;
 

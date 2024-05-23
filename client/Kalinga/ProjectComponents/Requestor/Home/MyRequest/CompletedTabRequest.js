@@ -90,14 +90,22 @@ const CompletedTabRequest = ({route}) => {
                                 <Text style={styles.boxContentBold}>Amount of milk requested: </Text>
                                 <Text style={[styles.boxContent, styles.limitText, {marginTop: 2}]}>{formData.milkAmount} ml</Text>
                             </View>
-                            <View style={[styles.boxContentContainer, {gap: 4}]}>
-                                <Text style={styles.boxContentBold}>Baby Category:</Text>
-                                <Text style={[styles.boxContent, styles.limitText, {marginTop: 2}]}>{formData.BabyCategory}</Text>
+							<View style={[styles.boxContentContainer, {gap: 4}]}>
+                                <Text style={styles.boxContentBold}>Method of Obtaining:</Text>
+                                <Text style={[styles.boxContent, styles.limitText, {marginTop: 2}]}>{formData.method}</Text>
                             </View>
+							{formData.BabyCategory && (
+								  <View style={[styles.boxContentContainer, {gap: 4}]}>
+									<Text style={styles.boxContentBold}>Baby Category:</Text>
+									<Text style={[styles.boxContent, styles.limitText, {marginTop: 2}]}>{formData.BabyCategory}</Text>
+							  	  </View>
+							)}
+                          
 							<View style={[styles.boxContentContainer, {gap: 4}]}>
                                 <Text style={styles.boxContentBold}>Date:</Text>
                                 <Text style={[styles.boxContent, styles.limitText, {marginTop: 2}]}>{formData.Date}</Text>
                             </View>
+							
                         </View>
                     </View>
                 ))}

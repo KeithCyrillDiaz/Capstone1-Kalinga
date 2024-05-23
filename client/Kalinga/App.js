@@ -88,6 +88,7 @@ import AppointmentConfirmation from './ProjectComponents/Donor/Home/MakeDonation
 import DonorHelpAndSupportMessage from './ProjectComponents/Donor/Profile/DonorSettngs/DonorHelpAndSupportMessage.js'
 import AppointmentConfirmationMessage from './ProjectComponents/Donor/Home/MakeDonation/AppointmentConfirmationMessage.js';
 import ValidUserExplore from './ProjectComponents/Donor/Dashboard/ValidUserExporeFInal/ValidUserExplore.js'
+import AppointmentUploads from './ProjectComponents/Donor/Home/MakeDonation/AppointmentUploads.js'
 
 
 {/* Requestor */}
@@ -123,7 +124,7 @@ import CompletedTabRequest from './ProjectComponents/Requestor/Home/MyRequest/Co
 import PendingTabRequest from './ProjectComponents/Requestor/Home/MyRequest/PendingTabRequest.js';
 import RequestTab from './ProjectComponents/Requestor/Home/MyRequest/Request.js'
 import MakeRequestUploadMedicalAbstract from './ProjectComponents/Requestor/Home/MakeRequest/MakeRequestUploadMedicalAbstract.js'
-
+import SetMethod from './ProjectComponents/Requestor/Home/MakeRequest/SetMethod.js'
 
 //Requestor DUPLICATE THE DONOR PAGES
 // import RequestorProfile from './ProjectComponents/Requestor/Profile/RequestorProfile.js'
@@ -138,28 +139,28 @@ import SetPassword from './ProjectComponents/Guest/Profile/ApplyDonor/SetPasswor
 
 
 //Admin
-import MedicalHistory from './screens/Admin/ScreeningForm/Donor/MedicalHistory.js'
-import AdminMedicalHistory2 from './screens/Admin/ScreeningForm/Donor/AdminMedicalHistory2.js'
-import DonorInitialScreeningFormPage1 from './screens/Admin/ScreeningForm/Donor/DonorInitialScreeningFormPage1.js'
-import DonorInitialScreeningFormPage2 from './screens/Admin/ScreeningForm/Donor/DonorInitialScreeningFormPage2.js'
-import DonorInitialScreeningFormPage3 from './screens/Admin/ScreeningForm/Donor/DonorInitialScreeningFormPage3.js'
-import DonorInitialScreeningFormPage4 from './screens/Admin/ScreeningForm/Donor/DonorInitialScreeningFormPage4.js'
+// import MedicalHistory from './screens/Admin/ScreeningForm/Donor/MedicalHistory.js'
+// import AdminMedicalHistory2 from './screens/Admin/ScreeningForm/Donor/AdminMedicalHistory2.js'
+// import DonorInitialScreeningFormPage1 from './screens/Admin/ScreeningForm/Donor/DonorInitialScreeningFormPage1.js'
+// import DonorInitialScreeningFormPage2 from './screens/Admin/ScreeningForm/Donor/DonorInitialScreeningFormPage2.js'
+// import DonorInitialScreeningFormPage3 from './screens/Admin/ScreeningForm/Donor/DonorInitialScreeningFormPage3.js'
+// import DonorInitialScreeningFormPage4 from './screens/Admin/ScreeningForm/Donor/DonorInitialScreeningFormPage4.js'
 
 
 //import Header from './screens/Admin/header';
-import AdminDashboard from './screens/Admin/AdminDashboard';
-import AdminUser from './screens/Admin/AdminUser';
-import AdminMilkbanks from './screens/Admin/AdminMilkbanks';
-import DonorUserVerification from './screens/Admin/ScreeningForm/Donor/DonorUserVerification.js'; 
-import DonorUploadAdmin from './screens/Admin/ScreeningForm/Donor/DonorUploadAdmin.js';   //<Stack.Screen name="RequestorVerification" component={RequestorVerification} />
-//import RequestorVerification from './screens/Admin/RequestorVerification'; 
-import DonorAppointmentConfirmation from './screens/Admin/ScreeningForm/Donor/DonorAppointmentConfirmation.js';
-import RequestorRequestConfirmation from './screens/Admin/ScreeningForm/Requestor/RequestorRequestConfirmation.js'
+// import AdminDashboard from './screens/Admin/AdminDashboard';
+// import AdminUser from './screens/Admin/AdminUser';
+// import AdminMilkbanks from './screens/Admin/AdminMilkbanks';
+// import DonorUserVerification from './screens/Admin/ScreeningForm/Donor/DonorUserVerification.js'; 
+// import DonorUploadAdmin from './screens/Admin/ScreeningForm/Donor/DonorUploadAdmin.js';   //<Stack.Screen name="RequestorVerification" component={RequestorVerification} />
+// //import RequestorVerification from './screens/Admin/RequestorVerification'; 
+// import DonorAppointmentConfirmation from './screens/Admin/ScreeningForm/Donor/DonorAppointmentConfirmation.js';
+// import RequestorRequestConfirmation from './screens/Admin/ScreeningForm/Requestor/RequestorRequestConfirmation.js'
 
-import RequestorInitialScreeningFormPage1 from './screens/Admin/ScreeningForm/Requestor/RequestorInitialScreeningFormPage1.js'
-import RequestorUserVerification from './screens/Admin/ScreeningForm/Requestor/RequestorUserVerification.js';   //<Stack.Screen name="RequestorVerification" component={RequestorVerification} />
-import ForumPage from './ProjectComponents/Donor/Home/Forum/ForumPage.js';
-import ImageViewer from './screens/Admin/ScreeningForm/Donor/ImageViewer.js';
+// import RequestorInitialScreeningFormPage1 from './screens/Admin/ScreeningForm/Requestor/RequestorInitialScreeningFormPage1.js'
+// import RequestorUserVerification from './screens/Admin/ScreeningForm/Requestor/RequestorUserVerification.js';   //<Stack.Screen name="RequestorVerification" component={RequestorVerification} />
+// import ForumPage from './ProjectComponents/Donor/Home/Forum/ForumPage.js';
+// import ImageViewer from './screens/Admin/ScreeningForm/Donor/ImageViewer.js';
 
 
 
@@ -220,7 +221,7 @@ export default function App() {
         <NavigationContainer>
          
           <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
-          {/* <Stack.Navigator initialRouteName="Data Privacy Requestor" screenOptions={{ headerShown: false }}> */}
+        
           
             {/*InitialScreen*/}
             <Stack.Screen name="Splash" component={SplashScreen} />
@@ -230,8 +231,8 @@ export default function App() {
       
 
             {/*Routes*/}
-            {/* <Stack.Screen name="GuestTabsExploreAndMilkBank" component={GuestTabsExploreAndMilkBank} /> */}
             <Stack.Screen name="MainTabs" component = {MainTabs}/>
+            <Stack.Screen name="GuestTabs" component={GuestTabs} />
 
             <Stack.Screen name="SetPassword" component={SetPassword} />
             <Stack.Screen name="SendCode" component={SendCode} />
@@ -255,7 +256,6 @@ export default function App() {
              <Stack.Screen name="Guest Explore" component={GuestExplore} />
              <Stack.Screen name="Guest Educational Contents" component={GuestEducContents} />
              <Stack.Screen name="Guest Educational Library" component={GuestEducLibrary} />
-             <Stack.Screen name="GuestTabs" component={GuestTabs} />
              <Stack.Screen name="DonorApproved" component={DonorApproved} />
              <Stack.Screen name="RequestorApproved" component={RequestorApproved} />
              <Stack.Screen name="ApplyAsDonorStack" component={ApplyAsDonorStack} />
@@ -279,7 +279,6 @@ export default function App() {
              <Stack.Screen name="Donor Home" component={DonorHome} />
              <Stack.Screen name="Donor Notifications" component={DonorNotifications} />
              <Stack.Screen name="DonorProfile" component={DonorProfile} />
-             <Stack.Screen name="MedicalHistory" component={MedicalHistory} />
              <Stack.Screen name="SetPasswordDonor" component={SetPasswordDonor} />
              <Stack.Screen name="DonorSettingScreen" component={DonorSettingScreen} />
              <Stack.Screen name="DonorAboutUs" component={DonorAboutUs} />
@@ -301,6 +300,8 @@ export default function App() {
              <Stack.Screen name="AppointmentConfirmationMessage" component={AppointmentConfirmationMessage} />
              <Stack.Screen name="MyDonationTabs" component={MyDonationTabs} />
              <Stack.Screen name="ValidUserExplore" component={ValidUserExplore} />
+             <Stack.Screen name="AppointmentUploads" component={AppointmentUploads} />
+
            
         
 
@@ -319,7 +320,8 @@ export default function App() {
              <Stack.Screen name="MakeRequest" component={MakeRequest} />
              <Stack.Screen name="MakeRequest2" component={MakeRequest2} />
              <Stack.Screen name="RequestorProfile" component={RequestorProfile} />
-             
+
+             <Stack.Screen name="SetMethod" component={SetMethod} />
              <Stack.Screen name="RequestorSettingScreen" component={RequestorSettingScreen} />
              <Stack.Screen name="RequestorAboutUs" component={RequestorAboutUs} />
              <Stack.Screen name="RequestorChangePassword" component={RequestorChangePassword} />
@@ -345,46 +347,6 @@ export default function App() {
              <Stack.Screen name="PendingTabRequest" component={PendingTabRequest} />
              <Stack.Screen name="RequestTab" component={RequestTab} />
              <Stack.Screen name="MakeRequestUploadMedicalAbstract" component={MakeRequestUploadMedicalAbstract} />
-          
-
-
-
-
-
-
-
-
-            
-         
-
-
-
-
-
-             {/*Admin*/}
-             {/* <Stack.Screen name="Medical Abstract" component={MedicalAbstract} />
-             <Stack.Screen name="Reason For Requesting" component={ReasonForRequesting} /> */}
-             {/* <Stack.Screen name="LoginAdmin" component={LoginAdmin} />
-             <Stack.Screen name="AdminMenu" component={AdminMenu} /> */}
-             <Stack.Screen name="AdminDashboard" component={AdminDashboard} />
-             <Stack.Screen name="AdminUser" component={AdminUser} />
-             <Stack.Screen name="AdminMilkbanks" component={AdminMilkbanks} />
-
-             <Stack.Screen name="DonorInitialScreeningFormPage1" component={DonorInitialScreeningFormPage1} />
-             <Stack.Screen name="DonorInitialScreeningFormPage2" component={DonorInitialScreeningFormPage2} />
-             <Stack.Screen name="DonorInitialScreeningFormPage3" component={DonorInitialScreeningFormPage3} />
-             <Stack.Screen name="DonorInitialScreeningFormPage4" component={DonorInitialScreeningFormPage4} />
-
-
-             <Stack.Screen name="AdminMedicalHistory2" component={AdminMedicalHistory2} />
-             <Stack.Screen name="DonorUploadAdmin" component={DonorUploadAdmin} />
-             <Stack.Screen name="DonorAppointmentConfirmation" component={DonorAppointmentConfirmation} />
-             <Stack.Screen name="RequestorRequestConfirmation" component={RequestorRequestConfirmation} />
-             <Stack.Screen name="RequestorInitialScreeningFormPage1" component={RequestorInitialScreeningFormPage1} />
-             <Stack.Screen name="DonorUserVerification" component={DonorUserVerification} />
-             <Stack.Screen name="RequestorUserVerification" component={RequestorUserVerification} />
-             <Stack.Screen name="ImageViewer" component={ImageViewer} />
-
 
             </Stack.Navigator>
         </NavigationContainer>

@@ -6,9 +6,14 @@ import AppointmentRequestDeclineModal from "../../../../modal/AppointmentRequest
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { WebHost } from "../../../../../MyConstantAdmin";
+import { getMedicalAbstractsFiles, getMedicalAbstractsImages } from "../../../../api/Appointments/Request";
 
 const requestorAppointmentConfirmation = () => {
+
+
   const [requestData, setRequestData] = useState(null); // State to store fetched request details
+  const [images, setImages] = useState([])
+  const [files, setFiles] = useState([])
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -31,7 +36,7 @@ const requestorAppointmentConfirmation = () => {
   };
 
   const { RequestID } = useParams(); // Get the appointmentDonorID from the URL
-
+  console.log("RequestID: ", RequestID)
   useEffect(() => {
     const fetchRequestData = async () => {
       try {
@@ -41,6 +46,7 @@ const requestorAppointmentConfirmation = () => {
         );
         console.log("API Response:", response.data);
         setRequestData(response.data); // Update state with response data
+        fetchRequirements(response.data)
       } catch (error) {
         console.error("Error fetching appointment data:", error);
       }
@@ -48,6 +54,7 @@ const requestorAppointmentConfirmation = () => {
 
     console.log("RequestID:", RequestID);
     fetchRequestData();
+    fetchRequirements()
   }, [RequestID]);
 
   console.log("Request Data:", requestData);
@@ -108,6 +115,14 @@ const requestorAppointmentConfirmation = () => {
       BabyCategory: e.target.value,
     }));
   };
+
+  const fetchRequirements = async (id) => {
+    const Requestor_ID= id.Request.Requestor_ID
+    const files = await getMedicalAbstractsFiles({id: Requestor_ID, purpose: "Request"})
+    const images = await getMedicalAbstractsImages({id: Requestor_ID, purpose: "Request"})
+    setFiles(files)
+    setImages(images)
+  }
 
   return (
     <section className="w-full h-screen bg-primary-body overflow-hidden px-4">
@@ -259,8 +274,37 @@ const requestorAppointmentConfirmation = () => {
             </div>
           </div>
         </div>
-
+        
         <div className="mt-4 flex flex-cols gap-4">
+      {images.map(requirement => (
+        <>
+              <div key={requirement.originalname} className="bg-white px-4 py-2 w-full h-72 shadow-md rounded-lg focus:outline-none focus: text-primary-default">
+                <span className="flex justify-center text-primary-default text-lg text-center">
+                {requirement.originalname}
+                </span>
+                <img
+                    className="w-[80%] h-[80%] mt-2 mx-auto py-2 hover: cursor-pointer object-contain"
+                  src={requirement.link}
+                  alt={requirement.originalname}
+                  />
+              </div>
+        </>
+         
+      ))}
+        {files.map(requirement => (
+         <div key={requirement.originalname} className="bg-white px-4 py-2 w-[40%] h-72 shadow-md items-center justify-center rounded-lg focus:outline-none focus: text-primary-default">
+           <span className="flex justify-center text-primary-default text-lg text-center">
+             {requirement.originalname}
+           </span>
+           <a href ={`${requirement.link}`} target="_blank">
+                <button 
+                className="bg-primary-default px-4 py-2 text-white rounded-lg text-xs">
+                Download {requirement.originalname} File
+              </button>
+            </a>
+         </div>
+      ))}
+        {/* <div className="mt-4 flex flex-cols gap-4">
           <div className="bg-white px-4 py-2 w-1/4 h-72 shadow-md  rounded-lg focus:outline-none focus: text-primary-default">
             <span className="flex justify-center text-primary-default text-lg text-center">
               Medical Abstract
@@ -283,8 +327,8 @@ const requestorAppointmentConfirmation = () => {
             <span className="flex justify-center text-primary-default text-lg text-center">
               Authorized Person's ID
             </span>
-          </div>
-        </div>
+          </div>*/}
+        </div> 
 
         <div className="mt-4 ">
           <div className="flex bg-white w-full px-4 py-2 h-30 shadow-md  rounded-lg focus:outline-none focus: text-primary-default">

@@ -158,7 +158,8 @@ export const registerUserOrSetNewPassword = async (req: express.Request, res: ex
             messages:{
                 code: 1,
                 message: "Something went wrong"
-            }
+            },
+            error
         })
     }
 

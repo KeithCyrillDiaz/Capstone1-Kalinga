@@ -45,8 +45,8 @@ const SplashScreen = ({ navigation }) => {
               try{
                 const result = await axios.get(`${BASED_URL}/kalinga/isApproved/${Applicant_ID}`)
                 console.log("Message: ",result.data.messages.message)
-                if((result.data.messages.message === "Non existing Applicant" || result.data.messages.message === "Applicant is Deleted") && DonorApplicant_ID === Applicant_ID) await AsyncStorage.removeItem('DonorApplicant_ID')
-                else if((result.data.messages.message === "Non existing Applicant" || result.data.messages.message === "Applicant is Deleted") && RequestorApplicant_ID === Applicant_ID) await AsyncStorage.removeItem('RequestorApplicant_ID')
+                if((result.data.messages.message === "Non existing Applicant" || result.data.messages.message === "Applicant is Rejected") && DonorApplicant_ID === Applicant_ID) await AsyncStorage.removeItem('DonorApplicant_ID')
+                else if((result.data.messages.message === "Non existing Applicant" || result.data.messages.message === "Applicant is Rejected") && RequestorApplicant_ID === Applicant_ID) await AsyncStorage.removeItem('RequestorApplicant_ID')
                 if(result.data.messages.code === 0){
                     console.log(result.data.messages.message)
                     console.log("result.data.userType: ", result.data.userType)
@@ -63,7 +63,7 @@ const SplashScreen = ({ navigation }) => {
                   try{
                     const result = await axios.get(`${BASED_URL}/kalinga/isApproved/${checkRequestorID}`)
                     console.log("Message: ",result.data.messages.message)
-                    if((result.data.messages.message === "Non existing Applicant" || result.data.messages.message === "Applicant is Deleted") && DonorApplicant_ID === Applicant_ID) await AsyncStorage.removeItem('RequestorApplicant_ID')
+                    if((result.data.messages.message === "Non existing Applicant" || result.data.messages.message === "Applicant is Rejected") && DonorApplicant_ID === Applicant_ID) await AsyncStorage.removeItem('RequestorApplicant_ID')
                       if(result.data.messages.code === 0){
                         console.log(result.data.messages.message)
                         console.log("result.data.userType: ", result.data.userType)

@@ -154,7 +154,9 @@ const DonorMedicalHistory2 = ({route}) => {
                       maxWidth:210,
                       marginLeft: 20,
                       color: "black",
-                      paddingBottom: 2
+                      paddingBottom: 2,
+                      fontFamily: "Open-Sans-SemiBold"
+                      
                     }}
                     multiline={true}
                     textAlignVertical="bottom" // Align text to the top vertically
@@ -295,26 +297,24 @@ const DonorMedicalHistory2 = ({route}) => {
     
     form: {
 
-      borderWidth: 1,
       borderRadius: 10,
       borderColor: '#E60965',
       paddingBottom: 20,
       paddingRight: 10,
       marginBottom: 10,
       backgroundColor: "#FFFFFF",
-      elevation: 5
+      elevation: 7
     },
 
     form2: {
 
-        borderWidth: 1,
         borderRadius: 10,
         borderColor: '#E60965',
-        height: 170,
+        height: 190,
         paddingRight: 10,
         marginBottom: 10,
         backgroundColor: "#FFFFFF",
-        elevation: 5
+        elevation: 7
       },
 
     row: {
@@ -330,6 +330,7 @@ const DonorMedicalHistory2 = ({route}) => {
       marginLeft: 20,
       marginTop: 10,
       color: "#E60965",
+      fontFamily: "Open-Sans-SemiBold"
     },
 
     circle: {
@@ -349,6 +350,7 @@ const DonorMedicalHistory2 = ({route}) => {
       //backgroundColor: "gray",
       width: 220,
       marginLeft: 20,
+      fontFamily: "Open-Sans-SemiBold"
     }
 
    

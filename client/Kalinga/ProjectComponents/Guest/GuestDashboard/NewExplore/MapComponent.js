@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { GetUsersLocation } from './UsersLocation';
 // import MapViewDirections from 'react-native-maps-directions'; // Import MapViewDirections
+import Spinner from 'react-native-loading-spinner-overlay';
 
 export default MapComponent = ({ regionLat, regionLong, initialRegion }) => {
     const originalZoom = {
@@ -13,11 +14,13 @@ export default MapComponent = ({ regionLat, regionLong, initialRegion }) => {
     const [latitude, setLatitude] = useState(0);
     const [longitude, setLongitude] = useState(0);
     const [mapReady, setMapReady] = useState(false);
+    const [loading, setLoading] =  useState(false)
 
     const mapViewRef = useRef(null); // Reference to MapView
 
     const fetchUserLocation = async () => {
         try {
+            setLoading(true)
             setMapReady(false);
             await GetUsersLocation({
                 latitude: setLatitude,
@@ -27,6 +30,7 @@ export default MapComponent = ({ regionLat, regionLong, initialRegion }) => {
             console.log("Failed to get User's Location");
         } finally {
             setMapReady(true);
+            setLoading(false)
         }
     };
 
@@ -42,53 +46,62 @@ export default MapComponent = ({ regionLat, regionLong, initialRegion }) => {
                 latitudeDelta: originalZoom.latitudeDelta,
                 longitudeDelta: originalZoom.longitudeDelta,
             }, 1000); // Duration in milliseconds
+            
         }
     }, [regionLat, regionLong, mapReady]);
 
-    if (latitude!==0 && longitude !== 0 && mapReady) {
+    if (latitude!==0 && longitude !== 0 && mapReady && !loading) {
         return (
-            <MapView
-                ref={mapViewRef}
-                style={{ flex: 1 }}
-                showsUserLocation={true}
-                showsMyLocationButton={true}
-                mapPadding={{ top: 100, bottom: 50, right: 10 }}
-                showsTraffic={false}
-                showsBuildings={false}
-                showsScale={false}
-                mapType="standard"
-                initialRegion={{
-                    latitude: latitude,
-                    longitude: longitude,
-                    latitudeDelta: originalZoom.latitudeDelta,
-                    longitudeDelta: originalZoom.longitudeDelta,
-                }}
-            >
-                {regionLat !== 0 && regionLong !== 0 && (
-                       <Marker
-                       coordinate={{
-                           latitude: regionLat,
-                           longitude: regionLong,
-                       }}
-                       /> 
-                )} 
-                {/* Need may billing kaya comment nalang */}
-                {/* {regionLat !== 0 && regionLong !== 0 &&(
-                    <MapViewDirections
-                    origin={{
-                        latitude: latitude,
-                        longitude: longitude,
-                    }}
-                    destination={{
-                        latitude: regionLat,
-                        longitude: regionLong,
-                    }}
-                    apikey={GOOGLE_MAPS_API_KEY}
-                    strokeWidth={5}
-                  />
-                )} */}
-                
-            </MapView>
+            <>
+                    <Spinner 
+                        visible = {loading}
+                        textContent={'Processing...'}
+                        textStyle={{ color: '#FFF' }}
+                    />
+                    <MapView
+                        ref={mapViewRef}
+                        style={{ flex: 1 }}
+                        showsUserLocation={true}
+                        showsMyLocationButton={true}
+                        mapPadding={{ top: 100, bottom: 50, right: 10 }}
+                        showsTraffic={false}
+                        showsBuildings={false}
+                        showsScale={false}
+                        mapType="standard"
+                        initialRegion={{
+                            latitude: latitude,
+                            longitude: longitude,
+                            latitudeDelta: originalZoom.latitudeDelta,
+                            longitudeDelta: originalZoom.longitudeDelta,
+                        }}
+                    >
+                        {regionLat !== 0 && regionLong !== 0 && (
+                            <Marker
+                            coordinate={{
+                                latitude: regionLat,
+                                longitude: regionLong,
+                            }}
+                            /> 
+                        )} 
+                        {/* Need may billing kaya comment nalang */}
+                        {/* {regionLat !== 0 && regionLong !== 0 &&(
+                            <MapViewDirections
+                            origin={{
+                                latitude: latitude,
+                                longitude: longitude,
+                            }}
+                            destination={{
+                                latitude: regionLat,
+                                longitude: regionLong,
+                            }}
+                            apikey={GOOGLE_MAPS_API_KEY}
+                            strokeWidth={5}
+                        />
+                        )} */}
+                        
+                    </MapView>
+            </>
+           
         );
     }
 

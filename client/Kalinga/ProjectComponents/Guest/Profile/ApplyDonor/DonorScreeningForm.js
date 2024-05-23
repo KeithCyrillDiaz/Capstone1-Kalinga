@@ -266,6 +266,9 @@ const formatCity = (city) => {
 
 
 const handleChangeText = (name, value) => {
+  console.log(name)
+  if (name === "contactNumber" && /[^a-zA-Z0-9]/.test(value))return;
+  
   setScreeningFormData({ ...screeningFormData, [name]: value });
     if(name === "email" && value.includes("@") && (value.endsWith("com") || value.endsWith("ph"))){
       console.log("Email: ", value)
@@ -274,6 +277,8 @@ const handleChangeText = (name, value) => {
     }
     return
 };
+
+
 
 
 const checkAgeValidity = () => {
@@ -600,7 +605,9 @@ useEffect(() => {
                         placeholder="Contact Number"
                         placeholderTextColor="#E60965"
                         keyboardType="numeric"
+                        maxLength={11}
                         onChangeText={(value) => handleChangeText('contactNumber', value)}
+                        value={screeningFormData.contactNumber}
                     />
 
                       <View style = {styles.addressDropdown}>

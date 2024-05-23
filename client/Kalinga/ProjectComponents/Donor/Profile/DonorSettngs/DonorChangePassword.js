@@ -172,7 +172,7 @@ export default function ChangePasswordScreen({route}) {
             }}
             onPress={() => setShowPassword(!showPassword)}>
                 <MaterialCommunityIcons
-                  name={showPassword ? "eye-off" : "eye"}
+                  name={showPassword ?  "eye" : "eye-off" }
                   size={24}
                   color="#E60965"
                   style={{ paddingHorizontal: 12 }}
@@ -215,7 +215,7 @@ export default function ChangePasswordScreen({route}) {
             }}
             onPress={() => setShowPassword(!showPassword)}>
                 <MaterialCommunityIcons
-                  name={showPassword ? "eye-off" : "eye"}
+                  name={showPassword ?  "eye" : "eye-off" }
                   size={24}
                   color="#E60965"
                   style={{ paddingHorizontal: 12 }}

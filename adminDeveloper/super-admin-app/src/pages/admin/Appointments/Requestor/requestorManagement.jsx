@@ -302,55 +302,55 @@ export default function RequestorAppointments() {
                           <tr>
                             <th
                               scope="col"
-                              className="text-center px-4 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                              className="text-center px-4 py-2 text-md font-sans text-primary-default uppercase tracking-wider"
                             >
                               Index
                             </th>
                             <th
                               scope="col"
-                              className="text-center w-10 py-2 text-left text-md font-sans text-primary-default uppercase"
+                              className="text-center w-10 py-2 text-md font-sans text-primary-default uppercase"
                             >
                               Created on
                             </th>
                             <th
                               scope="col"
-                              className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                              className="text-center px-6 py-2  text-md font-sans text-primary-default uppercase tracking-wider"
                             >
                               Name
                             </th>
                             <th
                               scope="col"
-                              className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                              className="text-center px-6 py-2  text-md font-sans text-primary-default uppercase tracking-wider"
                             >
                               Email
                             </th>
                             <th
                               scope="col"
-                              className="text-center w-6 py-2 text-left text-sm font-sans text-primary-default uppercase tracking-wider "
+                              className="text-center w-6 py-2  text-sm font-sans text-primary-default uppercase tracking-wider "
                             >
                               Milk Amount
                             </th>
                             <th
                               scope="col"
-                              className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                              className="text-center px-6 py-2 text-md font-sans text-primary-default uppercase tracking-wider"
                             >
                               Baby Category
                             </th>
                             <th
                               scope="col"
-                              className="px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                              className="px-6 py-2 text-center text-md font-sans text-primary-default uppercase tracking-wider"
                             >
                               Status
                             </th>
                             <th
                               scope="col"
-                              className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                              className="text-center px-6 py-2 text-md font-sans text-primary-default uppercase tracking-wider"
                             >
                               Remarks
                             </th>
                             <th
                               scope="col"
-                              className="text-center px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                              className="text-center px-6 py-2 text-md font-sans text-primary-default uppercase tracking-wider"
                             >
                               Actions
                             </th>

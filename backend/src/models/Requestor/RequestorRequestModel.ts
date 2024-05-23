@@ -55,7 +55,7 @@ const RequestSchema: Schema = new Schema({
   Date: {type: String},
   createdAt: {type: Date, default: Date.now},
   RequestRemark: {type: String, default: ""},
-
+  method: {type: String, required: true}
 
 });
 

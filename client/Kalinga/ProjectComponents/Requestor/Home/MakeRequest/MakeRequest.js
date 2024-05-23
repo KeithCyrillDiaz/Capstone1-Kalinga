@@ -51,19 +51,26 @@ export default function RequestorProfile({route}) {
   let city
 
   const fetchScreeningForm = async () => {
-    const response = await axios.get(`${BASED_URL}/kalinga/getScreeningFormsApplicant_ID/${Requestor_ID}`)
-    console.log(response.data.messages.message)
-    if(response.data.screeningForms){
-      setForm(response.data.screeningForms)
-      setFormData(prevForm => ({
-        ...prevForm,
-        ageOfGestation: response.data.screeningForms.ageOfGestation,
-        childBirthDate: response.data.screeningForms.childBirthDate,
-        medicalCondition: response.data.screeningForms.medicalCondition,
-      }))
+    setIsLoading(true)
+    try{
+      const response = await axios.get(`${BASED_URL}/kalinga/getScreeningFormsApplicant_ID/${Requestor_ID}`)
+      console.log(response.data.messages.message)
+      if(response.data.screeningForms){
+        setForm(response.data.screeningForms)
+        setFormData(prevForm => ({
+          ...prevForm,
+          childBirthDate: response.data.screeningForms.childBirthDate,
+          ReasonForRequesting: response.data.screeningForms.RFR,
+        }))
+        
+      }
+    } catch(error) {
+      console.log("Error Fetching screening form", error)
+    } finally {
+      setIsLoading(false)
     }
-  }
 
+  }
   const [formData, setFormData] = useState({
     Requestor_ID: Requestor_ID,
       userType: "Requestor",
@@ -72,13 +79,11 @@ export default function RequestorProfile({route}) {
       phoneNumber: userInformation.mobileNumber,
       emailAddress: userInformation.email,
       homeAddress: userInformation.homeAddress,
-      ageOfGestation: '',
       childBirthDate: '',
       city: '',
-      medicalCondition: '',
       milkBank: "",
       milkAmount: '',
-      ReasonForRequesting: userInformation.RFR,
+      ReasonForRequesting: '',
   });
 
   const getCity = () => {
@@ -107,10 +112,8 @@ export default function RequestorProfile({route}) {
       'phoneNumber',
       'emailAddress',
       'homeAddress',
-      'ageOfGestation',
       'childBirthDate',
       'city',
-      'medicalCondition',
       'milkBank',
       'milkAmount',
       'ReasonForRequesting',
@@ -177,7 +180,7 @@ export default function RequestorProfile({route}) {
         Alert.alert("Image Required", "Please upload your prescription.");
       return
     }
-    navigation.navigate(page, { selectedImage: selectedImage, formData: formData, screeningFormData: form });
+    navigation.navigate(page, { formData: formData });
 };
 
 const handleChange = (name, value) => {
@@ -187,263 +190,272 @@ const handleChange = (name, value) => {
   }));
 };
 
-
-    return (
-      <SafeAreaView style={globalStyles.container}>
-          <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
-            <View style={globalHeader.SmallHeader}>
-                <TouchableOpacity onPress={handleBackPress}>
-                    <AntDesign name="arrowleft" size={24} color="white" style={{position: 'absolute', top: 5, left: -180}}/>
-                </TouchableOpacity>
-                
-                <Text style={globalHeader.SmallHeaderTitle}>Make a Request</Text>
-            </View>
-
-            <ScrollView>
-            <View style={{ flex: 1 }}> 
-                <View style={styles.textAndImage}>
-                    <Text style={styles.text}>Need milk for your little one? Pen down your request now and let our community of caring donors support your child's nourishment journey.</Text>
-                    <Image source={require('../../../../assets/makereq.png')} style={styles.image}></Image>
-                </View>
-
-                <View style={styles.body}>
-                <Text 
-                  style = {{
-                    marginLeft: 20,
-                    color: "#E60965",
-                    fontSize: 20,
-                    fontFamily: "Open-Sans-Bold",
-                    marginBottom: 10,
-
-                  }}
-                  >Personal Information</Text>
-                    <Text style={styles.bodyNote}>Note: Bold fields are not editable.</Text>
-                    <TextInput
-                    style={[styles.form1, {fontFamily:"Open-Sans-SemiBold"}]}
-                    value={formData.fullName}
-                    placeholder="Full Name *"
-                    placeholderTextColor="#E60965"
-                    onChangeText={(text) => handleInputChange('fullName', text)}
-                    editable={false}
-                />
-                <TextInput
-                    style={styles.form1}
-                    value={formData.phoneNumber}
-                    placeholder="Phone Number *"
-                    placeholderTextColor="#E60965"
-                    onChangeText={(text) => handleInputChange('phoneNumber', text)}
-                    
-                />
-                <TextInput
-                    style={[styles.form1, {fontFamily:"Open-Sans-SemiBold"}]}
-                    value={formData.emailAddress}
-                    placeholder="Email Address *"
-                    placeholderTextColor="#E60965"
-                    onChangeText={(text) => handleInputChange('emailAddress', text)}
-                    editable={false}
-                />
-                <TextInput
-                    style={[styles.form2, {fontFamily:"Open-Sans-SemiBold"}]}
-                    value={formData.homeAddress}
-                    multiline={true}
-                    placeholder="Home Address *"
-                    placeholderTextColor="#E60965"
-                    onChangeText={(text) => handleInputChange('homeAddress', text)}
-                    editable={false}
-                />
-                 
-                <TextInput
-                        style={styles.form2}
-                        value={formData.ReasonForRequesting}
-                        placeholder="Reason for Requesting *"
-                        placeholderTextColor="#E60965"
-                        onChangeText={(text) => handleInputChange('ReasonForRequesting', text)}
-                        /> 
-                  {/* <View style={styles.dropdownContainer1}>
-                    <Picker
-                      selectedValue={formData.ageOfGestation}
-                      style={{ height: 30, width: "100%", color: '#E60965',}}
-                      onValueChange={(text) => handleInputChange('ageOfGestation', text)} 
-                    >
-                      <Picker.Item label="Select Age of Gestation" value="" />
-                      <Picker.Item label="Early Term" value="Early Term" />
-                      <Picker.Item label="Full Term" value="Full Term" />
-                      <Picker.Item label="Late Term" value="Late Term" />
-                      <Picker.Item label="Post Term" value="Post Term" />
-                    </Picker>
-                </View> */}
-         
-
-                  <View style={styles.dropdownContainer1}>
-                      <Picker
-                        selectedValue={formData.city}
-                        style={{ height: 30, width: "100%", color: '#E60965'}}
-                        onValueChange={(text) => handleInputChange('city', text)} 
-
-                      >
-                        <Picker.Item label="Select City" value="" />
-                        <Picker.Item label="Manila City" value="Manila City" />
-                        <Picker.Item label="Quezon City" value="Quezon City" />
-                      </Picker>
-                  </View>
-
-                <Text 
-                  style = {{
-                    marginLeft: 20,
-                    color: "#E60965",
-                    fontSize: 20,
-                    fontFamily: "Open-Sans-Bold",
-                    marginTop:20,
-                    marginBottom: 10,
-
-                  }}
-                  >Infant Information</Text>
-                  <TextInput
-                    style={[styles.form1, {paddingLeft: 25, fontFamily: "Open-Sans-SemiBold"}]}
-                    value={formData.childBirthDate}
-                    placeholder="Child Birthday *"
-                    placeholderTextColor="#E60965"
-                    onChangeText={(text) => handleInputChange('emailAddress', text)}
-                    editable={false}
-                />         
+if(!isLoading){
+  return (
       
-                    <View style={styles.dropDown}>
-                      <Picker
-                        selectedValue={formData.milkBank}
-                        style ={{color: '#E60965'}}
-                        onValueChange={(itemValue) =>
-                          handleChange("milkBank", itemValue)
-                    
-                        }
-                        >
-                        <Picker.Item label="Choose Milk Bank" value="" />
-                        <Picker.Item label="Quezon City General Hospital - Human Milk Bank" value="Quezon City General Hospital - Human Milk Bank" />
-                    </Picker>
-                  </View>   
-                  
-              <View style={styles.dropDown}>
-                    <Picker
-                        selectedValue={formData.milkAmount}
-                        style ={{
-                          color: '#E60965', 
-                        }}
-                        onValueChange={(itemValue) =>
-                          handleChange("milkAmount", itemValue)
-                        }
-                        >
-                        <Picker.Item label="Amount of Milk to be requested" value="" />
-                        <Picker.Item label="100 ml" value="100" />
-                        <Picker.Item label="200 ml" value="200" />
-                    </Picker>              
+    <SafeAreaView style={globalStyles.container}>
+        <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
+          <View style={globalHeader.SmallHeader}>
+              <TouchableOpacity onPress={handleBackPress}>
+                  <AntDesign name="arrowleft" size={24} color="white" style={{position: 'absolute', top: 5, left: -180}}/>
+              </TouchableOpacity>
+              
+              <Text style={globalHeader.SmallHeaderTitle}>Make a Request</Text>
+          </View>
+
+          <ScrollView>
+          <View style={{ flex: 1 }}> 
+              <View style={styles.textAndImage}>
+                  <Text style={styles.text}>Need milk for your little one? Pen down your request now and let our community of caring donors support your child's nourishment journey.</Text>
+                  <Image source={require('../../../../assets/makereq.png')} style={styles.image}></Image>
               </View>
-                      
-
-                    {/* <TouchableOpacity onPress={() => handleImageUpload("Prescription")} style = {styles.uploadContainer}>
-                        <Text style = {styles.uploadContainerTitle}>Attach Prescription *</Text>
-                    </TouchableOpacity> */}
-
-                    {imageContainer && (
-                      <View  style = {{
-                        height: 150,
-                        marginBottom: 20,
-                        borderWidth: 1,
-                        backgroundColor: "white",
-                        paddingLeft: 10,
-                        paddingRight: 10,
-                        borderColor: "#E60965",
-                        borderRadius: 15,
-                        elevation: 5,
-                        marginTop: 20,
-                        marginHorizontal: "10%",
-                        alignItems: "center"
-                        }}>
-                        <ScrollView 
-                          showsHorizontalScrollIndicator={true}
-                          overScrollMode='never'
-                          horizontal={scrollableHorizontal}
-                        contentContainerStyle={{ flexDirection: 'row', }}
-                      >
-                          {Object.entries(selectedImage).map(([attachmentType, value]) => (
-                                    <TouchableOpacity
-                                        key={attachmentType}
-                                        onPress={() => {
-                                            setSelectedImageUrl(value.uri);
-                                            setModalVisible(true);
-                                        }}
-                                    >
-                                        <View style={{ marginHorizontal: 5 , alignItems: "center"}}>
-                                            <Text style ={{
-                                              textAlign: "center",
-                                              color: "#E60965",
-                                              marginTop: 7,
-                                          
-                                            }}>{attachmentType}</Text>
-                                            <Image
-                                                source={{ uri: value.uri }}
-                                                style={{ width: 100, height: 100, marginTop: 7, resizeMode: 'cover',}}
-                                            />
-                                        </View>
-                                    </TouchableOpacity>
-                                ))}
-
-                        </ScrollView>
-                    </View>
-                )}
-            
-                            
-                </View>
-                <TouchableOpacity style={styles.reqButton} onPress={() => navigatePage("MakeRequestUploadMedicalAbstract")}>
-                    <Text style={{ color: 'white' }}>Next</Text>
-                </TouchableOpacity>
-            </View>
-        </ScrollView>
-
-        <Modal
-                  animationType="slide"
-                  transparent={true}
-                  visible={modalVisible}
-                  onRequestClose={() => {
-                      setModalVisible(!modalVisible);
-                  }}
-              >
-                  <View style={styles.modalContainer}>
-                  <ImageZoom
-                      cropWidth={Dimensions.get('window').width}
-                      cropHeight={Dimensions.get('window').height}
-                      imageWidth={Dimensions.get('window').width}
-                      imageHeight={Dimensions.get('window').height * 1} // Adjust the height as needed
-                      enableSwipeDown={true}
-                      onSwipeDown={() => setModalVisible(false)} // Close modal on swipe down
-                      style={{ backgroundColor: 'black' }} // Set background color to black to avoid seeing the underlying content
-                  >
-                      <Image
-                          source={{ uri: selectedImageUrl }}
-                          style={{ width: '100%', height: '100%' }}
-                      />
-                  </ImageZoom>
-                      <TouchableHighlight
-                          style={styles.closeButton}
-                          onPress={() => {
-                              setModalVisible(!modalVisible);
-                          }}
-                      >
-                          <AntDesign name="close" size={24} color="black" />
-                      </TouchableHighlight>
-                  </View>
-              </Modal>
-
               <Spinner
-              visible={isLoading}
-              textContent={'Loading...'}
-              textStyle={{ color: '#FFF' }}
-            />
-      
+                visible={isLoading}
+                textContent={'Loading...'}
+                textStyle={{ color: '#FFF' }}
+              />
 
-            
-            
+              <View style={styles.body}>
+              <Text 
+                style = {{
+                  marginLeft: 20,
+                  color: "#E60965",
+                  fontSize: 20,
+                  fontFamily: "Open-Sans-Bold",
+                  marginBottom: 10,
 
-        </SafeAreaView>
-  );
+                }}
+                >Personal Information</Text>
+                  <Text style={styles.bodyNote}>Note: Bold fields are not editable.</Text>
+                  <TextInput
+                  style={[styles.form1, {fontFamily:"Open-Sans-SemiBold"}]}
+                  value={formData.fullName}
+                  placeholder="Full Name *"
+                  placeholderTextColor="#E60965"
+                  onChangeText={(text) => handleInputChange('fullName', text)}
+                  editable={false}
+              />
+              <TextInput
+                  style={styles.form1}
+                  value={formData.phoneNumber}
+                  placeholder="Phone Number *"
+                  placeholderTextColor="#E60965"
+                  maxLength={11}
+                  onChangeText={(text) => handleInputChange('phoneNumber', text)}
+                  
+              />
+              <TextInput
+                  style={[styles.form1, {fontFamily:"Open-Sans-SemiBold"}]}
+                  value={formData.emailAddress}
+                  placeholder="Email Address *"
+                  placeholderTextColor="#E60965"
+                  onChangeText={(text) => handleInputChange('emailAddress', text)}
+                  editable={false}
+              />
+              <TextInput
+                  style={[styles.form2, {fontFamily:"Open-Sans-SemiBold"}]}
+                  value={formData.homeAddress}
+                  multiline={true}
+                  placeholder="Home Address *"
+                  placeholderTextColor="#E60965"
+                  onChangeText={(text) => handleInputChange('homeAddress', text)}
+                  editable={false}
+              />
+               
+              <TextInput
+                      style={styles.form2}
+                      value={formData.ReasonForRequesting}
+                      placeholder="Reason for Requesting *"
+                      placeholderTextColor="#E60965"
+                      onChangeText={(text) => handleInputChange('ReasonForRequesting', text)}
+                      /> 
+                {/* <View style={styles.dropdownContainer1}>
+                  <Picker
+                    selectedValue={formData.ageOfGestation}
+                    style={{ height: 30, width: "100%", color: '#E60965',}}
+                    onValueChange={(text) => handleInputChange('ageOfGestation', text)} 
+                  >
+                    <Picker.Item label="Select Age of Gestation" value="" />
+                    <Picker.Item label="Early Term" value="Early Term" />
+                    <Picker.Item label="Full Term" value="Full Term" />
+                    <Picker.Item label="Late Term" value="Late Term" />
+                    <Picker.Item label="Post Term" value="Post Term" />
+                  </Picker>
+              </View> */}
+       
+
+                <View style={styles.dropdownContainer1}>
+                    <Picker
+                      selectedValue={formData.city}
+                      style={{ height: 30, width: "100%", color: '#E60965'}}
+                      onValueChange={(text) => handleInputChange('city', text)} 
+
+                    >
+                      <Picker.Item label="Select City" value="" />
+                      <Picker.Item label="Manila City" value="Manila City" />
+                      <Picker.Item label="Quezon City" value="Quezon City" />
+                    </Picker>
+                </View>
+
+              <Text 
+                style = {{
+                  marginLeft: 20,
+                  color: "#E60965",
+                  fontSize: 20,
+                  fontFamily: "Open-Sans-Bold",
+                  marginTop:20,
+                  marginBottom: 10,
+
+                }}
+                >Infant Information</Text>
+                <TextInput
+                  style={[styles.form1, {paddingLeft: 25, fontFamily: "Open-Sans-SemiBold"}]}
+                  value={formData.childBirthDate}
+                  placeholder="Child Birthday *"
+                  placeholderTextColor="#E60965"
+                  onChangeText={(text) => handleInputChange('emailAddress', text)}
+                  editable={false}
+              />         
+    
+                  <View style={styles.dropDown}>
+                    <Picker
+                      selectedValue={formData.milkBank}
+                      style ={{color: '#E60965'}}
+                      onValueChange={(itemValue) =>
+                        handleChange("milkBank", itemValue)
+                  
+                      }
+                      >
+                      <Picker.Item label="Choose Milk Bank" value="" />
+                      <Picker.Item label="Quezon City General Hospital - Human Milk Bank" value="Quezon City General Hospital - Human Milk Bank" />
+                  </Picker>
+                </View>   
+                
+            <View style={styles.dropDown}>
+                  <Picker
+                      selectedValue={formData.milkAmount}
+                      style ={{
+                        color: '#E60965', 
+                      }}
+                      onValueChange={(itemValue) =>
+                        handleChange("milkAmount", itemValue)
+                      }
+                      >
+                      <Picker.Item label="Amount of Milk to be requested" value="" />
+                      <Picker.Item label="100 ml" value="100" />
+                      <Picker.Item label="200 ml" value="200" />
+                  </Picker>              
+            </View>
+                    
+
+                  {/* <TouchableOpacity onPress={() => handleImageUpload("Prescription")} style = {styles.uploadContainer}>
+                      <Text style = {styles.uploadContainerTitle}>Attach Prescription *</Text>
+                  </TouchableOpacity> */}
+
+                  {imageContainer && (
+                    <View  style = {{
+                      height: 150,
+                      marginBottom: 20,
+                      borderWidth: 1,
+                      backgroundColor: "white",
+                      paddingLeft: 10,
+                      paddingRight: 10,
+                      borderColor: "#E60965",
+                      borderRadius: 15,
+                      elevation: 5,
+                      marginTop: 20,
+                      marginHorizontal: "10%",
+                      alignItems: "center"
+                      }}>
+                      <ScrollView 
+                        showsHorizontalScrollIndicator={true}
+                        overScrollMode='never'
+                        horizontal={scrollableHorizontal}
+                      contentContainerStyle={{ flexDirection: 'row', }}
+                    >
+                        {Object.entries(selectedImage).map(([attachmentType, value]) => (
+                                  <TouchableOpacity
+                                      key={attachmentType}
+                                      onPress={() => {
+                                          setSelectedImageUrl(value.uri);
+                                          setModalVisible(true);
+                                      }}
+                                  >
+                                      <View style={{ marginHorizontal: 5 , alignItems: "center"}}>
+                                          <Text style ={{
+                                            textAlign: "center",
+                                            color: "#E60965",
+                                            marginTop: 7,
+                                        
+                                          }}>{attachmentType}</Text>
+                                          <Image
+                                              source={{ uri: value.uri }}
+                                              style={{ width: 100, height: 100, marginTop: 7, resizeMode: 'cover',}}
+                                          />
+                                      </View>
+                                  </TouchableOpacity>
+                              ))}
+
+                      </ScrollView>
+                  </View>
+              )}
+          
+                          
+              </View>
+              <TouchableOpacity style={styles.reqButton} onPress={() => navigatePage("SetMethod")}>
+                  <Text style={{ color: 'white' }}>Next</Text>
+              </TouchableOpacity>
+          </View>
+      </ScrollView>
+
+      <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                <View style={styles.modalContainer}>
+                <ImageZoom
+                    cropWidth={Dimensions.get('window').width}
+                    cropHeight={Dimensions.get('window').height}
+                    imageWidth={Dimensions.get('window').width}
+                    imageHeight={Dimensions.get('window').height * 1} // Adjust the height as needed
+                    enableSwipeDown={true}
+                    onSwipeDown={() => setModalVisible(false)} // Close modal on swipe down
+                    style={{ backgroundColor: 'black' }} // Set background color to black to avoid seeing the underlying content
+                >
+                    <Image
+                        source={{ uri: selectedImageUrl }}
+                        style={{ width: '100%', height: '100%' }}
+                    />
+                </ImageZoom>
+                    <TouchableHighlight
+                        style={styles.closeButton}
+                        onPress={() => {
+                            setModalVisible(!modalVisible);
+                        }}
+                    >
+                        <AntDesign name="close" size={24} color="black" />
+                    </TouchableHighlight>
+                </View>
+            </Modal>
+
+            <Spinner
+            visible={isLoading}
+            textContent={'Loading...'}
+            textStyle={{ color: '#FFF' }}
+          />
+    
+
+          
+          
+
+      </SafeAreaView>
+);
+}
+   
 }
 
 const styles = StyleSheet.create({

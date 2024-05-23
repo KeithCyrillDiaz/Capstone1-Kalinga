@@ -4,15 +4,16 @@ import {
     updateBlockStatusRequestor, 
     getBlockedRequestors, getBlockedDonors 
 } from '../../models/users'
+import { nextTick } from 'process'
 
 
-export const updateBlockStatus = async (req: express.Request, res: express.Response) => {
+export const updateBlockStatus = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {
         console.log ("Blocking User")
         const { id } = req.params
-        const { userType, status } = req.body
+        const { userType, status, email} = req.body
 
-        if(!id || !userType || !status){
+        if(!id || !userType || !status || !email){
             console.log ("Invalid inputs, Bad Request")
             return res.json({
                 messages: {
@@ -34,13 +35,8 @@ export const updateBlockStatus = async (req: express.Request, res: express.Respo
             }).status(400)
         }
 
-        console.log("Blocked User Successfully")
-        return res.json({
-            messages: {
-                code: 0,
-                message: "Blocked User Successfully"
-            }
-        }).status(200)
+        console.log(status === "Yes" ? "Blocked User Successfully" : "Unblocked User Successfully")
+      next()
 
     } catch(error) {
         console.log("Internal Server Error")

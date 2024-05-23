@@ -1,13 +1,14 @@
 import express from 'express'
-import { getMRImage } from '../../models/ApplyAsDonor'
+import { getMRImage, deleteMRImages } from '../../models/ApplyAsDonor'
 
 
 export const getImage = async (req: express.Request, res: express.Response) =>{
 
     try{
         const { ownerID } = req.params
+        const { purpose } = req.body
 
-        if(!ownerID){
+        if(!ownerID || !purpose){
             console.log("Bad Request")
             return res.json({
                 messages: {
@@ -16,8 +17,8 @@ export const getImage = async (req: express.Request, res: express.Response) =>{
                 }
             }).status(400)
         }
-
-        const images = await getMRImage(ownerID)
+   
+        const images = await getMRImage(ownerID, purpose)
         if(images.length === 0) {
             console.log("No Image Uploaded")
             return res.json({
@@ -27,7 +28,6 @@ export const getImage = async (req: express.Request, res: express.Response) =>{
                 }
             }).status(404)
         }
-        console.log("image: ", images)
         console.log("Successfully Retrieved Images")
         return res.status(200).json({
             messages: {

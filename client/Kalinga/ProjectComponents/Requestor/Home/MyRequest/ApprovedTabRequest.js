@@ -115,11 +115,7 @@ const ApprovedTabRequest = ({route}) => {
 									<Text style={[styles.boxContent, styles.limitText]}>{formData[0].phoneNumber}</Text>
 								</View>
 								<View style={styles.boxContentContainer}>
-									<Text style={styles.boxContentBold}>Medical Condition: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>{formData[0].medicalCondition}</Text>
-								</View>
-								<View style={styles.boxContentContainer}>
-									<Text style={styles.boxContentBold}>Amount of milk requested (mL): </Text>
+									<Text style={styles.boxContentBold}>Milk requested (mL): </Text>
 									<Text style={[styles.boxContent, styles.limitText]}>{formData[0].milkAmount}</Text>
 								</View>
 								<View style={styles.boxContentContainer}>
@@ -127,9 +123,16 @@ const ApprovedTabRequest = ({route}) => {
 									<Text style={[styles.boxContent, styles.limitText]}>{formData[0].milkBank}</Text>
 								</View>
 								<View style={styles.boxContentContainer}>
-									<Text style={styles.boxContentBold}>Baby Category: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>{formData[0].BabyCategory}</Text>
+									<Text style={styles.boxContentBold}>Method of Obtaining:</Text>
+									<Text style={[styles.boxContent, styles.limitText]}>{formData[0].method}</Text>
 								</View>
+								{formData[0].BabyCategory && (
+									<View style={styles.boxContentContainer}>
+										<Text style={styles.boxContentBold}>Baby Category: </Text>
+										<Text style={[styles.boxContent, styles.limitText]}>{formData[0].BabyCategory}</Text>
+									</View>
+								)}
+								
 								
 								<View style={styles.boxContentContainer}>
 									<Text style={styles.boxContentBold}>Address: </Text>
@@ -231,6 +234,7 @@ const styles = StyleSheet.create ({
 		marginLeft: 10,
 		marginTop: 5,
 		marginRight:5,
+		gap: 7,
 	},
 
 	boxContentBold: {

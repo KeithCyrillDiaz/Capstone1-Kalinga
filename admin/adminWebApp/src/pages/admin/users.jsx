@@ -27,6 +27,7 @@ export default function UserManagement() {
 const [id, setId] = useState("")
 const [userTypeToBeBlocked, setUserTypeToBeBlocked] = useState("")
 const [status, setStatus] = useState("")
+const [email, setEmail] = useState("")
 
   const [filters, setFilters] = useState({
     monthOfCreation: "",
@@ -170,12 +171,13 @@ const [status, setStatus] = useState("")
     }
   };
 
-  const handleBlock = (id, userType, status) => {
+  const handleBlock = (id, userType, status, email) => {
     console.log("id: ", id)
     console.log("userType: ", userType)
     setId(id)
     setUserTypeToBeBlocked(userType)
     setStatus(status)
+    setEmail(email)
     setModalMessage(
       <>
       Are you sure you want to <span style={{ fontWeight: 'bold' }} >block</span> this account? Once <span style={{ fontWeight: 'bold' }} >blocked</span>, the account will be permanently not be able to use the app's features.
@@ -185,12 +187,13 @@ const [status, setStatus] = useState("")
 
   };
 
-  const handleUnBlock = (id, userType, status) => {
+  const handleUnBlock = (id, userType, status, email) => {
     console.log("id: ", id)
     console.log("userType: ", userType)
     setId(id)
     setUserTypeToBeBlocked(userType)
     setStatus(status)
+    setEmail(email)
     setModalMessage(
       <>
         Are you sure you want to <span style={{ fontWeight: 'bold' }}>unblock</span> this account? 
@@ -203,7 +206,8 @@ const [status, setStatus] = useState("")
       await BlockdUser({
         id: id,
         userType: userTypeToBeBlocked,
-        status: status
+        status: status,
+        email: email
       })
       window.location.reload() // reload the currect page after block update
     setShowModal(false); // Close the modal
@@ -401,7 +405,7 @@ const [status, setStatus] = useState("")
                                 {/* BLOCK */}
                                 {user.Blocked === "No" && (
                                   <button
-                                    onClick={()=> handleBlock(user.userType === "Donor" ? user.Donor_ID : user.Requestor_ID, user.userType, "Yes")}
+                                    onClick={()=> handleBlock(user.userType === "Donor" ? user.Donor_ID : user.Requestor_ID, user.userType, "Yes", user.email)}
                                     className="px-3  rounded-full hover:bg-neutral-variant"
                                   >
                                     <svg
@@ -423,7 +427,7 @@ const [status, setStatus] = useState("")
                                   {/* UNBLOCK */}
                                  {user.Blocked === "Yes" && (
                                  <button
-                                    onClick={()=> handleUnBlock(user.userType === "Donor" ? user.Donor_ID : user.Requestor_ID, user.userType, "No")}
+                                    onClick={()=> handleUnBlock(user.userType === "Donor" ? user.Donor_ID : user.Requestor_ID, user.userType, "No", user.email)}
                                     className="px-3  rounded-full hover:bg-neutral-variant"
                                   >
                                     <CgUnblock size={24} color="#E60965" style={{flexShrink: 0}}/>

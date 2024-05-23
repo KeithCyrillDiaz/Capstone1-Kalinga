@@ -107,12 +107,11 @@ const [profilePic, setProfilePic] = useState("")
                     <View style = {styles.row}>
                     {profilePic === "" ? (
                         <View style = {styles.profilePic}>
-                        <FontAwesome name="user-circle-o" size={200} color="#E60965" />
+                        <FontAwesome name="user-circle-o" size={170} color="#E60965" />
                         </View>
                       ) : (
                         <Image
                         style = {{
-                          marginRight: -30,
                           width: 157,
                           height: 157,
                           borderWidth: 1,
@@ -124,14 +123,14 @@ const [profilePic, setProfilePic] = useState("")
                         />
                       )
                     }
-                      <View>
-                        <MaterialIcons name="verified" size={24} color="#E60965" />
-                      </View>
-                     
+          
                     </View>
 
                     <Text style = {styles.name}>{UserName}</Text>
-                    <Text style = {styles.userType}>Requestor</Text>
+                    <View style={{gap: 3, flexDirection: "row", alignSelf: "center", alignItems: "center", marginBottom: 30}}>
+                      <MaterialIcons name="verified" size={17} color="#E60965" />
+                      <Text style = {styles.userType}>Requestor</Text>
+                    </View> 
 
                   </View>
 
@@ -238,11 +237,6 @@ const [profilePic, setProfilePic] = useState("")
       
     },
 
-    profilePic: {
-      marginRight: -20,
-
-    },
-
     text: {
 
       //backgroundColor: "gray",
@@ -275,7 +269,6 @@ const [profilePic, setProfilePic] = useState("")
       color: "#E60965",
       fontFamily: "Open-Sans-SemiBold",
       fontSize: 15,
-      marginBottom: 30
     },
 
     iconBookmark: {

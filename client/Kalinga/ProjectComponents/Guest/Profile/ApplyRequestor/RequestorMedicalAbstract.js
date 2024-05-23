@@ -116,6 +116,7 @@ const handleFileUpload = async (attachmentType) => {
     if (!result.canceled && result.assets && result.assets.length > 0) {
       delete selectedImage[attachmentType]
       if(Object.keys(selectedImage).length===0)setImageContainer(false)
+      if(Object.keys(selectedImage).length < 3)setScrollableHorizontal(false)
             if (
               result.assets[0].mimeType === "application/pdf" ||
               result.assets[0].mimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -180,7 +181,7 @@ const handleFileUpload = async (attachmentType) => {
                
                 <Text style = {[styles.MainTitle, {marginVertical: 20,}]}>Medical Abstract of Infant</Text>
               </View>
-              
+              <Text style = {styles.note}> Note: Please make sure that your images are clear</Text>
               <View style = {styles. attachmentContainer}>
                 <Text style={styles.newLabel}>
                     Clinical History
@@ -457,6 +458,13 @@ const handleFileUpload = async (attachmentType) => {
   }
 
   const styles = StyleSheet.create ({
+    note: {
+      color: '#E60965',
+      fontFamily: "Open-Sans-SemiBold",
+      marginBottom: 10,
+      fontSize: 13,
+      textAlign: "center"
+    },
 
     rowAlignment: {
       flexDirection: "row",

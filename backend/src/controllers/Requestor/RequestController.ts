@@ -13,10 +13,10 @@ const createRequest = async (req: Request, res: Response): Promise<void> => {
       emailAddress,
       homeAddress,
       city,
-      medicalCondition,
       milkBank,
       milkAmount,
       ReasonForRequesting,
+      method,
     } = req.body;
 
     console.log(req.body)
@@ -30,11 +30,11 @@ const createRequest = async (req: Request, res: Response): Promise<void> => {
       emailAddress,
       homeAddress,
       city,
-      medicalCondition,
       milkBank,
       milkAmount,
       ReasonForRequesting,
       Date: currentTime,
+      method,
     });
     console.log(newRequest)
     res.status(201).json(newRequest);

@@ -118,8 +118,12 @@ export const createMedicalRequirementFiles = (values: Record<string, any>) => ne
 
 export const createMedicalRequirementImages = (values: Record<string, any>) => new MedicalRequirementsImagesModel(values).save().then((MedicalRequirements) => MedicalRequirements.toObject())
 
-export const getMRImage = (ownerID: string) => MedicalRequirementsImagesModel.find({ownerID})
-export const getMRFile = (ownerID: string) => MedicalRequirementsFilesModel.find({ownerID})
+export const getMRImage = (ownerID: string, purpose: string) => MedicalRequirementsImagesModel.find({ownerID, purpose})
+export const getMRFile = (ownerID: string, purpose: string) => MedicalRequirementsFilesModel.find({ownerID, purpose})
+export const deleteMRImages = (ownerID: string, purpose: string) => MedicalRequirementsImagesModel.deleteMany({ownerID, purpose})
+export const deleteMRFiles = (ownerID: string, purpose: string) => MedicalRequirementsFilesModel.deleteMany({ownerID, purpose})
+
+
 export const createScreeningForm = (values: Record<string, any>) => new screeningFormModel(values).save().then((ScreeningForm) => ScreeningForm.toObject())
 
 export const getScreeningFormByUserType = (userType: string) => screeningFormModel.find({userType: userType, isDeleted: {$ne: "Deleted"}})

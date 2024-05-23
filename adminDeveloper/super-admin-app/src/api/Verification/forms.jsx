@@ -22,7 +22,9 @@ export const fetchFormsByUserType = async ({userType}) => {
 export const fetchApplicantFilesById = async ({id}) => {
     try {
         console.log("Fetching Applicant Files")
-        const response = await axios.get(`${WebHost}/kalinga/getMedicalRequirementFile/${id}`)
+        const response = await axios.post(`${WebHost}/kalinga/getMedicalRequirementFile/${id}`,
+        {purpose: "Application"}
+        )
         console.log(response.data.messages.message)
 
         if(!response.data.files)
@@ -40,7 +42,9 @@ export const fetchApplicantFilesById = async ({id}) => {
 export const fetchApplicantImagesById = async ({id}) => {
     try {
         console.log("Fetching Applicant Images")
-        const response = await axios.get(`${WebHost}/kalinga/getMedicalRequirementImage/${id}`)
+        const response = await axios.post(`${WebHost}/kalinga/getMedicalRequirementImage/${id}`,
+        {purpose: "Applicant"}
+        )
         console.log(response.data.messages.message)
 
         if(!response.data.images)
