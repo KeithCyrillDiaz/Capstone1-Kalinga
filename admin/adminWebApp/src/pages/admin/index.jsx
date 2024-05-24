@@ -161,7 +161,8 @@ export default function Dashboard() {
   const users = [
     { name: "Kara Mia", amount: "1,200 mL" },
     { name: "Beverly", amount: "850 mL" },
-    { name: "Charice Bai", amount: "500 mL" },
+    { name: "Jana", amount: "500 mL" },
+    { name: "Rog", amount: "500 mL" },
   ];
 
   return (
@@ -279,7 +280,7 @@ export default function Dashboard() {
                   <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
                     Transaction Overview
                   </h1>
-                  <div className="absolute top-2 -right-2 text-white px-4 py-2">
+                  <div className="absolute top-4 -right-1 text-white px-4 py-2">
                     <a href={"/admin/chart"} className="flex items-center">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -323,14 +324,14 @@ export default function Dashboard() {
                   </div>
                 </div>
                 {/* Barangays */}
-                <div className="flex flex-col  p-4 bg-white rounded-2xl shadow-sm relative">
+                <div className="flex flex-col p-4 bg-white rounded-2xl shadow-sm relative">
                   <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
                     Barangays
                   </h1>
                   <h3 className="text-md text-primary-default font-sans font-light text-start ml-4">
                     Registered Barangays: {barangaysData.length}
                   </h3>
-                  <div className="absolute top-2 -right-2 text-white px-4 py-2">
+                  <div className="absolute top-4 -right-1 text-white px-4 py-2">
                     <a href={"/"} className="flex items-center">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
