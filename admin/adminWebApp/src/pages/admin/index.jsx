@@ -32,8 +32,6 @@ export default function Dashboard() {
   const [totalPendingAppointments, setTotalPendingAppointments] = useState(0);
   const [totalPendingRequest, setTotalPendingRequest] = useState(0);
 
-
-
   useEffect(() => {
     console.log("Fetching data...");
     const fetchCounts = async () => {
@@ -63,29 +61,29 @@ export default function Dashboard() {
       } catch (error) {
         console.error("Error fetching total users:", error);
       }
-    
 
-    try {
-      const responsePendingAppointments = await axios.get(
-        `${WebHost}/kalinga/getTotalPendingAppointment`
-      );
-      setTotalPendingAppointments(responsePendingAppointments.data.totalPendingAppointments || 0);
-    } catch (error) {
-      console.error("Error fetching total pending appointments:", error);
-    }
-    
-    
-    try {
-      const responsePendingRequest = await axios.get(
-        `${WebHost}/kalinga/getTotalPendingRequest`
-      );
-      setTotalPendingRequest(responsePendingRequest.data.totalPendingRequest || 0);
-    } catch (error) {
-      console.error("Error fetching total pending appointments:", error);
-    }
+      try {
+        const responsePendingAppointments = await axios.get(
+          `${WebHost}/kalinga/getTotalPendingAppointment`
+        );
+        setTotalPendingAppointments(
+          responsePendingAppointments.data.totalPendingAppointments || 0
+        );
+      } catch (error) {
+        console.error("Error fetching total pending appointments:", error);
+      }
+
+      try {
+        const responsePendingRequest = await axios.get(
+          `${WebHost}/kalinga/getTotalPendingRequest`
+        );
+        setTotalPendingRequest(
+          responsePendingRequest.data.totalPendingRequest || 0
+        );
+      } catch (error) {
+        console.error("Error fetching total pending appointments:", error);
+      }
     };
-
-
 
     fetchCounts();
   }, []);
@@ -134,198 +132,317 @@ export default function Dashboard() {
     fetchData();
   }, []);
 
+  const DashboardCard = ({ icon, title, count, seeMore }) => {
+    return (
+      <div className="flex flex-col h-32 p-2 pr-3 bg-white rounded-2xl shadow-sm w-1/4">
+        <div className="flex justify-end">
+          <span className="text-md font-sans text-primary-default ">
+            {title}
+          </span>
+        </div>
+        <div className="flex flex-row justify-start items-center w-full mt-2">
+          {icon}
+          <span className="flex-grow text-5xl font-sans font-bold text-primary-default text-right pr-2">
+            {count}
+          </span>
+        </div>
+        <div className="flex justify-end mt-2">
+          <a
+            href={seeMore}
+            className="text-sm font-light italic font-sans underline text-primary-default"
+          >
+            See more
+          </a>
+        </div>
+      </div>
+    );
+  };
+
+  const users = [
+    { name: "Kara Mia", amount: "1,200 mL" },
+    { name: "Beverly", amount: "850 mL" },
+    { name: "Charice Bai", amount: "500 mL" },
+  ];
+
   return (
     <>
-      <section className="w-full h-full bg-primary-body overflow-hidden">
+      <section className="w-full h-full bg-primary-body overflow-hidden rounded-xl">
         <div className="p-12 pt-2">
-          <div>
-            <h1 className="text-2xl text-primary-default font-bold font-sans py-4 mt-2 pb-6">
+          <div className="py-4">
+            <h1 className="text-2xl text-primary-default font-bold font-sans py-">
               Welcome, QCGH Human Milk Bank Admin!
             </h1>
+            <h3 className="text-md text-primary-default font-light font-sans pb-3">
+              Here’s the overview for Quezon City
+            </h3>
           </div>
           <div className="flex flex-wrap gap-4 justify-center">
-            {/* First Row */}
-            {/* Total Donor */}
             <div className="flex w-full justify-center gap-4">
-              <div className="flex items-center justify-center h-40 p-4 bg-white rounded-lg shadow-md w-1/5">
-                <div className="flex items-center w-full">
-                  <div className="flex justify-center items-center w-1/3">
+              <div className="flex items-center justify-center gap-x-4 w-4/6">
+                <DashboardCard
+                  icon={
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="70"
-                      height="70"
+                      width="50"
+                      height="50"
                       viewBox="0 0 24 24"
+                      className="rounded-full bg-primary-default p-2 ml-2"
                     >
                       <path
                         fill="none"
-                        stroke="#E60965"
+                        stroke="#FFFFFF"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth="1.5"
                         d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0-8 0M6 21v-2a4 4 0 0 1 4-4h.5m7.5 7l3.35-3.284a2.143 2.143 0 0 0 .005-3.071a2.24 2.24 0 0 0-3.129-.006l-.224.22l-.223-.22a2.24 2.24 0 0 0-3.128-.006a2.143 2.143 0 0 0-.006 3.071z"
                       ></path>
                     </svg>
-                  </div>
-                  <div className="flex flex-col items-center w-2/3">
-                    <span className="text-lg text-primary-default pb-2">
-                      Total Donor Users
-                    </span>
-                    <span className="text-5xl font-semibold text-primary-default pb-4">
-                      {totalDonors}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Total Requestor  */}
-              <div className="flex items-center justify-center h-40 p-4 bg-white rounded-lg shadow-md w-1/5">
-                <div className="flex items-center w-full">
-                  <div className="flex justify-center items-center w-1/3">
+                  }
+                  title="Total Donor Users"
+                  count={totalDonors}
+                  seeMore={"/admin/users"}
+                />
+                <DashboardCard
+                  icon={
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="70"
-                      height="70"
+                      width="50"
+                      height="50"
                       viewBox="0 0 24 24"
+                      className="rounded-full bg-primary-default p-2 ml-2"
                     >
                       <path
                         fill="none"
-                        stroke="#E60965"
+                        stroke="#FFFFFF"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth="1.5"
                         d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0-8 0M6 21v-2a4 4 0 0 1 4-4h3m3 7l5-5m0 4.5V17h-4.5"
                       ></path>
                     </svg>
-                  </div>
-                  <div className="flex flex-col items-center w-2/3">
-                    <span className="text-lg text-primary-default pb-2">
-                      Total Requestor Users
-                    </span>
-                    <span className="text-5xl font-semibold text-primary-default pb-4">
-                      {totalRequestors}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Total App  */}
-              <div className="flex items-center justify-center h-40 p-4 bg-white rounded-lg shadow-md w-1/5">
-                <div className="flex items-center w-full">
-                  <div className="flex justify-center items-center w-1/3">
+                  }
+                  title="Total Requestor Users"
+                  count={totalRequestors}
+                  seeMore={"/admin/users"}
+                />
+                <DashboardCard
+                  icon={
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="70"
-                      height="70"
+                      width="50"
+                      height="50"
                       viewBox="0 0 24 24"
+                      className="rounded-full bg-primary-default p-2 ml-2"
                     >
                       <path
-                        fill="none"
-                        stroke="#E60965"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="1.5"
-                        d="M18 18.72a9.1 9.1 0 0 0 3.741-.479q.01-.12.01-.241a3 3 0 0 0-4.692-2.478m.94 3.197l.001.031q0 .337-.037.666A11.94 11.94 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6 6 0 0 1 6 18.719m12 0a5.97 5.97 0 0 0-.941-3.197m0 0A6 6 0 0 0 12 12.75a6 6 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72a9 9 0 0 0 3.74.477m.94-3.197a5.97 5.97 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0a3 3 0 0 1 6 0m6 3a2.25 2.25 0 1 1-4.5 0a2.25 2.25 0 0 1 4.5 0m-13.5 0a2.25 2.25 0 1 1-4.5 0a2.25 2.25 0 0 1 4.5 0"
-                      ></path>
-                    </svg>
-                  </div>
-                  <div className="flex flex-col items-center w-2/3">
-                    <span className="text-lg text-primary-default pb-2">
-                      Total App Users
-                    </span>
-                    <span className="text-5xl font-semibold text-primary-default pb-4">
-                      {totalUsers}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Pending Appointments  */}
-              <div className="flex items-center justify-center h-40 p-4 bg-white rounded-lg shadow-md w-1/5">
-                <div className="flex items-center w-full">
-                  <div className="flex justify-center items-center w-1/3">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="60"
-                      height="60"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        fill="#E60965"
+                        fill="#FFFFFF"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth="1"
                         d="M9 1v2h6V1h2v2h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4V1zm11 10H4v8h16zM7 5H4v4h16V5h-3v2h-2V5H9v2H7z"
                       ></path>
                     </svg>
-                  </div>
-                  <div className="flex flex-col items-center w-2/3">
-                    <span className="text-lg text-primary-default pb-2">
-                      Pending Appointment
-                    </span>
-                    <span className="text-5xl font-semibold text-primary-default pb-4">
-                    {totalPendingAppointments}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Pending Requests  */}
-              <div className="flex items-center justify-center h-40 p-4 bg-white rounded-lg shadow-md w-1/5">
-                <div className="flex items-center w-full">
-                  <div className="flex justify-center items-center w-1/3">
+                  }
+                  title="Pending Appointment"
+                  count={totalPendingAppointments}
+                  seeMore={"/admin/donorAppointManage"}
+                />
+                <DashboardCard
+                  icon={
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="60"
-                      height="60"
-                      viewBox="0 0 24 24"
+                      width="50"
+                      height="50"
+                      viewBox="-0.5 -0.5 24 24"
+                      className="rounded-full bg-primary-default p-2 ml-2"
                     >
                       <path
-                        fill="#E60965"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="1.5"
-                        d="m5.72 14.456l1.761-.508l10.603-10.73a.456.456 0 0 0-.003-.64l-.635-.642a.443.443 0 0 0-.632-.003L6.239 12.635zM18.703.664l.635.643c.876.887.884 2.318.016 3.196L8.428 15.561l-3.764 1.084a.901.901 0 0 1-1.11-.623a.915.915 0 0 1-.002-.506l1.095-3.84L15.544.647a2.215 2.215 0 0 1 3.159.016zM7.184 1.817c.496 0 .898.407.898.909a.903.903 0 0 1-.898.909H3.592c-.992 0-1.796.814-1.796 1.817v10.906c0 1.004.804 1.818 1.796 1.818h10.776c.992 0 1.797-.814 1.797-1.818v-3.635c0-.502.402-.909.898-.909s.898.407.898.91v3.634c0 2.008-1.609 3.636-3.593 3.636H3.592C1.608 19.994 0 18.366 0 16.358V5.452c0-2.007 1.608-3.635 3.592-3.635z"
+                        fill="#FFFFFF"
+                        d="m21.289.98l.59.59c.813.814.69 2.257-.277 3.223L9.435 16.96l-3.942 1.442c-.495.182-.977-.054-1.075-.525a.928.928 0 0 1 .045-.51l1.47-3.976L18.066 1.257c.967-.966 2.41-1.09 3.223-.276zM8.904 2.19a1 1 0 1 1 0 2h-4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4a1 1 0 0 1 2 0v4a4 4 0 0 1-4 4h-12a4 4 0 0 1-4-4v-12a4 4 0 0 1 4-4z"
                       ></path>
                     </svg>
-                  </div>
-                  <div className="flex flex-col items-center w-2/3">
-                    <span className="text-lg text-primary-default pb-2">
-                      Pending Requests
-                    </span>
-
-                    <span className="text-5xl font-semibold text-primary-default pb-4">
-                    {totalPendingRequest}
-                    </span>
-                  </div>
-                </div>
+                  }
+                  title="Pending Requests"
+                  count={totalPendingRequest}
+                  seeMore={"/admin/requestorManagement"}
+                />
+              </div>
+              <div className="flex items-center justify-center h-32 p-4 bg-white rounded-2xl shadow-sm w-2/6">
+                LOE
               </div>
             </div>
 
-            {/* Second Row */}
-            <div className="flex w-full justify-center gap-4">
-              <div className="flex flex-col items-center justify-center col-span-5 px-8 py-8 bg-white rounded-lg shadow-md w-full">
-                <h2 className="text-2xl text-primary-default text-center mb-4">
-                  Percentage of Requests and Appointments
-                </h2>
-                <div className="w-full p-4">
-                  <div className="py-3 bg-white rounded-2xl">
-                    <div>
-                      <div className="grid grid-flow-row-dense px-4 xl:grid-cols-2 gap-x-4">
-                        <span>
-                          <PieChart name="Donations" />
-                        </span>
-                        <span className="lg:pt-4 lg:pb-8 xl:p-0">
-                          <RequestPieChart name="Requests" />
-                        </span>
+            <div className="w-full flex justify-center gap-4">
+              <div className="flex flex-col w-4/6 gap-4">
+                {/* Transactions */}
+                <div className="flex flex-col  p-4 bg-white rounded-2xl shadow-sm relative">
+                  <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
+                    Transaction Overview
+                  </h1>
+                  <div className="absolute top-2 -right-2 text-white px-4 py-2">
+                    <a href={"/admin/chart"} className="flex items-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="35"
+                        height="35"
+                        viewBox="0 0 24 24"
+                        className="cursor-pointer"
+                      >
+                        <path
+                          fill="#E60965"
+                          fillRule="evenodd"
+                          d="M3 2a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V8.5a.5.5 0 0 0-1 0V12H3V3h3.5a.5.5 0 0 0 0-1zm9.854.146a.5.5 0 0 1 .146.351V5.5a.5.5 0 0 1-1 0V3.707L6.854 8.854a.5.5 0 1 1-.708-.708L11.293 3H9.5a.5.5 0 0 1 0-1h3a.499.499 0 0 1 .354.146"
+                          clipRule="evenodd"
+                        ></path>
+                      </svg>
+                    </a>
+                  </div>
+                  <div className="py-2 ml-4">
+                    <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
+                      Donations
+                    </h1>
+                    <h1 className="text-4xl text-primary-default font-sans font-bold text-start ml-4">
+                      1, 256
+                    </h1>
+                    <h3 className="text-sm text-primary-default font-sans font-light text-start ml-4">
+                      Total Overall Donations
+                    </h3>
+                    <div>basta dito stacked bargraph beh ng donation</div>
+                  </div>
+                  <div className="py-2 ml-4">
+                    <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
+                      Requests
+                    </h1>
+                    <h1 className="text-4xl text-primary-default font-sans font-bold text-start ml-4">
+                      247
+                    </h1>
+                    <h3 className="text-sm text-primary-default font-sans font-light text-start ml-4">
+                      Total Overall Requests
+                    </h3>
+                    <div>basta dito stacked bargraph beh ng requests</div>
+                  </div>
+                </div>
+                {/* Barangays */}
+                <div className="flex flex-col  p-4 bg-white rounded-2xl shadow-sm relative">
+                  <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
+                    Barangays
+                  </h1>
+                  <h3 className="text-md text-primary-default font-sans font-light text-start ml-4">
+                    Registered Barangays: {barangaysData.length}
+                  </h3>
+                  <div className="absolute top-2 -right-2 text-white px-4 py-2">
+                    <a href={"/"} className="flex items-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="35"
+                        height="35"
+                        viewBox="0 0 24 24"
+                        className="cursor-pointer"
+                      >
+                        <path
+                          fill="#E60965"
+                          fillRule="evenodd"
+                          d="M3 2a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V8.5a.5.5 0 0 0-1 0V12H3V3h3.5a.5.5 0 0 0 0-1zm9.854.146a.5.5 0 0 1 .146.351V5.5a.5.5 0 0 1-1 0V3.707L6.854 8.854a.5.5 0 1 1-.708-.708L11.293 3H9.5a.5.5 0 0 1 0-1h3a.499.499 0 0 1 .354.146"
+                          clipRule="evenodd"
+                        ></path>
+                      </svg>
+                    </a>
+                  </div>
+
+                  <div className="py-2 ml-4">
+                    <div>basta dito bargraph beh ng mga barangays</div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col w-2/6 gap-4">
+                <div className="flex flex-col p-4 bg-white rounded-2xl shadow-sm relative">
+                  <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
+                    Total App Users
+                  </h1>
+                  <div className="py-4 ml-4">
+                    <h1 className="text-4xl text-primary-default font-sans font-bold text-start ml-4">
+                      147
+                    </h1>
+                    <h3 className="text-sm text-primary-default font-sans font-light text-start ml-4">
+                      Total Overall App Users
+                    </h3>
+                    <div>basta dito line graph ng users per month</div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col p-4 bg-white rounded-2xl shadow-sm relative">
+                  <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
+                    Top Donating Users
+                  </h1>
+                  <div className="py-4 px-2 ml-4">
+                    {users.map((user, index) => (
+                      <div key={index} className="flex flex-row items-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="40"
+                          height="40"
+                          viewBox="0 0 24 24"
+                          className="cursor-pointer"
+                        >
+                          <path
+                            fill="#E60965"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1.5"
+                            fillRule="evenodd"
+                            d="M12 20a7.97 7.97 0 0 1-5.002-1.756l.002.001v-.683c0-1.794 1.492-3.25 3.333-3.25h3.334c1.84 0 3.333 1.456 3.333 3.25v.683A7.97 7.97 0 0 1 12 20M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10c0 5.5-4.44 9.963-9.932 10h-.138C6.438 21.962 2 17.5 2 12m10-5c-1.84 0-3.333 1.455-3.333 3.25S10.159 13.5 12 13.5c1.84 0 3.333-1.455 3.333-3.25S13.841 7 12 7"
+                            clipRule="evenodd"
+                          ></path>
+                        </svg>
+                        <h1 className="text-lg text-primary-default font-sans mt-1 text-start ml-4">
+                          {user.name}
+                        </h1>
+                        <h1 className="text-lg text-primary-default font-sans font-light mt-1 ml-auto">
+                          {user.amount}
+                        </h1>
                       </div>
-                    </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex flex-col p-4 bg-white rounded-2xl shadow-sm relative">
+                  <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
+                    Top Requesting Users
+                  </h1>
+                  <div className="py-4 px-2 ml-4">
+                    {users.map((user, index) => (
+                      <div key={index} className="flex flex-row items-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="40"
+                          height="40"
+                          viewBox="0 0 24 24"
+                          className="cursor-pointer"
+                        >
+                          <path
+                            fill="#E60965"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1.5"
+                            fillRule="evenodd"
+                            d="M12 20a7.97 7.97 0 0 1-5.002-1.756l.002.001v-.683c0-1.794 1.492-3.25 3.333-3.25h3.334c1.84 0 3.333 1.456 3.333 3.25v.683A7.97 7.97 0 0 1 12 20M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10c0 5.5-4.44 9.963-9.932 10h-.138C6.438 21.962 2 17.5 2 12m10-5c-1.84 0-3.333 1.455-3.333 3.25S10.159 13.5 12 13.5c1.84 0 3.333-1.455 3.333-3.25S13.841 7 12 7"
+                            clipRule="evenodd"
+                          ></path>
+                        </svg>
+                        <h1 className="text-lg text-primary-default font-sans mt-1 text-start ml-4">
+                          {user.name}
+                        </h1>
+                        <h1 className="text-lg text-primary-default font-sans font-light mt-1 ml-auto">
+                          {user.amount}
+                        </h1>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Third Row */}
-            <div className="flex w-full justify-center gap-4">
+            {/* <div className="flex w-full justify-center gap-4">
               <div className="flex flex-col items-center justify-center col-span-2 px-8 py-2 bg-white rounded-lg shadow-md w-1.5/5">
                 <h2 className="text-2xl text-center text-primary-default mt-2">
                   QCGH Human Milk Bank User Demographics
@@ -372,7 +489,7 @@ export default function Dashboard() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
