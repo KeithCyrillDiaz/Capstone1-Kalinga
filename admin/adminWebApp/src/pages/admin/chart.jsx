@@ -9,6 +9,17 @@ import {
 export default function () {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
+  const [totalDonors, setTotalDonors] = useState(0);
+  const [totalRequestors, setTotalRequestors] = useState(0);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [usersPerCity, setUsersPerCity] = useState([]);
+  const [totalRequestorsPerBarangay, setTotalRequestorsPerBarangay] = useState(
+    []
+  );
+  const [totalDonorsPerBarangay, setTotalDonorsPerBarangay] = useState([]);
+  const [barangaysData, setBarangaysData] = useState([]);
+  const [totalPendingAppointments, setTotalPendingAppointments] = useState(0);
+  const [totalPendingRequest, setTotalPendingRequest] = useState(0);
 
   const months = [
     { id: 1, name: "January" },
@@ -50,43 +61,85 @@ export default function () {
     setIsFilterVisible(!isFilterVisible);
   };
 
+  const DashboardCard = ({ icon, title, count, seeMore }) => {
+    return (
+      <div className="flex flex-col h-32 p-2 pr-3 bg-white rounded-2xl shadow-sm w-1/4">
+        <div className="flex justify-end">
+          <span className="text-md font-sans text-primary-default ">
+            {title}
+          </span>
+        </div>
+        <div className="flex flex-row justify-start items-center w-full mt-2">
+          {icon}
+          <span className="flex-grow text-5xl font-sans font-bold text-primary-default text-right pr-2">
+            {count}
+          </span>
+        </div>
+        <div className="flex justify-end mt-2">
+          <a
+            href={seeMore}
+            className="text-sm font-light italic font-sans underline"
+          >
+            See more
+          </a>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       <section className="w-full h-auto bg-primary-body overflow-hidden">
-        <div className="p-8 pt-2">
+        <div className="p-12 pt-2">
           <div>
             <h1 className="text-3xl text-primary-default font-bold font-sans py-4 pb-2">
               Monthly Report
             </h1>
           </div>
 
-          <div className="px-8 ">
-            <div className="flex flex-col items-end xl:gap-x-6 lg:gap-x-3">
-              <button
-                onClick={toggleFilterVisibility}
-                className="bg-primary-default text-white py-2 px-4 rounded-xl focus:outline-none hover:bg-neutral-variant flex items-center"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="1em"
-                  height="1em"
-                  viewBox="0 0 36 36"
-                  className="mr-2"
+          <div className="px-2">
+            <div className="flex flex-col items-end  lg:gap-x-3">
+              <div className="flex flex-row gap-x-2">
+                <button
+                  onClick={toggleFilterVisibility}
+                  className="bg-primary-default text-white py-2 px-4 rounded-xl focus:outline-none hover:bg-pink-600 flex items-center"
                 >
-                  <path
-                    fill="currentColor"
-                    d="M22 33V19.5L33.47 8A1.81 1.81 0 0 0 34 6.7V5a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1.67a1.79 1.79 0 0 0 .53 1.27L14 19.58v10.2Z"
-                    className="clr-i-solid clr-i-solid-path-1"
-                  ></path>
-                  <path
-                    fill="currentColor"
-                    d="M33.48 4h-31a.52.52 0 0 0-.48.52v1.72a1.33 1.33 0 0 0 .39.95l12 12v10l7.25 3.61V19.17l12-12a1.35 1.35 0 0 0 .36-.91V4.52a.52.52 0 0 0-.52-.52"
-                    className="clr-i-solid clr-i-solid-path-1"
-                  ></path>
-                  <path fill="none" d="M0 0h36v36H0z"></path>
-                </svg>
-                Filter By
-              </button>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1em"
+                    height="1em"
+                    viewBox="0 0 36 36"
+                    className="mr-2"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M22 33V19.5L33.47 8A1.81 1.81 0 0 0 34 6.7V5a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1.67a1.79 1.79 0 0 0 .53 1.27L14 19.58v10.2Z"
+                      className="clr-i-solid clr-i-solid-path-1"
+                    ></path>
+                    <path
+                      fill="currentColor"
+                      d="M33.48 4h-31a.52.52 0 0 0-.48.52v1.72a1.33 1.33 0 0 0 .39.95l12 12v10l7.25 3.61V19.17l12-12a1.35 1.35 0 0 0 .36-.91V4.52a.52.52 0 0 0-.52-.52"
+                      className="clr-i-solid clr-i-solid-path-1"
+                    ></path>
+                    <path fill="none" d="M0 0h36v36H0z"></path>
+                  </svg>
+                  Filter By
+                </button>
+                <button className="bg-primary-default text-white py-2 px-4 rounded-xl focus:outline-none hover:bg-pink-600 flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.5em"
+                    height="1.5em"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M5 20h14v-2H5zM19 9h-4V3H9v6H5l7 7z"
+                    ></path>
+                  </svg>
+                  Download as PDF
+                </button>
+              </div>
 
               {isFilterVisible && (
                 <div className="mt-2 w-auto gap-x-4 bg-neutral-variant flex p-2 px-6 pb-4 rounded-md shadow-md justify-end">
@@ -125,9 +178,231 @@ export default function () {
               )}
             </div>
           </div>
-          <hr className="border-t-1 mt-4 border-primary-default" />
+
           <div>
-            <div className="grid grid-flow-row-dense px-4 xl:grid-cols-2 gap-4 mt-6">
+            <div>
+              <h1 className="text-2xl text-primary-default font-semibold font-sans py-4 pb-6">
+                {" "}
+                {/* nakadepende din dapat to sa filter */}
+                Reports for the month of May 2024
+              </h1>
+            </div>
+            <div className="w-full flex justify-center gap-4">
+              <div className="flex flex-col w-4/6 gap-4">
+                {/* Transactions */}
+                <div className="flex w-full justify-center gap-4">
+                  <div className="flex items-center justify-center gap-x-4 w-full">
+                    <DashboardCard
+                      icon={
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="50"
+                          height="50"
+                          viewBox="0 0 24 24"
+                          className="rounded-full bg-primary-default p-2 ml-2"
+                        >
+                          <path
+                            fill="none"
+                            stroke="#FFFFFF"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1.5"
+                            d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0-8 0M6 21v-2a4 4 0 0 1 4-4h.5m7.5 7l3.35-3.284a2.143 2.143 0 0 0 .005-3.071a2.24 2.24 0 0 0-3.129-.006l-.224.22l-.223-.22a2.24 2.24 0 0 0-3.128-.006a2.143 2.143 0 0 0-.006 3.071z"
+                          ></path>
+                        </svg>
+                      }
+                      title="Added Donor Users"
+                      count={totalDonors}
+                      seeMore={"/admin/users"}
+                    />
+                    <DashboardCard
+                      icon={
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="50"
+                          height="50"
+                          viewBox="0 0 24 24"
+                          className="rounded-full bg-primary-default p-2 ml-2"
+                        >
+                          <path
+                            fill="none"
+                            stroke="#FFFFFF"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1.5"
+                            d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0-8 0M6 21v-2a4 4 0 0 1 4-4h3m3 7l5-5m0 4.5V17h-4.5"
+                          ></path>
+                        </svg>
+                      }
+                      title="Added Requestor Users"
+                      count={totalRequestors}
+                      seeMore={"/admin/users"}
+                    />
+                    <DashboardCard
+                      icon={
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="50"
+                          height="50"
+                          viewBox="0 0 24 24"
+                          className="rounded-full bg-primary-default p-2 ml-2"
+                        >
+                          <path
+                            fill="#FFFFFF"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1"
+                            d="M9 1v2h6V1h2v2h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4V1zm11 10H4v8h16zM7 5H4v4h16V5h-3v2h-2V5H9v2H7z"
+                          ></path>
+                        </svg>
+                      }
+                      title="Appointments for the month"
+                      count={totalPendingAppointments}
+                      seeMore={"/admin/donorAppointManage"}
+                    />
+                    <DashboardCard
+                      icon={
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="50"
+                          height="50"
+                          viewBox="-0.5 -0.5 24 24"
+                          className="rounded-full bg-primary-default p-2 ml-2"
+                        >
+                          <path
+                            fill="#FFFFFF"
+                            d="m21.289.98l.59.59c.813.814.69 2.257-.277 3.223L9.435 16.96l-3.942 1.442c-.495.182-.977-.054-1.075-.525a.928.928 0 0 1 .045-.51l1.47-3.976L18.066 1.257c.967-.966 2.41-1.09 3.223-.276zM8.904 2.19a1 1 0 1 1 0 2h-4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4a1 1 0 0 1 2 0v4a4 4 0 0 1-4 4h-12a4 4 0 0 1-4-4v-12a4 4 0 0 1 4-4z"
+                          ></path>
+                        </svg>
+                      }
+                      title="Requests for the month"
+                      count={totalPendingRequest}
+                      seeMore={"/admin/requestorManagement"}
+                    />
+                  </div>
+                </div>
+
+                {/* Overview */}
+                <div className="flex flex-col  p-4 bg-white rounded-2xl shadow-sm relative">
+                  <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
+                    MAY 2024 Overview
+                  </h1>
+                  <div className="absolute top-4 -right-1 text-white px-4 py-2">
+                    <a href={"/admin/chart"} className="flex items-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="35"
+                        height="35"
+                        viewBox="0 0 24 24"
+                        className="cursor-pointer"
+                      >
+                        <path
+                          fill="#E60965"
+                          fillRule="evenodd"
+                          d="M3 2a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V8.5a.5.5 0 0 0-1 0V12H3V3h3.5a.5.5 0 0 0 0-1zm9.854.146a.5.5 0 0 1 .146.351V5.5a.5.5 0 0 1-1 0V3.707L6.854 8.854a.5.5 0 1 1-.708-.708L11.293 3H9.5a.5.5 0 0 1 0-1h3a.499.499 0 0 1 .354.146"
+                          clipRule="evenodd"
+                        ></path>
+                      </svg>
+                    </a>
+                  </div>
+                  <div className="flex flex-row">
+                    <div className="py-2 ml-4">
+                      <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
+                        Donations
+                      </h1>
+                      <h1 className="text-4xl text-primary-default font-sans font-bold text-start ml-4">
+                        1, 256
+                      </h1>
+                      <h3 className="text-sm  font-sans font-light text-start ml-4">
+                        Total Overall Donations of the month
+                      </h3>
+                    </div>
+                    <div className="py-2 ml-32">
+                      <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
+                        Requests
+                      </h1>
+                      <h1 className="text-4xl text-primary-default font-sans font-bold text-start ml-4">
+                        247
+                      </h1>
+                      <h3 className="text-sm  font-sans font-light text-start ml-4">
+                        Total Overall Requests of the month
+                      </h3>
+                    </div>
+                  </div>
+                  <div>
+                    basta dito stacked bargraph beh ng monthly donor and
+                    requestor
+                  </div>
+                </div>
+              </div>
+              {/* Analysis */}
+              <div className="flex flex-col w-2/6 gap-4">
+                <div className="flex flex-col p-4 bg-white rounded-2xl shadow-sm relative">
+                  <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
+                    Analysis
+                  </h1>
+                  <div className="px-4">
+                    <div>
+                      <h1 className="text-xl text-primary-default font-sans font-semibold text-start ml-4 mt-4">
+                        Donations
+                      </h1>
+                    </div>
+                    <div className="flex flex-row py-4 ml-4 gap-x-4">
+                      <div>
+                        <div className="flex flex-col px-4 py-10">
+                          <h1 className="font-sans font-semibold text-center text-5xl text-primary-default">
+                            25
+                          </h1>
+                          <h1 className="font-sans text-center text-sm text-primary-default">
+                            Successful
+                          </h1>
+                          <hr className="my-4 border-t border-primary-default" />
+                          <h1 className="font-sans font-semibold text-center text-5xl text-primary-default">
+                            10
+                          </h1>
+                          <h1 className="font-sans text-center text-sm text-primary-default">
+                            Declined
+                          </h1>
+                        </div>
+                      </div>
+                      <div>pie graph here</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col p-4 bg-white rounded-2xl shadow-sm relative">
+                  <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4"></h1>
+                  <div className="px-4">
+                    <div>
+                      <h1 className="text-xl text-primary-default font-sans font-semibold text-start ml-4 mt-4">
+                        Requests
+                      </h1>
+                    </div>
+                    <div className="flex flex-row py-4 ml-4 gap-x-4">
+                      <div>
+                        <div className="flex flex-col px-4 py-10">
+                          <h1 className="font-sans font-semibold text-center text-5xl text-primary-default">
+                            25
+                          </h1>
+                          <h1 className="font-sans text-center text-sm text-primary-default">
+                            Successful
+                          </h1>
+                          <hr className="my-4 border-t border-primary-default" />
+                          <h1 className="font-sans font-semibold text-center text-5xl text-primary-default">
+                            10
+                          </h1>
+                          <h1 className="font-sans text-center text-sm text-primary-default">
+                            Declined
+                          </h1>
+                        </div>
+                      </div>
+                      <div>pie graph here</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* <div className="grid grid-flow-row-dense px-4 xl:grid-cols-2 gap-4 mt-6">
               <div className=" bg-white rounded-lg shadow-lg p-4 pb-10 ">
                 <span clas>
                   <DonatePerMonth
@@ -160,7 +435,7 @@ export default function () {
                   <BarRequestPerMonth name="Total Request" />
                 </span>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
