@@ -15,7 +15,18 @@ export default function chart() {
   const [selectedYear, setSelectedYear] = useState("");
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null);  const [totalDonors, setTotalDonors] = useState(0);
+  const [totalRequestors, setTotalRequestors] = useState(0);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [usersPerCity, setUsersPerCity] = useState([]);
+  const [totalRequestorsPerBarangay, setTotalRequestorsPerBarangay] = useState(
+    []
+  );
+  const [totalDonorsPerBarangay, setTotalDonorsPerBarangay] = useState([]);
+  const [barangaysData, setBarangaysData] = useState([]);
+  const [totalPendingAppointments, setTotalPendingAppointments] = useState(0);
+  const [totalPendingRequest, setTotalPendingRequest] = useState(0);
+
   const months = [
     { id: 1, name: "January" },
     { id: 2, name: "February" },
@@ -218,16 +229,41 @@ export default function chart() {
     setIsFilterVisible(!isFilterVisible);
   };
 
-
+  const DashboardCard = ({ icon, title, count, seeMore }) => {
     return (
-      <>
-        <section className="w-full h-auto bg-primary-body overflow-hidden">
-          <div className="p-8 pt-2">
-            <div>
-              <h1 className="text-3xl text-primary-default font-bold font-sans py-4 pb-2">
-                Monthly Report
-              </h1>
-            </div>
+      <div className="flex flex-col h-32 p-2 pr-3 bg-white rounded-2xl shadow-sm w-1/4">
+        <div className="flex justify-end">
+          <span className="text-md font-sans text-primary-default ">
+            {title}
+          </span>
+        </div>
+        <div className="flex flex-row justify-start items-center w-full mt-2">
+          {icon}
+          <span className="flex-grow text-5xl font-sans font-bold text-primary-default text-right pr-2">
+            {count}
+          </span>
+        </div>
+        <div className="flex justify-end mt-2">
+          <a
+            href={seeMore}
+            className="text-sm font-light italic font-sans underline"
+          >
+            See more
+          </a>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <>
+      <section className="w-full h-auto bg-primary-body overflow-hidden">
+        <div className="p-12 pt-2">
+          <div>
+            <h1 className="text-3xl text-primary-default font-bold font-sans py-4 pb-2">
+              Monthly Report
+            </h1>
+          </div>
 
             <div className="px-8 ">
               <div className="flex flex-col items-end xl:gap-x-6 lg:gap-x-3">
@@ -338,17 +374,21 @@ export default function chart() {
                   </span>
                 </div>
 
-                <div className=" bg-white rounded-lg shadow-lg p-4 pb-10 xl:col-span-2">
-                  <span className="lg:pt-4 lg:pb-8 xl:p-0 mt-8">
-                    <BarDonatePerMonth name="Total Requests" 
-                    />
-                    
-                  </span>
-                </div>
+              <div className=" bg-white rounded-lg shadow-lg p-4 pb-10 ">
+                <span className="lg:pt-4 lg:pb-8 xl:p-0 mt-8">
+                  <BarDonatePerMonth name="Total Donation" />
+                </span>
               </div>
-            </div>
+
+              <div className=" bg-white rounded-lg shadow-lg p-4 pb-10 ">
+                <span className="lg:pt-4 lg:pb-8 xl:p-0 mt-8">
+                  <BarRequestPerMonth name="Total Request" />
+                </span>
+              </div>
+            </div> 
           </div>
-        </section>
-      </>
-    );
-  }
+        </div>
+      </section>
+    </>
+  );
+}

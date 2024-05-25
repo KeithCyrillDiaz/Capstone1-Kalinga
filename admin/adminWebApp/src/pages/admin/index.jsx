@@ -197,7 +197,7 @@ export default function Dashboard() {
         <div className="flex justify-end mt-2">
           <a
             href={seeMore}
-            className="text-sm font-light italic font-sans underline text-primary-default"
+            className="text-sm font-light italic font-sans underline "
           >
             See more
           </a>
@@ -311,8 +311,26 @@ export default function Dashboard() {
                   seeMore={"/admin/requestorManagement"}
                 />
               </div>
-              <div className="flex items-center justify-center h-32 p-4 bg-white rounded-2xl shadow-sm w-2/6">
-                LOE
+              <div className="flex items-center justify-center h-32 bg-white rounded-2xl shadow-sm w-2/6">
+                <div className="flex items-center -ml-28 h-full bg-primary-default rounded-l-2xl p-4 ">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="50"
+                    height="50"
+                    viewBox="0 0 512 512"
+                  >
+                    <path
+                      fill="#FFFFFFFF"
+                      d="M480 128a64 64 0 0 0-64-64h-16V48.45c0-8.61-6.62-16-15.23-16.43A16 16 0 0 0 368 48v16H144V48.45c0-8.61-6.62-16-15.23-16.43A16 16 0 0 0 112 48v16H96a64 64 0 0 0-64 64v12a4 4 0 0 0 4 4h440a4 4 0 0 0 4-4ZM32 416a64 64 0 0 0 64 64h320a64 64 0 0 0 64-64V179a3 3 0 0 0-3-3H35a3 3 0 0 0-3 3Zm344-208a24 24 0 1 1-24 24a24 24 0 0 1 24-24m0 80a24 24 0 1 1-24 24a24 24 0 0 1 24-24m-80-80a24 24 0 1 1-24 24a24 24 0 0 1 24-24m0 80a24 24 0 1 1-24 24a24 24 0 0 1 24-24m0 80a24 24 0 1 1-24 24a24 24 0 0 1 24-24m-80-80a24 24 0 1 1-24 24a24 24 0 0 1 24-24m0 80a24 24 0 1 1-24 24a24 24 0 0 1 24-24m-80-80a24 24 0 1 1-24 24a24 24 0 0 1 24-24m0 80a24 24 0 1 1-24 24a24 24 0 0 1 24-24"
+                    ></path>
+                  </svg>
+                </div>
+                <div className="flex flex-col justify-center ml-10">
+                  <div className="flex items-top font-sans ">Today is</div>
+                  <p className="text-2xl font-bold text-primary-default font-sans">
+                    {formattedDate}
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -348,7 +366,7 @@ export default function Dashboard() {
                     <h1 className="text-4xl text-primary-default font-sans font-bold text-start ml-4">
                     {totalCompleteDonations}
                     </h1>
-                    <h3 className="text-sm text-primary-default font-sans font-light text-start ml-4">
+                    <h3 className="text-sm font-sans font-light text-start ml-4">
                       Total Overall Donations
                     </h3>
                     <div><BarDonationOverAll/></div>
@@ -360,7 +378,7 @@ export default function Dashboard() {
                     <h1 className="text-4xl text-primary-default font-sans font-bold text-start ml-4">
                     {totalCompleteRequests}
                     </h1>
-                    <h3 className="text-sm text-primary-default font-sans font-light text-start ml-4">
+                    <h3 className="text-sm font-sans font-light text-start ml-4">
                       Total Overall Requests
                     </h3>
                     <div><BarRequestOverAll/></div>
@@ -371,7 +389,7 @@ export default function Dashboard() {
                   <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
                     Barangays
                   </h1>
-                  <h3 className="text-md text-primary-default font-sans font-light text-start ml-4">
+                  <h3 className="text-md font-sans font-light text-start ml-4">
                     Registered Barangays: {barangaysData.length}
                   </h3>
                   <div className="absolute top-4 -right-1 text-white px-4 py-2">
