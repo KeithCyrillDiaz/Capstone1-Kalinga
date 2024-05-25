@@ -5,6 +5,7 @@ import { PieChart, LoadPercentage, RequestPieChart } from "@components";
 import { BarangayGraph } from "../../components";
 import { AdminLogin } from "../../api/AdminLogin";
 import { useParams } from "react-router-dom";
+import { BarDonationOverAll, BarRequestOverAll, LineGraphTotalUserPerMonth } from "../../components";
 import {
   BarChart,
   Bar,
@@ -31,6 +32,12 @@ export default function Dashboard() {
   const [barangaysData, setBarangaysData] = useState([]);
   const [totalPendingAppointments, setTotalPendingAppointments] = useState(0);
   const [totalPendingRequest, setTotalPendingRequest] = useState(0);
+  const [totalCompleteDonations, setTotalCompleteDonations] = useState(0);
+  const [totalCompleteRequests, setTotalCompleteRequests] = useState(0);
+  const [topDonatingUsers, setTopDonatingUsers] = useState([]);
+  const [topRequestingUsers, setTopRequestingUsers] = useState([]);
+
+
 
   useEffect(() => {
     console.log("Fetching data...");
@@ -132,6 +139,47 @@ export default function Dashboard() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const responseCompleteDonation = await axios.get(`${WebHost}/kalinga/getCompleteDonationsTotal`);
+        console.log("Response Complete Donations:", responseCompleteDonation.data);
+        setTotalCompleteDonations(responseCompleteDonation.data.totalCompleteDonations);
+        
+        const responseCompleteRequest = await axios.get(`${WebHost}/kalinga/getCompleteRequestsTotal`);
+        console.log("Response Complete Requests:", responseCompleteRequest.data);
+        setTotalCompleteRequests(responseCompleteRequest.data.totalCompleteRequests);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setError('Error fetching data');
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const Donationresponse = await axios.get(`${WebHost}/kalinga/getHighestDonation`);
+        const Requestresponse = await axios.get(`${WebHost}/kalinga/getHighestRequestors`);
+        console.log("Top Donating Users Response:", Donationresponse.data); // Log the response data
+        console.log("Top Donating Users Response:", Requestresponse.data); // Log the response data
+
+        // Assuming the response is an array of user strings
+        setTopDonatingUsers(Donationresponse.data.data || []); // Ensure to access the correct property of the response data
+        setTopRequestingUsers(Requestresponse.data.data || []); // Ensure to access the correct property of the response data
+
+      } catch (error) {
+        console.error('Error fetching top donating users:', error);
+      }
+    };
+  
+    fetchData();
+  }, []);
+
   const DashboardCard = ({ icon, title, count, seeMore }) => {
     return (
       <div className="flex flex-col h-32 p-2 pr-3 bg-white rounded-2xl shadow-sm w-1/4">
@@ -158,12 +206,7 @@ export default function Dashboard() {
     );
   };
 
-  const users = [
-    { name: "Kara Mia", amount: "1,200 mL" },
-    { name: "Beverly", amount: "850 mL" },
-    { name: "Jana", amount: "500 mL" },
-    { name: "Rog", amount: "500 mL" },
-  ];
+
 
   return (
     <>
@@ -303,24 +346,24 @@ export default function Dashboard() {
                       Donations
                     </h1>
                     <h1 className="text-4xl text-primary-default font-sans font-bold text-start ml-4">
-                      1, 256
+                    {totalCompleteDonations}
                     </h1>
                     <h3 className="text-sm text-primary-default font-sans font-light text-start ml-4">
                       Total Overall Donations
                     </h3>
-                    <div>basta dito stacked bargraph beh ng donation</div>
+                    <div><BarDonationOverAll/></div>
                   </div>
                   <div className="py-2 ml-4">
                     <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
                       Requests
                     </h1>
                     <h1 className="text-4xl text-primary-default font-sans font-bold text-start ml-4">
-                      247
+                    {totalCompleteRequests}
                     </h1>
                     <h3 className="text-sm text-primary-default font-sans font-light text-start ml-4">
                       Total Overall Requests
                     </h3>
-                    <div>basta dito stacked bargraph beh ng requests</div>
+                    <div><BarRequestOverAll/></div>
                   </div>
                 </div>
                 {/* Barangays */}
@@ -351,7 +394,7 @@ export default function Dashboard() {
                   </div>
 
                   <div className="py-2 ml-4">
-                    <div>basta dito bargraph beh ng mga barangays</div>
+                    <div><BarangayGraph/></div>
                   </div>
                 </div>
               </div>
@@ -362,48 +405,48 @@ export default function Dashboard() {
                   </h1>
                   <div className="py-4 ml-4">
                     <h1 className="text-4xl text-primary-default font-sans font-bold text-start ml-4">
-                      147
+                    {totalUsers}
                     </h1>
                     <h3 className="text-sm text-primary-default font-sans font-light text-start ml-4">
                       Total Overall App Users
                     </h3>
-                    <div>basta dito line graph ng users per month</div>
+                    <div><LineGraphTotalUserPerMonth/></div>
                   </div>
                 </div>
 
                 <div className="flex flex-col p-4 bg-white rounded-2xl shadow-sm relative">
-                  <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
+                <div className="py-4 px-2 ml-4">
+                <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4 pb-4">
                     Top Donating Users
                   </h1>
-                  <div className="py-4 px-2 ml-4">
-                    {users.map((user, index) => (
-                      <div key={index} className="flex flex-row items-center">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="40"
-                          height="40"
-                          viewBox="0 0 24 24"
-                          className="cursor-pointer"
-                        >
-                          <path
-                            fill="#E60965"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="1.5"
-                            fillRule="evenodd"
-                            d="M12 20a7.97 7.97 0 0 1-5.002-1.756l.002.001v-.683c0-1.794 1.492-3.25 3.333-3.25h3.334c1.84 0 3.333 1.456 3.333 3.25v.683A7.97 7.97 0 0 1 12 20M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10c0 5.5-4.44 9.963-9.932 10h-.138C6.438 21.962 2 17.5 2 12m10-5c-1.84 0-3.333 1.455-3.333 3.25S10.159 13.5 12 13.5c1.84 0 3.333-1.455 3.333-3.25S13.841 7 12 7"
-                            clipRule="evenodd"
-                          ></path>
-                        </svg>
-                        <h1 className="text-lg text-primary-default font-sans mt-1 text-start ml-4">
-                          {user.name}
-                        </h1>
-                        <h1 className="text-lg text-primary-default font-sans font-light mt-1 ml-auto">
-                          {user.amount}
-                        </h1>
-                      </div>
-                    ))}
-                  </div>
+                      {topDonatingUsers.map((user, index) => (
+                        <div key={index} className="flex flex-row items-center">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="40"
+                            height="40"
+                            viewBox="0 0 24 24"
+                            className="cursor-pointer"
+                          >
+                            <path
+                              fill="#E60965"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="1.5"
+                              fillRule="evenodd"
+                              d="M12 20a7.97 7.97 0 0 1-5.002-1.756l.002.001v-.683c0-1.794 1.492-3.25 3.333-3.25h3.334c1.84 0 3.333 1.456 3.333 3.25v.683A7.97 7.97 0 0 1 12 20M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10c0 5.5-4.44 9.963-9.932 10h-.138C6.438 21.962 2 17.5 2 12m10-5c-1.84 0-3.333 1.455-3.333 3.25S10.159 13.5 12 13.5c1.84 0 3.333-1.455 3.333-3.25S13.841 7 12 7"
+                              clipRule="evenodd"
+                            ></path>
+                          </svg>
+                          <h1 className="text-lg text-primary-default font-sans mt-1 text-start ml-4">
+                            {user.fullName}
+                          </h1>
+                          <h1 className="text-lg text-primary-default font-sans font-light mt-1 ml-auto">
+                            {user.milkAmount} ml
+                          </h1>
+                        </div>
+                      ))}
+                    </div>
                 </div>
 
                 <div className="flex flex-col p-4 bg-white rounded-2xl shadow-sm relative">
@@ -411,7 +454,7 @@ export default function Dashboard() {
                     Top Requesting Users
                   </h1>
                   <div className="py-4 px-2 ml-4">
-                    {users.map((user, index) => (
+                    {topRequestingUsers.map((user, index) => (
                       <div key={index} className="flex flex-row items-center">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -431,11 +474,11 @@ export default function Dashboard() {
                           ></path>
                         </svg>
                         <h1 className="text-lg text-primary-default font-sans mt-1 text-start ml-4">
-                          {user.name}
-                        </h1>
-                        <h1 className="text-lg text-primary-default font-sans font-light mt-1 ml-auto">
-                          {user.amount}
-                        </h1>
+                            {user.fullName}
+                          </h1>
+                          <h1 className="text-lg text-primary-default font-sans font-light mt-1 ml-auto">
+                            {user.totalMilkAmount} ml
+                          </h1>
                       </div>
                     ))}
                   </div>

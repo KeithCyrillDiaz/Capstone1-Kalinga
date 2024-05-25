@@ -57,6 +57,11 @@ import { getDonationStatus, getDonationStatusOfMother } from '../controllers/Don
 import { getAllUsers } from '../controllers/SuperAdmin/getAllUser'
 import { deleteUser } from '../controllers/SuperAdmin/deleteUser'
 import { getTotalUsersPerBarangay } from '../controllers/Admin/Reports/getTotalUserBarangay'
+import { getTotalPendingAppointment } from '../controllers/Admin/Reports/getTotalPendingAppointment'
+import { getTotalPendingRequest } from '../controllers/Admin/Reports/getTotalPendingRequest'
+import { getTotalUserPerMonth } from '../controllers/Admin/Reports/getTotalUserPerMonth'
+import { getHighestDonation } from '../controllers/Admin/Reports/getHighestDonation'
+import { getHighestRequestors } from '../controllers/Admin/Reports/getHighestRequestors'
 
 export default (router: express.Router) => {
   
@@ -112,7 +117,7 @@ export default (router: express.Router) => {
     router.get('/kalinga/getTotalDeclineDonationPerMonth', getTotalDeclineDonationPerMonth)
     router.get('/kalinga/getTotalCompleteRequestPerMonth', getTotalCompleteRequestPerMonth)
     router.get('/kalinga/getTotalDeclineRequestPerMonth', getTotalDeclineRequestPerMonth)
-    router.get('/kalinga/getTotalCompleteDonationsAllMonths', getTotalCompleteDonationsAllMonths )
+    router.get('/kalinga/getTotalCompleteDonationsAllMonths', getTotalCompleteDonationsAllMonths)
     router.get('/kalinga/getTotalDeclineDonationsAllMonths', getTotalDeclineDonationsAllMonths )
     router.get('/kalinga/getTotalCompleteRequestAllMonths',getTotalCompleteRequestAllMonths)
     router.get('/kalinga/getTotalDeclineRequestAllMonths',getTotalDeclineRequestAllMonths)
@@ -128,6 +133,13 @@ export default (router: express.Router) => {
     router.get ('/kalinga/getAllUsers', getAllUsers)
     router.delete ('/kalinga/deleteUser/:id/:userType', deleteUser)
     router.get ('/kalinga/getTotalUsersPerBarangay', getTotalUsersPerBarangay)
+    router.get ('/kalinga/getTotalPendingAppointment', getTotalPendingAppointment)
+    router.get ('/kalinga/getTotalPendingRequest', getTotalPendingRequest)
+    router.get ('/kalinga/getTotalUserPerMonth', getTotalUserPerMonth)
+    router.get ('/kalinga/getHighestDonation', getHighestDonation)
+    router.get ('/kalinga/getHighestRequestors', getHighestRequestors)
+
+
 
 
 

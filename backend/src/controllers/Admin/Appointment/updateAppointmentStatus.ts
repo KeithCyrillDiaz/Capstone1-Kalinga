@@ -4,11 +4,13 @@ import AppointmentModel from '../../../models/Donor/DonorSetAppointmentModel';
 const updateDonationStatus = async (req: Request, res: Response): Promise<void> => {
   const { AppointmentDonorID } = req.params;
   const { DonationStatus } = req.body;
+  const { selectedDate } = req.body;
+  const { selectedTime } = req.body;
 
   try {
     const donation = await AppointmentModel.findOneAndUpdate(
       { AppointmentDonorID: AppointmentDonorID }, 
-      { $set: {DonationStatus: DonationStatus} }, 
+      { $set: {DonationStatus: DonationStatus, selectedDate: selectedDate, selectedTime: selectedTime }}, 
       { new: true }
     );
 
