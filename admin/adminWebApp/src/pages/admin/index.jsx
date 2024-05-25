@@ -37,6 +37,10 @@ export default function Dashboard() {
   const [topDonatingUsers, setTopDonatingUsers] = useState([]);
   const [topRequestingUsers, setTopRequestingUsers] = useState([]);
 
+  const currentDate = new Date();
+const formattedDate = `${currentDate.getFullYear()}-${
+  currentDate.getMonth() + 1
+}-${currentDate.getDate()}`;
 
 
   useEffect(() => {

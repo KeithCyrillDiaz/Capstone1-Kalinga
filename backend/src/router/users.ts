@@ -61,7 +61,9 @@ import { getTotalPendingAppointment } from '../controllers/Admin/Reports/getTota
 import { getTotalPendingRequest } from '../controllers/Admin/Reports/getTotalPendingRequest'
 import { getTotalUserPerMonth } from '../controllers/Admin/Reports/getTotalUserPerMonth'
 import { getHighestDonation } from '../controllers/Admin/Reports/getHighestDonation'
-import { getHighestRequestors } from '../controllers/Admin/Reports/getHighestRequestors'
+import { getHighestRequestors } from '../controllers/Admin/Reports/getHighestRequest'
+import { getTotalDonorsPerMonth } from '../controllers/Admin/Reports/getTotalUserPerMonthYear'
+import { getTotalRequestorsPerMonth} from '../controllers/Admin/Reports/getTotalUserPerMonthYear'
 
 export default (router: express.Router) => {
   
@@ -138,6 +140,10 @@ export default (router: express.Router) => {
     router.get ('/kalinga/getTotalUserPerMonth', getTotalUserPerMonth)
     router.get ('/kalinga/getHighestDonation', getHighestDonation)
     router.get ('/kalinga/getHighestRequestors', getHighestRequestors)
+    router.get ('/kalinga/getTotalDonorsPerMonth', getTotalDonorsPerMonth)
+    router.get ('/kalinga/getTotalRequestorsPerMonth', getTotalRequestorsPerMonth)
+
+
 
 
 

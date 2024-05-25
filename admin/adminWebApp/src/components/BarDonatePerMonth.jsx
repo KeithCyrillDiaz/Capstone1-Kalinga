@@ -88,29 +88,6 @@ export default function BarDonatePerMonth({ name }) {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <div>
-          <label htmlFor="year" className="mr-2">Select Year:</label>
-          <select
-            id="year"
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-            className="border-black border-solid border-1 rounded-md px-2 py-1"
-          >
-            <option value={new Date().getFullYear() - 1}>
-              {new Date().getFullYear() - 1}
-            </option>
-            <option value={new Date().getFullYear()}>{new Date().getFullYear()}</option>
-            <option value={new Date().getFullYear() + 1}>
-              {new Date().getFullYear() + 1}
-            </option>
-          </select>
-        </div>
-        <button
-          onClick={handleDownloadPDF}
-          className="bg-pink-500 text-white py-2 px-4 rounded-xl focus:outline-none hover:bg-pink-600"
-        >
-          Download PDF
-        </button>
       </div>
       <ResponsiveContainer width="100%" height={400}>
         <BarChart

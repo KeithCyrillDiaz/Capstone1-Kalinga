@@ -78,6 +78,8 @@ export default function RequestPerMonth({ name, selectedMonth, selectedYear }) {
         alpha: 45,
         beta: 0,
       },
+      height: 300,
+      width: 300
     },
     title: {
       text: name,
@@ -88,6 +90,14 @@ export default function RequestPerMonth({ name, selectedMonth, selectedYear }) {
     },
     credits: {
       enabled: false,
+    },
+    plotOptions: {
+      pie: {
+        dataLabels: {
+          enabled: false,
+        },
+        innerSize: "50%",
+      },
     },
   
     series: [
@@ -109,7 +119,6 @@ export default function RequestPerMonth({ name, selectedMonth, selectedYear }) {
           },
           useHTML: true,
         },
-        innerSize: "50%", 
       },
     ],
   };

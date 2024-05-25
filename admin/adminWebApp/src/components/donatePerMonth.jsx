@@ -78,24 +78,32 @@ export default function DonatePerMonth({ name, selectedMonth, selectedYear }) {
         alpha: 45,
         beta: 0,
       },
+      height: 300,
+      width: 300
     },
     title: {
       text: name,
       style: {
-        color: "#ED5077", 
-        fontSize: "20px", 
+        color: "#ED5077",
+        fontSize: "16px",
       },
     },
     credits: {
-      enabled: false, 
+      enabled: false,
     },
-  
+    plotOptions: {
+      pie: {
+        dataLabels: {
+          enabled: false, // Remove data labels outside the pie chart
+        },
+        innerSize: "50%",
+      },
+    },
     series: [
       {
-        name: "Donations",
         data: [
-          { name: "Successful", y: totalCompleteDonations, color: "#ED5077", dataLabels: { style: { fontSize: "20px" } } }, // Pink color for Successful
-          { name: "Unsuccessful", y: totalDeclinedDonations, color: "#007AFF", dataLabels: { style: { fontSize: "20px" } } }, // Blue color for Unsuccessful
+          { name: "Successful", y: totalCompleteDonations, color: "#ED5077" }, // Pink color for Successful
+          { name: "Unsuccessful", y: totalDeclinedDonations, color: "#007AFF" }, // Blue color for Unsuccessful
         ],
         dataLabels: {
           style: {
@@ -109,7 +117,8 @@ export default function DonatePerMonth({ name, selectedMonth, selectedYear }) {
           },
           useHTML: true,
         },
-        innerSize: "50%", 
+        innerSize: "50%",
+        
       },
     ],
   };

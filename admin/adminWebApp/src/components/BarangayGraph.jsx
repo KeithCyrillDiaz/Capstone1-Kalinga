@@ -3,7 +3,7 @@ import { WebHost } from "../../MyConstantAdmin";
 import axios from "axios";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import jsPDF from "jspdf";
-import "jspdf-autotable";
+import autoTable from "jspdf-autotable";
 
 export default function BarangayGraph({ name }) {
   const [barangaysData, setBarangaysData] = useState([]);
@@ -41,14 +41,36 @@ export default function BarangayGraph({ name }) {
 
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
-    doc.setFontSize(18);
-    doc.text("KALINGA BARANGAY REPORT", 105, 20, { align: "center" });
-    doc.autoTable({
-      head: [["Barangay", "Total Requestors", "Total Donors"]],
-      body: barangaysData.map((item) => [item._id, item.totalRequestors, item.totalDonors]),
+    doc.setTextColor("#ED5077");
+    doc.setFontSize(16);
+    doc.text("KALINGA OVERALL DONATION REPORT", 105, 15, { align: "center" });
+
+    const tableColumn = ["Barangay", "Total Requestors", "Total Donors"];
+    const tableRows = [];
+
+    barangaysData.forEach(item => {
+      const rowData = [
+        item._id,
+        item.totalRequestors,
+        item.totalDonors,
+      ];
+      tableRows.push(rowData);
     });
+
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 20,
+      headStyles: { fillColor: "#ED5077" }, 
+      didDrawCell: (data) => {
+        if (data.section === 'body' && data.column.index === 0) {
+          doc.setTextColor("#ED5077"); 
+        }
+      }
+    });
+
     doc.save("Kalinga_Barangay_Report.pdf");
-  };
+};
 
   if (loading) {
     return <div>Loading...</div>;
