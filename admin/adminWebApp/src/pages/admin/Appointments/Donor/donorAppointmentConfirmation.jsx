@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -46,13 +47,13 @@ const donorAppointmentConfirmation = () => {
   useEffect(() => {
     const fetchAppointmentData = async () => {
       try {
-        console.log("Fetching appointment data...");
         const response = await axios.get(
           `${WebHost}/kalinga/getAppointmentsByDonorID/${AppointmentDonorID}`
         );
-        console.log("Response:", response.data);
         setAppointmentData(response.data.Appointment);
-        await fetchRequirements(response.data.Appointment.Donor_ID)
+        setSelectedDate(new Date(response.data.Appointment.selectedDate));
+        setSelectedTime(new Date(response.data.Appointment.selectedTime));
+        await fetchRequirements(response.data.Appointment.Donor_ID);
       } catch (error) {
         console.error("Error fetching appointment data:", error);
       }
@@ -71,6 +72,8 @@ const donorAppointmentConfirmation = () => {
         `${WebHost}/kalinga/updateDonationStatus/${AppointmentDonorID}`,
         {
           DonationStatus: "Ongoing",
+          selectedDate: selectedDate.toISOString(),
+          selectedTime: selectedTime.toISOString()
         }
       );
 
@@ -169,9 +172,10 @@ const donorAppointmentConfirmation = () => {
     console.log("id: ", id)
     const files = await getMedicalAbstractsFiles({id: Donor_ID, purpose: "Donate"})
     const images = await getMedicalAbstractsImages({id: Donor_ID, purpose: "Donate"})
-    setFiles(files)
-    setImages(images)
-    console.l0g("images: ", images)
+    if(files) setFiles(files)
+      else setFiles([])
+    if(images) setImages(images)
+      else setImages([])
   }
 
   return (
@@ -406,34 +410,34 @@ const donorAppointmentConfirmation = () => {
           <div
           className="flex flex-row"
           >
-            {images.map(requirement => (
+            {images.length !== 0 && images.map(requirement => (
               <>
-                <div key={requirement.originalname} className="bg-white px-4 py-2 w-full h-72 shadow-md rounded-lg focus:outline-none focus: text-primary-default">
-                  <span className="flex justify-center text-primary-default text-lg text-center">
-                  {requirement.originalname}
-                  </span>
-                  <img
-                      className="w-[80%] h-[80%] mt-2 mx-auto py-2 hover: cursor-pointer object-contain"
-                    src={requirement.link}
-                    alt={requirement.originalname}
-                    />
-                </div>
+                    <div key={requirement.originalname} className="bg-white px-4 py-2 w-full h-72 shadow-md rounded-lg focus:outline-none focus: text-primary-default">
+                      <span className="flex justify-center text-primary-default text-lg text-center">
+                      {requirement.originalname}
+                      </span>
+                      <img
+                          className="w-[80%] h-[80%] mt-2 mx-auto py-2 hover: cursor-pointer object-contain"
+                        src={requirement.link}
+                        alt={requirement.originalname}
+                        />
+                    </div>
               </>
               
             ))}
-              {files.map(requirement => (
-              <div key={requirement.originalname} className="bg-white px-4 py-2 w-[40%] h-72 shadow-md items-center justify-center rounded-lg focus:outline-none focus: text-primary-default">
-                <span className="flex justify-center text-primary-default text-lg text-center">
-                  {requirement.originalname}
-                </span>
-                <a href ={`${requirement.link}`} target="_blank">
-                      <button 
-                      className="bg-primary-default px-4 py-2 text-white rounded-lg text-xs">
-                      Download {requirement.originalname} File
-                    </button>
-                  </a>
-              </div>
-            ))}
+        {files.length !== 0 && files.map(requirement => (
+         <div key={requirement.originalname} className="bg-white px-4 py-2 w-[40%] h-72 shadow-md items-center justify-center rounded-lg focus:outline-none focus: text-primary-default">
+           <span className="flex justify-center text-primary-default text-lg text-center">
+             {requirement.originalname}
+           </span>
+           <a href ={`${requirement.link}`} target="_blank">
+                <button 
+                className="bg-primary-default px-4 py-2 text-white rounded-lg text-xs">
+                Download {requirement.originalname} File
+              </button>
+            </a>
+         </div>
+      ))}
           </div>
           
 

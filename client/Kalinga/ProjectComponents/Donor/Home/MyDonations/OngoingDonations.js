@@ -25,10 +25,50 @@ const OngoingDonations = ({route}) => {
   const userInformation = route.params.userInformation
   const token = route.params.token
   const Donor_ID = userInformation.Donor_ID;
-  const [formData, setFormData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
+
+  const [formData, setFormData] = useState({
+    DonationStatus: "",
+    fullName: "",
+    phoneNumber: "",
+    emailAddress: "",
+    homeAddress: "",
+    medicalCondition: "",
+    milkAmount: "",
+    location: "",
+    selectedDate: ""(),
+    selectedTime: ""(),
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const { AppointmentDonorID } = useParams();
+  useEffect(() => {
+    const fetchAppointmentData = async () => {
+      try {
+        const response = await axios.get(
+          `${WebHost}/kalinga/getAppointmentsByDonorID/${AppointmentDonorID}`
+        );
+        setAppointmentData(response.data.Appointment);
+        setSelectedDate(new Date(response.data.Appointment.selectedDate));
+        setSelectedTime(new Date(response.data.Appointment.selectedTime));
+        await fetchRequirements(response.data.Appointment.Donor_ID);
+      } catch (error) {
+        console.error("Error fetching appointment data:", error);
+      }
+    };  
+
+    console.log("AppointmentDonorID:", AppointmentDonorID);
+    fetchAppointmentData();
+  }, [AppointmentDonorID]);
  
  const fetchData = async () => {
       try {
@@ -148,7 +188,9 @@ const OngoingDonations = ({route}) => {
                             placeholder="Date"
                             multiline={true}
                             placeholderTextColor="#E60965"
-                            value={date}
+                            value={`Date: ${
+                              appointmentData ? appointmentData.selectedDate : ""
+                            }`}                            
                             editable={false}
                         />
                         <FontAwesome5 name="calendar-alt" size={20} color="#E60965" style={styles.icon} />
@@ -163,8 +205,9 @@ const OngoingDonations = ({route}) => {
                             placeholder="Time"
                             multiline={true}
                             placeholderTextColor="#E60965"
-                            value={time}
-
+                            value={`Time: ${
+                              appointmentData ? appointmentData.selectedTime : ""
+                            }`}
                             editable={false}
                         />
                         <MaterialIcons name="access-time-filled" size={24} color="#E60965" style={styles.icon2} />

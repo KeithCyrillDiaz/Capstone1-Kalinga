@@ -13,21 +13,18 @@ import { BlockdUser } from "../../api/blockUsers/BlockUsers";
 export default function UserManagement() {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-  const [isRemarksModalOpen, setRemarksModalOpen] = useState(false);
-  const [deleteUserId, setDeleteUserId] = useState(null);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [userType, setUserType] = useState("");
-  const [form, setForms] = useState([]);
-  const [modalMessage, setModalMessage] = useState("")
+  const [modalMessage, setModalMessage] = useState("");
 
   //Blocked User
-const [id, setId] = useState("")
-const [userTypeToBeBlocked, setUserTypeToBeBlocked] = useState("")
-const [status, setStatus] = useState("")
-const [email, setEmail] = useState("")
+  const [id, setId] = useState("");
+  const [userTypeToBeBlocked, setUserTypeToBeBlocked] = useState("");
+  const [status, setStatus] = useState("");
+  const [email, setEmail] = useState("");
 
   const [filters, setFilters] = useState({
     monthOfCreation: "",
@@ -35,9 +32,6 @@ const [email, setEmail] = useState("")
     status: "",
     remarks: "",
   });
-
-  const usersPerPage = 10; // Fixed typo: changed 'usesrsPerPage' to 'usersPerPage'
-  const [currentPage, setCurrentPage] = useState(1); // Added state for current page
 
   const months = [
     { id: 1, name: "January" },
@@ -74,8 +68,6 @@ const [email, setEmail] = useState("")
     fetchData();
   }, []);
 
-  const [selectedUser, setSelectedUser] = useState(null);
-
   const handleUserTypeChange = (e) => {
     const selectedType = e.target.value;
     setUserType(selectedType);
@@ -110,7 +102,11 @@ const [email, setEmail] = useState("")
     setCurrentPage(1); // Reset to first page after filtering
   };
 
-  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+  //VIEW PER PAGE
+  // Pagination state and logic
+  const usersPerPage = 10; // Number of users per page
+  const [currentPage, setCurrentPage] = useState(1); // State for current page
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage); // Total number of pages
 
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
@@ -137,79 +133,97 @@ const [email, setEmail] = useState("")
     pageNumbers.push(i);
   }
 
+  // Modify the users map to use currentUsers
+  {
+    currentUsers.map((user, index) => (
+      <tr key={user.id}>
+        <td className="px-2 py-1 whitespace-nowrap">
+          <div className="text-center text-sm font-medium text-gray-900">
+            {index + 1 + (currentPage - 1) * usersPerPage}
+          </div>
+        </td>
+        ...
+      </tr>
+    ));
+  }
+
   const toggleFilterVisibility = () => {
     setIsFilterVisible(!isFilterVisible);
   };
 
-  const handleDelete = async (id, userType) => {
-    try {
-      if (!id) {
-        console.error("Error deleting user: ID is undefined");
-        return;
-      }
+  // const handleDelete = async (id, userType) => {
+  //   try {
+  //     if (!id) {
+  //       console.error("Error deleting user: ID is undefined");
+  //       return;
+  //     }
 
-      const response = await axios.delete(
-        `${WebHost}/kalinga/deleteUser/${id}/${userType}`
-      );
+  //     const response = await axios.delete(
+  //       `${WebHost}/kalinga/deleteUser/${id}/${userType}`
+  //     );
 
-      if (response.status === 200) {
-        const updatedUsers = users.filter(
-          (user) =>
-            (userType === "Donor" ? user.Donor_ID : user.Requestor_ID) !== id
-        );
-        const updatedFilteredUsers = filteredUsers.filter(
-          (user) =>
-            (userType === "Donor" ? user.Donor_ID : user.Requestor_ID) !== id
-        );
-        setUsers(updatedUsers);
-        setFilteredUsers(updatedFilteredUsers);
-      } else {
-        console.error("Failed to delete user");
-      }
-    } catch (error) {
-      console.error("Error deleting user:", error);
-    }
-  };
+  //     if (response.status === 200) {
+  //       const updatedUsers = users.filter(
+  //         (user) =>
+  //           (userType === "Donor" ? user.Donor_ID : user.Requestor_ID) !== id
+  //       );
+  //       const updatedFilteredUsers = filteredUsers.filter(
+  //         (user) =>
+  //           (userType === "Donor" ? user.Donor_ID : user.Requestor_ID) !== id
+  //       );
+  //       setUsers(updatedUsers);
+  //       setFilteredUsers(updatedFilteredUsers);
+  //     } else {
+  //       console.error("Failed to delete user");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error deleting user:", error);
+  //   }
+  // };
 
   const handleBlock = (id, userType, status, email) => {
-    console.log("id: ", id)
-    console.log("userType: ", userType)
-    setId(id)
-    setUserTypeToBeBlocked(userType)
-    setStatus(status)
-    setEmail(email)
+    console.log("id: ", id);
+    console.log("userType: ", userType);
+    setId(id);
+    setUserTypeToBeBlocked(userType);
+    setStatus(status);
+    setEmail(email);
     setModalMessage(
       <>
-      Are you sure you want to <span style={{ fontWeight: 'bold' }} >block</span> this account? Once <span style={{ fontWeight: 'bold' }} >blocked</span>, the account will be permanently not be able to use the app's features.
+        Are you sure you want to{" "}
+        <span style={{ fontWeight: "bold" }}>block</span> this account? Once{" "}
+        <span style={{ fontWeight: "bold" }}>blocked</span>, the account will be
+        permanently not be able to use the app's features.
       </>
-    )
+    );
     setShowModal(true);
-
   };
 
   const handleUnBlock = (id, userType, status, email) => {
-    console.log("id: ", id)
-    console.log("userType: ", userType)
-    setId(id)
-    setUserTypeToBeBlocked(userType)
-    setStatus(status)
-    setEmail(email)
+    console.log("id: ", id);
+    console.log("userType: ", userType);
+    setId(id);
+    setUserTypeToBeBlocked(userType);
+    setStatus(status);
+    setEmail(email);
     setModalMessage(
       <>
-        Are you sure you want to <span style={{ fontWeight: 'bold' }}>unblock</span> this account? 
-        Once <span style={{ fontWeight: 'bold' }} >unblocked</span>, the account will regain full access to all app features.
+        Are you sure you want to{" "}
+        <span style={{ fontWeight: "bold" }}>unblock</span> this account? Once{" "}
+        <span style={{ fontWeight: "bold" }}>unblocked</span>, the account will
+        regain full access to all app features.
       </>
     );
     setShowModal(true);
   };
   const handleApproveConfirm = async () => {
-      await BlockdUser({
-        id: id,
-        userType: userTypeToBeBlocked,
-        status: status,
-        email: email
-      })
-      window.location.reload() // reload the currect page after block update
+    await BlockdUser({
+      id: id,
+      userType: userTypeToBeBlocked,
+      status: status,
+      email: email,
+    });
+    window.location.reload(); // reload the currect page after block update
     setShowModal(false); // Close the modal
   };
 
@@ -219,7 +233,7 @@ const [email, setEmail] = useState("")
 
   return (
     <>
-      <section className="w-full h-screen bg-primary-body overflow-hidden">
+      <section className="w-full h-full bg-primary-body overflow-hidden">
         <div className="p-8 pt-2">
           <div>
             <h1 className="text-3xl text-primary-default font-bold font-sans my-4 mb-6">
@@ -303,6 +317,12 @@ const [email, setEmail] = useState("")
                           <tr>
                             <th
                               scope="col"
+                              className="text-center px-4 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
+                            >
+                              Index
+                            </th>
+                            <th
+                              scope="col"
                               className="text-center px-6 py-2 text-md font-sans text-primary-default uppercase tracking-wider"
                             >
                               Created On
@@ -340,8 +360,13 @@ const [email, setEmail] = useState("")
                           </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-primary-default">
-                          {filteredUsers.map((user) => (
+                          {currentUsers.map((user, index) => (
                             <tr key={user.id}>
+                              <td className="px-2 py-1 whitespace-nowrap">
+                                <div className="text-center text-sm font-medium text-gray-900">
+                                  {indexOfFirstUser + index + 1}
+                                </div>
+                              </td>
                               <td className="px-2 py-4 whitespace-nowrap">
                                 <div className="text-center text-sm font-medium text-gray-900">
                                   {new Date(
@@ -359,10 +384,16 @@ const [email, setEmail] = useState("")
                                   {user.email}
                                 </div>
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-center text-sm text-gray-500">
+                              <td className="px-6 py-4 whitespace-nowrap text-center  font-medium">
+                                <span
+                                  className={`px-2 inline-flex text-sm leading-5 font-semibold rounded-full ${
+                                    user.userType === "Donor"
+                                      ? "bg-pink-300 text-pink-800"
+                                      : "bg-blue-300 text-blue-800"
+                                  }`}
+                                >
                                   {user.userType}
-                                </div>
+                                </span>
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
                                 <div className="text-center text-sm text-gray-500">
@@ -379,33 +410,42 @@ const [email, setEmail] = useState("")
                                         : `/admin/requestorVerification/${user.Requestor_ID}`,
                                   }}
                                 >
-                                <button
-                                  onClick={""}
-                                  className="px-3  rounded-full hover:bg-neutral-variant"
-                                >
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 32 32"
+                                  <button
+                                    onClick={""}
+                                    className="px-3  rounded-full hover:bg-neutral-variant"
                                   >
-                                    <circle
-                                      cx={16}
-                                      cy={16}
-                                      r={4}
-                                      fill="#E60965"
-                                    ></circle>
-                                    <path
-                                      fill="#E60965"
-                                      d="M30.94 15.66A16.69 16.69 0 0 0 16 5A16.69 16.69 0 0 0 1.06 15.66a1 1 0 0 0 0 .68A16.69 16.69 0 0 0 16 27a16.69 16.69 0 0 0 14.94-10.66a1 1 0 0 0 0-.68M16 22.5a6.5 6.5 0 1 1 6.5-6.5a6.51 6.51 0 0 1-6.5 6.5"
-                                    ></path>
-                                  </svg>
-                                </button>
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="24"
+                                      height="24"
+                                      viewBox="0 0 32 32"
+                                    >
+                                      <circle
+                                        cx={16}
+                                        cy={16}
+                                        r={4}
+                                        fill="#E60965"
+                                      ></circle>
+                                      <path
+                                        fill="#E60965"
+                                        d="M30.94 15.66A16.69 16.69 0 0 0 16 5A16.69 16.69 0 0 0 1.06 15.66a1 1 0 0 0 0 .68A16.69 16.69 0 0 0 16 27a16.69 16.69 0 0 0 14.94-10.66a1 1 0 0 0 0-.68M16 22.5a6.5 6.5 0 1 1 6.5-6.5a6.51 6.51 0 0 1-6.5 6.5"
+                                      ></path>
+                                    </svg>
+                                  </button>
                                 </Link>
                                 {/* BLOCK */}
                                 {user.Blocked === "No" && (
                                   <button
-                                    onClick={()=> handleBlock(user.userType === "Donor" ? user.Donor_ID : user.Requestor_ID, user.userType, "Yes", user.email)}
+                                    onClick={() =>
+                                      handleBlock(
+                                        user.userType === "Donor"
+                                          ? user.Donor_ID
+                                          : user.Requestor_ID,
+                                        user.userType,
+                                        "Yes",
+                                        user.email
+                                      )
+                                    }
                                     className="px-3  rounded-full hover:bg-neutral-variant"
                                   >
                                     <svg
@@ -424,13 +464,26 @@ const [email, setEmail] = useState("")
                                     </svg>
                                   </button>
                                 )}
-                                  {/* UNBLOCK */}
-                                 {user.Blocked === "Yes" && (
-                                 <button
-                                    onClick={()=> handleUnBlock(user.userType === "Donor" ? user.Donor_ID : user.Requestor_ID, user.userType, "No", user.email)}
+                                {/* UNBLOCK */}
+                                {user.Blocked === "Yes" && (
+                                  <button
+                                    onClick={() =>
+                                      handleUnBlock(
+                                        user.userType === "Donor"
+                                          ? user.Donor_ID
+                                          : user.Requestor_ID,
+                                        user.userType,
+                                        "No",
+                                        user.email
+                                      )
+                                    }
                                     className="px-3  rounded-full hover:bg-neutral-variant"
                                   >
-                                    <CgUnblock size={24} color="#E60965" style={{flexShrink: 0}}/>
+                                    <CgUnblock
+                                      size={24}
+                                      color="#E60965"
+                                      style={{ flexShrink: 0 }}
+                                    />
                                   </button>
                                 )}
                                 {/* DELETE
@@ -468,8 +521,8 @@ const [email, setEmail] = useState("")
                 )}
               </div>
             </div>
+            {/* PAGINATION */}
             <div className="flex justify-end">
-              {/* Pagination */}
               <nav className="block">
                 <ul className="flex pl-0 rounded list-none flex-wrap">
                   <button
@@ -485,7 +538,7 @@ const [email, setEmail] = useState("")
                           currentPage === number
                             ? "hover:font-bold hover:text-primary-default text-lg font-sans text-primary-disabled py-2 px-2 font-bold"
                             : "text-lg font-sans text-primary-disabled py-2 px-4"
-                        } `}
+                        }`}
                         onClick={() => goToPage(number)}
                       >
                         {number}
@@ -504,7 +557,7 @@ const [email, setEmail] = useState("")
             <BlockConfirmationModal
               isOpen={showModal}
               onCancel={handleApproveCancel}
-              onConfirm={()=> handleApproveConfirm ()}
+              onConfirm={() => handleApproveConfirm()}
               message={modalMessage}
             />
           </div>
