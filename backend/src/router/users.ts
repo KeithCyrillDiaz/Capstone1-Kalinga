@@ -64,6 +64,17 @@ import { getHighestDonation } from '../controllers/Admin/Reports/getHighestDonat
 import { getHighestRequestors } from '../controllers/Admin/Reports/getHighestRequest'
 import { getTotalDonorsPerMonth } from '../controllers/Admin/Reports/getTotalUserPerMonthYear'
 import { getTotalRequestorsPerMonth} from '../controllers/Admin/Reports/getTotalUserPerMonthYear'
+import { getTotalAppointmentsPerMonth } from '../controllers/Admin/Reports/getTotalAppointmentsPerMonth'
+import { getTotalRequestsPerMonthAndYear } from '../controllers/Admin/Reports/getTotalRequestPerMonth'
+import { getTotalOverallDonation } from '../controllers/Admin/Reports/getTotalOverallDonation'
+import { getTotalOverAllRequest } from '../controllers/Admin/Reports/getTotalOverAllRequest'
+import { getHighestDonationBarangay } from '../controllers/Admin/Reports/getHighestDonationBarangay'
+import { getHighestRequestBarangay } from '../controllers/Admin/Reports/getHighestRequestBarangay'
+
+
+
+
+
 
 export default (router: express.Router) => {
   
@@ -142,6 +153,18 @@ export default (router: express.Router) => {
     router.get ('/kalinga/getHighestRequestors', getHighestRequestors)
     router.get ('/kalinga/getTotalDonorsPerMonth', getTotalDonorsPerMonth)
     router.get ('/kalinga/getTotalRequestorsPerMonth', getTotalRequestorsPerMonth)
+    router.get ('/kalinga/getTotalAppointmentsPerMonth', getTotalAppointmentsPerMonth)
+    router.get ('/kalinga/getTotalRequestsPerMonthAndYear', getTotalRequestsPerMonthAndYear)
+    router.get ('/kalinga/getTotalOverallDonation', getTotalOverallDonation)
+    router.get ('/kalinga/getTotalOverAllRequest', getTotalOverAllRequest)
+    router.get ('/kalinga/getHighestDonationBarangay', getHighestDonationBarangay)
+    router.get ('/kalinga/getHighestRequestBarangay', getHighestRequestBarangay)
+
+
+    
+
+    
+    
 
 
 

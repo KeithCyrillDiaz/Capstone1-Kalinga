@@ -2,10 +2,11 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { WebHost } from "../../../MyConstantAdmin";
 import { PieChart, LoadPercentage, RequestPieChart } from "@components";
-import { BarangayGraph } from "../../components";
 import { AdminLogin } from "../../api/AdminLogin";
 import { useParams } from "react-router-dom";
-import { BarDonationOverAll, BarRequestOverAll, LineGraphTotalUserPerMonth } from "../../components";
+import { BarDonationOverAll, BarRequestOverAll, LineGraphTotalUserPerMonth,BarangayGraph } from "../../components";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import {
   BarChart,
   Bar,
@@ -36,6 +37,12 @@ export default function Dashboard() {
   const [totalCompleteRequests, setTotalCompleteRequests] = useState(0);
   const [topDonatingUsers, setTopDonatingUsers] = useState([]);
   const [topRequestingUsers, setTopRequestingUsers] = useState([]);
+  const [topDonatingBarangay, setTopDonatingBarangay] = useState([]);
+  const [topRequestingBarangay, setTopRequestingBarangay] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+
 
   const currentDate = new Date();
 const formattedDate = `${currentDate.getFullYear()}-${
@@ -169,12 +176,11 @@ const formattedDate = `${currentDate.getFullYear()}-${
       try {
         const Donationresponse = await axios.get(`${WebHost}/kalinga/getHighestDonation`);
         const Requestresponse = await axios.get(`${WebHost}/kalinga/getHighestRequestors`);
-        console.log("Top Donating Users Response:", Donationresponse.data); // Log the response data
-        console.log("Top Donating Users Response:", Requestresponse.data); // Log the response data
+        console.log("Top Donating Users Response:", Donationresponse.data); 
+        console.log("Top Donating Users Response:", Requestresponse.data); 
 
-        // Assuming the response is an array of user strings
-        setTopDonatingUsers(Donationresponse.data.data || []); // Ensure to access the correct property of the response data
-        setTopRequestingUsers(Requestresponse.data.data || []); // Ensure to access the correct property of the response data
+        setTopDonatingUsers(Donationresponse.data.data || []); 
+        setTopRequestingUsers(Requestresponse.data.data || []); 
 
       } catch (error) {
         console.error('Error fetching top donating users:', error);
@@ -183,6 +189,129 @@ const formattedDate = `${currentDate.getFullYear()}-${
   
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const BarangayDonationresponse = await axios.get(`${WebHost}/kalinga/getHighestDonationBarangay`);
+        const BarangayRequestresponse = await axios.get(`${WebHost}/kalinga/getHighestRequestBarangay`);
+        console.log("Top Donating Users Response:", BarangayDonationresponse.data); 
+        console.log("Top Donating Users Response:", BarangayRequestresponse.data); 
+
+        setTopDonatingBarangay(BarangayDonationresponse.data.data || []); 
+        setTopRequestingBarangay(BarangayRequestresponse.data.data || []); 
+
+      } catch (error) {
+        console.error('Error fetching top donating users:', error);
+      }
+    };
+  
+    fetchData();
+  }, []);
+
+  const handleDownloadPDFTopDonatingBarangay = () => {
+    const doc = new jsPDF();
+    const title = "Kalinga Top Donating Barangay"; // Set the title
+    
+    doc.setTextColor("#FF69B4");
+    doc.setFontSize(20);
+    doc.text(title, 105, 15, { align: "center" });
+  
+    doc.setTextColor("#000000");
+    autoTable(doc, {
+      headStyles: { fillColor: [255, 105, 180] },
+      head: [["Barangay", "Milk Amount"]],
+      body: topDonatingBarangay.map(({ barangay, milkAmount }) => [barangay, milkAmount]),
+      startY: 40, // Adjust startY value to leave space for the title
+    });
+  
+    // Check if the PDF is generated correctly
+    console.log(doc.output("datauristring")); // Log the PDF data URI
+  
+    // Set the file name using the title
+    doc.save(`${title.toLowerCase().replace(/\s/g, "_")}.pdf`);
+};
+
+  const handleDownloadPDFTopRequestingBarangay = () => {
+    const doc = new jsPDF();
+    const title = "Kalinga Top Requesting Barangay"; // Set the title
+
+    doc.setTextColor("#FF69B4");
+    doc.setFontSize(20);
+    doc.text(title, 105, 15, { align: "center" });
+  
+  
+    doc.setTextColor("#000000");
+    autoTable(doc, {
+      headStyles: { fillColor: [255, 105, 180] },
+      head: [["Barangay", "Milk Amount"]],
+      body: topRequestingBarangay.map(({ barangay, milkAmount }) => [barangay, milkAmount]),
+      startY: 40, // Adjust startY value to leave space for the title
+    });
+  
+    // Check if the PDF is generated correctly
+    console.log(doc.output("datauristring")); // Log the PDF data URI
+  
+    // Check if the download is triggered
+    doc.save(`${title.toLowerCase().replace(/\s/g, "_")}.pdf`);
+  };
+
+  const handleDownloadPDFTopDonatingUser = () => {
+    const doc = new jsPDF();
+    const title = "Kalinga Top Donating User"; // Set the title
+
+    doc.setTextColor("#FF69B4");
+    doc.setFontSize(20);
+    doc.text(title, 105, 15, { align: "center" });
+  
+  
+    doc.setTextColor("#000000");
+    autoTable(doc, {
+      headStyles: { fillColor: [255, 105, 180] },
+      head: [["Fullname", "Milk Amount"]],
+      body: topDonatingUsers.map(({ fullName, milkAmount }) => [fullName, milkAmount]),
+      startY: 40, // Adjust startY value to leave space for the title
+    });
+  
+    // Check if the PDF is generated correctly
+    console.log(doc.output("datauristring")); // Log the PDF data URI
+  
+    // Check if the download is triggered
+    doc.save(`${title.toLowerCase().replace(/\s/g, "_")}.pdf`);
+  };
+
+  const handleDownloadPDFTopRequestingUser = () => {
+    const doc = new jsPDF();
+    const title = "Kalinga Top Requesting User"; // Set the title
+
+    doc.setTextColor("#FF69B4");
+    doc.setFontSize(20);
+    doc.text(title, 105, 15, { align: "center" });
+  
+  
+    doc.setTextColor("#000000");
+    autoTable(doc, {
+      headStyles: { fillColor: [255, 105, 180] },
+      head: [["Fullname", "Milk Amount"]],
+      body: topRequestingUsers.map(({ fullName, totalMilkAmount }) => [fullName, totalMilkAmount]),
+      startY: 40, // Adjust startY value to leave space for the title
+    });
+  
+    // Check if the PDF is generated correctly
+    console.log(doc.output("datauristring")); // Log the PDF data URI
+  
+    // Check if the download is triggered
+    doc.save(`${title.toLowerCase().replace(/\s/g, "_")}.pdf`);
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
 
   const DashboardCard = ({ icon, title, count, seeMore }) => {
     return (
@@ -381,6 +510,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
                     </h1>
                     <h1 className="text-4xl text-primary-default font-sans font-bold text-start ml-4">
                     {totalCompleteRequests}
+
                     </h1>
                     <h3 className="text-sm font-sans font-light text-start ml-4">
                       Total Overall Requests
@@ -439,9 +569,17 @@ const formattedDate = `${currentDate.getFullYear()}-${
                 <div className="flex flex-col p-4 bg-white rounded-2xl shadow-sm relative">
                 <div className="py-4 px-2 ml-4">
                 <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4 pb-4">
-                    Top Donating Users
+                    Top Donating Barangay
                   </h1>
-                      {topDonatingUsers.map((user, index) => (
+                  <div className="flex justify-end mb-4"> {/* Updated className */}
+                    <button
+                      onClick={handleDownloadPDFTopDonatingBarangay}
+                      className="bg-pink-500 text-white py-2 px-4 rounded-xl focus:outline-none hover:bg-pink-600"
+                    >
+                      Download PDF
+                    </button>
+                  </div>
+                      {topDonatingBarangay.map((user, index) => (
                         <div key={index} className="flex flex-row items-center">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -461,7 +599,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
                             ></path>
                           </svg>
                           <h1 className="text-lg text-primary-default font-sans mt-1 text-start ml-4">
-                            {user.fullName}
+                            {user.barangay}
                           </h1>
                           <h1 className="text-lg text-primary-default font-sans font-light mt-1 ml-auto">
                             {user.milkAmount} ml
@@ -473,8 +611,102 @@ const formattedDate = `${currentDate.getFullYear()}-${
 
                 <div className="flex flex-col p-4 bg-white rounded-2xl shadow-sm relative">
                   <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
+                    Top Requesting Barangay
+                  </h1>
+                  <div className="flex justify-end mb-4"> {/* Updated className */}
+                    <button
+                      onClick={handleDownloadPDFTopRequestingBarangay}
+                      className="bg-pink-500 text-white py-2 px-4 rounded-xl focus:outline-none hover:bg-pink-600"
+                    >
+                      Download PDF
+                    </button>
+                  </div>
+                  <div className="py-4 px-2 ml-4">
+                    {topRequestingBarangay.map((user, index) => (
+                      <div key={index} className="flex flex-row items-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="40"
+                          height="40"
+                          viewBox="0 0 24 24"
+                          className="cursor-pointer"
+                        >
+                          <path
+                            fill="#E60965"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1.5"
+                            fillRule="evenodd"
+                            d="M12 20a7.97 7.97 0 0 1-5.002-1.756l.002.001v-.683c0-1.794 1.492-3.25 3.333-3.25h3.334c1.84 0 3.333 1.456 3.333 3.25v.683A7.97 7.97 0 0 1 12 20M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10c0 5.5-4.44 9.963-9.932 10h-.138C6.438 21.962 2 17.5 2 12m10-5c-1.84 0-3.333 1.455-3.333 3.25S10.159 13.5 12 13.5c1.84 0 3.333-1.455 3.333-3.25S13.841 7 12 7"
+                            clipRule="evenodd"
+                          ></path>
+                        </svg>
+                        <h1 className="text-lg text-primary-default font-sans mt-1 text-start ml-4">
+                            {user.barangay}
+                          </h1>
+                          <h1 className="text-lg text-primary-default font-sans font-light mt-1 ml-auto">
+                            {user.totalMilkAmount} ml
+                          </h1>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex flex-col p-4 bg-white rounded-2xl shadow-sm relative">
+                  <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
+                    Top Donating Users
+                  </h1>
+                  <div className="flex justify-end mb-4"> {/* Updated className */}
+                    <button
+                      onClick={handleDownloadPDFTopDonatingUser}
+                      className="bg-pink-500 text-white py-2 px-4 rounded-xl focus:outline-none hover:bg-pink-600"
+                    >
+                      Download PDF
+                    </button>
+                  </div>
+                  <div className="py-4 px-2 ml-4">
+                    {topDonatingUsers.map((user, index) => (
+                      <div key={index} className="flex flex-row items-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="40"
+                          height="40"
+                          viewBox="0 0 24 24"
+                          className="cursor-pointer"
+                        >
+                          <path
+                            fill="#E60965"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1.5"
+                            fillRule="evenodd"
+                            d="M12 20a7.97 7.97 0 0 1-5.002-1.756l.002.001v-.683c0-1.794 1.492-3.25 3.333-3.25h3.334c1.84 0 3.333 1.456 3.333 3.25v.683A7.97 7.97 0 0 1 12 20M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10c0 5.5-4.44 9.963-9.932 10h-.138C6.438 21.962 2 17.5 2 12m10-5c-1.84 0-3.333 1.455-3.333 3.25S10.159 13.5 12 13.5c1.84 0 3.333-1.455 3.333-3.25S13.841 7 12 7"
+                            clipRule="evenodd"
+                          ></path>
+                        </svg>
+                        <h1 className="text-lg text-primary-default font-sans mt-1 text-start ml-4">
+                            {user.fullName}
+                          </h1>
+                          <h1 className="text-lg text-primary-default font-sans font-light mt-1 ml-auto">
+                            {user.milkAmount} ml
+                          </h1>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex flex-col p-4 bg-white rounded-2xl shadow-sm relative">
+                  <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
                     Top Requesting Users
                   </h1>
+                  <div className="flex justify-end mb-4"> {/* Updated className */}
+                    <button
+                      onClick={handleDownloadPDFTopRequestingUser}
+                      className="bg-pink-500 text-white py-2 px-4 rounded-xl focus:outline-none hover:bg-pink-600"
+                    >
+                      Download PDF
+                    </button>
+                  </div>
                   <div className="py-4 px-2 ml-4">
                     {topRequestingUsers.map((user, index) => (
                       <div key={index} className="flex flex-row items-center">
@@ -505,6 +737,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
                     ))}
                   </div>
                 </div>
+
               </div>
             </div>
 

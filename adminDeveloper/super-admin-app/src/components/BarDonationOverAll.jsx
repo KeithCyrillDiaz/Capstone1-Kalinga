@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { WebHost } from "../../MyConstantAdmin";
+import { WebHost } from "../../MyConstantSuperAdmin";
 import {
   BarChart,
   Bar,

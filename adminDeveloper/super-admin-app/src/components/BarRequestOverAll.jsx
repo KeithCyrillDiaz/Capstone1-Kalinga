@@ -1,20 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { WebHost } from "../../MyConstantAdmin";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+import { WebHost } from "../../MyConstantSuperAdmin";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-export default function BarDonationOverAll({ name }) {
+export default function BarRequestOverAll({ name }) {
   const [monthlyData, setMonthlyData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -25,12 +16,12 @@ export default function BarDonationOverAll({ name }) {
       setLoading(true);
       setError(null);
       try {
-        const responseComplete = await axios.get(`${WebHost}/kalinga/getTotalCompleteDonationsAllMonths?year=${selectedYear}`);
-        const responseDecline = await axios.get(`${WebHost}/kalinga/getTotalDeclineDonationsAllMonths?year=${selectedYear}`);
+        const responseComplete = await axios.get(`${WebHost}/kalinga/getTotalCompleteRequestAllMonths?year=${selectedYear}`);
+        const responseDecline = await axios.get(`${WebHost}/kalinga/getTotalDeclineRequestAllMonths?year=${selectedYear}`);
         const mergedData = mergeData(responseComplete.data, responseDecline.data);
         setMonthlyData(mergedData);
       } catch (error) {
-        console.error('Error fetching donations:', error);
+        console.error('Error fetching requests:', error);
         setError('Error fetching data');
       } finally {
         setLoading(false);
@@ -38,57 +29,57 @@ export default function BarDonationOverAll({ name }) {
     };
 
     fetchData();
-  }, [selectedYear]); // Fetch data when selectedYear changes
+  }, [selectedYear]);
 
   const mergeData = (completeData, declineData) => {
     return completeData.map(completeItem => ({
       month: completeItem.month,
-      totalCompleteDonations: completeItem.totalCompleteDonations,
-      totalDeclineDonations: declineData.find(item => item.month === completeItem.month)?.totalDeclineDonations || 0
+      totalCompleteRequests: completeItem.totalCompleteRequests,
+      totalDeclineRequests: declineData.find(item => item.month === completeItem.month)?.totalDeclineRequests || 0
     }));
   };
 
   const calculateTotals = (data) => {
-    let totalCompleteDonations = 0;
-    let totalDeclineDonations = 0;
+    let totalCompleteRequests = 0;
+    let totalDeclineRequests = 0;
 
     data.forEach(item => {
-      totalCompleteDonations += item.totalCompleteDonations;
-      totalDeclineDonations += item.totalDeclineDonations;
+      totalCompleteRequests += item.totalCompleteRequests;
+      totalDeclineRequests += item.totalDeclineRequests;
     });
 
-    return { totalCompleteDonations, totalDeclineDonations };
+    return { totalCompleteRequests, totalDeclineRequests };
   };
 
   const COLORS = ["#ED5077", "#007AFF"];
 
   const handleDownloadPDF = () => {
-    const { totalCompleteDonations, totalDeclineDonations } = calculateTotals(monthlyData);
+    const { totalCompleteRequests, totalDeclineRequests } = calculateTotals(monthlyData);
 
     const doc = new jsPDF();
     doc.setTextColor("#000000");
     doc.setFontSize(16);
-    doc.text("KALINGA OVERALL DONATION REPORT", 105, 15, { align: "center" });
+    doc.text("KALINGA OVERALL REQUEST REPORT", 105, 15, { align: "center" });
 
     doc.setFontSize(12);
     doc.text(`Year: ${selectedYear}`, 20, 30);
-    doc.text(`Total Complete Donations: ${totalCompleteDonations}`, 20, 40);
-    doc.text(`Total Decline Donations: ${totalDeclineDonations}`, 20, 50);
+    doc.text(`Total Complete Requests: ${totalCompleteRequests}`, 20, 40);
+    doc.text(`Total Decline Requests: ${totalDeclineRequests}`, 20, 50);
 
-    const tableColumn = ["Month", "Total Complete Donations", "Total Decline Donations"];
+    const tableColumn = ["Month", "Total Complete Requests", "Total Decline Requests"];
     const tableRows = [];
 
     monthlyData.forEach(item => {
       const rowData = [
         item.month,
-        item.totalCompleteDonations,
-        item.totalDeclineDonations,
+        item.totalCompleteRequests,
+        item.totalDeclineRequests,
       ];
       tableRows.push(rowData);
     });
 
     // Adding the total row at the end of the table
-    tableRows.push(["Total", totalCompleteDonations, totalDeclineDonations]);
+    tableRows.push(["Total", totalCompleteRequests, totalDeclineRequests]);
 
     autoTable(doc, {
       head: [tableColumn],
@@ -104,7 +95,7 @@ export default function BarDonationOverAll({ name }) {
       }
     });
 
-    doc.save("KALINGA_OVERALL_DONATION_REPORT.pdf");
+    doc.save("KALINGA_OVERALL_REQUEST_REPORT.pdf");
   };
 
   const handleYearChange = (e) => {
@@ -112,18 +103,20 @@ export default function BarDonationOverAll({ name }) {
   };
 
   if (loading) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    return <div className="flex justify-center items-center h-screen">Error: {error}</div>;
+    return <div>Error: {error}</div>;
   }
 
+  console.log('Monthly data:', monthlyData);
+
   return (
-    <div className="p-4">
-      <h1 className="text-3xl text-center text-primary-default mb-4">{name}</h1>
-      <div className="text-center mb-4">
-        <div className="inline-block relative w-64">
+    <div>
+      <h1 className="text-3xl text-center text-primary-default">{name}</h1>
+      <div className="text-center">
+      <div className="inline-block relative w-64">
           <select
             id="yearSelect"
             value={selectedYear}
@@ -154,8 +147,8 @@ export default function BarDonationOverAll({ name }) {
           <YAxis domain={[0, 'auto']} />
           <Tooltip />
           <Legend />
-          <Bar dataKey="totalCompleteDonations" fill={COLORS[0]} name="Total Complete Donations" stackId="a" />
-          <Bar dataKey="totalDeclineDonations" fill={COLORS[1]} name="Total Decline Donations" stackId="a" />
+          <Bar dataKey="totalCompleteRequests" fill={COLORS[0]} name="Total Complete Requests" stackId="a" />
+          <Bar dataKey="totalDeclineRequests" fill={COLORS[1]} name="Total Decline Requests" stackId="a" />
         </BarChart>
       </ResponsiveContainer>
       <div className="text-center mt-4">

@@ -48,6 +48,7 @@ const SetAppointment = ({route}) => {
     Donor_ID: Donor_ID,
     userType: "Donor",
     DonationStatus: "Pending",
+    barangay: userInformation.barangay || '',     
     fullName: userInformation.fullName,
     phoneNumber: userInformation.mobileNumber,
     emailAddress: userInformation.email,

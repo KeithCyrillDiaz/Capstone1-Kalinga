@@ -14,8 +14,7 @@ import {
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-export default function BarDonatePerMonth({ name }) {
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+export default function BarDonatePerMonth({ name, selectedYear }) {
   const [monthlyData, setMonthlyData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -23,19 +22,16 @@ export default function BarDonatePerMonth({ name }) {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      setError(null);
+
       try {
-        // Fetch total complete donations
         const responseComplete = await axios.get(
-          `${WebHost}/kalinga/getTotalCompleteDonationsAllMonths`, 
+          `${WebHost}/kalinga/getTotalCompleteDonationsAllMonths`,
           { params: { year: selectedYear } }
         );
-        // Fetch total complete requests
         const responseRequests = await axios.get(
           `${WebHost}/kalinga/getTotalCompleteRequestAllMonths`,
           { params: { year: selectedYear } }
         );
-        // Merge the data from both responses
         const mergedData = mergeData(
           responseComplete.data,
           responseRequests.data
@@ -43,7 +39,6 @@ export default function BarDonatePerMonth({ name }) {
         setMonthlyData(mergedData);
       } catch (error) {
         console.error("Error fetching data:", error);
-        setError("Error fetching data");
       } finally {
         setLoading(false);
       }
@@ -67,12 +62,15 @@ export default function BarDonatePerMonth({ name }) {
     doc.setTextColor("#FF69B4");
     doc.setFontSize(20);
     doc.text("KALINGA REPORT", 105, 15, { align: "center" });
+  
+    doc.text(`Year: ${selectedYear}`, 105, 30, { align: "center" });
+  
     doc.setTextColor("#000000");
     autoTable(doc, {
       headStyles: { fillColor: [255, 105, 180] },
       head: [["Month", "Total Complete Donations", "Total Complete Requests"]],
       body: monthlyData.map(({ month, totalCompleteDonations, totalCompleteRequests }) => [month, totalCompleteDonations, totalCompleteRequests]),
-      startY: 20,
+      startY: 40, // Adjust startY value to leave space for the title
     });
     doc.save(`${name}_report.pdf`);
   };
@@ -87,7 +85,13 @@ export default function BarDonatePerMonth({ name }) {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-end mb-4"> {/* Updated className */}
+        <button
+          onClick={handleDownloadPDF}
+          className="bg-pink-500 text-white py-2 px-4 rounded-xl focus:outline-none hover:bg-pink-600"
+        >
+          Download PDF
+        </button>
       </div>
       <ResponsiveContainer width="100%" height={400}>
         <BarChart
