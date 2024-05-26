@@ -83,6 +83,7 @@ export const updateBlockStatusDonor = (Donor_ID: string, status: string) => Dono
 export const getBlockedDonors = () => DonorModel.find({Blocked: "Yes"})
 export const updateDonorDp = (Donor_ID: string, link: String) => DonorModel.findOneAndUpdate({Donor_ID}, { $set: {DPLink: link, updatedAt: Date.now()} }, { new: true }) 
 
+
 export const getRequestor = () => RequestorModel.find()
 export const updateRequestorPassword=(Requestor_ID: string, Password: string, salt: string) => RequestorModel.findOneAndUpdate({Requestor_ID}, { $set: { password: Password, salt: salt } }, { new: true })
 export const updateRequestorDetails=(Requestor_ID: string, userDetails: any) => RequestorModel.findOneAndUpdate({Requestor_ID}, { $set: userDetails }, { new: true })
