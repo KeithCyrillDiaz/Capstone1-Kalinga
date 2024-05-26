@@ -49,6 +49,7 @@ export default function App() {
     const formatStatus = data === "declined" ? "Rejected" : "Approved";
     console.log("formatStatus: ", formatStatus);
     try {
+      setLoading(true)
       console.log("Updating Screening Form Status to ", data);
       const response = await axios.patch(
         `${WebHost}/kalinga/updateScreeningFormStatus/${id}`,
@@ -58,8 +59,12 @@ export default function App() {
       if (response.data.messages.code === 0) sendEmail(data);
     } catch (error) {
       console.log("Error Deleting ScreeningForm", error);
+    } finally {
+      setLoading(false)
+      setApprovalMessage(true)
     }
   };
+
 
   const fetchData = async () => {
     try {

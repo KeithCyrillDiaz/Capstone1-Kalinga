@@ -43,34 +43,33 @@ export default function () {
   }, [showDropdown]);
 
   return (
-    <nav className="bg-white flex justify-between items-center elevate-2 w-full pr-4">
-      <div className="px-4 text-white flex items-center space-x-4 justify-end w-full">
-        <div className="flex items-center rounded-md py-1">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="30"
-            height="30"
-            viewBox="0 0 24 24"
-            className="mr-2"
-          >
-            <path
-              fill="#E60965"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="1.5"
-              d="M12 12h5v5h-5zm7-9h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m0 2v2H5V5zM5 19V9h14v10z"
-            ></path>
-          </svg>
-          <span className="text-primary-default">{formattedDate} |</span>
-          <span className="text-primary-default">| {currentTime}</span>
-        </div>
-
+    <nav className="bg-white flex justify-between items-center elevate-2 w-full h-14 pr-4 shadow-xl">
+      <div className="text-white flex items-center  justify-end w-full ">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="25"
+          height="25"
+          viewBox="0 0 24 24"
+          className="cursor-pointer mr-2"
+        >
+          <path
+            fill="#E60965"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.5"
+            fillRule="evenodd"
+            d="M21 19v1H3v-1l2-2v-6c0-3.1 2.03-5.83 5-6.71V4a2 2 0 0 1 2-2a2 2 0 0 1 2 2v.29c2.97.88 5 3.61 5 6.71v6zm-7 2a2 2 0 0 1-2 2a2 2 0 0 1-2-2"
+          ></path>
+        </svg>
         <div className="relative inline-block text-left" ref={dropdownRef}>
-          <div onClick={() => setShowDropdown(!showDropdown)}>
+          <div
+            className="flex flex-row"
+            onClick={() => setShowDropdown(!showDropdown)}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="40"
-              height="40"
+              width="35"
+              height="35"
               viewBox="0 0 24 24"
               className="cursor-pointer"
             >
@@ -80,10 +79,13 @@ export default function () {
                 strokeLinejoin="round"
                 strokeWidth="1.5"
                 fillRule="evenodd"
-                d="M12 4a8 8 0 0 0-6.96 11.947A4.99 4.99 0 0 1 9 14h6a4.99 4.99 0 0 1 3.96 1.947A8 8 0 0 0 12 4m7.943 14.076A9.959 9.959 0 0 0 22 12c0-5.523-4.477-10-10-10S2 6.477 2 12a9.958 9.958 0 0 0 2.057 6.076l-.005.018l.355.413A9.98 9.98 0 0 0 12 22a9.947 9.947 0 0 0 5.675-1.765a10.055 10.055 0 0 0 1.918-1.728l.355-.413zM12 6a3 3 0 1 0 0 6a3 3 0 0 0 0-6"
+                d="M12 20a7.97 7.97 0 0 1-5.002-1.756l.002.001v-.683c0-1.794 1.492-3.25 3.333-3.25h3.334c1.84 0 3.333 1.456 3.333 3.25v.683A7.97 7.97 0 0 1 12 20M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10c0 5.5-4.44 9.963-9.932 10h-.138C6.438 21.962 2 17.5 2 12m10-5c-1.84 0-3.333 1.455-3.333 3.25S10.159 13.5 12 13.5c1.84 0 3.333-1.455 3.333-3.25S13.841 7 12 7"
                 clipRule="evenodd"
               ></path>
             </svg>
+            <span className="text-primary-default text-md text-center font-sans mt-1 ml-2">
+              QCGH Human Milk Bank
+            </span>
           </div>
           {showDropdown && (
             <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">

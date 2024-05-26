@@ -26,7 +26,10 @@ export default function () {
 
   return (
     <>
-      <section className="flex flex-col justify-between w-60 h-full py-4 p-2 body-color">
+      <section
+        className="flex flex-col justify-between w-60 h-full py-4 p-2 body-color"
+        style={{ minHeight: "100vh" }}
+      >
         <div>
           <div className="flex items-center pb-4 gap-x-2 pl-2  mb-6">
             <img className="w-1/3" src={KalingaLogo} alt="KalingaLogo" />
