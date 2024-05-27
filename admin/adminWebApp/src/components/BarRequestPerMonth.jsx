@@ -11,8 +11,10 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
-export default function BarRequestPerMonth({ name }) {
+export default function BarDonatePerMonth({ name }) {
   const [monthlyData, setMonthlyData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -24,20 +26,20 @@ export default function BarRequestPerMonth({ name }) {
       try {
         // Fetch total complete donations
         const responseComplete = await axios.get(
-          `${WebHost}/kalinga/getTotalCompleteRequestAllMonths`
+          `${WebHost}/kalinga/getTotalCompleteDonationsAllMonths`
         );
-        // Fetch total decline donations
-        const responseDecline = await axios.get(
-          `${WebHost}/kalinga/getTotalDeclineRequestAllMonths`
+        // Fetch total complete requests
+        const responseRequests = await axios.get(
+          `${WebHost}/kalinga/getTotalCompleteRequestAllMonths`
         );
         // Merge the data from both responses
         const mergedData = mergeData(
           responseComplete.data,
-          responseDecline.data
+          responseRequests.data
         );
         setMonthlyData(mergedData);
       } catch (error) {
-        console.error("Error fetching donations:", error);
+        console.error("Error fetching data:", error);
         setError("Error fetching data");
       } finally {
         setLoading(false);
@@ -47,17 +49,30 @@ export default function BarRequestPerMonth({ name }) {
     fetchData();
   }, []);
 
-  const mergeData = (completeData, declineData) => {
-    return completeData.map((completeItem) => ({
-      month: completeItem.month,
-      totalCompleteRequests: completeItem.totalCompleteRequests,
-      totalDeclineRequests:
-        declineData.find((item) => item.month === completeItem.month)
-          ?.totalDeclineRequests || 0,
+  const mergeData = (donationData, requestData) => {
+    return donationData.map((donationItem) => ({
+      month: donationItem.month,
+      totalCompleteDonations: donationItem.totalCompleteDonations,
+      totalCompleteRequests:
+        requestData.find((item) => item.month === donationItem.month)
+          ?.totalCompleteRequests || 0,
     }));
   };
 
-  const COLORS = ["#ED5077", "#007AFF"]; // Add blue color for decline donations
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF();
+    doc.setTextColor("#FF69B4");
+    doc.setFontSize(20);
+    doc.text("KALINGA REPORT", 105, 15, { align: "center" });
+    doc.setTextColor("#000000");
+    autoTable(doc, {
+      headStyles: { fillColor: [255, 105, 180] }, 
+      head: [["Month", "Total Complete Donations", "Total Complete Requests"]],
+      body: monthlyData.map(({ month, totalCompleteDonations, totalCompleteRequests }) => [month, totalCompleteDonations, totalCompleteRequests]),
+      startY: 20,
+    });
+    doc.save(`${name}_report.pdf`);
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -67,11 +82,16 @@ export default function BarRequestPerMonth({ name }) {
     return <div>Error: {error}</div>;
   }
 
-  console.log("Monthly data:", monthlyData); // Log monthly data for debugging
+  console.log("Monthly data:", monthlyData);
 
   return (
     <div>
-      <h1 className="text-3xl text-center text-primary-default">{name}</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-3xl text-center text-pink-500">Donation</h1>
+        <button onClick={handleDownloadPDF} className="bg-pink-500 text-white py-2 px-4 rounded-xl focus:outline-none hover:bg-pink-600">
+          Download PDF
+        </button>
+      </div>
       <ResponsiveContainer width="100%" height={400}>
         <BarChart
           width={500}
@@ -81,18 +101,20 @@ export default function BarRequestPerMonth({ name }) {
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="month" />
-          <YAxis domain={[0, "auto"]} /> {/* Adjust the YAxis domain */}
+          <YAxis domain={[0, "auto"]} /> 
           <Tooltip />
           <Legend />
           <Bar
-            dataKey="totalCompleteRequests"
-            fill={COLORS[0]}
-            name="Total Complete Requests"
+            dataKey="totalCompleteDonations"
+            fill="#ED5077"
+            name="Total Complete Donations"
+            stackId="stack"
           />
           <Bar
-            dataKey="totalDeclineRequests"
-            fill={COLORS[1]}
-            name="Total Decline Requests"
+            dataKey="totalCompleteRequests"
+            fill="#007AFF"
+            name="Total Complete Requests"
+            stackId="stack"
           />
         </BarChart>
       </ResponsiveContainer>

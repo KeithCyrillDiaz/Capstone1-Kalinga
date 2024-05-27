@@ -9,7 +9,10 @@ import DonatePerMonth from "./donatePerMonth";
 import BarDonatePerMonth from "./BarDonatePerMonth";
 import BarRequestPerMonth from "./BarRequestPerMonth";
 import TotalUserPieChart from "./totalUserPieChart";
-
+import BarangayGraph from "./BarangayGraph";
+import BarDonationOverAll from "./BarDonationOverAll"
+import BarRequestOverAll from "./BarRequestOverAll"
+import LineGraphTotalUserPerMonth from "./LineGraphTotalUserPerMonth"
 
 
 export { MobileChecker,
@@ -22,6 +25,10 @@ export { MobileChecker,
          DonatePerMonth,
          BarDonatePerMonth,
          BarRequestPerMonth,
-         TotalUserPieChart
+         TotalUserPieChart,
+         BarangayGraph,
+         BarDonationOverAll,
+         BarRequestOverAll,
+         LineGraphTotalUserPerMonth
         };
 

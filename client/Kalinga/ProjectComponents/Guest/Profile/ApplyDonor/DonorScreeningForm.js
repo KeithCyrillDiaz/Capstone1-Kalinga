@@ -291,12 +291,12 @@ const checkAgeValidity = () => {
     return false
   }
 
-  if(motherAge <= infantAge && Age !== "" && childAge !== ""){
-    Alert.alert("Invalid Ages"," Please input the proper birthday")
-    setIsAgeValid(false)
-    setIsChildAgeValid(false)
-    return false
-  }
+  // if(motherAge <= infantAge && Age !== "" && childAge !== ""){
+  //   Alert.alert("Invalid Ages"," Please input the proper birthday")
+  //   setIsAgeValid(false)
+  //   setIsChildAgeValid(false)
+  //   return false
+  // }
 
   if(motherAge - infantAge <= 12){
     Alert.alert("Invalid Infant Age","The age difference between the infant and the mother should be at least 13 years.")

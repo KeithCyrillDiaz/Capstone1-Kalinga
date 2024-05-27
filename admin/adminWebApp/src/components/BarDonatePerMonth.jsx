@@ -11,8 +11,10 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
-export default function BarDonatePerMonth({ name }) {
+export default function BarDonatePerMonth({ name, selectedYear }) {
   const [monthlyData, setMonthlyData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -20,44 +22,58 @@ export default function BarDonatePerMonth({ name }) {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      setError(null);
+
       try {
-        // Fetch total complete donations
         const responseComplete = await axios.get(
-          `${WebHost}/kalinga/getTotalCompleteDonationsAllMonths`
+          `${WebHost}/kalinga/getTotalCompleteDonationsAllMonths`,
+          { params: { year: selectedYear } }
         );
-        // Fetch total decline donations
-        const responseDecline = await axios.get(
-          `${WebHost}/kalinga/getTotalDeclineDonationsAllMonths`
+        const responseRequests = await axios.get(
+          `${WebHost}/kalinga/getTotalCompleteRequestAllMonths`,
+          { params: { year: selectedYear } }
         );
-        // Merge the data from both responses
         const mergedData = mergeData(
           responseComplete.data,
-          responseDecline.data
+          responseRequests.data
         );
         setMonthlyData(mergedData);
       } catch (error) {
-        console.error("Error fetching donations:", error);
-        setError("Error fetching data");
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [selectedYear]);
 
-  const mergeData = (completeData, declineData) => {
-    return completeData.map((completeItem) => ({
-      month: completeItem.month,
-      totalCompleteDonations: completeItem.totalCompleteDonations,
-      totalDeclineDonations:
-        declineData.find((item) => item.month === completeItem.month)
-          ?.totalDeclineDonations || 0,
+  const mergeData = (donationData, requestData) => {
+    return donationData.map((donationItem) => ({
+      month: donationItem.month,
+      totalCompleteDonations: donationItem.totalCompleteDonations,
+      totalCompleteRequests:
+        requestData.find((item) => item.month === donationItem.month)
+          ?.totalCompleteRequests || 0,
     }));
   };
 
-  const COLORS = ["#ED5077", "#007AFF"]; // Add blue color for decline donations
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF();
+    doc.setTextColor("#FF69B4");
+    doc.setFontSize(20);
+    doc.text("KALINGA REPORT", 105, 15, { align: "center" });
+  
+    doc.text(`Year: ${selectedYear}`, 105, 30, { align: "center" });
+  
+    doc.setTextColor("#000000");
+    autoTable(doc, {
+      headStyles: { fillColor: [255, 105, 180] },
+      head: [["Month", "Total Complete Donations", "Total Complete Requests"]],
+      body: monthlyData.map(({ month, totalCompleteDonations, totalCompleteRequests }) => [month, totalCompleteDonations, totalCompleteRequests]),
+      startY: 40, // Adjust startY value to leave space for the title
+    });
+    doc.save(`${name}_report.pdf`);
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -67,11 +83,16 @@ export default function BarDonatePerMonth({ name }) {
     return <div>Error: {error}</div>;
   }
 
-  console.log("Monthly data:", monthlyData); // Log monthly data for debugging
-
   return (
     <div>
-      <h1 className="text-3xl text-center text-primary-default">{name}</h1>
+      <div className="flex justify-end mb-4"> {/* Updated className */}
+        <button
+          onClick={handleDownloadPDF}
+          className="bg-pink-500 text-white py-2 px-4 rounded-xl focus:outline-none hover:bg-pink-600"
+        >
+          Download PDF
+        </button>
+      </div>
       <ResponsiveContainer width="100%" height={400}>
         <BarChart
           width={500}
@@ -81,18 +102,20 @@ export default function BarDonatePerMonth({ name }) {
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="month" />
-          <YAxis domain={[0, "auto"]} /> {/* Adjust the YAxis domain */}
+          <YAxis domain={[0, "auto"]} />
           <Tooltip />
           <Legend />
           <Bar
             dataKey="totalCompleteDonations"
-            fill={COLORS[0]}
+            fill="#ED5077"
             name="Total Complete Donations"
+            stackId="stack"
           />
           <Bar
-            dataKey="totalDeclineDonations"
-            fill={COLORS[1]}
-            name="Total Decline Donations"
+            dataKey="totalCompleteRequests"
+            fill="#007AFF"
+            name="Total Complete Requests"
+            stackId="stack"
           />
         </BarChart>
       </ResponsiveContainer>

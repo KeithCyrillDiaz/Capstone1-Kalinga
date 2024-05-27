@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
         flexGrow: 1,
     },
     SecondContainer: {
-        backgroundColor: '#FFF8EB',
+        backgroundColor: '#f5f5f5',
         justifyContent: 'start',
         alignItems: 'center',
         height: '100%',

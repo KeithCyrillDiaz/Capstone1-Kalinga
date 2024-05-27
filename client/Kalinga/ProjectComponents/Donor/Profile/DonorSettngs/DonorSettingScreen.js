@@ -60,6 +60,10 @@ export default function SettingScreen({route}) {
     );
     return
     }
+    if(Page === "DonorEditPersonalScreen"){
+      navigation.navigate(Page, {userInformation: userInformation, userName: UserName, token: token})
+      return
+    }
      navigation.navigate(Page, {userInformation: userInformation, userName: UserName, token: token}); // Navigate to the Login screen
   }
 
@@ -136,10 +140,10 @@ export default function SettingScreen({route}) {
             </TouchableOpacity> */}
 
             {/* Location */}
-            <TouchableOpacity onPress={() => navigatePage("DonorLocationScreen")} style={cardStyle.link}>              
+            {/* <TouchableOpacity onPress={() => navigatePage("DonorLocationScreen")} style={cardStyle.link}>              
                 <Text style={cardStyle.linkTitle}>Location</Text>
               <Entypo name="chevron-right" size={24} color="#E60965" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             {/* Change Password */}
             <TouchableOpacity onPress={() => navigatePage("DonorChangePassword")} style={cardStyle.link}>

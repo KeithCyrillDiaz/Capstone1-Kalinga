@@ -2,7 +2,7 @@ import express from 'express'
 import { isAuthorized, tokenVerification, checkToken } from '../middleware/Authentication'
 import { getToken } from '../controllers/token'
 import { generateToken } from '../controllers/test'
-import { sendEmail, sendApprovedEmail, sendDeclinedEmail, sendCode } from '../controllers/Admin/sendEmail';
+import { sendEmail, sendEmailVerifCode, sendApprovedEmail, sendDeclinedEmail, sendCode } from '../controllers/Admin/sendEmail';
 import { checkCode, checkPassCode} from '../controllers/Admin/checkCodes'
 import { userLogInToken } from '../controllers/Users/userLoginViaToken'
 
@@ -11,6 +11,7 @@ export default (router: express.Router) => {
     router.get("/kalinga/reqToken", isAuthorized, generateToken)
     router.get("/kalinga/getToken", isAuthorized, getToken)
     router.post('/kalinga/sendEmail/:Applicant_ID', sendEmail)
+    router.post('/kalinga/sendVerifCodeNewEmail/:email', tokenVerification, sendEmailVerifCode)
     router.post('/kalinga/sendApprovedEmail/:Applicant_ID', sendApprovedEmail)
     router.post('/kalinga/sendDeclinedEmail/:Applicant_ID', sendDeclinedEmail)
     router.get('/kalinga/sendCode/:email', sendCode)

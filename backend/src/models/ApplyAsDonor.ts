@@ -137,6 +137,6 @@ export const getScreeningFormByMaxApplicantID = () => screeningFormModel.findOne
 export const getScreeningFormByMaxScreeningID = () => screeningFormModel.findOne({}).sort({ Screening_ID: -1 }).limit(1).select('Screening_ID');
 export const getScreeningFormByScreeningID = (Screening_ID: string) => screeningFormModel.findOne({Screening_ID})
 export const getScreeningFormByStatusAndUserType = (userType: string, status: string) => screeningFormModel.find({userType, status})
-
+export const updateScreeningFormDetails = (id: string, newDetails: any) => screeningFormModel.findOneAndUpdate({Applicant_ID: id}, {$set: newDetails}, {new: true})
 
 //export const deleteUserById = (id: string) => userModel.findOneAndDelete({_id: id})

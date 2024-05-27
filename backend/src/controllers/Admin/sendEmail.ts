@@ -15,6 +15,105 @@ const transporter = nodemailer.createTransport({
     }
   });
 
+  export const sendEmailVerifCode = async (req: express.Request, res: express.Response) => {
+    try{
+
+        console.log(req.params.email)
+        console.log(process.env.NM_EMAIL)
+        const { email } = req.params
+
+        const verificationCode = randomatic('0', 6)
+
+        const newCode = await createCode({
+            code: verificationCode,
+            expiresAt: moment().add(4, 'hours').toDate()
+        })
+
+        const result = await transporter.sendMail({
+            from: process.env.NM_EMAIL,
+            to: email,
+            subject: "Change Email Verification from Kalinga",
+            html:
+            `<!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Email Verification</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        margin: 0;
+                        padding: 0;
+                        background-color: #f4f4f4;
+                    }
+                    .container {
+                        max-width: 600px;
+                        margin: 0 auto;
+                        padding: 20px;
+                        background-color: #fff;
+                        border-radius: 10px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    }
+                    h2 {
+                        color: #333;
+                    }
+                    p {
+                        margin-bottom: 20px;
+                        line-height: 1.6;
+                    }
+                    .button {
+                        display: inline-block;
+                        background-color: #E60965;
+                        color: #fff;
+                        text-decoration: none;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                    }
+                    .footer {
+                        margin-top: 20px;
+                        text-align: left;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h2>Change Email Verification</h2>
+                    <p>Dear User,</p>
+                    <p style="font-size: 18px; font-weight: bold;">Your verification code to change your email is: ${verificationCode}</p>
+                    <p>Kindly enter the verification code in the designated field to complete the email change process:</p>
+                    <a href="Kalinga://" class="button">Verify Email</a>
+                    <p>If you did not initiate this change, please disregard this email.</p>
+                    <div class="footer">
+                        <p>Best Regards,</p>
+                        <p>Kalinga Team</p>
+                    </div>
+                </div>
+            </body>
+            </html>`
+        })
+ 
+        
+        return res.status(200).json({
+            messages: {
+                code: 0,
+                message: "Email Sent Successfully"
+            },
+            verificationCode,
+            newCode
+        })
+
+    } catch (error){
+        return res.status(400).json({
+            messages: {
+                code: 1,
+                message: error
+            },
+            
+        })
+    }
+}
+
 
 
 

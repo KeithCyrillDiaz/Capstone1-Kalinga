@@ -158,9 +158,10 @@ const donorAppointmentConfirmation = () => {
     console.log("id: ", id)
     const files = await getMedicalAbstractsFiles({id: Donor_ID, purpose: "Donate"})
     const images = await getMedicalAbstractsImages({id: Donor_ID, purpose: "Donate"})
-    setFiles(files)
-    setImages(images)
-    console.l0g("images: ", images)
+    if(files) setFiles(files)
+      else setFiles([])
+    if(images) setImages(images)
+      else setImages([])
   }
 
   return (
@@ -394,7 +395,7 @@ const donorAppointmentConfirmation = () => {
         <div
           className="flex flex-row"
           >
-            {images.map(requirement => (
+            {images.length !== 0 && images.map(requirement => (
               <>
                 <div key={requirement.originalname} className="bg-white px-4 py-2 w-full h-72 shadow-md rounded-lg focus:outline-none focus: text-primary-default">
                   <span className="flex justify-center text-primary-default text-lg text-center">
@@ -409,7 +410,7 @@ const donorAppointmentConfirmation = () => {
               </>
               
             ))}
-              {files.map(requirement => (
+              {files.length !== 0 &&files.map(requirement => (
               <div key={requirement.originalname} className="bg-white px-4 py-2 w-[40%] h-72 shadow-md items-center justify-center rounded-lg focus:outline-none focus: text-primary-default">
                 <span className="flex justify-center text-primary-default text-lg text-center">
                   {requirement.originalname}

@@ -1,22 +1,41 @@
 import express from 'express'
-import { updateDonorDetails, updateRequestorDetails, createRequestor} from '../models/users'
+import { 
+    updateDonorDetails, 
+    updateRequestorDetails, 
+} from '../models/users'
 import moment from 'moment'
+import { getScreeningFormByScreeningID, updateScreeningFormDetails } from '../models/ApplyAsDonor'
+import { userLogInToken } from './Users/userLoginViaToken'
 export const updateUserDetails = async (req: express.Request, res: express.Response) => {
     try{
         const userData = req.body.userData
         console.log("userData: ", userData)
         console.log("ID: ", userData.Requestor_ID)
-        const updatedUserData = {
+
+          const existingScreeningForm =  userData.Requestor_ID 
+          ? await getScreeningFormByScreeningID(userData.Requestor_ID) 
+          : await getScreeningFormByScreeningID(userData.Donor_ID)
+
+          const newScreeningForm = {
+            ...existingScreeningForm,
+            email: userData.email,
+            contactNumber: userData.mobileNumber,
+            homeAddress: userData.homeAddress
+          }
+          const existingUser = userData.userType === "Donor" 
+          ? await updateScreeningFormDetails(userData.Donor_ID, newScreeningForm)
+          : await updateScreeningFormDetails(userData.Requestor_ID, newScreeningForm)
+
+          const updatedUserData = {
             ...userData,
             updatedAt: moment().toDate()
           };
-        let result: any = {}
+      
+          const result = userData.userType === "Donor" 
+          ? await updateDonorDetails(userData.Donor_ID, updatedUserData) 
+          : await updateRequestorDetails(userData.Requestor_ID, updatedUserData)
 
-        if(userData.userType === "Requestor"){
-            result = await updateRequestorDetails(userData.Requestor_ID, updatedUserData)
-        } else result = await updateDonorDetails(userData.Donor_ID, updatedUserData)
-
-        if(!result){
+        if(!result && !existingUser){
             console.log("Failed to update user")
             return res.json({
                 messages: {
@@ -25,6 +44,7 @@ export const updateUserDetails = async (req: express.Request, res: express.Respo
                 }
             }).status(400)
         }
+        console.log("existingUser: ", existingUser)
         console.log("result: ", result)
         console.log("Update user details successfully")
         return res.json({

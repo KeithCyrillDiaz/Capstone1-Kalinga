@@ -11,7 +11,6 @@ import { getRequestByID } from '../controllers/Admin/Appointment/getMakeRequest'
 import { getRequestByUserType } from '../controllers/Admin/Appointment/getRequestByUserType';
 import { logInUser, logOutUser, checkIfBlock } from '../controllers/LogInUser';
 import { isApproved } from '../controllers/isApproved';
-import { updateUserDetails } from '../controllers/updateUser';
 import { updateDonationStatus } from '../controllers/Admin/Appointment/updateAppointmentStatus';
 import { updateRequestStatus }  from '../controllers/Admin/Appointment/updateRequestStatus';
 import { getPendingRequests } from '../controllers/Requestor/getPendingRequest';
@@ -57,6 +56,24 @@ import { getDonationStatus, getDonationStatusOfMother } from '../controllers/Don
 import { getAllUsers } from '../controllers/SuperAdmin/getAllUser'
 import { deleteUser } from '../controllers/SuperAdmin/deleteUser'
 import { getTotalUsersPerBarangay } from '../controllers/Admin/Reports/getTotalUserBarangay'
+import { getTotalPendingAppointment } from '../controllers/Admin/Reports/getTotalPendingAppointment'
+import { getTotalPendingRequest } from '../controllers/Admin/Reports/getTotalPendingRequest'
+import { getTotalUserPerMonth } from '../controllers/Admin/Reports/getTotalUserPerMonth'
+import { getHighestDonation } from '../controllers/Admin/Reports/getHighestDonation'
+import { getHighestRequestors } from '../controllers/Admin/Reports/getHighestRequest'
+import { getTotalDonorsPerMonth } from '../controllers/Admin/Reports/getTotalUserPerMonthYear'
+import { getTotalRequestorsPerMonth} from '../controllers/Admin/Reports/getTotalUserPerMonthYear'
+import { getTotalAppointmentsPerMonth } from '../controllers/Admin/Reports/getTotalAppointmentsPerMonth'
+import { getTotalRequestsPerMonthAndYear } from '../controllers/Admin/Reports/getTotalRequestPerMonth'
+import { getTotalOverallDonation } from '../controllers/Admin/Reports/getTotalOverallDonation'
+import { getTotalOverAllRequest } from '../controllers/Admin/Reports/getTotalOverAllRequest'
+import { getHighestDonationBarangay } from '../controllers/Admin/Reports/getHighestDonationBarangay'
+import { getHighestRequestBarangay } from '../controllers/Admin/Reports/getHighestRequestBarangay'
+
+
+
+
+
 
 export default (router: express.Router) => {
   
@@ -69,7 +86,6 @@ export default (router: express.Router) => {
     router.post('/kalinga/superAdminLogin', superAdminLogIn)
     router.post('/kalinga/adminLogin', AdminLogIn)
     router.get('/kalinga/isApproved/:Applicant_ID', isApproved)
-    router.post('/kalinga/updateUserInformation', updateUserDetails)
 
    //donor
    router.post('/kalinga/createAppointment', createAppointment);
@@ -112,7 +128,7 @@ export default (router: express.Router) => {
     router.get('/kalinga/getTotalDeclineDonationPerMonth', getTotalDeclineDonationPerMonth)
     router.get('/kalinga/getTotalCompleteRequestPerMonth', getTotalCompleteRequestPerMonth)
     router.get('/kalinga/getTotalDeclineRequestPerMonth', getTotalDeclineRequestPerMonth)
-    router.get('/kalinga/getTotalCompleteDonationsAllMonths', getTotalCompleteDonationsAllMonths )
+    router.get('/kalinga/getTotalCompleteDonationsAllMonths', getTotalCompleteDonationsAllMonths)
     router.get('/kalinga/getTotalDeclineDonationsAllMonths', getTotalDeclineDonationsAllMonths )
     router.get('/kalinga/getTotalCompleteRequestAllMonths',getTotalCompleteRequestAllMonths)
     router.get('/kalinga/getTotalDeclineRequestAllMonths',getTotalDeclineRequestAllMonths)
@@ -128,6 +144,29 @@ export default (router: express.Router) => {
     router.get ('/kalinga/getAllUsers', getAllUsers)
     router.delete ('/kalinga/deleteUser/:id/:userType', deleteUser)
     router.get ('/kalinga/getTotalUsersPerBarangay', getTotalUsersPerBarangay)
+    router.get ('/kalinga/getTotalPendingAppointment', getTotalPendingAppointment)
+    router.get ('/kalinga/getTotalPendingRequest', getTotalPendingRequest)
+    router.get ('/kalinga/getTotalUserPerMonth', getTotalUserPerMonth)
+    router.get ('/kalinga/getHighestDonation', getHighestDonation)
+    router.get ('/kalinga/getHighestRequestors', getHighestRequestors)
+    router.get ('/kalinga/getTotalDonorsPerMonth', getTotalDonorsPerMonth)
+    router.get ('/kalinga/getTotalRequestorsPerMonth', getTotalRequestorsPerMonth)
+    router.get ('/kalinga/getTotalAppointmentsPerMonth', getTotalAppointmentsPerMonth)
+    router.get ('/kalinga/getTotalRequestsPerMonthAndYear', getTotalRequestsPerMonthAndYear)
+    router.get ('/kalinga/getTotalOverallDonation', getTotalOverallDonation)
+    router.get ('/kalinga/getTotalOverAllRequest', getTotalOverAllRequest)
+    router.get ('/kalinga/getHighestDonationBarangay', getHighestDonationBarangay)
+    router.get ('/kalinga/getHighestRequestBarangay', getHighestRequestBarangay)
+
+
+    
+
+    
+    
+
+
+
+
 
 
 

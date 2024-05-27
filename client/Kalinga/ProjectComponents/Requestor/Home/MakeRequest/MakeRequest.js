@@ -75,6 +75,7 @@ export default function RequestorProfile({route}) {
     Requestor_ID: Requestor_ID,
       userType: "Requestor",
       RequestStatus: "Pending",
+      barangay: userInformation.barangay || '',     
       fullName: userInformation.fullName,
       phoneNumber: userInformation.mobileNumber,
       emailAddress: userInformation.email,
