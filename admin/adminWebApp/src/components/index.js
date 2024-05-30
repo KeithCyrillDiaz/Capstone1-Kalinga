@@ -13,7 +13,7 @@ import BarangayGraph from "./BarangayGraph";
 import BarDonationOverAll from "./BarDonationOverAll"
 import BarRequestOverAll from "./BarRequestOverAll"
 import LineGraphTotalUserPerMonth from "./LineGraphTotalUserPerMonth"
-
+import DonatePerMonthBarangay from "./donatePerMonthBarangay"
 
 export { MobileChecker,
          Sidebar,
@@ -29,6 +29,7 @@ export { MobileChecker,
          BarangayGraph,
          BarDonationOverAll,
          BarRequestOverAll,
-         LineGraphTotalUserPerMonth
+         LineGraphTotalUserPerMonth,
+         DonatePerMonthBarangay
         };
 

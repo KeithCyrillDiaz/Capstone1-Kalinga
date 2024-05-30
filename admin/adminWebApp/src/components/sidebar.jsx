@@ -156,6 +156,18 @@ export default function () {
                       Monthly Report
                     </h1>
                   </NavLink>
+                  <NavLink
+                    to="/admin/barangay"
+                    className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-5 py-1 mb-1 ${
+                      isActiveRoute("donor verif")
+                        ? "bg-primary-default"
+                        : "bg-transparent hover:bg-primary-default"
+                    }`}
+                  >
+                    <h1 className="text-lg text-neutral-primary">
+                      Barangay Report
+                    </h1>
+                  </NavLink>
                 </div>
               )}
             </div>

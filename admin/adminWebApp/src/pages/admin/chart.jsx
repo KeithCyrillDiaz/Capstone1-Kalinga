@@ -430,7 +430,7 @@
                 <h1 className="text-2xl text-primary-default font-semibold font-sans py-4 pb-6">
                   {" "}
                   {/* nakadepende din dapat to sa filter */}
-                  Reports for the month of May 2024
+                  Reports for the month of {selectedMonth} {selectedYear}
                 </h1>
               </div>
               <div className="w-full flex justify-center gap-4">
