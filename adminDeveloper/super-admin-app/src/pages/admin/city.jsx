@@ -5,36 +5,28 @@ import { Pie } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 
 export default function () {
-  const [city, setCity] = useState(""); // State to hold the selected city
-  const [donationData, setDonationData] = useState({}); // State to hold donation data
-  const [requestData, setRequestData] = useState({}); // State to hold request data
-  const [error, setError] = useState(null); // State to hold error messages
+  const [city, setCity] = useState("");
+  const [donationData, setDonationData] = useState({});
+  const [requestData, setRequestData] = useState({});
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const donationResponse = await axios.get(
-          `${WebHost}/kalinga/getDonationStatusTotal?city=${encodeURIComponent(
-            city
-          )}`
+          `${WebHost}/kalinga/getDonationStatusTotal?city=${encodeURIComponent(city)}`
         );
-
         const requestResponse = await axios.get(
-          `${WebHost}/kalinga/getRequestStatusTotal?city=${encodeURIComponent(
-            city
-          )}`
+          `${WebHost}/kalinga/getRequestStatusTotal?city=${encodeURIComponent(city)}`
         );
-
-        console.log("Donation Response:", donationResponse.data);
-        console.log("Request Response:", requestResponse.data);
 
         setDonationData(donationResponse.data);
         setRequestData(requestResponse.data);
 
-        setError(null); // Clear any previous errors
+        setError(null);
       } catch (error) {
         console.error("Error fetching data:", error);
-        setError("Error fetching data: " + error.message); // Set error state with descriptive message
+        setError("Error fetching data: " + error.message);
       }
     };
 
@@ -57,10 +49,7 @@ export default function () {
     labels: ["Successful Donations", "Unsuccessful Donations"],
     datasets: [
       {
-        data: [
-          donationData.totalCompleteDonations || 0,
-          donationData.totalDeclinedDonations || 0,
-        ],
+        data: [donationData.totalCompleteDonations || 0, donationData.totalDeclinedDonations || 0],
         backgroundColor: ["#36A2EB", "#FF6384"],
         hoverBackgroundColor: ["#36A2EB", "#FF6384"],
       },
@@ -71,10 +60,7 @@ export default function () {
     labels: ["Successful Requests", "Unsuccessful Requests"],
     datasets: [
       {
-        data: [
-          requestData.totalCompleteRequests || 0,
-          requestData.totalDeclinedRequests || 0,
-        ],
+        data: [requestData.totalCompleteRequests || 0, requestData.totalDeclinedRequests || 0],
         backgroundColor: ["#36A2EB", "#FF6384"],
         hoverBackgroundColor: ["#36A2EB", "#FF6384"],
       },
@@ -146,10 +132,10 @@ export default function () {
                 Donations
               </h1>
               <div className="flex flex-row items-center gap-x-6">
-                <div className="w-1/2">
+                <div className="w-full lg:w-1/2">
                   <Pie data={donationChartData} />
                 </div>
-                <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-24 lg:px-16 rounded-xl border-primary-default">
+                <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-24 lg:px-16 rounded-xl border-primary-default lg:w-1/2">
                   <h1 className="pb-4 text-6xl text-center text-primary-default">
                     {donationData.totalCompleteDonations}
                   </h1>
@@ -166,12 +152,12 @@ export default function () {
               </div>
             </div>
 
-            <div className=" bg-white rounded-lg shadow-lg p-4 pb-10 ">
+            <div className=" bg-whiterounded-lg shadow-lg p-4 pb-10 lg:w-full">
               <h1 className="text-4xl text-center text-primary-default">
                 Requests
               </h1>
               <div className="flex flex-row items-center gap-x-6">
-                <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-24 lg:px-16 rounded-xl border-primary-default">
+                <div className="flex flex-col items-center justify-center py-4 bg-white border shadow-xl xl:px-24 lg:px-16 rounded-xl border-primary-default lg:w-1/2">
                   <h1 className="pb-4 text-6xl text-center text-primary-default">
                     {requestData.totalCompleteRequests}
                   </h1>
@@ -185,7 +171,7 @@ export default function () {
                     Unsuccessful
                   </p>
                 </div>
-                <div className="w-1/2">
+                <div className="w-full lg:w-1/2">
                   <Pie data={requestChartData} />
                 </div>
               </div>
@@ -198,3 +184,4 @@ export default function () {
     </>
   );
 }
+

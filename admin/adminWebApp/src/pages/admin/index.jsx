@@ -576,7 +576,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
                       onClick={handleDownloadPDFTopDonatingBarangay}
                       className="bg-pink-500 text-white py-2 px-4 rounded-xl focus:outline-none hover:bg-pink-600"
                     >
-                      Download PDF
+                      Export as PDF
                     </button>
                   </div>
                       {topDonatingBarangay.map((user, index) => (
@@ -618,7 +618,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
                       onClick={handleDownloadPDFTopRequestingBarangay}
                       className="bg-pink-500 text-white py-2 px-4 rounded-xl focus:outline-none hover:bg-pink-600"
                     >
-                      Download PDF
+                      Export as PDF
                     </button>
                   </div>
                   <div className="py-4 px-2 ml-4">
@@ -661,7 +661,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
                       onClick={handleDownloadPDFTopDonatingUser}
                       className="bg-pink-500 text-white py-2 px-4 rounded-xl focus:outline-none hover:bg-pink-600"
                     >
-                      Download PDF
+                       Export as PDF
                     </button>
                   </div>
                   <div className="py-4 px-2 ml-4">
@@ -704,7 +704,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
                       onClick={handleDownloadPDFTopRequestingUser}
                       className="bg-pink-500 text-white py-2 px-4 rounded-xl focus:outline-none hover:bg-pink-600"
                     >
-                      Download PDF
+                       Export as PDF
                     </button>
                   </div>
                   <div className="py-4 px-2 ml-4">

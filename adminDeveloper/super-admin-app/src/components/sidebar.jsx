@@ -97,7 +97,7 @@ export default function () {
             <h1 className="ml-2 text-lg text-neutral-primary">Mikbanks</h1>
           </NavLink>
           {/* FORUM MOD */}
-          <NavLink
+          {/* <NavLink
             to="/admin/forum"
             className={`flex items-center cursor-pointer w-full rounded-2xl py-1 mb-1 ${
               isActiveRoute("forum")
@@ -124,7 +124,7 @@ export default function () {
             <h1 className="ml-2 text-md text-neutral-primary">
               Forum Moderation
             </h1>
-          </NavLink>
+          </NavLink> */}
           {/* REPORTS */}
           <div>
             <div className="relative">

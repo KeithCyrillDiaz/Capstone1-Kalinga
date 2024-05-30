@@ -90,7 +90,7 @@ export default function BarDonatePerMonth({ name, selectedYear }) {
           onClick={handleDownloadPDF}
           className="bg-pink-500 text-white py-2 px-4 rounded-xl focus:outline-none hover:bg-pink-600"
         >
-          Download PDF
+          Export as PDF
         </button>
       </div>
       <ResponsiveContainer width="100%" height={400}>

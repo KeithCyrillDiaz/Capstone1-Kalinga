@@ -383,7 +383,7 @@
                         d="M5 20h14v-2H5zM19 9h-4V3H9v6H5l7 7z"
                       ></path>
                     </svg>
-                    Download as PDF
+                    Export as PDF
                   </button>
                 </div>
 
