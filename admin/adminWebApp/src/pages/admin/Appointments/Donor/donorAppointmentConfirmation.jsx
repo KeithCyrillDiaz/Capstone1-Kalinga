@@ -11,6 +11,7 @@ import AppointmentDeclineModal from "../../../../modal/AppointmentDeclineModal";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { getMedicalAbstractsFiles, getMedicalAbstractsImages } from "../../../../api/Appointments/Request";
+import { getDateTime } from "../../../../functions/ConvertDateandTime";
 
 const donorAppointmentConfirmation = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -65,15 +66,16 @@ const donorAppointmentConfirmation = () => {
 
   const handleApproved = async () => {
     setShowModal(true); // Open the modal
-
     try {
       // Make a PUT request to update the RequestStatus to "Ongoing"
+      const utcTime = new Date(selectedTime.getTime() + (selectedTime.getTimezoneOffset() * 60000));
+
       await axios.put(
         `${WebHost}/kalinga/updateDonationStatus/${AppointmentDonorID}`,
         {
           DonationStatus: "Ongoing",
           selectedDate: selectedDate.toISOString(),
-          selectedTime: selectedTime.toISOString()
+          selectedTime: utcTime.toISOString()
         }
       );
 
@@ -162,7 +164,8 @@ const donorAppointmentConfirmation = () => {
     setSelectedDate(date);
   };
 
-  const handleTimeChange = (time) => {
+  const handleTimeChange = (selectedTime) => {
+    const { time } = getDateTime({data: {selectedTime: selectedTime}})
     setSelectedTime(time);
   };
 
@@ -334,8 +337,27 @@ const donorAppointmentConfirmation = () => {
                   onChange={(e) => {
                     const [hours, minutes] = e.target.value.split(":");
                     const newTime = new Date(selectedTime);
-                    newTime.setHours(hours);
-                    newTime.setMinutes(minutes);
+                    
+                    // Set the hours and minutes of the new time
+                    newTime.setUTCHours(parseInt(hours, 10), parseInt(minutes, 10));
+                  
+                    // Convert newTime to local time zone (Philippine time)
+                    const localTime = newTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+                  
+                    // Parse the local time string to get the hours, minutes, and AM/PM
+                    const [localHours, localMinutes, amPm] = localTime.split(/:| /);
+                    
+                    // Convert hours to 24-hour format
+                    let hours24 = parseInt(localHours, 10);
+                    if (amPm.toLowerCase() === 'pm' && hours24 < 12) {
+                      hours24 += 12;
+                    } else if (amPm.toLowerCase() === 'am' && hours24 === 12) {
+                      hours24 = 0;
+                    }
+                  
+                    // Set the new time with local hours and minutes
+                    newTime.setHours(hours24, parseInt(localMinutes, 10));
+                  
                     setSelectedTime(newTime);
                   }}
                   className={`bg-white w-full py-2 h-14 px-4 shadow-md rounded-lg focus:outline-none focus: text-primary-default ${

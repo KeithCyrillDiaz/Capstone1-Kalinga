@@ -67,6 +67,7 @@ const SetAppointment = ({route}) => {
       'phoneNumber',
       'homeAddress',
       'milkAmount',
+      'city'
       ];
 
       const isFormDataValid = keysToCheck.every(key => formData[key].trim() !== '');
@@ -89,20 +90,24 @@ const SetAppointment = ({route}) => {
     }
   };
 
-  const validateMilkAmount = (text) => {
-    if (/^\d+$/.test(text)) {
-      handleChange("milkAmount", text);
-    } else {
-      Alert.alert("Error", "Please enter a numeric value for milk amount.");
-    }
-  };
 
 
   const handleChange = (name, value) => {
+
+    if(name === "milkAmount" && /[^0-9]/.test(value))return
+
     setFormData(prevData => ({
       ...prevData,
       [name]: value,
     }));
+  
+    if(name === "email" && value.includes("@") && (value.endsWith("com") || value.endsWith("ph"))){
+      console.log("Email: ", value)
+      setIsEmailValid(true)
+      checkEmail(value)
+    }
+    return
+    
   };
 
   const navigation = useNavigation();
@@ -122,7 +127,10 @@ const SetAppointment = ({route}) => {
   
   useEffect(()=> {
     checkForm()
-  },[formData.milkAmount])
+  },[
+    formData.milkAmount,
+    formData.city
+  ])
   return (
     <SafeAreaView style={globalStyles.SafeArea}>
       <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
@@ -160,9 +168,7 @@ const SetAppointment = ({route}) => {
                 editable={false}
               />
             </View>
-                    <Text style = {styles.asterix}>
-                      *
-                    </Text>
+
                 </View>
                 <View style={styles.inputField}>
                   <View style={styles.spaceBetween}>
@@ -172,13 +178,9 @@ const SetAppointment = ({route}) => {
                       placeholderTextColor="#E60965"
                       onChangeText={(text) => validatePhoneNumber(text)}
                       value={formData.phoneNumber}
-                      
+                      editable={false}
                       />
                   </View>
-                      
-                    <Text style = {styles.asterix}>
-                      *
-                    </Text>
                 </View>
                 <View style={styles.inputField}>
                   <View style={styles.spaceBetween}>
@@ -191,11 +193,8 @@ const SetAppointment = ({route}) => {
                       editable={false}
                     />
                   </View>
-                 
-                    <Text style = {styles.asterix}>
-                      *
-                    </Text>
                 </View>
+
                 <View style={styles.inputField}>
                   <View style={styles.spaceBetween}>
                     <TextInput
@@ -204,12 +203,9 @@ const SetAppointment = ({route}) => {
                       placeholderTextColor="#E60965"
                       onChangeText={(text) => handleChange("homeAddress", text)}
                       value = {formData.homeAddress}
+                      editable={false}
                     />
                   </View>
-                 
-                    <Text style = {styles.asterix}>
-                      *
-                    </Text>
                 </View>
                 <View style={styles.inputField}>
                   <View style={styles.spaceBetween}>
@@ -238,7 +234,9 @@ const SetAppointment = ({route}) => {
                       placeholder="Amount of milk to be donated (ml)"
                       placeholderTextColor="#E60965"
                       keyboardType="numeric"
-                      onChangeText={(text) => validateMilkAmount(text)}
+                      maxLength={3}
+                      onChangeText={(text) => handleChange("milkAmount", text)}
+                      value={formData.milkAmount}
                       />
                   </View>
                  

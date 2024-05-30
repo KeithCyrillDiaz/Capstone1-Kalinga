@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -16,38 +16,53 @@ import axios from 'axios'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASED_URL } from "../../../../MyConstants";
 import { globalStyles } from "../../../../styles_kit/globalStyles";
+import { LoadingSpinner } from "../../../uploader/LoadingSpinner";
 export default function SettingScreen({route}) {
 
   const userInformation = route.params.userInformation
   const UserName = route.params.UserName
   const { token } = route.params
+  const [isLoading, setIsLoading] = useState(false)
 
   const navigation = useNavigation(); 
   const deleteToken = async () => {
-    const token = await AsyncStorage.getItem('token')
-    if(!token){
-      console.log("Unauthorized")
-      navigatePage("LogIn")
+    try {
+      setIsLoading(true)
+      const token = await AsyncStorage.getItem('token')
+      if(!token){
+        setIsLoading(false)
+        console.log("Unauthorized")
+        navigatePage("LogIn")
+        return
+      }
+      const result = await axios.get(`${BASED_URL}/kalinga/userLogout/${token}`)
+      if(result.data.messages.code !== 0){
+        setIsLoading(false)
+        console.log("Unauthorized")
+        navigatePage("LogIn")
+        return
+      }
+  
+      await AsyncStorage.multiRemove(['token', 'userInformation', 'DPLink', 'Image_ID']);
+      const checkToken = await AsyncStorage.getItem('token')
+      const checkUserInfo = await AsyncStorage.getItem('userInformation')
+      if(checkToken && checkUserInfo){
+        console.log("Failed to delete token in Async")
+        await AsyncStorage.removeItem('token')
+        await AsyncStorage.removeItem('userInformation')
+      }
+      setIsLoading(false)
+      console.log("Deleted token and user Information in Storage")
+      navigatePage('LogIn')
       return
+    } catch(error) {
+      if (error.message.includes('Network')) {
+        Alert.alert("Network Error", "Please check your internet connection and try again.");
+      } else if(error)console.log("Error: ", error)
+    } finally {
+      setIsLoading(false)
     }
-    const result = await axios.get(`${BASED_URL}/kalinga/userLogout/${token}`)
-    if(result.data.messages.code !== 0){
-      console.log("Unauthorized")
-      navigatePage("LogIn")
-      return
-    }
-
-    await AsyncStorage.multiRemove(['token', 'userInformation', 'DPLink', 'Image_ID']);
-    const checkToken = await AsyncStorage.getItem('token')
-    const checkUserInfo = await AsyncStorage.getItem('userInformation')
-    if(checkToken && checkUserInfo){
-      console.log("Failed to delete token in Async")
-      await AsyncStorage.removeItem('token')
-      await AsyncStorage.removeItem('userInformation')
-    }
-    console.log("Deleted token and user Information in Storage")
-    navigatePage('LogIn')
-    return
+   
   }
 
   const navigatePage = (Page) => {
@@ -93,13 +108,16 @@ export default function SettingScreen({route}) {
 
   return (
     <SafeAreaView style={globalStyles.defaultBackgroundColor}>
-      <ScrollView contentContainerStyle={bodyStyle.container}>
         <StatusBar />
         <Header title="Settings" />
+        <ScrollView 
+          style={{flex: 1, paddingVertical:"7%"}}
+          contentContainerStyle={bodyStyle.container}
+          >
         <View style={bodyStyle.section}>
           <Text style={fontStyle.title}>Account</Text>
           <View style={cardStyle.container}>
-
+          <LoadingSpinner loading={isLoading}/>
             <View
               style={{
                 gap: 16,

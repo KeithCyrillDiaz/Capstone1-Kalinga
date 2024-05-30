@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 24,
+    fontFamily: "Kurale"
   },
   headerTitle: {
     fontFamily: "Kurale",

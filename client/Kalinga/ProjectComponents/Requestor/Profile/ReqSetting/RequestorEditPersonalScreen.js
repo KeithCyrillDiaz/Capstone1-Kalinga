@@ -248,29 +248,38 @@ const checkEmail = async (email) => {
   return
 }
   const handleChangeText = (name, value) => {
-    const validNumber = /^[0-9]*$/
-    if(name === "mobileNumber" && !validNumber.test(value))return
+    if(name === "birthWeight" && /[^0-9]/.test(value))return
 
-    if(name === "email" && value.includes("@") && (value.endsWith("com") || value.endsWith("ph"))){
-      if(value === userInformation.email){
-        setIsEmailExisting(false)
-        setIsEmailValid(true)
-      } else {
-        console.log("Email: ", value)
-        setIsEmailValid(true)
-        checkEmail(value)
-      }
-    
-    } else if(name === "email") {
-      setIsEmailValid(false)
-      setIsEmailExisting(false)
-    }
-
-    setUserData({
-      ...userData,
-      [name]: value
-    })
+  if (name === "contactNumber" && /[^0-9]/.test(value)){
+    console.log("number: ", value)
+    setInvalidContactNumber(true)
+    return
+  } else if (name === "contactNumber" && value.length !== 11){
+    setInvalidContactNumber(true)
+  } else if(name === "contactNumber"){
+    setInvalidContactNumber(false)
+}
+  console.log("value:", value)
+  if (
+    name === "email" &&
+    value.includes("@") &&
+    (value.endsWith(".com") || value.endsWith(".ph")) &&
+    (value.match(/\.com/g) || []).length <= 1 && // Ensure there's at most one occurrence of ".com"
+    (value.match(/\.ph/g) || []).length <= 1 // Ensure there's at most one occurrence of ".ph"
+  ) {
+    console.log("Email: ", value);
+    setIsEmailValid(true);
+    checkEmail(value);
+  } else if (name === "email") {
+    setIsEmailValid(false);
+    setIsEmailExisting(false)
   }
+  setUserData({ ...userData, [name]: value });
+
+    return
+  }
+
+  
 
 const saveDetails = async () => {
   try{
@@ -539,9 +548,9 @@ const saveDetails = async () => {
             <TouchableOpacity 
             disabled={!onEdit}
             onPress={() => setShowAddressPicker(true)}
-            style={[inputStyle.container, {height: 50}]}>
+            style={[inputStyle.container, {paddingVertical: 10}]}>
               <Text style={inputStyle.label}>Address:</Text>
-              <Text style={[inputStyle.primary, {minHeight:20}]}>{userData.homeAddress}</Text>
+              <Text style={[inputStyle.primary, {minHeight:20, width: "75%",}]}>{userData.homeAddress}</Text>
             </TouchableOpacity>
           </View>
           

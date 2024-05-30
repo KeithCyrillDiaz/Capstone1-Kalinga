@@ -32,6 +32,7 @@ const ApplyAs_DonorISF = () => {
   const [isEmailValid, setIsEmailValid]= useState(false)
   const [isFormFilled, setIsFormFilled] = useState(false)
   const [isChildTooOld, setChildIsTooOld] = useState(false)
+  const [invalidContactNumber, setInvalidContactNumber] = useState(false)
 
   //Dropdowns
   const [openSexDropdown, setOpenSexDropdown] = useState(false)
@@ -109,10 +110,10 @@ const checkForm= (value) => {
     const isFormDataValid = keysToCheck.every(key => screeningFormData[key].trim() !== '');
 
     if (isFormDataValid) {
-        console.log('All values until medical condition are valid');
+        if(!isFormFilled)console.log('All values until medical condition are valid');
         setIsFormFilled(true)
     } else {
-        console.log('Some values until medical condition are empty');
+      if(isFormFilled)console.log('Some values until medical condition are empty');
         setIsFormFilled(false)
     }
 }
@@ -247,13 +248,34 @@ const checkForm= (value) => {
 // }, [screeningFormData]);
 
 const handleChangeText = (name, value) => {
-  if (name === "contactNumber" && /[^a-zA-Z0-9]/.test(value))return;
+
+  if(name === "birthWeight" && /[^0-9]/.test(value))return
+
+  if (name === "contactNumber" && /[^0-9]/.test(value)){
+    console.log("number: ", value)
+    setInvalidContactNumber(true)
+    return
+  } else if (name === "contactNumber" && value.length !== 11){
+    if(!invalidContactNumber)setInvalidContactNumber(true)
+  } else {
+    setInvalidContactNumber(false)
+}
+  console.log("value:", value)
+  if (
+    name === "email" &&
+    value.includes("@") &&
+    (value.endsWith(".com") || value.endsWith(".ph")) &&
+    (value.match(/\.com/g) || []).length <= 1 && // Ensure there's at most one occurrence of ".com"
+    (value.match(/\.ph/g) || []).length <= 1 // Ensure there's at most one occurrence of ".ph"
+  ) {
+    console.log("Email: ", value);
+    setIsEmailValid(true);
+    checkEmail(value);
+  } else if (name === "email") {
+    setIsEmailValid(false);
+  }
   setScreeningFormData({ ...screeningFormData, [name]: value });
-    if(name === "email" && value.includes("@") && (value.endsWith("com") || value.endsWith("ph"))){
-      console.log("Email: ", value)
-      setIsEmailValid(true)
-      checkEmail(value)
-    }
+
     return
 };
 
@@ -415,7 +437,19 @@ const formatCity = (city) => {
 useEffect(() => {
   //checkForm
   checkForm("Screening Form")
-}, [screeningFormData.childBirthDate])
+}, [
+  screeningFormData.fullName,
+  screeningFormData.birthDate,
+  screeningFormData.email,
+  screeningFormData.contactNumber,
+  screeningFormData.barangay,
+  screeningFormData.Municipality,
+  screeningFormData.homeAddress,
+  screeningFormData.childName,
+  screeningFormData.birthWeight,
+  screeningFormData.sex,
+  screeningFormData.childBirthDate
+])
 
 useEffect(() => {
   checkAgeValidity()
@@ -571,8 +605,17 @@ useEffect(() => {
             keyboardType="numeric"
             value={screeningFormData.contactNumber}
           />
-        </View>
         
+        </View>
+        {invalidContactNumber && (
+           <Text 
+           style = {{
+             marginLeft: "10%", 
+             marginTop: 5, 
+             marginBottom: -10, 
+             color: "red"}}>Please enter a valid 11-digit contact number</Text>
+        )}
+       
         <View style = {styles.addressDropdown}>
           <Dropdown
               style={[, isRegionFocus && { borderColor: 'blue'}]}
@@ -596,7 +639,7 @@ useEffect(() => {
               }}
             />
         </View>
-        <View style = {[styles.addressDropdown, {paddingVertical: 20}]}>
+        <View style = {[styles.addressDropdown]}>
             
             <Dropdown
                 disable={listProvinces === null}
@@ -716,9 +759,10 @@ useEffect(() => {
               placeholder="Birth Weight (kg)"
               placeholderTextColor={"#E60965"}
               style={styles.inputField}
-              
+              maxLength={2}
               onChangeText={(value) => handleChangeText('birthWeight', value)}
               keyboardType="numeric"
+              value={screeningFormData.birthWeight}
             />
             </View>
           <View style={[styles.inputSexContainer, { elevation: 5 }]}>

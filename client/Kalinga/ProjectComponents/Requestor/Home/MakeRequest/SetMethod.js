@@ -137,7 +137,7 @@ const SetDateTimeLocation = () => {
     
     const checkForm = () => {
         // console.log("Test", newForm.location
-        if (newForm.method === undefined) {
+        if (newForm.method === undefined || newForm.method === "") {
             Alert.alert('Missing Information', 'Please input a delivery method.');
             return;
         }
@@ -153,7 +153,7 @@ const SetDateTimeLocation = () => {
                 "Milk Banks are only available during working hours from 8:00 AM to 5:00 PM.")
             return
         }
-        if(newForm.location === undefined) {
+        if(newForm.location === undefined || newForm.location === "") {
             Alert.alert("Invalid Milk Bank", "Please select a milk bank before proceeding.")
             return
         }
@@ -561,8 +561,14 @@ const SetDateTimeLocation = () => {
                             </View>
                         </Modal>
 
-                                <TouchableOpacity onPress={() => checkForm()}>
-                                    <View style={styles.buttonContainer}>
+                                <TouchableOpacity 
+                                disabled={newForm.method === "Authorized Person" && Object.keys(selectedImage).length + Object.keys(selectedFile).length < 2}
+                                onPress={() => checkForm()}>
+                                    <View 
+                                    style={[styles.buttonContainer,
+                                    {
+                                        opacity: newForm.method === "Authorized Person" && Object.keys(selectedImage).length + Object.keys(selectedFile).length < 2 ? 0.5 :1
+                                    }]}>
                                         <Text style={styles.label}>Next</Text>
                                     </View>
                                 </TouchableOpacity>

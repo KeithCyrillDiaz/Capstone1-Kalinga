@@ -6,7 +6,8 @@ import {
 	ScrollView, 
 	StatusBar, 
 	StyleSheet, 
-	Alert
+	Alert,
+	ActivityIndicator
 } from 'react-native';
 //import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -31,11 +32,10 @@ const CompletedTabRequest = ({route}) => {
 
     const fetchData = async () => {
         try {
+			setLoading(true)
             const response = await axios.get(`${BASED_URL}/kalinga/getCompletedRequests/${Requestor_ID}`);
             const responseData = response.data;
-			console.log(responseData)
 			if(responseData.messages.success === false){
-				Alert.alert("No Completed Request", "You currently don't have any completed requests.");
 				setLoading(false); 
 				return
 			}
@@ -65,9 +65,14 @@ const CompletedTabRequest = ({route}) => {
 			setError(true)
             // console.log('Error fetching data:', error);
             setLoading(false);
-        }
+        } finally {
+			setLoading(false)
+		}
     };
-
+	if (loading) {
+		return <ActivityIndicator size="large" color="#E60965" />;
+	}
+  
     return (
 			<SafeAreaView style = {globalStyles.defaultBackgroundColor}>
 				<StatusBar barStyle="dark-content" translucent backgroundColor="white" />
@@ -79,6 +84,26 @@ const CompletedTabRequest = ({route}) => {
 					showsVerticalScrollIndicator={false}
 				>
 				<View style={styles.body}>
+				{formDataList.length === 0 && (
+						<View style ={{
+							backgroundColor: "white",
+							width: "90%",
+							alignItems: "center",
+							justifyContent: "center",
+							paddingHorizontal:7,
+							paddingVertical:17,
+							elevation:7,
+							borderRadius: 17,
+							marginTop: "7%",
+							alignSelf: "center",
+							marginVertical: "7%"
+						}}>
+						<Text style={{
+						fontFamily: "Open-Sans-SemiBold",
+						color:  '#E60965',
+						}}>No completed at the moment.</Text>
+						</View>
+					)}
 					{formDataList.map((formData, index) => (
                     <View key={index} style={{paddingBottom: 17}}>
                         <View style={styles.boxColContainer}>

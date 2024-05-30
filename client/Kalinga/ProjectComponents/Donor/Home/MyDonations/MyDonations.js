@@ -53,7 +53,7 @@ const MyDonation = ({route}) => {
 
   if (loading) {
     return (
-      <View style={[styles.container, styles.loadingContainer]}>
+      <View style={[styles.defaultBackgroundColor, styles.loadingContainer]}>
         <ActivityIndicator size="large" color="#E60965" />
       </View>
     );

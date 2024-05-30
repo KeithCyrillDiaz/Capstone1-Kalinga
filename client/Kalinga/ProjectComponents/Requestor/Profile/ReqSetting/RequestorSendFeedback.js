@@ -16,13 +16,14 @@ import { useNavigation } from '@react-navigation/native';
 import axios from "axios";
 import { BASED_URL } from "../../../../MyConstants";
 import { globalStyles } from "../../../../styles_kit/globalStyles";
+import { LoadingSpinner } from "../../../uploader/LoadingSpinner";
 
 export default function SendFeedback({route}) {
 
   const { userInformation, token, userName } = route.params
 
   const [currentStar, setCurrentStar] = useState(0);
-
+  const [loading, setLoading]= useState(false);
   const handleStarPress = (selectedStar) => {
     setCurrentStar(selectedStar);
   };
@@ -86,6 +87,7 @@ export default function SendFeedback({route}) {
   
   const submit = async () => {
     try {
+      setLoading(true)
       const id = userInformation.Requestor_ID
       const response = await axios.post(`${BASED_URL}/kalinga/createFeedback/${id}`,
       { 
@@ -113,6 +115,7 @@ export default function SendFeedback({route}) {
         "There was an issue submitting your bug report. Please try again later."
       );
     } finally {
+      setLoading(false)
       if(currentStar < 3){
         navigate.replace("RequestorSendFeedbackFailed", {userInformation: userInformation, UserName: userName, token: token})
         return
