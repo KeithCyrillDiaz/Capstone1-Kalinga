@@ -177,15 +177,15 @@ export const uploadDpInFirebase = async ({
           setPath(filePath)
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
           setLink(downloadURL)
-          await uploadImageDataInDatabase({
+          const result = await uploadImageDataInDatabase({
             id: id,
             link: downloadURL,
             path: filePath,
             userType: userType,
             token: token,
-            setHook: setResponse
+            setHook: setResponse,
           });
-          resolve(); // Resolve the promise when upload and database update are complete
+          resolve(result); // Resolve the promise when upload and database update are complete
         } catch (error) {
           console.error('Error getting download URL: ', error);
           reject(error);
@@ -200,23 +200,28 @@ export const uploadDpInFirebase = async ({
 
 
 export const uploadImageDataInDatabase = async ({id, link, path, userType, token, setHook}) => {
-  try{
-      const response = await axios.patch(`${BASED_URL}/kalinga/updateProfilePicture/${id}`,
-        {
-          userType,
-          link,
-          path
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+  try {
+    const response = await axios.patch(`${BASED_URL}/kalinga/updateProfilePicture/${id}`,
+      {
+        userType,
+        link,
+        path
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-      )
+      }
+    );
 
-      setHook(response.data.messages.message)
-      console.log(response.data.messages.message)
-  } catch {
-    console.log("Error Uploading Image Data in Database", error)
+    setHook(response.data.messages.message);
+    if(response.data.messages.code === 0 ){
+      return response.data.result; // Return the result
+    } else {
+      return {};
+    }
+  } catch (error) {
+    console.log("Error Uploading Image Data in Database", error);
+    return {};
   }
 }

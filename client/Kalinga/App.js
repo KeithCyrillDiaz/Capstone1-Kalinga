@@ -1,7 +1,8 @@
 
 import React, {useState, useEffect} from 'react';
 import * as Font from 'expo-font';
-import { NavigationContainer, StackActions } from '@react-navigation/native';
+import { Linking } from 'react-native';
+import { NavigationContainer, StackActions, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 
@@ -89,6 +90,7 @@ import DonorHelpAndSupportMessage from './ProjectComponents/Donor/Profile/DonorS
 import AppointmentConfirmationMessage from './ProjectComponents/Donor/Home/MakeDonation/AppointmentConfirmationMessage.js';
 import ValidUserExplore from './ProjectComponents/Donor/Dashboard/ValidUserExporeFInal/ValidUserExplore.js'
 import AppointmentUploads from './ProjectComponents/Donor/Home/MakeDonation/AppointmentUploads.js'
+import VerifyNewEmail from './ProjectComponents/Authorization/VerifyNewEmail.js'
 
 
 {/* Requestor */}
@@ -183,8 +185,13 @@ const getFonts = async () => {
 
 export default function App() {
   const [fontsLoaded,  setFontsLoaded] = useState(false);
-
- 
+  Linking.getInitialURL().then(url => {
+    if (url && url.startsWith('Kalinga://')) {
+      // Handle deep link here
+      // Navigate to the appropriate screen or perform the required action
+      return
+    }
+  });
 
 
   useEffect(() => {
@@ -347,6 +354,10 @@ export default function App() {
              <Stack.Screen name="PendingTabRequest" component={PendingTabRequest} />
              <Stack.Screen name="RequestTab" component={RequestTab} />
              <Stack.Screen name="MakeRequestUploadMedicalAbstract" component={MakeRequestUploadMedicalAbstract} />
+
+
+            {/* Requestor And Donor */}
+            <Stack.Screen name="VerifyNewEmail" component={VerifyNewEmail} />
 
             </Stack.Navigator>
         </NavigationContainer>

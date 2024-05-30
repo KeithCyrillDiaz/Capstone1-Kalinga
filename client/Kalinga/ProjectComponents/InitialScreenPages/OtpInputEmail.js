@@ -43,12 +43,13 @@ const styles = StyleSheet.create({
     input: {
       width: 40,
       height: 45,
-      borderWidth: 1,
       borderColor: '#E60965',
       backgroundColor: 'white', // Set text color to white
       textAlign: 'center',
       margin: 5,
       borderRadius: 5,
+      elevation: 7,
+      color: '#E60965',
     },
   });
 

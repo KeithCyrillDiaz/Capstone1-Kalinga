@@ -11,7 +11,6 @@ import { getRequestByID } from '../controllers/Admin/Appointment/getMakeRequest'
 import { getRequestByUserType } from '../controllers/Admin/Appointment/getRequestByUserType';
 import { logInUser, logOutUser, checkIfBlock } from '../controllers/LogInUser';
 import { isApproved } from '../controllers/isApproved';
-import { updateUserDetails } from '../controllers/updateUser';
 import { updateDonationStatus } from '../controllers/Admin/Appointment/updateAppointmentStatus';
 import { updateRequestStatus }  from '../controllers/Admin/Appointment/updateRequestStatus';
 import { getPendingRequests } from '../controllers/Requestor/getPendingRequest';
@@ -87,7 +86,6 @@ export default (router: express.Router) => {
     router.post('/kalinga/superAdminLogin', superAdminLogIn)
     router.post('/kalinga/adminLogin', AdminLogIn)
     router.get('/kalinga/isApproved/:Applicant_ID', isApproved)
-    router.post('/kalinga/updateUserInformation', updateUserDetails)
 
    //donor
    router.post('/kalinga/createAppointment', createAppointment);

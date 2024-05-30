@@ -332,10 +332,10 @@ const checkAgeValidity = () => {
   const motherAge = parseInt(Age)
   const infantAge = parseInt(childAge)
   if(motherAge < 13) {
-    Alert.alert("Invalid Mother Age"," Please input your proper birthday")
+    if(isAgeValid)Alert.alert("Invalid Mother Age"," Please input your proper birthday")
     setIsAgeValid(false)
     return false
-  }
+  } else  setIsAgeValid(true)
 
   if(childAge.includes("days") || childAge.includes("months")){
     setIsChildAgeValid(true)

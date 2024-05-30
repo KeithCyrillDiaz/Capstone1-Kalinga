@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
         flexGrow: 1,
     },
     SecondContainer: {
-        backgroundColor: '#FFF8EB',
+        backgroundColor: '#f5f5f5',
         justifyContent: 'center',
         alignItems: 'center',
         paddingVertical: 30,
@@ -150,7 +150,8 @@ const styles = StyleSheet.create({
         marginTop:90,
         borderTopLeftRadius: 40,
         borderTopRightRadius: 40,
-        paddingBottom: 250
+        paddingBottom: 250,
+        elevation: 7
     },
     FirstText: {
         marginHorizontal: 50,
@@ -181,7 +182,6 @@ const styles = StyleSheet.create({
         width: '80%',
         height: 45,
         borderRadius: 10,
-        borderWidth: 1,
         borderColor: '#F94892',
         paddingHorizontal: 10,
         paddingVertical: 10,
@@ -201,8 +201,8 @@ const styles = StyleSheet.create({
     },
     SubmitButton: {
         backgroundColor: "#F94892",
-        paddingHorizontal: 50,
-        paddingVertical: 10,
+        paddingHorizontal: 30,
+        paddingVertical: 7,
         borderRadius: 50,
         marginBottom: 10,
         top: 40
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     },
     SubmitButtonText: {
         color: "white",
-        fontSize: 20,
+        fontSize: 15,
         fontFamily: "Open-Sans-Bold"
     },
 });

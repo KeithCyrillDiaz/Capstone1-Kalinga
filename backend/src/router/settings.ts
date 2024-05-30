@@ -13,8 +13,9 @@ import { changePassword } from '../controllers/clientSettings/changePassword'
 import { fetchFeedBackByUserType, generateFeedback } from '../controllers/clientSettings/sendFeedback'
 import { checkPassword } from '../middleware/checkPassword'
 import { generateHelpAndSupportReport } from '../controllers/clientSettings/helpAndSupport'
-import { updateProfileImagelink } from '../controllers/clientSettings/changeProfileImage'
+import { updateProfileImagelink, checkCredentials } from '../controllers/clientSettings/changeProfileImage'
 import { getFeedbackByFeedbackID } from '../controllers/clientSettings/getFeedback'
+import { updateUserDetails } from '../controllers/updateUser';
 
 export default (router: express.Router) => {
     
@@ -38,4 +39,6 @@ export default (router: express.Router) => {
 
     //Edit Personal Details
     router.patch('/kalinga/updateProfilePicture/:id', tokenVerification, updateProfileImagelink)
+    router.post('/kalinga/updateUserInformation', tokenVerification, updateUserDetails)
+    router.post('/kalinga/getAccess/:id', tokenVerification, checkCredentials)
 }

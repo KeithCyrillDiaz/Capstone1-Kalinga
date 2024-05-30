@@ -207,20 +207,6 @@ useFocusEffect(
               </View>
 
               <View style = {styles.boxRowContainer}>
-                <TouchableOpacity style = {styles.box} onPress={() => navigatePage("Chat Assistance")}>
-                    <FontAwesome5 name="robot" size={70} color="#E60965"/>
-                    <Text style = {styles.boxTitle}>Instant Messaging</Text>
-                    <Text style = {styles.subLabel}>Chat with our chatbot for quick respond to FAQs </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style = {styles.box} onPress={() => navigatePage("DonorForum", userInformation)}>
-                    <MaterialIcons name="forum" size={70} color="#E60965" />
-                    <Text style = {styles.boxTitle}>Forum</Text>
-                    <Text style = {styles.ShortLabel}>Engage with user discussions</Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style = {styles.boxRowContainer}>
               <TouchableOpacity style={styles.box} onPress={handleMakeDonation}>
                     <Ionicons name="calendar" size={70} color="#E60965" />
                     <Text style = {styles.boxTitle}>Make a Donation</Text>
@@ -232,6 +218,21 @@ useFocusEffect(
                     <Text style = {styles.boxTitle}>My Donations</Text>
                     <Text style = {styles.subLabel}>View Milk Donation History</Text>
                 </TouchableOpacity>
+              </View>
+
+              
+              <View style = {styles.boxRowContainer}>
+                <TouchableOpacity style = {styles.box} onPress={() => navigatePage("Chat Assistance")}>
+                    <FontAwesome5 name="robot" size={70} color="#E60965"/>
+                    <Text style = {styles.boxTitle}>Instant Messaging</Text>
+                    <Text style = {styles.subLabel}>Chat with our chatbot for quick respond to FAQs </Text>
+                </TouchableOpacity>
+{/* 
+                <TouchableOpacity style = {styles.box} onPress={() => navigatePage("DonorForum", userInformation)}>
+                    <MaterialIcons name="forum" size={70} color="#E60965" />
+                    <Text style = {styles.boxTitle}>Forum</Text>
+                    <Text style = {styles.ShortLabel}>Engage with user discussions</Text>
+                </TouchableOpacity> */}
               </View>
        
         </ScrollView>

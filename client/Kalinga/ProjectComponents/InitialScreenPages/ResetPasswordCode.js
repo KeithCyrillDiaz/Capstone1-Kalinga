@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
         flexGrow: 1,
     },
     SecondContainer: {
-        backgroundColor: '#FFF8EB',
+        backgroundColor: '#f5f5f5',
         justifyContent: 'start',
         alignItems: 'center',
         height: '100%',
@@ -167,15 +167,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     SendButton: {
-        backgroundColor: "#E60965",
-        paddingHorizontal: 50,
-        paddingVertical: 10,
+        backgroundColor: "#F94892",
+        paddingHorizontal: 30,
+        paddingVertical: 7,
         borderRadius: 50,
-        marginBottom: 20,
-        top: 100
+        marginBottom: 10,
+        top: 40
+
     },
     SendButtonText: {
         color: "white",
-        fontSize: 20,
+        fontSize: 15,
+        fontFamily: "Open-Sans-Bold"
     },
 });
