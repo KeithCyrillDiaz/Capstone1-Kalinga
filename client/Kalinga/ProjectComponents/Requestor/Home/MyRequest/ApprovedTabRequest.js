@@ -26,7 +26,7 @@ const ApprovedTabRequest = ({route}) => {
 
     const navigation = useNavigation();
     const [formData, setFormData] = useState({});
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(false)
 
     useFocusEffect(
@@ -36,16 +36,15 @@ const ApprovedTabRequest = ({route}) => {
 	);
     const fetchData = async () => {
         try {
+			setLoading(true)
             const response = await axios.get(`${BASED_URL}/kalinga/getApprovedRequests/${Requestor_ID}`);
             const responseData = response.data;
 			if(responseData.messages.success === false){
 				console.log("No Approved Request")
-				Alert.alert("No Approved Request", "You currently don't have any approved requests.");
 				setLoading(false); 
 				return
 			}
             const formDataFromResponse = responseData.RequestData;
-			console.log("formDataFromResponse: ", formDataFromResponse)
     
             setFormData(formDataFromResponse);
 			setError(false)
@@ -100,7 +99,31 @@ const ApprovedTabRequest = ({route}) => {
 					overScrollMode='never'
 					nestedScrollEnabled={true} 
 					showsVerticalScrollIndicator={false}
+					style={{
+						flex: 1,
+						paddingBottom: "7%",
+					}}
 				>
+					{Object.keys(formData).length === 0 && (
+						<View style ={{
+							backgroundColor: "white",
+							width: "90%",
+							alignItems: "center",
+							justifyContent: "center",
+							paddingHorizontal:7,
+							paddingVertical:17,
+							elevation:7,
+							borderRadius: 17,
+							marginTop: "7%",
+							alignSelf: "center",
+							marginVertical: "7%"
+						}}>
+						<Text style={{
+						fontFamily: "Open-Sans-SemiBold",
+						color:  '#E60965',
+						}}>No approved request at the moment.</Text>
+						</View>
+					)}
 					{Object.keys(formData).length !== 0 && (
 						<>
 							<View style ={styles.boxContainer}>

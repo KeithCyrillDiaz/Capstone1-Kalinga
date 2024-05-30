@@ -20,6 +20,8 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 const LogIn = () => {
+
+    const [registered, setRegistered] = useState(false)
     const checkToken = async () =>{
         const token = await AsyncStorage.getItem('token')
         if (token) {
@@ -28,8 +30,14 @@ const LogIn = () => {
         console.log("No existing Token")
     }
 
+    const checkIfRegistered = async() => {
+        const registered = await AsyncStorage.getItem('registered')
+        if(registered) setRegistered(true)
+         else setRegistered(false)
+    }
     useEffect(()=>{
         checkToken();
+        checkIfRegistered()
     },[])
 
    
@@ -88,6 +96,7 @@ const LogIn = () => {
                 console.log("User is a " + result.data.userInformation.userType);
                 const registeredUserType = result.data.userInformation.userType
                 await AsyncStorage.setItem('userType', registeredUserType)
+                await AsyncStorage.setItem('registered', 'true')
                 let Applicant_ID = ""
                 if(registeredUserType === "Donor"){
                     Applicant_ID = await AsyncStorage.getItem('DonorApplicant_ID')
@@ -140,6 +149,8 @@ const LogIn = () => {
         return
     };
 
+
+
     const navigatePage = (Page) =>{
         navigation.replace(Page)
     }
@@ -169,7 +180,7 @@ const LogIn = () => {
                         style={styles.image}
                     />
                     <Text style={styles.Title}>KALINGA</Text>
-                    <Text style={styles.SubTitle}>Welcome Back!</Text>
+                    <Text style={styles.SubTitle}>{registered ? 'Welcome Back!' : 'Welcome!'}</Text>
                     <Text style={styles.LogInText}>Log In to your account</Text>
                 </View>
 
@@ -191,7 +202,7 @@ const LogIn = () => {
                             secureTextEntry={!showPassword} // Show password if showPassword is true
                         />
                         <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.togglePassword}>
-                            <MaterialCommunityIcons name={showPassword ? 'eye-off' : 'eye'} size={24} color="#E60965" />
+                            <MaterialCommunityIcons name={showPassword ? 'eye' : 'eye-off'} size={24} color="#E60965" />
                         </TouchableOpacity>
                      </View>
                 </View>

@@ -11,6 +11,9 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios';
 import { BASED_URL } from '../../../MyConstants.js';
+import { checkOngoingAppointments, deleteAllCheckListItems } from '../../functions/checkAppointment.js';
+import { getDateTime } from '../../functions/formatDateAndTime.js';
+import { ReminderModal } from '../../modal/ReminderModal.js';
 
 
 const DonorHome = ({route}) => {
@@ -19,6 +22,8 @@ const DonorHome = ({route}) => {
     // console.log("route.params.userInformation: ", route.params.userInformation.fullName)
     const [userInformation, setUserInformation] = useState(route.params.userInformation)
     const [donationStatus, setDonationStatus] = useState('empty'); // State to hold request status
+    const [openReminder, setOpenReminder] = useState(false)
+    const [onReminder, setOnReminder] = useState(false)
     const storeInAsync = async () => {
       await AsyncStorage.setItem('userInformation', JSON.stringify(userInformation))
       await AsyncStorage.setItem('token', token)
@@ -164,11 +169,42 @@ const handleMakeDonation = () => {
     }
 };
 
+const appointmentReminder = async () => {
+    const result = await checkOngoingAppointments({id: userInformation.Donor_ID, token: token, navigation: navigation})
+    if(!result) {
+      console.log("No ongoing Appointment")
+      await deleteAllCheckListItems()
+      setOnReminder(false)
+      return
+    }
+    const {time, date} = getDateTime({data:result})
+    console.log("time: ",time)
+    console.log("date: ",date)
+    const currentDate = new Date();
+    const currentDateString = currentDate.toISOString().split('T')[0];
+    const currentHours = currentDate.getUTCHours() + 8;
+    const formatTime = currentHours % 12 || 12 
+
+    console.log("formatTime: ", formatTime)
+    if (date !== currentDateString) {
+      console.log(currentDateString)
+      console.log("The appointment date is today!");
+      if(!onReminder)Alert.alert("Appointment Reminder", "Your appointment is scheduled for today. Please make sure to attend on time.")
+        setOnReminder(true)
+      // Perform any additional actions if the appointment is today
+    } else {
+      console.log("The appointment date is not today.");
+      await deleteAllCheckListItems()
+      setOnReminder(false)
+    }
+}
+
 useFocusEffect(
   React.useCallback(() => {
     fetchUpdateduserInfo()
     storeInAsync()
     simulateFetchDonationStatus();
+    appointmentReminder()
   }, [])
 );
 
@@ -184,7 +220,7 @@ useFocusEffect(
         overScrollMode='never' // Disable the over-scroll effect or the Jelly effect when reaching the end of the scroll
         nestedScrollEnabled={true} // Enable nested scrolling
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: 20}}
+        contentContainerStyle={{paddingBottom: 20, paddingHorizontal: 20}}
         >
               <View style = {styles.flex_start}>
                 <Text style = {styles.title}>Donor's Dashboard</Text>
@@ -207,13 +243,23 @@ useFocusEffect(
               </View>
 
               <View style = {styles.boxRowContainer}>
-              <TouchableOpacity style={styles.box} onPress={handleMakeDonation}>
+              <TouchableOpacity style={[styles.box, {position: "relative"}]} onPress={handleMakeDonation}>
                     <Ionicons name="calendar" size={70} color="#E60965" />
                     <Text style = {styles.boxTitle}>Make a Donation</Text>
                     <Text style = {styles.subLabel}>Ready to donate? Set an appointment</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style = {styles.box} onPress={() => navigatePage("MyDonationTabs")}>
+                <TouchableOpacity style = {[styles.box, {position: "relative"}]} onPress={() => navigatePage("MyDonationTabs")}>
+                {onReminder && (
+                   <TouchableOpacity 
+                   onPress={() => setOpenReminder(true)}
+                   style={{ position: "absolute", right: -12, top: -12,  transform: [{ rotate: '37deg' }]}}>
+                       <Ionicons 
+                         name="alarm-outline" 
+                         size={37} 
+                         color="#E60965" />
+                   </TouchableOpacity>
+                )}
                   <SimpleLineIcons name="graph" size={70} color="#E60965"s />
                     <Text style = {styles.boxTitle}>My Donations</Text>
                     <Text style = {styles.subLabel}>View Milk Donation History</Text>
@@ -234,7 +280,11 @@ useFocusEffect(
                     <Text style = {styles.ShortLabel}>Engage with user discussions</Text>
                 </TouchableOpacity> */}
               </View>
-       
+              {openReminder && (
+                 <ReminderModal 
+                 onClose={() => setOpenReminder(false)}/>
+              )}
+             
         </ScrollView>
       </View>
         

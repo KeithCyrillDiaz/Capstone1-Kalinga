@@ -133,7 +133,12 @@ export default function RequestorProfile({route}) {
 
   useEffect(()=> {
     checkForm()
-  },[formData.milkAmount])
+  },[
+    formData.ReasonForRequesting,
+    formData.city,
+    formData.milkBank,
+    formData.milkAmount
+  ])
 
   const handleInputChange = (field, value) => {
    if (field === 'city') {
@@ -237,12 +242,13 @@ if(!isLoading){
                   editable={false}
               />
               <TextInput
-                  style={styles.form1}
+                  style={[styles.form1, {fontFamily:"Open-Sans-SemiBold"}]}
                   value={formData.phoneNumber}
                   placeholder="Phone Number *"
                   placeholderTextColor="#E60965"
                   maxLength={11}
                   onChangeText={(text) => handleInputChange('phoneNumber', text)}
+                  editable={false}
                   
               />
               <TextInput

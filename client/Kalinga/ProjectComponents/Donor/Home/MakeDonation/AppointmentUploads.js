@@ -178,7 +178,7 @@ const handleFileUpload = async (attachmentType) => {
       <View style={globalStyles.container}>
          <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style = {globalHeader.SmallHeader}>
-              <Text style = {globalHeader.SmallHeaderTitle}>Apply as Donor</Text>
+              <Text style = {globalHeader.SmallHeaderTitle}>Set Appointment</Text>
             </View>
         <ScrollView 
         showsVerticalScrollIndicator = {false}

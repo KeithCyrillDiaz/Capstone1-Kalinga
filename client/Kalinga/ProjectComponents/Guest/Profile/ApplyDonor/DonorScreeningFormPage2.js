@@ -21,11 +21,10 @@ const DonorScreeningFormPage2 = ({route}) => {
 
   const [formData, setFormData] = useState(screeningFormData);
   const [isFormFilled, setIsFormFilled] = useState(false)
-  const [selectedOption, setSelectedOption] = useState(null);
   const navigation = useNavigation();
-
+  const [selectedOption, setSelectedOption] = useState(null);
   const navigatePage = (Page, data) => {
-    checkForm("Screening Form")
+    checkForm()
     if(!isFormFilled) {
       Alert.alert("Invalid Form", "Please complete the form first")
       return
@@ -33,34 +32,17 @@ const DonorScreeningFormPage2 = ({route}) => {
     navigation.navigate(Page, data);
   };
 
-  useEffect(() => {
-    checkForm("Screening Form")
-  },[formData.Q2])
+
 
   const handleOptionSelect = (option) => {
-      setSelectedOption(option);
+    setSelectedOption(option)
+     setFormData({
+      ...formData,
+      typeOfDonor: option // Update typeOfDonor field
+     })
       
   };
 
-  const checkForm = (value) => {
-    let keysToCheck = [
-      'typeOfDonor',
-      'QA',
-      'QB',
-      'Q1',
-      'Q2',
-      ];
-  
-      const isFormDataValid = keysToCheck.every(key => formData[key].trim() !== '');
-  
-      if (isFormDataValid) {
-          console.log('All values until medical condition are valid');
-          setIsFormFilled(true)
-      } else {
-          console.log('Some values until medical condition are empty');
-          setIsFormFilled(false)
-      }
-  }
 
   const [medicalAnsweredQuestions, setMedicalAnsweredQuestions] = useState([]);
 
@@ -70,14 +52,12 @@ const DonorScreeningFormPage2 = ({route}) => {
           setFormData(prevData => ({
             ...prevData,
             [`Q${questionId}`]: answer,
-            typeOfDonor: selectedOption // Update typeOfDonor field
           }));
   };
 
   const handleChangeText = (name, value) => {
     setFormData(prevData => ({...prevData, 
     [`Q${name}`]: value
-    
     }))
     // setScreeningFormData({ ...screeningFormData, [name]: value });
 };
@@ -87,7 +67,7 @@ const DonorScreeningFormPage2 = ({route}) => {
         const isChecked = medicalAnsweredQuestions.find(item => item.id === questionId)?.answer;
 
     return (
-        <View style={styles.rowAlignment} key={questionId}>
+        <View style={[styles.rowAlignment, {marginVertical: 7}]} key={questionId}>
             <TouchableOpacity onPress={() => pressOption(questionId, 'Yes')}>
                 <View style={[styles.circle, isChecked === 'Yes' && styles.checkedCircle]}>
                     {isChecked === 'Yes' && <AntDesign name="checkcircle" size={18} color="#E60965" />}
@@ -107,9 +87,37 @@ const DonorScreeningFormPage2 = ({route}) => {
     );
   };
 
+  const checkForm = () => {
+    let keysToCheck = [
+      'QA',
+      'QB',
+      'Q1',
+      'Q2',
+      ];
 
+ 
+      const isFormDataValid = keysToCheck.every(key => formData[key].trim() !== '');
+  
+      if (isFormDataValid) {
+          if(!isFormFilled)console.log('All values until medical condition are valid');
+          setIsFormFilled(true)
+      } else {
+        if(isFormFilled)console.log('Some values until medical condition are empty');
+          setIsFormFilled(false)
+      }
+  }
+
+
+  useEffect(() => {
+    checkForm()
+  },[
+    formData.QA,
+    formData.QB,
+    formData.Q1,
+    formData.Q2,
+  ])
     return (
-      <View style={globalStyles.container}>
+      <View style={globalStyles.defaultBackgroundColor}>
          <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style = {globalHeader.SmallHeader}>
               <Text style = {globalHeader.SmallHeaderTitle}>Apply As Donor</Text>
@@ -128,10 +136,7 @@ const DonorScreeningFormPage2 = ({route}) => {
                     <View style={styles.rectangle}></View>
                     <View style={styles.rectangle}></View>
                 </View>
-
-               <Text style = {styles.note}> Note: Select your answer by ticking the circle</Text>
-
-               <View style = {styles.box1}>
+               {/* <View style = {styles.box1}>
                      <Text style = {styles.userType}>Type of Donor</Text>
 
                      <View style={styles.rowAlignment}>
@@ -166,45 +171,37 @@ const DonorScreeningFormPage2 = ({route}) => {
                     </View>
 
 
-               </View>
+               </View> */}
 
              
                     
 
                 <View style = {styles.box2}>
-                    
-                      <View>
-                        <Text style = {styles.boxQuestion}>
-                            Bakit mo gusto magbigay ng iyong gatas/breastmilk?
-                        </Text>
-                      </View>
+                  <Text style = {styles.boxQuestion}>
+                      Bakit mo gusto magbigay ng iyong gatas/breastmilk?
+                  </Text>
 
-                        <TextInput
-                                  style={styles.BiginputField}
-                                  multiline={true}
-                                  textAlignVertical="top" // Align text to the top vertically
-                                  onChangeText={(value) => handleChangeText('A', value)}
-                              /> 
-                        
+                  <TextInput
+                            style={styles.BiginputField}
+                            multiline={true}
+                            textAlignVertical="top" // Align text to the top vertically
+                            onChangeText={(value) => handleChangeText('A', value)}
+                        /> 
                 </View>
 
                 <View style = {styles.box2}>
-                    
-                      <View>
-                        <Text style = {styles.boxQuestion}>
-                          Paano mo nalaman ang tungkol sa BreastMilk Bank ng Quezon City General Hospital?
-                        </Text>
-                      </View>
-
-                        <TextInput
-                                  style={styles.BiginputField}
-                                  multiline={true}
-                                  textAlignVertical="top"  // Align text to the top vertically
-                                  onChangeText={(value) => handleChangeText('B', value)}
-                              /> 
-                        
+                  <Text style = {styles.boxQuestion}>
+                    Paano mo nalaman ang tungkol sa BreastMilk Bank ng Quezon City General Hospital?
+                  </Text>
+                  <TextInput
+                      style={styles.BiginputField}
+                      multiline={true}
+                      textAlignVertical="top"  // Align text to the top vertically
+                      onChangeText={(value) => handleChangeText('B', value)}
+                  />       
                 </View>
                   
+               <Text style = {styles.note}> Note: Select your answer by ticking the circle</Text>
                 <View style = {styles.form}>
                   <View style = {styles.row}>
                       <Text style = {styles.choices}>Yes</Text>
@@ -255,12 +252,12 @@ const DonorScreeningFormPage2 = ({route}) => {
     },
 
     BiginputField: {
-      width: "100%",
       // marginVertical: 30,
-      //backgroundColor: "gray"
-      paddingHorizontal: 20,
+      marginHorizontal: 10,
       color: '#E60965',
-      fontFamily: "Open-Sans-SemiBold"
+      fontFamily: "Open-Sans-SemiBold",
+      maxHeight: 80
+
   },
 
     title: {
@@ -304,7 +301,8 @@ const DonorScreeningFormPage2 = ({route}) => {
         marginTop: "10%",
         //backgroundColor: "red",
         height: 10,
-        justifyContent: "center"
+        justifyContent: "center",
+        marginBottom:40
     },
 
     rectangle: {
@@ -335,14 +333,47 @@ const DonorScreeningFormPage2 = ({route}) => {
       borderRadius: 20,
       borderColor: "#E60965",
     },
+    box: {
+      borderColor: '#E60965',
+      elevation: 7,
+    },
+
+    box1: {
+      borderColor: '#E60965',
+      height: 100,
+      justifyContent: "center",
+      borderRadius: 10,
+      marginTop: 10,
+      marginBottom: 20,
+      backgroundColor: "#FFFFFF",
+      elevation: 7,
+      width: "90%",
+      alignSelf: "center"
+    },
+
+    box2: {
+      alignSelf: "flex-start",
+      justifyContent: "flex-start",
+      borderColor: '#E60965',
+      borderRadius: 10,
+      marginBottom: 20,
+      // marginHorizontal: 10
+      width: "90%",
+      paddingVertical: 10,
+      height: 150,
+      backgroundColor: "#FFFFFF",
+      elevation: 7,
+      paddingHorizontal: 10,
+      alignSelf: "center"
+    },
 
       boxQuestion : {
         color: "#E60965",
-        //backgroundColor: "gray",
-        width: 330,
-        marginLeft: 20,
-        marginBottom: 20,
-        fontFamily: "Open-Sans-SemiBold"
+        marginBottom: 10,
+        width: "95%",
+        marginLeft: 7,
+        fontFamily: "Open-Sans-SemiBold",
+        textAlign: "justify"
       },
   
       question: {
@@ -351,7 +382,8 @@ const DonorScreeningFormPage2 = ({route}) => {
         //backgroundColor: "gray",
         width: 230,
         marginLeft: 20,
-        fontFamily: "Open-Sans-SemiBold"
+        fontFamily: "Open-Sans-SemiBold",
+        textAlign: "justify"
       },
   
 
@@ -393,44 +425,6 @@ const DonorScreeningFormPage2 = ({route}) => {
         marginTop: 40,
         fontSize: 13
       },
-
-      box: {
-        borderColor: '#E60965',
-        elevation: 7
-      },
-
-      box1: {
-        borderColor: '#E60965',
-        height: 100,
-        justifyContent: "center",
-        borderRadius: 10,
-        marginTop: 10,
-        marginBottom: 20,
-        backgroundColor: "#FFFFFF",
-        elevation: 7
-      },
-
-      box2: {
-        //backgroundColor: "red",
-        alignSelf: "flex-start",
-        justifyContent: "flex-start",
-        borderColor: '#E60965',
-        borderRadius: 10,
-        marginBottom: 20,
-        // marginHorizontal: 10
-        width: "100%",
-        paddingVertical: 10,
-        height: 150,
-        backgroundColor: "#FFFFFF",
-        elevation: 7
-      },
-
-      box3: {
-        borderColor: '#E60965',
-        elevation: 7
-        
-      },
-
       text1: {
         marginBottom: 10,
         marginHorizontal: 10,
@@ -462,7 +456,9 @@ const DonorScreeningFormPage2 = ({route}) => {
         paddingVertical: 10,
         backgroundColor: "#FFFFFF",
         elevation: 7,
-        fontFamily: "Open-Sans-SemiBold"
+        fontFamily: "Open-Sans-SemiBold",
+        width: "90%",
+        alignSelf: "center"
       }
    
 

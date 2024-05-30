@@ -44,15 +44,8 @@ const DonorScreeningForm = () => {
     email: '',
     contactNumber: '',
     homeAddress: '',
-    childName: '',
-    childAge: '',
-    sex: '',
-    childBirthDate: '',
-    birthWeight: '',
-    typeOfDonor: '',
     QA: '',
     QB: '',
-    QB_Reason: '',
     Q1: '',
     Q2: '',
     MH1: '',
@@ -72,6 +65,7 @@ const DonorScreeningForm = () => {
     MH13: '',
     MH14: '',
     MH14_Reason: '',
+    MH15: '',
     SH1: '',
     SH2: '',
 
@@ -87,6 +81,7 @@ const [isFormFilled, setIsFormFilled] = useState(false)
 const [isEmailValid, setIsEmailValid]= useState(false)
 const [isAgeValid, setIsAgeValid] = useState(true)
 const [isChildAgeValid, setIsChildAgeValid] = useState(true)
+const [invalidContactNumber, setInvalidContactNumber] = useState(false)
 
  //Dropdowns
  const [openSexDropdown, setOpenSexDropdown] = useState(false)
@@ -137,11 +132,6 @@ const checkForm = (value) => {
     'email',
     'contactNumber',
     'homeAddress',
-    'childName',
-    'childAge',
-    'sex',
-    'childBirthDate',
-    'birthWeight',
     ];
 
     if(value === "Address") {
@@ -266,15 +256,34 @@ const formatCity = (city) => {
 
 
 const handleChangeText = (name, value) => {
-  console.log(name)
-  if (name === "contactNumber" && /[^a-zA-Z0-9]/.test(value))return;
-  
+
+  if(name === "birthWeight" && /[^0-9]/.test(value))return
+
+  if (name === "contactNumber" && /[^0-9]/.test(value)){
+    console.log("number: ", value)
+    setInvalidContactNumber(true)
+    return
+  } else if (name === "contactNumber" && value.length !== 11){
+    setInvalidContactNumber(true)
+  } else if(name === "contactNumber"){
+    setInvalidContactNumber(false)
+}
+  console.log("value:", value)
+  if (
+    name === "email" &&
+    value.includes("@") &&
+    (value.endsWith(".com") || value.endsWith(".ph")) &&
+    (value.match(/\.com/g) || []).length <= 1 && // Ensure there's at most one occurrence of ".com"
+    (value.match(/\.ph/g) || []).length <= 1 // Ensure there's at most one occurrence of ".ph"
+  ) {
+    console.log("Email: ", value);
+    setIsEmailValid(true);
+    checkEmail(value);
+  } else if (name === "email") {
+    setIsEmailValid(false);
+  }
   setScreeningFormData({ ...screeningFormData, [name]: value });
-    if(name === "email" && value.includes("@") && (value.endsWith("com") || value.endsWith("ph"))){
-      console.log("Email: ", value)
-      setIsEmailValid(true)
-      checkEmail(value)
-    }
+
     return
 };
 
@@ -491,7 +500,19 @@ useEffect(() => {
 useEffect(() => {
   //checkForm
   checkForm("Screening Form")
-}, [screeningFormData.childBirthDate])
+}, [
+  screeningFormData.childBirthDate,
+  screeningFormData.fullName,
+  screeningFormData.birthDate,
+  screeningFormData.email,
+  screeningFormData.contactNumber,
+  screeningFormData.barangay,
+  screeningFormData.Municipality,
+  screeningFormData.homeAddress,
+  screeningFormData.childName,
+  screeningFormData.birthWeight,
+  screeningFormData.sex,
+])
 
   return (
     
@@ -609,6 +630,15 @@ useEffect(() => {
                         onChangeText={(value) => handleChangeText('contactNumber', value)}
                         value={screeningFormData.contactNumber}
                     />
+
+                  {invalidContactNumber && (
+                      <Text 
+                      style = {{
+                        alignSelf: "flex-start",
+                        marginLeft: "10%",
+                        color: "red"}}>Please enter a valid 11-digit contact number</Text>
+                  )}
+                     
 
                       <View style = {styles.addressDropdown}>
                         <Dropdown
@@ -732,7 +762,7 @@ useEffect(() => {
                     
               </View>
 
-              <View style = {styles.flex_start}>
+              {/* <View style = {styles.flex_start}>
                 <Text style = {styles.subtitle}>Infant Information</Text>
               </View>
               <View style = {styles.container}>
@@ -748,7 +778,9 @@ useEffect(() => {
                         placeholder="Birth Weight (kg)"
                         placeholderTextColor="#E60965"
                         keyboardType="numeric"
+                        maxLength={2}
                         onChangeText={(value) => handleChangeText('birthWeight', value)}
+                        value={screeningFormData.birthWeight}
                     />
                      <View style ={styles.sexInputField}>
                       <Dropdown
@@ -825,7 +857,7 @@ useEffect(() => {
                                 alignSelf: "flex-end",
                                 marginRight: "20%",
                                 color: "red"}}>Please enter a valid Birthday</Text>
-                            )}
+                            )} */}
                     {/* <View 
                       style = {{
                         flex: 1,
@@ -882,16 +914,16 @@ useEffect(() => {
               
                     </View> */}
                     
-              </View>
+              {/* </View> */}
 
               <View style = {globalStyles.center}>
 
                     <TouchableOpacity 
                       style={[
                         styles.AgreebuttonContainer,
-                        {opacity: isEmailExisted || !isFormFilled || !isEmailValid ? 0.5 : 1}
+                        {opacity: isEmailExisted || !isFormFilled || !isEmailValid || invalidContactNumber ? 0.5 : 1}
                       ]}
-                      disabled = {isEmailExisted || screeningFormData.email === "" || !isEmailValid} 
+                      disabled = {isEmailExisted || screeningFormData.email === "" || !isEmailValid || invalidContactNumber} 
                       onPress={() => navigatePage("DonorScreeningForm2", { screeningFormData: screeningFormData })}
                     >
                       <Text style={styles.label}>Next</Text>

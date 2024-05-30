@@ -49,7 +49,7 @@ const DonorMedicalHistory = ({route}) => {
       )
       setIsFormFilled(false)
       return
-    }
+    } 
 
     if(formData.MH8 === "Yes" && formData.MH8_Reason === ""){
       Alert.alert(
@@ -60,7 +60,26 @@ const DonorMedicalHistory = ({route}) => {
       return
     }
 
-    checkForm("Screening Form")
+    if(formData.MH2 === "Yes" && formData.MH2_Reason.length < 10){
+      Alert.alert(
+        "Detailed Reason Required",
+        "Please provide a detailed reason for selecting 'Yes' to question 2. Your explanation should be at least 10 characters long."
+      )
+      setIsFormFilled(false)
+      return
+    } 
+
+    if(formData.MH8 === "Yes" && formData.MH8_Reason.length < 7){
+      Alert.alert(
+        "Detailed Reason Required",
+        "Please provide a detailed reason for selecting 'Yes' to question 8. Your explanation should be at least 7 characters long."
+      )
+      setIsFormFilled(false)
+      return
+    } 
+
+
+    checkForm()
     if(!isFormFilled) {
       Alert.alert("Invalid Form", "Please complete the form first")
       return
@@ -68,10 +87,7 @@ const DonorMedicalHistory = ({route}) => {
     navigation.navigate(Page, data);
   };
 
-  
-useEffect(() => {
-  checkForm()
-}, [formData.MH12])
+
 
 useEffect(() => {
   console.log("formData.MH2_Reason: ", formData.MH2_Reason)
@@ -83,13 +99,15 @@ useEffect(() => {
     })
   }
 
-  if(formData.MH8 === "No"){
+}, [formData.MH2_Reason, formData.MH2])
+useEffect(() => {
+if(formData.MH8 === "No"){
     setFormData({
       ...formData,
       MH8_Reason: ""
     })
   }
-}, [formData.MH2_Reason, formData.MH8_Reason, formData.MH2, formData.MH8])
+}, [formData.MH8_Reason, formData.MH8])
 
 // useEffect(() => {
 //   console.log("formData.MH8_Reason: ", formData.MH8_Reason)
@@ -102,33 +120,6 @@ useEffect(() => {
     }))
     // setScreeningFormData({ ...screeningFormData, [name]: value });
 };
-const checkForm = (value) => {
-  let keysToCheck = [
-    'MH1',
-    'MH2',
-    'MH3',
-    'MH4',
-    'MH5',
-    'MH6',
-    'MH7',
-    'MH8',
-    'MH9',
-    'MH10',
-    'MH11',
-    'MH12'
-    ];
-
-    const isFormDataValid = keysToCheck.every(key => formData[key].trim() !== '');
-
-    if (isFormDataValid) {
-        console.log('All values until medical condition are valid');
-        setIsFormFilled(true)
-    } else {
-        console.log('Some values until medical condition are empty');
-        setIsFormFilled(false)
-    }
-}
-
 
    
 
@@ -148,7 +139,7 @@ const checkForm = (value) => {
           const isChecked = medicalAnsweredQuestions.find(item => item.id === questionId)?.answer;
 
       return (
-          <View style={styles.rowAlignment} key={questionId}>
+          <View style={[styles.rowAlignment, {marginVertical: 7}]} key={questionId}>
               <TouchableOpacity onPress={() => pressOption(questionId, 'Yes', questionType)}>
                   <View style={[styles.circle, isChecked === 'Yes' && styles.checkedCircle]}>
                       {isChecked === 'Yes' && <AntDesign name="checkcircle" size={18} color="#E60965" />}
@@ -160,7 +151,8 @@ const checkForm = (value) => {
                   </View>
               </TouchableOpacity>
               <View style ={{
-              flexDirection: "column"
+              flexDirection: "column",
+              width: "100%"
             }}>
 
               <Text style={styles.question}>{questionText}</Text>
@@ -173,6 +165,7 @@ const checkForm = (value) => {
                   width: "80%",
                   maxWidth:210,
                   marginLeft: 20,
+                  maxHeight: 70,
                   color: "black",
                   paddingBottom: 2,
                   fontFamily: "Open-Sans-SemiBold"
@@ -190,18 +183,65 @@ const checkForm = (value) => {
       );
   };
 
+
+  const checkForm = () => {
+    let keysToCheck = [
+      'MH1',
+      'MH2',
+      'MH3',
+      'MH4',
+      'MH5',
+      'MH6',
+      'MH7',
+      'MH8',
+      'MH9',
+      'MH10',
+      'MH11',
+      'MH12'
+      ];
+  
+      const isFormDataValid = keysToCheck.every(key => formData[key].trim() !== '');
+  
+      if (isFormDataValid) {
+          if(!isFormDataValid)console.log('All values until medical condition are valid');
+          setIsFormFilled(true)
+      } else {
+        if(isFormDataValid)console.log('Some values until medical condition are empty');
+          setIsFormFilled(false)
+      }
+  }
+
+  
+  useEffect(() => {
+    checkForm()
+  }, [
+    formData.MH1,
+    formData.MH2,
+    formData.MH2_Reason,
+    formData.MH3,
+    formData.MH4,
+    formData.MH5,
+    formData.MH6,
+    formData.MH7,
+    formData.MH8,
+    formData.MH8_Reason,
+    formData.MH9,
+    formData.MH10,
+    formData.MH11,
+    formData.MH12
+  ])
+
+  useEffect(() => {
+    checkForm()
+  },[])
+
     return (
-      <View style={globalStyles.container}>
+      <View style={globalStyles.defaultBackgroundColor}>
          <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style = {globalHeader.SmallHeader}>
               <Text style = {globalHeader.SmallHeaderTitle}>Apply as Donor</Text>
             </View>
 
-        <ScrollView
-        overScrollMode='never' // Disable the over-scroll effect or the Jelly effect when reaching the end of the scroll
-        nestedScrollEnabled={true} // Enable nested scrolling
-        showsVerticalScrollIndicator={false}
-        >
             <View style={styles.rectanglesContainer}>
                 <View style={styles.rectangle}></View>
                 <View style={styles.rectangle}></View>
@@ -245,14 +285,14 @@ const checkForm = (value) => {
             </ScrollView>
                                   {/*MedicalHistory2.js*/}
                       <TouchableOpacity style = {[styles.button,
-                        {opacity: !isFormFilled ? 0.5 : 1}
+                        {opacity: !isFormFilled 
+                          || (formData.MH2 === "Yes" && formData.MH2_Reason === "") 
+                          || (formData.MH8 === "Yes" && formData.MH8_Reason === "") 
+                          ? 0.5 : 1}
                         ]}  
                       onPress={() => navigatePage("DonorMedicalHistory2", { screeningFormData: formData })}>
                             <Text style = {styles.buttonTitle}>Next</Text>
                       </TouchableOpacity>
-        </ScrollView>
-
-
       </View>
         
       )
@@ -316,17 +356,19 @@ const checkForm = (value) => {
       fontFamily: "Open-Sans-Light",
       marginTop: 20,
       marginBottom: 10,
+      marginLeft: 20,
       fontSize: 13
     },
     
     form: {
-
       borderRadius: 10,
       borderColor: '#E60965',
       height: 500,
       backgroundColor: "#FFFFFF",
       elevation: 7,
-      margin: 10
+      margin: 10,
+      width: "90%",
+      alignSelf: "center"
     },
 
     space: {
@@ -364,10 +406,10 @@ const checkForm = (value) => {
     question: {
       marginTop: 10,
       color: "#E60965",
-      //backgroundColor: "gray",
-      width: 220,
+      width:"60%",
       marginLeft: 20,
-      fontFamily: "Open-Sans-SemiBold"
+      fontFamily: "Open-Sans-SemiBold",
+      textAlign: "justify"
     }
 
    

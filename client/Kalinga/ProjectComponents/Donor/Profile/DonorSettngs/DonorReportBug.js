@@ -24,6 +24,8 @@ import { AntDesign } from '@expo/vector-icons';
 import { BASED_URL } from "../../../../MyConstants";
 import { Entypo } from '@expo/vector-icons';
 import { globalStyles } from "../../../../styles_kit/globalStyles";
+import { LoadingSpinner } from "../../../uploader/LoadingSpinner";
+
 
 export default function ReportBug({route}) {
 
@@ -36,6 +38,7 @@ export default function ReportBug({route}) {
   const [selectedImageUrl, setSelectedImageUrl] = useState('');
   const [scrollableHorizontal, setScrollableHorizontal] = useState(false)
   const [imageContainer, setImageContainer] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const [reportForm, setReportForm] = useState({
     title: "",
@@ -63,7 +66,7 @@ export default function ReportBug({route}) {
      const check = checkForm()
      if(!check) return
     try {
-      
+      setLoading(true)
       const attachmentType = `${reportForm.title}`
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
@@ -115,6 +118,8 @@ export default function ReportBug({route}) {
         
     } catch (error) {
         Alert.alert('Error', 'Failed to pick an image.');
+    } finally {
+      setLoading(false)
     }
 };
 
@@ -175,7 +180,7 @@ const submit = async () => {
       <ScrollView stickyHeaderIndices={[1]}>
         <StatusBar />
         <Header title="Report a Bug" />
-
+        <LoadingSpinner loading={loading}/>
         <Modal
                   animationType="slide"
                   transparent={true}

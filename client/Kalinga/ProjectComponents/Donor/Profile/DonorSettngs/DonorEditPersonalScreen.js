@@ -539,9 +539,9 @@ const saveDetails = async () => {
             <TouchableOpacity 
             disabled={!onEdit}
             onPress={() => setShowAddressPicker(true)}
-            style={[inputStyle.container, {height: 50}]}>
+            style={[inputStyle.container, {paddingVertical: 10}]}>
               <Text style={inputStyle.label}>Address:</Text>
-              <Text style={[inputStyle.primary, {minHeight:20}]}>{userData.homeAddress}</Text>
+              <Text style={[inputStyle.primary, {minHeight:20, width: "75%",}]}>{userData.homeAddress}</Text>
             </TouchableOpacity>
           </View>
           
