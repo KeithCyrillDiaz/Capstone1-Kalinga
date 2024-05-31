@@ -4,9 +4,9 @@ import { WebHost } from "../../MyConstantAdmin";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
-export default function DonatePerMonthBarangay({ name, selectedMonth, selectedYear, selectedBarangay }) {
-  const [totalCompleteDonations, setTotalCompleteDonations] = useState(0);
-  const [totalDeclinedDonations, setTotalDeclinedDonations] = useState(0);
+export default function RequestPerMonthBarangay({ name, selectedMonth, selectedYear, selectedBarangay }) {
+  const [totalCompleteRequests, setTotalCompleteRequests] = useState(0);
+  const [totalDeclinedRequests, setTotalDeclinedRequests] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -20,33 +20,31 @@ export default function DonatePerMonthBarangay({ name, selectedMonth, selectedYe
         : parseInt(selectedMonth);
 
       try {
-        const responseComplete = await axios.get(
-          `${WebHost}/kalinga/getTotalCompleteDonationPerBarangay`,
+        const response = await axios.get(
+          `${WebHost}/kalinga/getTotalCompleteRequestBarangay`,
           {
             params: {
               selectedMonth: monthValue,
               selectedYear: parseInt(selectedYear),
-              selectedBarangay: selectedBarangay,
+              selectedBarangay: selectedBarangay
             },
           }
         );
+        const completeData = response.data;
+        setTotalCompleteRequests(completeData.totalCompleteRequests);
 
-        const completeData = responseComplete.data.totalCompleteAppointments;
-        setTotalCompleteDonations(completeData);
-
-        const responseDecline = await axios.get(
-          `${WebHost}/kalinga/getTotalDeclineDonationPerBarangay`,
+        const Declineresponse = await axios.get(
+          `${WebHost}/kalinga/getTotalDeclineRequestBarangay`,
           {
             params: {
               selectedMonth: monthValue,
               selectedYear: parseInt(selectedYear),
-              selectedBarangay: selectedBarangay,
+              selectedBarangay: selectedBarangay
             },
           }
         );
-
-        const declineData = responseDecline.data.totalDeclineAppointments;
-        setTotalDeclinedDonations(declineData);
+        const declineData = Declineresponse.data;
+        setTotalDeclinedRequests(declineData.totalDeclineRequests);
       } catch (error) {
       } finally {
         setLoading(false);
@@ -83,13 +81,13 @@ export default function DonatePerMonthBarangay({ name, selectedMonth, selectedYe
         beta: 0,
       },
       height: 300,
-      width: 300,
+      width: 300
     },
     title: {
       text: name,
       style: {
-        color: "#ED5077",
-        fontSize: "16px",
+        color: "#ED5077", // Pink color for the title
+        fontSize: "20px", // Larger font size for the title
       },
     },
     credits: {
@@ -103,16 +101,19 @@ export default function DonatePerMonthBarangay({ name, selectedMonth, selectedYe
         innerSize: "50%",
       },
     },
+  
     series: [
       {
+        name: "Donations",
         data: [
-          { name: "Successful", y: totalCompleteDonations, color: "#ED5077" },
-          { name: "Unsuccessful", y: totalDeclinedDonations, color: "#007AFF" },
+          { name: "Successful", y: totalCompleteRequests, color: "#ED5077", dataLabels: { style: { fontSize: "20px" } } }, // Pink color for Successful
+          { name: "Unsuccessful", y: totalDeclinedRequests, color: "#007AFF", dataLabels: { style: { fontSize: "20px" } } }, // Blue color for Unsuccessful
         ],
         dataLabels: {
           style: {
-            fontSize: "16px",
+            fontSize: "16px", // Default font size for data labels
           },
+          // Increase font size when hovering
           allowOverlap: true,
           format: '<b>{point.name}</b>: {point.percentage:.1f}%',
           formatter: function () {
@@ -120,7 +121,6 @@ export default function DonatePerMonthBarangay({ name, selectedMonth, selectedYe
           },
           useHTML: true,
         },
-        innerSize: "50%",
       },
     ],
   };

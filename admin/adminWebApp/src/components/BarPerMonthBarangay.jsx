@@ -14,7 +14,7 @@ import {
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-export default function BarDonatePerMonth({ name, selectedYear }) {
+export default function BarPerMonthBarangay({ name, selectedYear, selectedBarangay }) {
   const [monthlyData, setMonthlyData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -25,12 +25,12 @@ export default function BarDonatePerMonth({ name, selectedYear }) {
 
       try {
         const responseComplete = await axios.get(
-          `${WebHost}/kalinga/getTotalCompleteDonationsAllMonths`,
-          { params: { year: selectedYear } }
+          `${WebHost}/kalinga/getTotalCompleteDonationsAllMonthsBarangay`,
+          { params: { selectedYear: selectedYear, selectedBarangay: selectedBarangay} }
         );
         const responseRequests = await axios.get(
-          `${WebHost}/kalinga/getTotalCompleteRequestAllMonths`,
-          { params: { year: selectedYear } }
+          `${WebHost}/kalinga/getTotalCompleteRequestAllMonthsBarangay`,
+          { params: { selectedYear: selectedYear, selectedBarangay: selectedBarangay } }
         );
         const mergedData = mergeData(
           responseComplete.data,
@@ -45,7 +45,7 @@ export default function BarDonatePerMonth({ name, selectedYear }) {
     };
 
     fetchData();
-  }, [selectedYear]);
+  }, [selectedYear, selectedBarangay]);
 
   const mergeData = (donationData, requestData) => {
     return donationData.map((donationItem) => ({
@@ -59,20 +59,20 @@ export default function BarDonatePerMonth({ name, selectedYear }) {
 
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
-    doc.setTextColor("#000000");
+    doc.setTextColor("#FF69B4");
     doc.setFontSize(20);
-    doc.setFont("helvetica", "bold")
     doc.text("KALINGA REPORT", 105, 15, { align: "center" });
-    doc.text(`Year: ${selectedYear}`, 105, 30, { align: "center" });
+  
+    doc.text(`Year: ${selectedYear} ${selectedBarangay}`, 105, 30, { align: "center" });
   
     doc.setTextColor("#000000");
     autoTable(doc, {
-      headStyles: { fillColor: "#ED5077" },
+      headStyles: { fillColor: [255, 105, 180] },
       head: [["Month", "Total Complete Donations", "Total Complete Requests"]],
       body: monthlyData.map(({ month, totalCompleteDonations, totalCompleteRequests }) => [month, totalCompleteDonations, totalCompleteRequests]),
-      startY: 40, // Adjust startY value to leave space for the title
+      startY: 40, 
     });
-    doc.save(`${name}_report.pdf`);
+    doc.save(`${name}_report.pdf ${selectedBarangay}`);
   };
 
   if (loading) {
