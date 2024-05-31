@@ -59,15 +59,15 @@ export default function BarDonatePerMonth({ name, selectedYear }) {
 
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
-    doc.setTextColor("#FF69B4");
+    doc.setTextColor("#000000");
     doc.setFontSize(20);
+    doc.setFont("helvetica", "bold")
     doc.text("KALINGA REPORT", 105, 15, { align: "center" });
-  
     doc.text(`Year: ${selectedYear}`, 105, 30, { align: "center" });
   
     doc.setTextColor("#000000");
     autoTable(doc, {
-      headStyles: { fillColor: [255, 105, 180] },
+      headStyles: { fillColor: "#ED5077" },
       head: [["Month", "Total Complete Donations", "Total Complete Requests"]],
       body: monthlyData.map(({ month, totalCompleteDonations, totalCompleteRequests }) => [month, totalCompleteDonations, totalCompleteRequests]),
       startY: 40, // Adjust startY value to leave space for the title
@@ -90,7 +90,7 @@ export default function BarDonatePerMonth({ name, selectedYear }) {
           onClick={handleDownloadPDF}
           className="bg-pink-500 text-white py-2 px-4 rounded-xl focus:outline-none hover:bg-pink-600"
         >
-          Download PDF
+          Export as PDF
         </button>
       </div>
       <ResponsiveContainer width="100%" height={400}>

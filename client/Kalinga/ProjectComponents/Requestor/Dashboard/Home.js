@@ -209,20 +209,6 @@ export default function RequestorHome({route}) {
               </View>
 
               <View style = {styles.boxRowContainer}>
-                <TouchableOpacity style = {styles.box} onPress={() => navigatePage("RequestorChatAssistance")}>
-                    <FontAwesome5 name="robot" size={70} color="#E60965"/>
-                    <Text style = {styles.boxTitle}>Instant Messaging</Text>
-                    <Text style = {styles.subLabel}>Chat with our chatbot for quick respond to FAQs </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style = {styles.box} onPress={() => navigatePage("RequestorForum")}>
-                    <MaterialIcons name="forum" size={70} color="#E60965" />
-                    <Text style = {styles.boxTitle}>Forum</Text>
-                    <Text style = {styles.ShortLabel}>Engage with user discussions</Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style = {styles.boxRowContainer}>
               <TouchableOpacity style={styles.box} onPress={handleMakeRequest}>
                     <Ionicons name="calendar" size={70} color="#E60965" />
                     <Text style = {styles.boxTitle}>Make Request</Text>
@@ -234,6 +220,19 @@ export default function RequestorHome({route}) {
                     <Text style = {styles.boxTitle}>My Request</Text>
                     <Text style = {styles.subLabel}>View Milk Request History</Text>
                 </TouchableOpacity>
+              </View>
+              <View style = {styles.boxRowContainer}>
+                <TouchableOpacity style = {styles.box} onPress={() => navigatePage("RequestorChatAssistance")}>
+                    <FontAwesome5 name="robot" size={70} color="#E60965"/>
+                    <Text style = {styles.boxTitle}>Instant Messaging</Text>
+                    <Text style = {styles.subLabel}>Chat with our chatbot for quick respond to FAQs </Text>
+                </TouchableOpacity>
+
+                {/* <TouchableOpacity style = {styles.box} onPress={() => navigatePage("RequestorForum")}>
+                    <MaterialIcons name="forum" size={70} color="#E60965" />
+                    <Text style = {styles.boxTitle}>Forum</Text>
+                    <Text style = {styles.ShortLabel}>Engage with user discussions</Text>
+                </TouchableOpacity> */}
               </View>
              
               

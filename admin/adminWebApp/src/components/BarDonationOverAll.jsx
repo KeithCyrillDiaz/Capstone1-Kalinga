@@ -68,9 +68,11 @@ export default function BarDonationOverAll({ name }) {
     const doc = new jsPDF();
     doc.setTextColor("#000000");
     doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
     doc.text("KALINGA OVERALL DONATION REPORT", 105, 15, { align: "center" });
 
     doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
     doc.text(`Year: ${selectedYear}`, 20, 30);
     doc.text(`Total Complete Donations: ${totalCompleteDonations}`, 20, 40);
     doc.text(`Total Decline Donations: ${totalDeclineDonations}`, 20, 50);
@@ -87,16 +89,13 @@ export default function BarDonationOverAll({ name }) {
       tableRows.push(rowData);
     });
 
-    // Adding the total row at the end of the table
-    tableRows.push(["Total", totalCompleteDonations, totalDeclineDonations]);
-
     autoTable(doc, {
       head: [tableColumn],
       body: tableRows,
       startY: 60,
       headStyles: { fillColor: "#ED5077" },
       bodyStyles: { textColor: "#000000" },
-      footStyles: { fillColor: "#ED5077", textColor: "#FFFFFF" },
+      footStyles: { fillColor: "##ED5077", textColor: "#FFFFFF" },
       didDrawCell: (data) => {
         if (data.section === 'body' && data.column.index === 0) {
           doc.setTextColor("#000000"); // reset to black for table content
@@ -122,7 +121,7 @@ export default function BarDonationOverAll({ name }) {
   return (
     <div className="p-4">
       <h1 className="text-3xl text-center text-primary-default mb-4">{name}</h1>
-      <div className="text-center mb-4">
+      <div className="flex justify-end mb-4">
         <div className="inline-block relative w-64">
           <select
             id="yearSelect"
@@ -163,7 +162,7 @@ export default function BarDonationOverAll({ name }) {
           onClick={handleDownloadPDF}
           className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded"
         >
-          Download Report as PDF
+          Export as PDF
         </button>
       </div>
     </div>

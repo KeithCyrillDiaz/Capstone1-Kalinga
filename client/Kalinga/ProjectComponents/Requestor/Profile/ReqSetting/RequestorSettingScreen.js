@@ -138,10 +138,10 @@ export default function SettingScreen({route}) {
             </TouchableOpacity> */}
 
             {/* Location */}
-            <TouchableOpacity onPress={() => navigatePage("RequestorLocationScreen")} style={cardStyle.link}>              
+            {/* <TouchableOpacity onPress={() => navigatePage("RequestorLocationScreen")} style={cardStyle.link}>              
                 <Text style={cardStyle.linkTitle}>Location</Text>
               <Entypo name="chevron-right" size={24} color="#E60965" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             {/* Change Password */}
             <TouchableOpacity onPress={() => navigatePage("RequestorChangePassword")} style={cardStyle.link}>

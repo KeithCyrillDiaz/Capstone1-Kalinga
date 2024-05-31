@@ -9,6 +9,8 @@ import { WebHost } from "../../../../../MyConstantSuperAdmin";
 
 const requestorAppointmentConfirmation = () => {
   const [requestData, setRequestData] = useState(null); // State to store fetched request details
+  const [images, setImages] = useState([])
+  const [files, setFiles] = useState([])
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -37,7 +39,7 @@ const requestorAppointmentConfirmation = () => {
       try {
         console.log("Fetching appointment data for RequestID:", RequestID);
         const response = await axios.get(
-          `${WebHost}/kalinga/getRequestByID/${RequestID}`
+          $`{WebHost}/kalinga/getRequestByID/${RequestID}`
         );
         console.log("API Response:", response.data);
         setRequestData(response.data); // Update state with response data
@@ -48,6 +50,7 @@ const requestorAppointmentConfirmation = () => {
 
     console.log("RequestID:", RequestID);
     fetchRequestData();
+    fetchRequirements()
   }, [RequestID]);
 
   console.log("Request Data:", requestData);
@@ -108,6 +111,17 @@ const requestorAppointmentConfirmation = () => {
       BabyCategory: e.target.value,
     }));
   };
+
+  const fetchRequirements = async (id) => {
+    const Donor_ID = id
+    console.log("id: ", id)
+    const files = await getMedicalAbstractsFiles({id: Donor_ID, purpose: "Donate"})
+    const images = await getMedicalAbstractsImages({id: Donor_ID, purpose: "Donate"})
+    if(files) setFiles(files)
+      else setFiles([])
+    if(images) setImages(images)
+      else setImages([])
+  }
 
   return (
     <section className="w-full h-screen bg-primary-body overflow-hidden px-4">
@@ -243,14 +257,43 @@ const requestorAppointmentConfirmation = () => {
             />
           </div>
         </div>
-
-        <div className="mt-4 relative">
+        <div className="mt-4 flex flex-cols gap-4">
+      {images.length !== 0 && images.map(requirement => (
+        <>
+              <div key={requirement.originalname} className="bg-white px-4 py-2 w-full h-72 shadow-md rounded-lg focus:outline-none focus: text-primary-default">
+                <span className="flex justify-center text-primary-default text-lg text-center">
+                {requirement.originalname}
+                </span>
+                <img
+                    className="w-[80%] h-[80%] mt-2 mx-auto py-2 hover: cursor-pointer object-contain"
+                  src={requirement.link}
+                  alt={requirement.originalname}
+                  />
+              </div>
+        </>
+         
+      ))}
+        {files.length !== 0 && files.map(requirement => (
+         <div key={requirement.originalname} className="bg-white px-4 py-2 w-[40%] h-72 shadow-md items-center justify-center rounded-lg focus:outline-none focus: text-primary-default">
+           <span className="flex justify-center text-primary-default text-lg text-center">
+             {requirement.originalname}
+           </span>
+           <a href ={`${requirement.link}`} target="_blank">
+                <button 
+                className="bg-primary-default px-4 py-2 text-white rounded-lg text-xs">
+                Download {requirement.originalname} File
+              </button>
+            </a>
+         </div>
+      ))}
+      </div>
+        {/* <div className="mt-4 relative">
           <div className="bg-white px-4 py-2 w-1/3 h-72 shadow-md  rounded-lg focus:outline-none focus: text-primary-default">
             <span className="flex justify-center text-primary-default text-lg text-center">
               Medical Abstract
             </span>
           </div>
-        </div>
+        </div> */}
 
         <div className="mt-4 ">
           <div className="flex bg-white w-full px-4 py-2 h-30 shadow-md  rounded-lg focus:outline-none focus: text-primary-default">

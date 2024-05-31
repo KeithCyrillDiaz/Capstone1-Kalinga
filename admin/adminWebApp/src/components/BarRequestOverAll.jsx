@@ -68,9 +68,11 @@ export default function BarRequestOverAll({ name }) {
     const doc = new jsPDF();
     doc.setTextColor("#000000");
     doc.setFontSize(16);
+    doc.setFont("helvetica", "bold")
     doc.text("KALINGA OVERALL REQUEST REPORT", 105, 15, { align: "center" });
 
     doc.setFontSize(12);
+    doc.setFont("helvetica", "bold")
     doc.text(`Year: ${selectedYear}`, 20, 30);
     doc.text(`Total Complete Requests: ${totalCompleteRequests}`, 20, 40);
     doc.text(`Total Decline Requests: ${totalDeclineRequests}`, 20, 50);
@@ -124,7 +126,7 @@ export default function BarRequestOverAll({ name }) {
   return (
     <div>
       <h1 className="text-3xl text-center text-primary-default">{name}</h1>
-      <div className="text-center">
+      <div className="flex justify-end mb-4">
       <div className="inline-block relative w-64">
           <select
             id="yearSelect"
@@ -165,7 +167,7 @@ export default function BarRequestOverAll({ name }) {
           onClick={handleDownloadPDF}
           className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded"
         >
-          Download Report as PDF
+          Export as PDF
         </button>
       </div>
     </div>

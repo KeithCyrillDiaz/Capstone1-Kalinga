@@ -139,9 +139,9 @@ const formattedDate = `${currentDate.getFullYear()}-${
               ?.totalDonors || 0,
         }));
 
-        setBarangaysData(mergedData); // Set barangaysData state
-        console.log("Barangays Data:", mergedData); // Log the merged data
-        console.log("response Data:", response.data); // Log the response data
+        setBarangaysData(mergedData); 
+        console.log("Barangays Data:", mergedData);
+        console.log("response Data:", response.data); 
       } catch (error) {
         console.error("Error fetching total users per barangay:", error);
       }
@@ -213,14 +213,15 @@ const formattedDate = `${currentDate.getFullYear()}-${
     const doc = new jsPDF();
     const title = "Kalinga Top Donating Barangay"; // Set the title
     
-    doc.setTextColor("#FF69B4");
+    doc.setTextColor("#000000");
+    doc.setFont("helvetica", "bold")
     doc.setFontSize(20);
     doc.text(title, 105, 15, { align: "center" });
   
     doc.setTextColor("#000000");
     autoTable(doc, {
-      headStyles: { fillColor: [255, 105, 180] },
-      head: [["Barangay", "Milk Amount"]],
+      headStyles: { fillColor: "#ED5077" },
+      head: [["Barangay", "Milk Amount (ml)"]],
       body: topDonatingBarangay.map(({ barangay, milkAmount }) => [barangay, milkAmount]),
       startY: 40, // Adjust startY value to leave space for the title
     });
@@ -236,16 +237,17 @@ const formattedDate = `${currentDate.getFullYear()}-${
     const doc = new jsPDF();
     const title = "Kalinga Top Requesting Barangay"; // Set the title
 
-    doc.setTextColor("#FF69B4");
+    doc.setTextColor("#000000");
+    doc.setFont("helvetica", "bold")
     doc.setFontSize(20);
     doc.text(title, 105, 15, { align: "center" });
   
   
     doc.setTextColor("#000000");
     autoTable(doc, {
-      headStyles: { fillColor: [255, 105, 180] },
-      head: [["Barangay", "Milk Amount"]],
-      body: topRequestingBarangay.map(({ barangay, milkAmount }) => [barangay, milkAmount]),
+      headStyles: { fillColor: "#ED5077" },
+      head: [["Barangay", "Milk Amount (ml)"]],
+      body: topRequestingBarangay.map(({ barangay, totalMilkAmount }) => [barangay, totalMilkAmount]),
       startY: 40, // Adjust startY value to leave space for the title
     });
   
@@ -260,15 +262,16 @@ const formattedDate = `${currentDate.getFullYear()}-${
     const doc = new jsPDF();
     const title = "Kalinga Top Donating User"; // Set the title
 
-    doc.setTextColor("#FF69B4");
+    doc.setTextColor("#000000");
+    doc.setFont("helvetica", "bold")
     doc.setFontSize(20);
     doc.text(title, 105, 15, { align: "center" });
   
   
     doc.setTextColor("#000000");
     autoTable(doc, {
-      headStyles: { fillColor: [255, 105, 180] },
-      head: [["Fullname", "Milk Amount"]],
+      headStyles: { fillColor: "#ED5077" },
+      head: [["Fullname", "Milk Amount (ml)"]],
       body: topDonatingUsers.map(({ fullName, milkAmount }) => [fullName, milkAmount]),
       startY: 40, // Adjust startY value to leave space for the title
     });
@@ -284,15 +287,17 @@ const formattedDate = `${currentDate.getFullYear()}-${
     const doc = new jsPDF();
     const title = "Kalinga Top Requesting User"; // Set the title
 
-    doc.setTextColor("#FF69B4");
+    
+    doc.setTextColor("#000000");
+    doc.setFont("helvetica", "bold")
     doc.setFontSize(20);
     doc.text(title, 105, 15, { align: "center" });
   
   
     doc.setTextColor("#000000");
     autoTable(doc, {
-      headStyles: { fillColor: [255, 105, 180] },
-      head: [["Fullname", "Milk Amount"]],
+      headStyles: { fillColor: "#ED5077" },
+      head: [["Fullname", "Milk Amount (ml)"]],
       body: topRequestingUsers.map(({ fullName, totalMilkAmount }) => [fullName, totalMilkAmount]),
       startY: 40, // Adjust startY value to leave space for the title
     });
@@ -343,7 +348,8 @@ const formattedDate = `${currentDate.getFullYear()}-${
 
   return (
     <>
-      <section className="w-full h-full bg-primary-body overflow-hidden rounded-xl">
+    <div className="overflow-y-auto">
+    <section className="w-full h-full bg-primary-body overflow-y-auto rounded-xl">
         <div className="p-12 pt-2">
           <div className="py-4">
             <h1 className="text-2xl text-primary-default font-bold font-sans py-">
@@ -576,7 +582,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
                       onClick={handleDownloadPDFTopDonatingBarangay}
                       className="bg-pink-500 text-white py-2 px-4 rounded-xl focus:outline-none hover:bg-pink-600"
                     >
-                      Download PDF
+                      Export as PDF
                     </button>
                   </div>
                       {topDonatingBarangay.map((user, index) => (
@@ -618,7 +624,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
                       onClick={handleDownloadPDFTopRequestingBarangay}
                       className="bg-pink-500 text-white py-2 px-4 rounded-xl focus:outline-none hover:bg-pink-600"
                     >
-                      Download PDF
+                      Export as PDF
                     </button>
                   </div>
                   <div className="py-4 px-2 ml-4">
@@ -661,7 +667,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
                       onClick={handleDownloadPDFTopDonatingUser}
                       className="bg-pink-500 text-white py-2 px-4 rounded-xl focus:outline-none hover:bg-pink-600"
                     >
-                      Download PDF
+                       Export as PDF
                     </button>
                   </div>
                   <div className="py-4 px-2 ml-4">
@@ -704,7 +710,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
                       onClick={handleDownloadPDFTopRequestingUser}
                       className="bg-pink-500 text-white py-2 px-4 rounded-xl focus:outline-none hover:bg-pink-600"
                     >
-                      Download PDF
+                       Export as PDF
                     </button>
                   </div>
                   <div className="py-4 px-2 ml-4">
@@ -792,6 +798,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
           </div>
         </div>
       </section>
+      </div>
     </>
   );
 }
