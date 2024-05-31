@@ -59,20 +59,21 @@ export default function BarPerMonthBarangay({ name, selectedYear, selectedBarang
 
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
-    doc.setTextColor("#FF69B4");
+    doc.setTextColor("#000000");
     doc.setFontSize(20);
+    doc.setFont("helvetica", "bold");
     doc.text("KALINGA REPORT", 105, 15, { align: "center" });
   
     doc.text(`Year: ${selectedYear} ${selectedBarangay}`, 105, 30, { align: "center" });
   
     doc.setTextColor("#000000");
     autoTable(doc, {
-      headStyles: { fillColor: [255, 105, 180] },
+      headStyles: { fillColor: "#ED5077" },
       head: [["Month", "Total Complete Donations", "Total Complete Requests"]],
       body: monthlyData.map(({ month, totalCompleteDonations, totalCompleteRequests }) => [month, totalCompleteDonations, totalCompleteRequests]),
       startY: 40, 
     });
-    doc.save(`${name}_report.pdf ${selectedBarangay}`);
+    doc.save(`Total Report_${selectedBarangay} report.pdf`);
   };
 
   if (loading) {
