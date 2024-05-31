@@ -1,10 +1,10 @@
 export const getDateTime = ({data}) => {
 
-    const selectedDate = new Date(data.selectedDate);
-    const selectedTime = new Date(data.selectedTime);
+    const selectedDate = new Date(data.selectedDate ?? new Date());
+    const selectedTime = new Date(data.selectedTime ?? new Date());
 
     selectedDate.setUTCHours(selectedDate.getUTCHours() + 8);
-    selectedTime.setUTCHours(selectedTime.getUTCHours() + 8);
+    if(!data.selectedTime)selectedTime.setUTCHours(selectedTime.getUTCHours() + 8);
 
     const formattedSelectedDate = selectedDate.toISOString().split('T')[0];
 

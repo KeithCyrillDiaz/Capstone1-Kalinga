@@ -2,6 +2,7 @@ import express from "express"
 import AppointmentModel, { getAppointmentByDonorID } from "../../models/Donor/DonorSetAppointmentModel"
 import { createNotification } from "../../models/Notification/Notification"
 import app from "../../../api"
+import RequestModel from "../../models/Requestor/RequestorRequestModel"
 
 
 export const sendUpdateStatusAppointmentNotification = async (
@@ -109,6 +110,53 @@ export const checkAppointment = async (req: express.Request, res: express.Respon
         }
 
         const appointment = await AppointmentModel.findOne({Donor_ID: id, DonationStatus: status})
+        if(!appointment){
+            console.log("No Appointment Found")
+            return res.status(404).json({
+                messages: {
+                    code: 1,
+                    message: "No Appointment Found"
+                }
+            })
+        }
+
+        console.log("Retrieved Appointment")
+        return res.status(200).json({
+            messages: {
+                code: 0,
+                message: "Retrieved Appointment"
+            },
+            appointment
+        })
+
+     } catch (error) {
+        console.log("Internal Server Error", error)
+        return res.json({
+            message: {
+                code: 1,
+                message: "Internal Server Error"
+            },
+            error
+        }).status(500)
+    }  
+}
+
+export const checkRequestStatus = async (req: express.Request, res: express.Response) => {
+    try{
+        const { status } = req.body;
+        const { id } = req.params
+
+        if (!id || !status){
+            console.log("Bad Request")
+            return res.status(400).json({
+                messages: {
+                    code: 1,
+                    message: "Bad Request"
+                }
+            })
+        }
+
+        const appointment = await RequestModel.findOne({Requestor_ID: id, RequestStatus: status})
         if(!appointment){
             console.log("No Appointment Found")
             return res.status(404).json({

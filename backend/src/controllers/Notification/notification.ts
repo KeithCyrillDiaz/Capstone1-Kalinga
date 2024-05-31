@@ -1,5 +1,5 @@
 import express from 'express'
-import { getNotificationById, updateStatusNotification } from '../../models/Notification/Notification'
+import { getNotificationById, updateStatusNotification, getNotificationByIdAndUnread} from '../../models/Notification/Notification'
 
 export const fetchUnreadNotification = async(req: express.Request, res: express.Response) => {
     try{
@@ -17,6 +17,7 @@ export const fetchUnreadNotification = async(req: express.Request, res: express.
         }
 
         const notifications = await getNotificationById(id)
+        const newNotifications = await getNotificationByIdAndUnread(id)
    
         if(notifications.length === 0) {
             console.log("No Exisiting Notification for this User")
@@ -35,7 +36,8 @@ export const fetchUnreadNotification = async(req: express.Request, res: express.
                 code: 0,
                 message: "Successfully Retrieved Unread Notifications"
             },
-            notifications
+            notifications,
+            newNotifications
         }).status(200)
 
     } catch (error) {

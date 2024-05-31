@@ -30,6 +30,7 @@ export interface Request extends Document {
   RequestRemark: string;
   barangay?: string; // Include the barangay field
   method: string
+  noQCID: string
 }
 
 // Define the Mongoose schema for the request
@@ -66,7 +67,8 @@ const RequestSchema: Schema = new Schema({
   createdAt: { type: Date, default: Date.now },
   RequestRemark: { type: String },
   barangay: { type: String }, // New field for barangay
-  method: {type: String}
+  method: {type: String},
+  noQCID: {type: String},
 });
 
 // Define and export the Mongoose model based on the schema

@@ -14,6 +14,7 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import axios from 'axios'; // Import axios for API requests
 import { BASED_URL } from '../../../../MyConstants.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
+import { getDateTime } from '../../../functions/formatDateAndTime.js';
 
 const CompletedTabRequest = ({route}) => {
 	const userInformation = route.params.userInformation
@@ -27,6 +28,7 @@ const CompletedTabRequest = ({route}) => {
     useFocusEffect(
 		React.useCallback(() => {
 			fetchData();	
+			
 		}, [])
 	);
 
@@ -59,7 +61,7 @@ const CompletedTabRequest = ({route}) => {
             // } else {
             //     console.log('No completed requests found for the specified Requestor_ID.');
             // }
-
+			formatDateTime(responseData.RequestData)
             setLoading(false);
         } catch (error) {
 			setError(true)
@@ -69,6 +71,26 @@ const CompletedTabRequest = ({route}) => {
 			setLoading(false)
 		}
     };
+
+	const formatDateTime = (data) => {
+		if (data.length === 0) return;
+		const updatedList = data.map(formData => {
+		  const newForm = {
+			...formData,
+			selectedDate: formData.Date,
+			selectedTime: formData.Time,
+		  }
+		  const { time, date } = getDateTime({ data: newForm }); 
+	  
+		  return {
+			...formData,
+			date,
+			time,
+		};
+		});
+		setFormDataList(updatedList); // Update the formDataList with the updated items
+	  };
+
 	if (loading) {
 		return <ActivityIndicator size="large" color="#E60965" />;
 	}
@@ -127,8 +149,12 @@ const CompletedTabRequest = ({route}) => {
 							)}
                           
 							<View style={[styles.boxContentContainer, {gap: 4}]}>
-                                <Text style={styles.boxContentBold}>Date:</Text>
-                                <Text style={[styles.boxContent, styles.limitText, {marginTop: 2}]}>{formData.Date}</Text>
+                                <Text style={styles.boxContentBold}>Scheduled Date:</Text>
+                                <Text style={[styles.boxContent, styles.limitText, {marginTop: 2}]}>{formData.date}</Text>
+                            </View>
+							<View style={[styles.boxContentContainer, {gap: 4}]}>
+                                <Text style={styles.boxContentBold}>Scheduled Time:</Text>
+                                <Text style={[styles.boxContent, styles.limitText, {marginTop: 2}]}>{formData.time}</Text>
                             </View>
 							
                         </View>
