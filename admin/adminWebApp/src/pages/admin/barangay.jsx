@@ -9,6 +9,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import axios from "axios";
 import { WebHost } from "../../../MyConstantAdmin";
+import { getBarangayByCityName } from "../../functions/getBarangay";
 
 export default function barangay() {
   const [selectedMonth, setSelectedMonth] = useState("");
@@ -28,7 +29,7 @@ export default function barangay() {
   const [totalRequestors, setTotalRequestors] = useState(0);
   const [totalAppointments, setTotalAppointments] = useState(0);
   const [totalRequests, setTotalRequest] = useState(0);
-
+  
   const currentDate = new Date();
   const currentMonth = currentDate.toLocaleString("default", { month: "long" });
   const currentYear = currentDate.getFullYear();
@@ -580,6 +581,30 @@ console.log ("Barangay", selectedBarangay)
                       title="Requests for the month"
                       count={totalRequests}                      
                       seeMore={"/admin/requestorManagement"}
+                    />
+
+                    <DashboardCard
+                      icon={
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="50"
+                          height="50"
+                          viewBox="0 0 24 24"
+                          className="rounded-full bg-primary-default p-2 ml-2"
+                        >
+                          <path
+                            fill="none"
+                            stroke="#FFFFFF"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1.5"
+                            d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0-8 0M6 21v-2a4 4 0 0 1 4-4h3m3 7l5-5m0 4.5V17h-4.5"
+                          ></path>
+                        </svg>
+                      }
+                      title="Added Requestor Users"
+                      count={totalRequestors}
+                      seeMore={"/admin/users"}
                     />
                   </div>
                 </div>
