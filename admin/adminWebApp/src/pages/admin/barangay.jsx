@@ -339,9 +339,6 @@ useEffect(() => {
     console.log("Is filter visible:", !isFilterVisible);
   };
 
-console.log ("Month", selectedMonth)
-console.log ("Year", selectedYear)
-console.log ("Barangay", selectedBarangay)
 
   const DashboardCard = ({ icon, title, count, seeMore }) => {
     return (
@@ -484,7 +481,7 @@ console.log ("Barangay", selectedBarangay)
               <h1 className="text-2xl text-primary-default font-semibold font-sans py-4 pb-6">
                 {" "}
                 {/* nakadepende din dapat to sa filter */}
-                Reports for the {selectedBarangay} {selectedMonth} {selectedYear}
+                Reports for {selectedBarangay} {selectedMonth} {selectedYear}
               </h1>
             </div>
             <div className="w-full flex justify-center gap-4">
