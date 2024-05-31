@@ -41,7 +41,7 @@ export default function BarangayGraph({ name }) {
 
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
-    doc.setTextColor("#ED5077");
+    doc.setTextColor("#000000");
     doc.setFontSize(16);
     doc.text("KALINGA OVERALL DONATION REPORT", 105, 15, { align: "center" });
 

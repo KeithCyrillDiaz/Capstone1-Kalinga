@@ -147,21 +147,17 @@
           responseDeclineRequests: responseDeclineRequests.data,
         };
       } catch (error) {
-      // Handle Axios errors
       console.error("Axios Error:", error);
 
-      // Check if error response exists and handle it
       if (error.response) {
         console.error("Error Response Data:", error.response.data);
         console.error("Error Response Status:", error.response.status);
       } else if (error.request) {
-        // Handle request without response (e.g., network error)
         console.error("No response received:", error.request);
       } else {
         console.error("Error setting up request:", error.message);
       }
 
-      // Throw error to be caught by caller
       throw new Error("Error fetching data");
     }
     };
@@ -189,30 +185,26 @@
     
         const doc = new jsPDF();
     
-        // Set text color to pink
-        doc.setTextColor("#FF69B4");
-    
-        // Add title at the top of the paper
+        doc.setTextColor("#000000");
+        doc.setFont("helvetica", "bold")
         doc.setFontSize(20);
         doc.text("KALINGA MONTHLY REPORT", 105, 15, { align: "center" });
+        doc.text(`${selectedMonth} ${selectedYear}`, 105, 30, { align: "center" });
     
-        // Reset text color to black
         doc.setTextColor("#000000");
     
-        // Add selected month and year to the PDF
         doc.setFontSize(14);
         doc.text(
-          `Donation Report for ${selectedMonth} ${selectedYear}`,
+          `Donation Report`,
           14,
-          30
+          35
         );
     
-        // Set table header fill color to pink
-        doc.setFillColor("#FF69B4");
+        doc.setFillColor("#ED5077");
     
         doc.autoTable({
-          startY: 35,
-          headStyles: { fillColor: [255, 105, 180] }, // Pink color
+          startY: 40,
+          headStyles: { fillColor: "#ED5077" }, 
           head: [["Category", "Value"]],
           body: [
             ["Total Complete Donations", responseComplete.totalCompleteAppointments],
@@ -221,14 +213,14 @@
         });
     
         doc.text(
-          `Request Monthly Report for ${selectedMonth} ${selectedYear}`,
+          `Request Monthly Report`,
           14,
           doc.autoTable.previous.finalY + 10
         );
     
         doc.autoTable({
           startY: doc.autoTable.previous.finalY + 20,
-          headStyles: { fillColor: [255, 105, 180] }, // Pink color
+          headStyles: { fillColor: "#ED5077" },  
           head: [["Category", "Value"]],
           body: [
             ["Total Complete Requests", responseRequests.totalCompleteRequest],
@@ -237,14 +229,14 @@
         });
 
         doc.text(
-          `Overview Monthly Report for ${selectedMonth} ${selectedYear}`,
+          `Overview Monthly Report for`,
           14,
           doc.autoTable.previous.finalY + 10
         );
     
         doc.autoTable({
           startY: doc.autoTable.previous.finalY + 20,
-          headStyles: { fillColor: [255, 105, 180] }, // Pink color
+          headStyles: { fillColor: "#ED5077" }, 
           head: [["Category", "Value"]],
           body: [
             ["Added Donor Users", totalDonors],
@@ -257,8 +249,6 @@
           ],
         });
 
-        
-    
         doc.save("monthly_reports.pdf");
       } catch (error) {
         console.error("Error downloading PDF:", error);

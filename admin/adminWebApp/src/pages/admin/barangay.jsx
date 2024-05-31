@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import {
   DonatePerMonthBarangay,
-  RequestPerMonth,
-  BarDonatePerMonth,
+  RequestPerMonthBarangay,
+  BarPerMonthBarangay,
   BarRequestPerMonth,
 } from "../../components";
 import jsPDF from "jspdf";
@@ -35,8 +35,9 @@ export default function barangay() {
   const currentYear = currentDate.getFullYear();
 
 useEffect(() => {
-  setSelectedMonth(currentMonth); // Set default selected month
-  setSelectedYear(currentYear); // Set default selected year
+  setSelectedMonth(currentMonth); 
+  setSelectedYear(currentYear); 
+  setSelectedBarangay ('Commonwealth')
 }, []);
 
 const handleSelectBarangay = (e) => {
@@ -220,37 +221,34 @@ useEffect(() => {
         responseDecline,
         responseRequests,
         responseDeclineRequests,
-      } = await fetchData(selectedMonth, selectedYear);
+      } = await fetchData(selectedMonth, selectedYear, selectedBarangay);
   
       console.log("Donate Data:", responseComplete);
       console.log("Request Data:", responseRequests);
   
       const doc = new jsPDF();
   
-      // Set text color to pink
-      doc.setTextColor("#FF69B4");
-  
-      // Add title at the top of the paper
+      doc.setTextColor("#000000");
+      doc.setFont("helvetica", "bold")
       doc.setFontSize(20);
       doc.text("KALINGA MONTHLY REPORT", 105, 15, { align: "center" });
-  
-      // Reset text color to black
+      doc.text(`${selectedBarangay} ${selectedMonth} ${selectedYear}`, 105, 30, { align: "center" });
+
       doc.setTextColor("#000000");
   
-      // Add selected month and year to the PDF
       doc.setFontSize(14);
       doc.text(
-        `Donation Report for ${selectedMonth} ${selectedYear}`,
+        `Donation Report`,
         14,
-        30
+        40
       );
   
       // Set table header fill color to pink
       doc.setFillColor("#FF69B4");
   
       doc.autoTable({
-        startY: 35,
-        headStyles: { fillColor: [255, 105, 180] }, // Pink color
+        startY: 45,
+        headStyles: { fillColor: "#ED5077" },   // Pink color
         head: [["Category", "Value"]],
         body: [
           ["Total Complete Donations", responseComplete.totalCompleteAppointments],
@@ -259,30 +257,30 @@ useEffect(() => {
       });
   
       doc.text(
-        `Request Monthly Report for ${selectedMonth} ${selectedYear}`,
+        `Request Monthly Report`,
         14,
         doc.autoTable.previous.finalY + 10
       );
   
       doc.autoTable({
         startY: doc.autoTable.previous.finalY + 20,
-        headStyles: { fillColor: [255, 105, 180] }, // Pink color
+        headStyles: { fillColor: "#ED5077" },   // Pink color
         head: [["Category", "Value"]],
         body: [
-          ["Total Complete Requests", responseRequests.totalCompleteRequest],
-          ["Total Declined Requests", responseDeclineRequests.totalDeclineRequest],
+          ["Total Complete Requests", responseRequests.totalCompleteRequests],
+          ["Total Declined Requests", responseDeclineRequests.totalDeclineRequests],
         ],
       });
 
       doc.text(
-        `Overview Monthly Report for ${selectedMonth} ${selectedYear}`,
+        `Overview Monthly Report`,
         14,
         doc.autoTable.previous.finalY + 10
       );
   
       doc.autoTable({
         startY: doc.autoTable.previous.finalY + 20,
-        headStyles: { fillColor: [255, 105, 180] }, // Pink color
+        headStyles: { fillColor: "#ED5077" },   // Pink color
         head: [["Category", "Value"]],
         body: [
           ["Added Donor Users", totalDonors],
@@ -297,7 +295,7 @@ useEffect(() => {
 
       
   
-      doc.save("monthly_reports.pdf");
+      doc.save( `${selectedBarangay} monthly_reports.pdf`);
     } catch (error) {
       console.error("Error downloading PDF:", error);
       setError("Error downloading PDF");
@@ -664,7 +662,7 @@ console.log ("Barangay", selectedBarangay)
                     </div>
                   </div>
                   <div>
-                  <BarDonatePerMonth name="Total Requests" selectedYear={selectedYear} />
+                  <BarPerMonthBarangay name="Total Requests" selectedYear={selectedYear} selectedBarangay={selectedBarangay}/>
                     
                   </div>
                 </div>
@@ -736,7 +734,7 @@ console.log ("Barangay", selectedBarangay)
                         </div>
                       </div>
                       <div>
-                      <RequestPerMonth
+                      <RequestPerMonthBarangay
                       selectedMonth={selectedMonth}
                       selectedYear={selectedYear}
                       selectedBarangay = {selectedBarangay}
