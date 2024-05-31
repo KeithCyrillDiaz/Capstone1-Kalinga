@@ -11,4 +11,28 @@ export const Loader = ({isLoading}) => {
         </>
    
     )  
-}
+};
+// }import React from 'react';
+// import React, { useState, useEffect } from 'react';
+// import Runningheart from '../assets/Runningheart.gif'; // Adjust the path as needed
+
+// export const Loader = () => {
+//     const [showLoader, setShowLoader] = useState(true);
+
+//     useEffect(() => {
+//         const timeout = setTimeout(() => {
+//             setShowLoader(false); // Hide the loader after 10 seconds
+//         }, 10000); // 10 seconds in milliseconds
+
+//         return () => {
+//             clearTimeout(timeout); // Clear the timeout when component unmounts or re-renders
+//         };
+//     }, []);
+
+//     return showLoader ? <img src={Runningheart} alt="Loading..." /> : null;
+// };
+
+
+
+
+

@@ -23,7 +23,7 @@ export const ValidIdInfoModal = ({onClose}) => {
                     contentContainerStyle={{ paddingBottom: 20 }}
                     keyboardShouldPersistTaps="handled"
                 >
-                    <RenderImages source={DriverLicense} title="Driver License" />
+                    <RenderImages source={DriverLicense} title="Driver's License" />
                     <RenderImages source={MultiPurposeID} title="SSS Unified Multi-Purpose ID (UMID)" />
                     <RenderImages source={NBIClearance} title="NBI Clearance" />
                     <RenderImages source={PassPort} title="Passport" />

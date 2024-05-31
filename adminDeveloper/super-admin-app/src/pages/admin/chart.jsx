@@ -132,6 +132,14 @@ useEffect(() => {
       });
       setTotalRequest(response.data.totalRequests);  
 
+      const responseAllComplete = await axios.get(`${WebHost}/kalinga/getTotalCompleteDonationsAllMonths`, { params: { year: selectedYear } });
+      const totalAllMonthCompleteDonations = responseAllComplete.data.reduce((acc, curr) => acc + curr.totalCompleteDonations, 0);
+      setTotalAllMonthCompleteDonations(totalAllMonthCompleteDonations);
+
+      const responseAllRequests = await axios.get(`${WebHost}/kalinga/getTotalCompleteRequestAllMonths`, { params: { year: selectedYear } });
+      const totalAllMonthCompleteRequests = responseAllRequests.data.reduce((acc, curr) => acc + curr.totalCompleteRequests, 0);
+      setTotalAllMonthCompleteRequests(totalAllMonthCompleteRequests);
+
       return {
         responseComplete: responseComplete.data,
         responseDecline: responseDecline.data,
@@ -163,25 +171,6 @@ useEffect(() => {
       fetchData();
     }
   }, [selectedMonth, selectedYear]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const responseAllComplete = await axios.get(`${WebHost}/kalinga/getTotalCompleteDonationsAllMonths`, { params: { year: selectedYear } });
-        const totalCompleteDonations = responseAllComplete.data.reduce((acc, curr) => acc + curr.totalCompleteDonations, 0);
-        setTotalAllMonthCompleteDonations(totalCompleteDonations);
-
-        const responseAllRequests = await axios.get(`${WebHost}/kalinga/getTotalCompleteRequestAllMonths`, { params: { year: selectedYear } });
-        const totalCompleteRequests = responseAllRequests.data.reduce((acc, curr) => acc + curr.totalCompleteRequests, 0);
-        setTotalAllMonthCompleteRequests(totalCompleteRequests);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, [selectedYear]);
-
   
   const handleDownloadPDF = async () => {
     try {
@@ -545,21 +534,9 @@ useEffect(() => {
                   Overview
                   </h1>
                   <div>
-                  <select
-                      id="year"
-                      value={selectedYear}
-                      onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-                      className="border-black border-solid border-1 rounded-md px-2 py-1"
-                    >
-                      <option value={new Date().getFullYear() - 1}>
-                        {new Date().getFullYear() - 1}
-                      </option>
-                      <option value={new Date().getFullYear()}>{new Date().getFullYear()}</option>
-                      <option value={new Date().getFullYear() + 1}>
-                        {new Date().getFullYear() + 1}
-                      </option>
-                    </select>
+                  
                   </div>
+               
                   
                   <div className="absolute top-4 -right-1 text-white px-4 py-2">
                     <a href={"/admin/chart"} className="flex items-center">

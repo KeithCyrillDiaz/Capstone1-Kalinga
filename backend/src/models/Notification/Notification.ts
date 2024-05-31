@@ -25,5 +25,6 @@ export const NotificationModel = mongoose.model("Notifications", notificationSch
 
 export const createNotification = (values: Record<string, any>) => new NotificationModel(values).save().then((results) => results.toObject())
 export const getNotificationById = (id: string) => NotificationModel.find({ownerID: id})
+export const getNotificationByIdAndUnread = (id: string) => NotificationModel.find({ownerID: id, status: "Unread"})
 export const updateStatusNotification = (id: string) => NotificationModel.findOneAndUpdate({notificationId: id}, {$set: {status: "Read", updatedAt: Date.now()}}, {new: true})
 export const deleteNotification = (id: string) => NotificationModel.findOneAndDelete({notificationId: id})

@@ -69,9 +69,17 @@ import { getTotalOverallDonation } from '../controllers/Admin/Reports/getTotalOv
 import { getTotalOverAllRequest } from '../controllers/Admin/Reports/getTotalOverAllRequest'
 import { getHighestDonationBarangay } from '../controllers/Admin/Reports/getHighestDonationBarangay'
 import { getHighestRequestBarangay } from '../controllers/Admin/Reports/getHighestRequestBarangay'
-
-
-
+import { getTotalCompleteDonationPerBarangay } from '../controllers/Admin/Reports/getTotalCompleteDonationPerBarangay'
+import { getTotalDeclineDonationPerBarangay } from '../controllers/Admin/Reports/getTotalDeclineDonationPerBarangay'
+import { getTotalCompleteRequestBarangay } from '../controllers/Admin/Reports/getTotalCompleteRequestBarangay'
+import { getTotalDeclineRequestBarangay } from '../controllers/Admin/Reports/getTotalDeclineRequestBarangay'
+import { getTotalDonorsPerBarangay } from '../controllers/Admin/Reports/getTotalMonthBarangay'
+import { getTotalRequestorsPerBarangay } from '../controllers/Admin/Reports/getTotalMonthBarangay'
+import { getTotalRequestsPerMonthAndYearBarangay } from '../controllers/Admin/Reports/getTotalRequestsPerMonthAndYearBarangay'
+import { getTotalCompleteDonationsAllMonthsBarangay } from '../controllers/Admin/Reports/getTotalCompleteDonationsAllMonthsBarangay'
+import { getTotalCompleteRequestAllMonthsBarangay } from '../controllers/Admin/Reports/getTotalCompleteRequestAllMonthsBarangay'
+import { getAllBarangay } from '../controllers/Admin/Reports/getAllBarangay'
+import { getTotalAppointmentsBarangay } from '../controllers/Admin/Reports/getTotalAppointmentsBarangay'
 
 
 
@@ -157,8 +165,23 @@ export default (router: express.Router) => {
     router.get ('/kalinga/getTotalOverAllRequest', getTotalOverAllRequest)
     router.get ('/kalinga/getHighestDonationBarangay', getHighestDonationBarangay)
     router.get ('/kalinga/getHighestRequestBarangay', getHighestRequestBarangay)
+    router.get ('/kalinga/getTotalCompleteDonationPerBarangay', getTotalCompleteDonationPerBarangay)
+    router.get ('/kalinga/getTotalDeclineDonationPerBarangay', getTotalDeclineDonationPerBarangay)
+    router.get ('/kalinga/getTotalCompleteRequestBarangay', getTotalCompleteRequestBarangay)
+    router.get ('/kalinga/getTotalDeclineRequestBarangay', getTotalDeclineRequestBarangay)
+    router.get ('/kalinga/getTotalDonorsPerBarangay', getTotalDonorsPerBarangay)
+    router.get ('/kalinga/getTotalRequestorsPerBarangay', getTotalRequestorsPerBarangay)
+    router.get ('/kalinga/getTotalRequestsPerMonthAndYearBarangay', getTotalRequestsPerMonthAndYearBarangay)
+    router.get ('/kalinga/getTotalCompleteDonationsAllMonthsBarangay', getTotalCompleteDonationsAllMonthsBarangay)
+    router.get ('/kalinga/getTotalCompleteRequestAllMonthsBarangay', getTotalCompleteRequestAllMonthsBarangay)
+    router.get ('/kalinga/getAllBarangay', getAllBarangay)
+    router.get ('/kalinga/getTotalAppointmentsBarangay', getTotalAppointmentsBarangay)
 
+    
 
+    
+    
+    
     
 
     

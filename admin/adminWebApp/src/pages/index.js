@@ -20,6 +20,7 @@ import RequestorAppointmentConfirmation from "./admin/Appointments/Requestor/req
 import Users from "./admin/users";
 import DonorAppointManage from "./admin/Appointments/Donor/donorAppointManage";
 import RequestorManagement from "./admin/Appointments/Requestor/requestorManagement";
+import Barangay from "./admin/barangay";
 
 
 export {
@@ -45,4 +46,5 @@ export {
   Users,
   DonorAppointManage,
   RequestorManagement,
+  Barangay
 };

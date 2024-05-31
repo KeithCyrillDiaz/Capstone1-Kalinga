@@ -1,7 +1,7 @@
 import express from 'express'
 import { tokenVerification } from '../middleware/Authentication'
 import { fetchUnreadNotification, updateNotificationStatus} from '../controllers/Notification/notification'
-import { checkAppointment } from '../controllers/Notification/appointment'
+import { checkAppointment, checkRequestStatus } from '../controllers/Notification/appointment'
 
 
 export default (router: express.Router) => {
@@ -9,5 +9,6 @@ export default (router: express.Router) => {
     router.patch('/kalinga/updateStatus/:id', tokenVerification, updateNotificationStatus)
 
     router.post('/kalinga/checkAppointmentStatus/:id', tokenVerification, checkAppointment)
+    router.post('/kalinga/checkRequestsStatus/:id', tokenVerification, checkRequestStatus)
 
 }

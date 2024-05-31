@@ -1,4 +1,4 @@
-import React, { useState}from 'react';
+import React, { useEffect, useState}from 'react';
 import { 
 	SafeAreaView, 
 	Text, 
@@ -15,6 +15,7 @@ import { useNavigation, useFocusEffect} from '@react-navigation/native';
 import axios from 'axios'; // Import axios for API requests
 import { BASED_URL } from '../../../../MyConstants.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
+import { getDateTime } from '../../../functions/formatDateAndTime.js';
  
 
 const ApprovedTabRequest = ({route}) => {
@@ -25,15 +26,18 @@ const ApprovedTabRequest = ({route}) => {
 	const Requestor_ID = userInformation.Requestor_ID;
 
     const navigation = useNavigation();
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState([]);
     const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(false)
+	const [time, setTime] = useState("")
+	const [date, setDate] = useState("")
 
     useFocusEffect(
 		React.useCallback(() => {
 			fetchData();
 		}, [])
 	);
+
     const fetchData = async () => {
         try {
 			setLoading(true)
@@ -49,6 +53,7 @@ const ApprovedTabRequest = ({route}) => {
             setFormData(formDataFromResponse);
 			setError(false)
             setLoading(false); 
+			formatDateTime(formDataFromResponse)
         } catch (error) {
 			console.log("Error: ", error)
 			setError(true)
@@ -86,9 +91,24 @@ const ApprovedTabRequest = ({route}) => {
 		);
 	  };
 	
+	  
+	  const formatDateTime = (data) => {
+		if(data.length === 0) return
+		const firstFormData = data[0]; 
+		const newForm = {
+			...firstFormData,
+			selectedDate: firstFormData.Date,
+			selectedTime: firstFormData.Time
+		}
+		const { time, date } = getDateTime({data: newForm})
+		setTime(time)
+		setDate(date)
+	}
+
 	  if (loading) {
 		return <ActivityIndicator size="large" color="#E60965" />;
 	  }
+
 	
     return (
 			<SafeAreaView style = {globalStyles.defaultBackgroundColor}>
@@ -157,14 +177,19 @@ const ApprovedTabRequest = ({route}) => {
 								)}
 								
 								
+								
 								<View style={styles.boxContentContainer}>
 									<Text style={styles.boxContentBold}>Address: </Text>
 									<Text style={[styles.boxContent, styles.limitText]}>{formData[0].homeAddress}</Text>
 								</View>
 
 								<View style={styles.boxContentContainer}>
-									<Text style={styles.boxContentBold}>Date: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>{formData[0].Date}</Text>
+									<Text style={styles.boxContentBold}>Scheduled Date:</Text>
+									<Text style={[styles.boxContent, styles.limitText]}>{date}</Text>
+								</View>
+								<View style={styles.boxContentContainer}>
+									<Text style={styles.boxContentBold}>Scheduled Time: </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>{time}</Text>
 								</View>
 								
 							</View>

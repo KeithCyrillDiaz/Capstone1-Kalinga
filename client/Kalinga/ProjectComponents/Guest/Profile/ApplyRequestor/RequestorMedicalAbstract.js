@@ -22,6 +22,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
 import ImageZoom from 'react-native-image-pan-zoom';
+import { ImagePickerModal } from "../../../modal/ImagePickerModal.js";
 
 const RequestorMedicalAbstract = ({route}) => {
 
@@ -35,6 +36,10 @@ const RequestorMedicalAbstract = ({route}) => {
   const [scrollableHorizontal, setScrollableHorizontal] = useState(false)
   const [imageContainer, setImageContainer] = useState(false)
 
+   //imagePicker
+   const [showImagePicker, setShowImagePicker] = useState(false)
+   const [selectedType, setSelectedType] = useState("")
+
   const navigatePage = (Page, Data, SI, SF) => {
     if(Object.keys(selectedImage).length + Object.keys(selectedFile).length < 7){
         Alert.alert(
@@ -47,14 +52,30 @@ const RequestorMedicalAbstract = ({route}) => {
 
   };
 
-  const handleImageUpload = async (attachmentType) => {
-    try {
+  const chooseImagePicker = async (value) => {
+    setShowImagePicker(false)
+    if(value === "Camera"){
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        if (status !== 'granted') {
+            console.error('Camera permission not granted');
+            return;
+        }
+        
+        const result = await ImagePicker.launchCameraAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [Dimensions.get('window').width, Dimensions.get('window').height],
+          quality: 1,
+        });
+  
+        return result
+    } else {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
             Alert.alert('Permission Denied', 'Sorry, we need camera roll permissions to make this work!');
             return;
         }
-
+  
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
@@ -62,6 +83,17 @@ const RequestorMedicalAbstract = ({route}) => {
             quality: 1,
             multiple: true, 
         });
+  
+        return result
+    }
+   
+  }
+  const handleImageUpload = async (attachmentType, value) => {
+    try {
+
+        console.log("attachmentType: ", attachmentType)
+        console.log("value: ", value)
+       const result = await chooseImagePicker(value)
 
         if (!result.canceled && result.assets && result.assets.length > 0) {
           delete selectedFile[attachmentType]
@@ -172,6 +204,12 @@ const handleFileUpload = async (attachmentType) => {
             nestedScrollEnabled={true}
         
           >
+            {showImagePicker && (
+              <ImagePickerModal
+              onSelect = {handleImageUpload}
+              type= {selectedType} 
+              onClose={() => setShowImagePicker(false)}/>
+            )}
               <View style = {styles.container}>
                 <View style = {globalStyles.flex_Row}>
                     <View style = {styles.pageIndicator}/>
@@ -189,7 +227,13 @@ const handleFileUpload = async (attachmentType) => {
                   <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                      <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('Clinical History')}>
+                      <TouchableOpacity 
+                      style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} 
+                      onPress={()=>{
+                        setSelectedType('Clinical History')
+                        setShowImagePicker(true)
+                        }}
+                      >
                         <AntDesign name="picture" size={27} color="#E60965" />
                       </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>
@@ -208,7 +252,13 @@ const handleFileUpload = async (attachmentType) => {
                   <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                      <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('Presenting Complaint')}>
+                      <TouchableOpacity 
+                      style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} 
+                      onPress={()=>{
+                        setSelectedType('Presenting Complaint')
+                        setShowImagePicker(true)
+                        }}
+                      >
                         <AntDesign name="picture" size={27} color="#E60965" />
                       </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>
@@ -227,7 +277,13 @@ const handleFileUpload = async (attachmentType) => {
                   <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                      <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('Clinical Findings')}>
+                      <TouchableOpacity 
+                      style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} 
+                      onPress={()=>{
+                        setSelectedType('Clinical Findings')
+                        setShowImagePicker(true)
+                        }}
+                      >
                         <AntDesign name="picture" size={27} color="#E60965" />
                       </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>
@@ -246,7 +302,13 @@ const handleFileUpload = async (attachmentType) => {
                   <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                      <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('Diagnosis')}>
+                      <TouchableOpacity 
+                      style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} 
+                      onPress={()=>{
+                        setSelectedType('Diagnosis')
+                        setShowImagePicker(true)
+                        }}
+                      >
                         <AntDesign name="picture" size={27} color="#E60965" />
                       </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>
@@ -265,7 +327,13 @@ const handleFileUpload = async (attachmentType) => {
                   <View style={[styles.rowAlignment]}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={[styles.iconContainer]}>
-                      <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('Treatments and Intervensions')}>
+                      <TouchableOpacity 
+                      style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} 
+                      onPress={()=>{
+                        setSelectedType('Treatments and Intervensions')
+                        setShowImagePicker(true)
+                        }}
+                      >
                         <AntDesign name="picture" size={27} color="#E60965" />
                       </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>
@@ -284,7 +352,13 @@ const handleFileUpload = async (attachmentType) => {
                   <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                      <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('Prescription')}>
+                      <TouchableOpacity 
+                      style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} 
+                      onPress={()=>{
+                        setSelectedType('Prescription')
+                        setShowImagePicker(true)
+                        }}
+                      >
                         <AntDesign name="picture" size={27} color="#E60965" />
                       </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>
@@ -304,7 +378,13 @@ const handleFileUpload = async (attachmentType) => {
                   <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                      <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('Government_ID')}>
+                      <TouchableOpacity 
+                      style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} 
+                      onPress={()=>{
+                        setSelectedType('Government_ID')
+                        setShowImagePicker(true)
+                        }}
+                      >
                         <AntDesign name="picture" size={27} color="#E60965" />
                       </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>

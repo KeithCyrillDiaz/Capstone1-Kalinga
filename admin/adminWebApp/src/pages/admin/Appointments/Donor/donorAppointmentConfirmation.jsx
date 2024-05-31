@@ -32,8 +32,8 @@ const donorAppointmentConfirmation = () => {
     medicalCondition: "",
     milkAmount: "",
     location: "",
-    selectedDate: selectedDate.toISOString(),
-    selectedTime: selectedTime.toISOString(),
+    selectedDate: new Date(),
+    selectedTime: new Date(),
   });
 
   const handleChange = (e) => {
@@ -68,14 +68,14 @@ const donorAppointmentConfirmation = () => {
     setShowModal(true); // Open the modal
     try {
       // Make a PUT request to update the RequestStatus to "Ongoing"
-      const utcTime = new Date(selectedTime.getTime() + (selectedTime.getTimezoneOffset() * 60000));
+      // const utcTime = new Date(selectedTime.getTime() + (selectedTime.getTimezoneOffset() * 60000));
 
       await axios.put(
         `${WebHost}/kalinga/updateDonationStatus/${AppointmentDonorID}`,
         {
           DonationStatus: "Ongoing",
           selectedDate: selectedDate.toISOString(),
-          selectedTime: utcTime.toISOString()
+          selectedTime: selectedTime.toISOString()
         }
       );
 

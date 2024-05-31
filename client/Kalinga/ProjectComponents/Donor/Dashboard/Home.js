@@ -11,7 +11,7 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios';
 import { BASED_URL } from '../../../MyConstants.js';
-import { checkOngoingAppointments, deleteAllCheckListItems } from '../../functions/checkAppointment.js';
+import { checkOngoingAppointments, deleteAllDonorCheckListItems } from '../../functions/checkAppointment.js';
 import { getDateTime } from '../../functions/formatDateAndTime.js';
 import { ReminderModal } from '../../modal/ReminderModal.js';
 
@@ -173,7 +173,7 @@ const appointmentReminder = async () => {
     const result = await checkOngoingAppointments({id: userInformation.Donor_ID, token: token, navigation: navigation})
     if(!result) {
       console.log("No ongoing Appointment")
-      await deleteAllCheckListItems()
+      await deleteAllDonorCheckListItems()
       setOnReminder(false)
       return
     }
@@ -186,7 +186,7 @@ const appointmentReminder = async () => {
     const formatTime = currentHours % 12 || 12 
 
     console.log("formatTime: ", formatTime)
-    if (date !== currentDateString) {
+    if (date === currentDateString) {
       console.log(currentDateString)
       console.log("The appointment date is today!");
       if(!onReminder)Alert.alert("Appointment Reminder", "Your appointment is scheduled for today. Please make sure to attend on time.")
@@ -194,7 +194,7 @@ const appointmentReminder = async () => {
       // Perform any additional actions if the appointment is today
     } else {
       console.log("The appointment date is not today.");
-      await deleteAllCheckListItems()
+      await deleteAllDonorCheckListItems()
       setOnReminder(false)
     }
 }

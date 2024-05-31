@@ -4,10 +4,7 @@ import { useNavigate, NavLink, useParams } from "react-router-dom";
 
 export default function () {
   const navigate = useNavigate();
-  const [showReportsDropdown, setShowReportsDropdown] = useState(false);
-  const [showVerificationDropdown, setVerificationDropdown] = useState(false);
-  const [showAppointmentsDropdown, setShowAppointmentsDropdown] =
-    useState(false);
+  const [openedDropdown, setOpenedDropdown] = useState(null);
 
   const isActiveRoute = (route) => {
     const currentPath = window.location.pathname;
@@ -23,6 +20,11 @@ export default function () {
     }
     return false;
   };
+
+  const toggleDropdown = (dropdown) => {
+    setOpenedDropdown(openedDropdown === dropdown ? null : dropdown);
+  };
+  
 
   return (
     <>
@@ -70,42 +72,13 @@ export default function () {
             <h1 className="ml-2 text-lg text-neutral-primary">Dashboard</h1>
           </NavLink>
 
-          {/* FORUM MOD */}
-          <NavLink
-            to="/admin/forum"
-            className={`flex items-center cursor-pointer w-full rounded-2xl py-1 mb-1 ${
-              isActiveRoute("forum")
-                ? "bg-secondary-default"
-                : "bg-transparent hover:bg-secondary-default"
-            }`}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="35"
-              height="35"
-              viewBox="0 0 24 24"
-              className="ml-6"
-            >
-              <path
-                fill="none"
-                stroke="#FFEECC"
-                strokeLinecap="round"
-                strokeWidth="1"
-                d="M7.23 16.23q-.326 0-.547-.22q-.221-.222-.221-.549v-1h11.75l.634.635V6h1q.327 0 .548.221t.222.548v10.595q0 .534-.498.742q-.497.207-.876-.171l-1.704-1.704zm-.768-3.769l-1.704 1.705q-.38.378-.876.17q-.497-.207-.497-.742V3.77q0-.327.22-.548Q3.828 3 4.155 3h11.923q.327 0 .548.221t.221.548v7.923q0 .327-.221.549q-.221.22-.548.22zm9.384-1V4H4.385v8.846l1.384-1.384zm-11.461 0V4z"
-              ></path>
-            </svg>
-
-            <h1 className="ml-2 text-md text-neutral-primary">
-              Forum Moderation
-            </h1>
-          </NavLink>
           {/* REPORTS */}
           <div>
             <div className="relative">
               <div
-                onClick={() => setShowReportsDropdown(!showReportsDropdown)}
+                onClick={() => toggleDropdown("reports")}
                 className={`flex items-center cursor-pointer w-full rounded-t-2xl  pb-2 ${
-                  showReportsDropdown ? "bg-secondary-default" : ""
+                  openedDropdown === "reports" ? "bg-secondary-default" : ""
                 }`}
               >
                 <svg
@@ -135,19 +108,19 @@ export default function () {
                   height="30"
                   viewBox="0 0 24 24"
                   className={`absolute right-2 transform transition-transform duration-300 ${
-                    showReportsDropdown ? "rotate-0" : "rotate-180"
+                    openedDropdown === "reports" ? "rotate-0" : "rotate-180"
                   }`}
                 >
                   <path fill="#FFEECC" d="m7 10l5 5l5-5z" />
                 </svg>
               </div>
 
-              {showReportsDropdown && (
+              {openedDropdown === "reports" && (
                 <div className="p-2 w-full bg-secondary-default rounded-b-2xl pb-2 mb-2">
                   <NavLink
                     to="/admin/chart"
                     className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-5 py-1 mb-1 ${
-                      isActiveRoute("donor verif")
+                      isActiveRoute("chart")
                         ? "bg-primary-default"
                         : "bg-transparent hover:bg-primary-default"
                     }`}
@@ -156,19 +129,29 @@ export default function () {
                       Monthly Report
                     </h1>
                   </NavLink>
+                  <NavLink
+                    to="/admin/barangay"
+                    className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-5 py-1 mb-1 ${
+                      isActiveRoute("barangay")
+                        ? "bg-primary-default"
+                        : "bg-transparent hover:bg-primary-default"
+                    }`}
+                  >
+                    <h1 className="text-lg text-neutral-primary">
+                      Barangay Report
+                    </h1>
+                  </NavLink>
                 </div>
               )}
             </div>
           </div>
-          {/* VERIFICAIION */}
+          {/* VERIFICATION */}
           <div>
             <div className="relative">
               <div
-                onClick={() =>
-                  setVerificationDropdown(!showVerificationDropdown)
-                }
+                onClick={() => toggleDropdown("verification")}
                 className={`flex items-center cursor-pointer w-full rounded-t-2xl pt-1 pb-1 ${
-                  showVerificationDropdown ? "bg-secondary-default" : ""
+                  openedDropdown === "verification" ? "bg-secondary-default" : ""
                 } `}
               >
                 <svg
@@ -184,8 +167,8 @@ export default function () {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="1.5"
-                    d="M4.616 19q-.691 0-1.153-.462T3 17.384V6.616q0-.691.463-1.153T4.615 5h14.77q.69 0 1.152.463T21 6.616v10.769q0 .69-.463 1.153T19.385 19zM4 8h16V6.616q0-.231-.192-.424T19.385 6H4.615q-.23 0-.423.192T4 6.616zm6.95 7.82l4.958-4.959l-.72-.719l-4.238 4.239l-2.138-2.139l-.72.72z"
-                  ></path>
+                    d="M4.616 19q-.691 0-1.153-.462T3 17.384V6.616q0-.691.463-1.153T4.615 5h14.77q.69 0 1.152.463T21 6.616v10.769q0 .69-.463 1.152T19.385 19H4.615ZM3 9h18"
+                  />
                 </svg>
                 <h1 className="ml-2 mr-2 text-lg text-neutral-primary">
                   Verification
@@ -197,64 +180,61 @@ export default function () {
                   height="30"
                   viewBox="0 0 24 24"
                   className={`absolute right-2 transform transition-transform duration-300 ${
-                    showReportsDropdown ? "rotate-0" : "rotate-180"
+                    openedDropdown === "verification" ? "rotate-0" : "rotate-180"
                   }`}
                 >
                   <path fill="#FFEECC" d="m7 10l5 5l5-5z" />
                 </svg>
               </div>
-
-              {showVerificationDropdown && (
+              {openedDropdown === "verification" && (
                 <div className="p-2 w-full bg-secondary-default rounded-b-2xl pb-2 mb-2">
-                  <NavLink
-                    to="/admin/DonorVerifPendings"
-                    className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-5 py-1 mb-1 ${
-                      isActiveRoute("donor verif")
-                        ? "bg-primary-default"
-                        : "bg-transparent hover:bg-primary-default"
-                    }`}
-                  >
-                    <h1 className="text-lg text-neutral-primary">
-                      Donor Pendings
-                    </h1>
-                  </NavLink>
-                  <NavLink
-                    to="/admin/RequestorVerifPendings"
-                    className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
-                      isActiveRoute("requestor")
-                        ? "bg-primary-default"
-                        : "bg-transparent hover:bg-primary-default"
-                    }`}
-                  >
-                    <h1 className="text-lg text-neutral-primary">
-                      Requestor Pendings
-                    </h1>
-                  </NavLink>
-                  <NavLink
-                    to="/admin/users"
-                    className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
-                      isActiveRoute("users")
-                        ? "bg-primary-default"
-                        : "bg-transparent hover:bg-primary-default"
-                    }`}
-                  >
-                    <h1 className="text-lg text-neutral-primary">
-                      User Management
-                    </h1>
-                  </NavLink>
-                </div>
+                <NavLink
+                  to="/admin/DonorVerifPendings"
+                  className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-5 py-1 mb-1 ${
+                    isActiveRoute("donor verif")
+                      ? "bg-primary-default"
+                      : "bg-transparent hover:bg-primary-default"
+                  }`}
+                >
+                  <h1 className="text-lg text-neutral-primary">
+                    Donor Pendings
+                  </h1>
+                </NavLink>
+                <NavLink
+                  to="/admin/RequestorVerifPendings"
+                  className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
+                    isActiveRoute("requestor")
+                      ? "bg-primary-default"
+                      : "bg-transparent hover:bg-primary-default"
+                  }`}
+                >
+                  <h1 className="text-lg text-neutral-primary">
+                    Requestor Pendings
+                  </h1>
+                </NavLink>
+                <NavLink
+                  to="/admin/users"
+                  className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
+                    isActiveRoute("users")
+                      ? "bg-primary-default"
+                      : "bg-transparent hover:bg-primary-default"
+                  }`}
+                >
+                  <h1 className="text-lg text-neutral-primary">
+                    User Management
+                  </h1>
+                </NavLink>
+              </div>
               )}
             </div>
           </div>
-          {/* APPOINTMENT */}
+          {/* APPOINTMENTS */}
           <div>
             <div className="relative">
               <div
-                onClick={() =>
-                  setShowAppointmentsDropdown(!showAppointmentsDropdown)
-                }
-                className={`flex items-center cursor-pointer w-full rounded-t-2xl pt-2 pb-2 ${
-                  showAppointmentsDropdown ? "bg-secondary-default" : ""
+                onClick={() => toggleDropdown("appointments")}
+                className={`flex items-center cursor-pointer w-full rounded-t-2xl pt-1 pb-1 ${
+                  openedDropdown === "appointments" ? "bg-secondary-default" : ""
                 }`}
               >
                 <svg
@@ -264,16 +244,14 @@ export default function () {
                   viewBox="0 0 24 24"
                   className="ml-6"
                 >
-                  <g
+                  <path
                     fill="none"
                     stroke="#FFEECC"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="1.5"
-                  >
-                    <path d="M9 20H6a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4h11a4 4 0 0 1 4 4v3M8 2v2m7-2v2M2 8h19m-2.5 7.643l-1.5 1.5"></path>
-                    <circle cx={17} cy={17} r={5}></circle>
-                  </g>
+                    d="M8 2v3m8-3v3M3 9h18M4 7h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Zm4 4v7m8-7v7m-4-7v7"
+                  />
                 </svg>
                 <h1 className="ml-2 mr-2 text-lg text-neutral-primary">
                   Appointments
@@ -285,43 +263,70 @@ export default function () {
                   height="30"
                   viewBox="0 0 24 24"
                   className={`absolute right-2 transform transition-transform duration-300 ${
-                    showReportsDropdown ? "rotate-0" : "rotate-180"
+                    openedDropdown === "appointments" ? "rotate-0" : "rotate-180"
                   }`}
                 >
                   <path fill="#FFEECC" d="m7 10l5 5l5-5z" />
                 </svg>
               </div>
 
-              {showAppointmentsDropdown && (
+              {openedDropdown === "appointments" && (
                 <div className="p-2 w-full bg-secondary-default rounded-b-2xl pb-2 mb-2">
-                  <NavLink
-                    to="/admin/donorAppointManage"
-                    className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
-                      isActiveRoute("city")
-                        ? "bg-primary-default"
-                        : "bg-transparent hover:bg-primary-default"
-                    }`}
-                  >
-                    <h1 className="text-md text-neutral-primary">
-                      Donor Mamangement
-                    </h1>
-                  </NavLink>
-                  <NavLink
-                    to="/admin/requestorManagement"
-                    className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
-                      isActiveRoute("requestorManagement")
-                        ? "bg-primary-default"
-                        : "bg-transparent hover:bg-primary-default"
-                    }`}
-                  >
-                    <h1 className="text-md text-neutral-primary">
-                      Requestor Mamangement
-                    </h1>
-                  </NavLink>
-                </div>
+                <NavLink
+                  to="/admin/donorAppointManage"
+                  className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
+                    isActiveRoute("city")
+                      ? "bg-primary-default"
+                      : "bg-transparent hover:bg-primary-default"
+                  }`}
+                >
+                  <h1 className="text-md text-neutral-primary">
+                    Donor Mamangement
+                  </h1>
+                </NavLink>
+                <NavLink
+                  to="/admin/requestorManagement"
+                  className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
+                    isActiveRoute("requestorManagement")
+                      ? "bg-primary-default"
+                      : "bg-transparent hover:bg-primary-default"
+                  }`}
+                >
+                  <h1 className="text-md text-neutral-primary">
+                    Requestor Mamangement
+                  </h1>
+                </NavLink>
+              </div>
               )}
             </div>
           </div>
+          {/* FORUM
+          <NavLink
+            to={`/admin/forum`}
+            className={`flex items-center cursor-pointer w-full rounded-2xl py-1 mb-1 ${
+              isActiveRoute("forum")
+                ? "bg-secondary-default"
+                : "bg-transparent hover:bg-secondary-default"
+            }`}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="35"
+              height="35"
+              viewBox="0 0 24 24"
+              className="ml-6"
+            >
+              <path
+                fill="none"
+                stroke="#FFEECC"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.5"
+                d="M2.75 16.125c0 .69.56 1.25 1.25 1.25h5.5v2.625a.75.75 0 0 0 1.28.53l4.32-4.405h6.15c.69 0 1.25-.56 1.25-1.25V4.75c0-.69-.56-1.25-1.25-1.25H4a1.25 1.25 0 0 0-1.25 1.25v11.375Zm2-5h14.5m-14.5-4h14.5"
+              />
+            </svg>
+            <h1 className="ml-2 text-lg text-neutral-primary">Forum</h1>
+          </NavLink> */}
         </div>
       </section>
     </>

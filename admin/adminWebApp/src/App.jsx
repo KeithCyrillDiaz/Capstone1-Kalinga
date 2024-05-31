@@ -28,6 +28,7 @@ import {
   Users,
   DonorAppointManage,
   RequestorManagement,
+  Barangay,
 } from "@/pages";
 import { RootLayout, NotFound, MainLayout, AdminLayout } from "@/layouts";
 import { MobileChecker } from "@/components";
@@ -60,6 +61,7 @@ const router = createBrowserRouter(
           element={<RequestorVerification />}
         />
         <Route path="chart" element={<Chart />} />
+        <Route path="barangay" element={<Barangay />} />
         <Route path="forum" element={<Forum />} />
         <Route path="approved" element={<Approved />} />
         <Route path="rejected" element={<Rejected />} />
