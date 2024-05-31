@@ -174,6 +174,13 @@ export default function RequestorAppointments() {
     setCurrentPage(page);
   };
 
+  useEffect(() => {
+    // Simulate a loading process
+    setTimeout(() => {
+      setLoading(false);
+    }, 20000);
+  }, []);
+
   return (
     <>
       <section className="w-full h-screen bg-primary-body overflow-hidden">
