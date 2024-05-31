@@ -10,6 +10,9 @@ import autoTable from "jspdf-autotable";
 import axios from "axios";
 import { WebHost } from "../../../MyConstantAdmin";
 import { getBarangayByCityName } from "../../functions/getBarangay";
+import { TopCard } from "../../components/TopCard/RenderTopCard";
+import { generatePDF } from "../../functions/generatePDF";
+import { getTopByBarangay } from "../../api/report/fetchTopUsers";
 
 export default function barangay() {
   const [selectedMonth, setSelectedMonth] = useState("");
@@ -29,6 +32,8 @@ export default function barangay() {
   const [totalRequestors, setTotalRequestors] = useState(0);
   const [totalAppointments, setTotalAppointments] = useState(0);
   const [totalRequests, setTotalRequest] = useState(0);
+  const [topDonorPerBarangay, setTopDonorPerBarangay] = useState([])
+  const [topRequestorPerBarangay, setTopRequestorPerBarangay] = useState([])
   
   const currentDate = new Date();
   const currentMonth = currentDate.toLocaleString("default", { month: "long" });
@@ -370,6 +375,31 @@ console.log ("Barangay", selectedBarangay)
     );
   };
 
+  useEffect(() => {
+    fetchTopDonorAndRequestorByBarangay()
+  }, [selectedBarangay])
+
+  const fetchTopDonorAndRequestorByBarangay = async() => {
+    const donors = await getTopByBarangay({barangay: selectedBarangay, userType: "Donor"})
+    const requestor = await getTopByBarangay({barangay: selectedBarangay, userType: "Requestor"})
+    setTopDonorPerBarangay(donors)
+    setTopRequestorPerBarangay(requestor)
+  }
+
+  const generateDownloadablePDF = (title, data) => {
+    console.log("Data: ", data)
+
+    const filteredData = data.filter(item => item.year === selectedYear.toString());
+    console.log("filteredData: ", filteredData)
+
+    const formattedData = filteredData.map((item, index) => [index + 1, item.fullName, item.milkAmount]);
+    console.log("barangay: ", formattedData)
+      generatePDF({
+        title: title,
+        data: formattedData
+      })
+  }
+
   return (
     <>
       <section className="w-full h-auto bg-primary-body overflow-hidden">
@@ -635,7 +665,7 @@ console.log ("Barangay", selectedBarangay)
                       </svg>
                     </a>
                   </div>
-                  <div className="flex flex-row">
+                  <div className="flex flex-row ">
                     <div className="py-2 ml-4">
                     
                       <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
@@ -661,14 +691,29 @@ console.log ("Barangay", selectedBarangay)
                       </h3>
                     </div>
                   </div>
-                  <div>
                   <BarPerMonthBarangay name="Total Requests" selectedYear={selectedYear} selectedBarangay={selectedBarangay}/>
-                    
-                  </div>
+             
                 </div>
+                {/* Top Donating Per Barangay    */}
+              <div className="flex flex-row gap-7 items-center justify-center bg-white">
+                    <TopCard 
+                    title={`Top Requestors in ${selectedBarangay}`} 
+                    data={topRequestorPerBarangay}
+                    barangay={selectedBarangay}
+                    userType={"Requestor"}
+                    download={() => generateDownloadablePDF(`Top Requestors in ${selectedBarangay} for ${selectedYear}`, topRequestorPerBarangay)}/>
+
+                    <TopCard 
+                    title={`Top Donors in ${selectedBarangay}`} 
+                    data={topDonorPerBarangay}
+                    barangay={selectedBarangay}
+                    userType={"Donor"}
+                    download={() => generateDownloadablePDF(`Top Donor in ${selectedBarangay} for ${selectedYear}`, topDonorPerBarangay)}/>
+                  </div>
               </div>
+              
               {/* Analysis */}
-              <div className="flex flex-col w-2/6 gap-4">
+              <div className="flex flex-col w-2/6 gap-4 ">
                 <div className="flex flex-col p-4 bg-white rounded-2xl shadow-sm relative">
                   <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
                     Analysis
@@ -738,7 +783,8 @@ console.log ("Barangay", selectedBarangay)
                       selectedMonth={selectedMonth}
                       selectedYear={selectedYear}
                       selectedBarangay = {selectedBarangay}
-                    /></div>
+                    />
+                    </div>
                     </div>
                   </div>
                 </div>
