@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-  DonatePerMonth,
+  DonatePerMonthBarangay,
   RequestPerMonth,
   BarDonatePerMonth,
   BarRequestPerMonth,
@@ -8,11 +8,13 @@ import {
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import axios from "axios";
-import { WebHost } from "../../../MyConstantSuperAdmin";
+import { WebHost } from "../../../MyConstantAdmin";
 
-export default function chart() {
+export default function barangay() {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
+  const [selectedBarangay, setSelectedBarangay] = useState("");
+  const [barangays, setBarangays] = useState([]);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -36,9 +38,21 @@ useEffect(() => {
   setSelectedYear(currentYear); // Set default selected year
 }, []);
 
+const handleSelectBarangay = (e) => {
+  setSelectedBarangay(e.target.value);
+};
 
-  
-
+useEffect(() => {
+  const fetchBarangays = async () => {
+    try {
+      const response = await axios.get(`${WebHost}/kalinga/getAllBarangay`);
+      setBarangays(response.data);
+    } catch (error) {
+      console.error("Error fetching barangays:", error);
+    }
+  };
+  fetchBarangays();
+}, []);
   const months = [
     { id: 1, name: "January" },
     { id: 2, name: "February" },
@@ -60,22 +74,25 @@ useEffect(() => {
   const monthValue = getMonthValue(selectedMonth);
     try {
       const responseComplete = await axios.get(
-        `${WebHost}/kalinga/getTotalCompleteDonationPerMonth`,
+        `${WebHost}/kalinga/getTotalCompleteDonationPerBarangay`,
         {
           params: {
             selectedMonth: monthValue,
             selectedYear: parseInt(selectedYear),
+            selectedBarangay: selectedBarangay
           },
         }
       );
       const totalCompleteDonations = responseComplete.data.totalCompleteAppointments;
   
       const responseDecline = await axios.get(
-        `${WebHost}/kalinga/getTotalDeclineDonationPerMonth`,
+        `${WebHost}/kalinga/getTotalDeclineDonationPerBarangay`,
         {
           params: {
             selectedMonth: monthValue,
             selectedYear: parseInt(selectedYear),
+            selectedBarangay: selectedBarangay
+
           },
         }
       );
@@ -84,59 +101,79 @@ useEffect(() => {
       setTotalDeclinedDonations(totalDeclinedDonations);
   
       const responseRequests = await axios.get(
-        `${WebHost}/kalinga/getTotalCompleteRequestPerMonth`,
+        `${WebHost}/kalinga/getTotalCompleteRequestBarangay`,
         {
           params: {
             selectedMonth: monthValue,
             selectedYear: parseInt(selectedYear),
+            selectedBarangay: selectedBarangay,
           },
         }
       );
-      const totalCompleteRequests = responseRequests.data.totalCompleteRequest;
+      const totalCompleteRequests = responseRequests.data.totalCompleteRequests;
 
-  
       const responseDeclineRequests = await axios.get(
-        `${WebHost}/kalinga/getTotalDeclineRequestPerMonth`,
+        `${WebHost}/kalinga/getTotalDeclineRequestBarangay`,
         {
           params: {
             selectedMonth: monthValue,
             selectedYear: parseInt(selectedYear),
+            selectedBarangay: selectedBarangay,
           },
         }
       );
-      const totalDeclinedRequests = responseDeclineRequests.data.totalDeclineRequest;
+      const totalDeclinedRequests = responseDeclineRequests.data.totalDeclineRequests;
       setTotalCompleteRequests(totalCompleteRequests);
       setTotalDeclinedRequests(totalDeclinedRequests);
       
-      const donorsResponse = await axios.get(`${WebHost}/kalinga/getTotalDonorsPerMonth`, {
-        params: { month: monthValue, year: parseInt(selectedYear) },
+      const donorsResponse = await axios.get(`${WebHost}/kalinga/getTotalDonorsPerBarangay`, {
+        params: {
+          selectedMonth: monthValue,
+          selectedYear: parseInt(selectedYear),
+          selectedBarangay: selectedBarangay,
+        },
       });
 
-      const requestorsResponse = await axios.get(`${WebHost}/kalinga/getTotalRequestorsPerMonth`, {
-        params: { month: monthValue, year: parseInt(selectedYear) },
+      const requestorsResponse = await axios.get(`${WebHost}/kalinga/getTotalRequestorsPerBarangay`, {
+        params: {
+          selectedMonth: monthValue,
+          selectedYear: parseInt(selectedYear),
+          selectedBarangay: selectedBarangay,
+        },
       });
 
       setTotalDonors(donorsResponse.data.totalDonors);
       setTotalRequestors(requestorsResponse.data.totalRequestors);
 
       const responseAppointments = await axios.get(
-        `${WebHost}/kalinga/getTotalAppointmentsPerMonth`,
+        `${WebHost}/kalinga/getTotalAppointmentsBarangay`,
         {
-          params: { month: monthValue, year: parseInt(selectedYear) },
+          params: {
+            selectedMonth: monthValue,
+            selectedYear: parseInt(selectedYear),
+            selectedBarangay: selectedBarangay,
+          },
         }
       );
       setTotalAppointments(responseAppointments.data.totalAppointments);   
       
-      const response = await axios.get(`${WebHost}/kalinga/getTotalRequestsPerMonthAndYear`, {
-        params: { month: monthValue, year: parseInt(selectedYear) },
+      const response = await axios.get(`${WebHost}/kalinga/getTotalRequestsPerMonthAndYearBarangay`, {
+        params: {
+          selectedMonth: monthValue,
+          selectedYear: parseInt(selectedYear),
+          selectedBarangay: selectedBarangay,
+        },        
+
       });
       setTotalRequest(response.data.totalRequests);  
-
-      const responseAllComplete = await axios.get(`${WebHost}/kalinga/getTotalCompleteDonationsAllMonths`, { params: { year: selectedYear } });
+      const responseAllComplete = await axios.get(`${WebHost}/kalinga/getTotalCompleteDonationsAllMonthsBarangay`, { params: { selectedYear: selectedYear, selectedBarangay: selectedBarangay, } });
       const totalAllMonthCompleteDonations = responseAllComplete.data.reduce((acc, curr) => acc + curr.totalCompleteDonations, 0);
       setTotalAllMonthCompleteDonations(totalAllMonthCompleteDonations);
+      console.log ("All Months", totalAllMonthCompleteDonations )
+      console.log ("response", responseAllComplete )
 
-      const responseAllRequests = await axios.get(`${WebHost}/kalinga/getTotalCompleteRequestAllMonths`, { params: { year: selectedYear } });
+
+      const responseAllRequests = await axios.get(`${WebHost}/kalinga/getTotalCompleteRequestAllMonthsBarangay`, { params: { selectedYear: selectedYear, selectedBarangay: selectedBarangay,  } });
       const totalAllMonthCompleteRequests = responseAllRequests.data.reduce((acc, curr) => acc + curr.totalCompleteRequests, 0);
       setTotalAllMonthCompleteRequests(totalAllMonthCompleteRequests);
 
@@ -167,10 +204,10 @@ useEffect(() => {
   };
 
   useEffect(() => {
-    if (selectedMonth && selectedYear) {
+    if (selectedMonth && selectedYear && selectedBarangay) {
       fetchData();
     }
-  }, [selectedMonth, selectedYear]);
+  }, [selectedMonth, selectedYear, selectedBarangay]);
   
   const handleDownloadPDF = async () => {
     try {
@@ -301,8 +338,12 @@ useEffect(() => {
 
   const toggleFilterVisibility = () => {
     setIsFilterVisible(!isFilterVisible);
+    console.log("Is filter visible:", !isFilterVisible);
   };
 
+console.log ("Month", selectedMonth)
+console.log ("Year", selectedYear)
+console.log ("Barangay", selectedBarangay)
 
   const DashboardCard = ({ icon, title, count, seeMore }) => {
     return (
@@ -336,7 +377,7 @@ useEffect(() => {
         <div className="p-12 pt-2">
           <div>
             <h1 className="text-3xl text-primary-default font-bold font-sans py-4 pb-2">
-              Monthly Report
+              Barangay Report
             </h1>
           </div>
 
@@ -383,7 +424,7 @@ useEffect(() => {
                       d="M5 20h14v-2H5zM19 9h-4V3H9v6H5l7 7z"
                     ></path>
                   </svg>
-                  Download as PDF
+                  Export as PDF
                 </button>
               </div>
 
@@ -420,6 +461,21 @@ useEffect(() => {
                       <option value="2024">2024</option>
                     </select>
                   </div>
+                  <div className=" border-b border-primary-default">
+                    <label className="text-xs text-primary-default">Barangay</label>
+                    <select
+                      value={selectedBarangay}
+                      onChange={handleSelectBarangay}
+                      className="bg-white text-primary-default text-xl py-1 px-5 pr-10 rounded-sm hover:cursor-pointer w-full"
+                    >
+                      <option value="">Select a Barangay</option>
+                      {barangays.map((barangay) => (
+                        <option key={barangay} value={barangay}>
+                          {barangay}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               )}
             </div>
@@ -430,7 +486,7 @@ useEffect(() => {
               <h1 className="text-2xl text-primary-default font-semibold font-sans py-4 pb-6">
                 {" "}
                 {/* nakadepende din dapat to sa filter */}
-                Reports for the month of May 2024
+                Reports for the {selectedBarangay} {selectedMonth} {selectedYear}
               </h1>
             </div>
             <div className="w-full flex justify-center gap-4">
@@ -619,9 +675,10 @@ useEffect(() => {
                         </div>
                       </div>
                       <div>
-                      <DonatePerMonth
+                      <DonatePerMonthBarangay
                       selectedMonth={selectedMonth}
                       selectedYear={selectedYear}
+                      selectedBarangay = {selectedBarangay}
                     /></div>
                     </div>
                   </div>
@@ -657,6 +714,7 @@ useEffect(() => {
                       <RequestPerMonth
                       selectedMonth={selectedMonth}
                       selectedYear={selectedYear}
+                      selectedBarangay = {selectedBarangay}
                     /></div>
                     </div>
                   </div>

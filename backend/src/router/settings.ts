@@ -23,8 +23,8 @@ export default (router: express.Router) => {
     router.post('/kalinga/createReportBug/:id', tokenVerification, reportBug)
     router.get('/kalinga/getReportBugs/', tokenVerification, getReports)
     router.get('/kalinga/getResolvedReportBugs/', tokenVerification, getResolvedReports)
-    router.patch('/kalinga/updateResolved/:id', tokenVerification,  updateResolved)
-    router.delete('/kalinga/deleteReport/:id', tokenVerification, deleteReport)
+    router.patch('/kalinga/updateResolved/:id',  updateResolved)
+    router.delete('/kalinga/deleteReport/:id', deleteReport)
 
     //ChangePassword
     router.patch('/kalinga/updatePassword/:id', tokenVerification, checkPassword, changePassword)

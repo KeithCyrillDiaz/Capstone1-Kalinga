@@ -89,7 +89,7 @@ export default function BarDonatePerMonth({ name }) {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl text-center text-pink-500">Donation</h1>
         <button onClick={handleDownloadPDF} className="bg-pink-500 text-white py-2 px-4 rounded-xl focus:outline-none hover:bg-pink-600">
-          Download PDF
+        Export as PDF
         </button>
       </div>
       <ResponsiveContainer width="100%" height={400}>

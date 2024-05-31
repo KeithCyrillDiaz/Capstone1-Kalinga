@@ -39,7 +39,7 @@ const requestorAppointmentConfirmation = () => {
       try {
         console.log("Fetching appointment data for RequestID:", RequestID);
         const response = await axios.get(
-          `${WebHost}/kalinga/getRequestByID/${RequestID}`
+          $`{WebHost}/kalinga/getRequestByID/${RequestID}`
         );
         console.log("API Response:", response.data);
         setRequestData(response.data); // Update state with response data

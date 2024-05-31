@@ -113,7 +113,7 @@ const donorAppointmentConfirmation = () => {
     try {
       // Update the DonationStatus to "Ongoing"
       const response = await axios.put(
-        `${WebHost}/kalinga/updateDonationStatus/${AppointmentDonorID}`,
+        $`{WebHost}/kalinga/updateDonationStatus/${AppointmentDonorID}`,
         {
           DonationStatus: "Decline",
         }

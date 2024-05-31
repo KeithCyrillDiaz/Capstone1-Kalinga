@@ -165,7 +165,7 @@ export default function BarRequestOverAll({ name }) {
           onClick={handleDownloadPDF}
           className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded"
         >
-          Download Report as PDF
+          Export as PDF
         </button>
       </div>
     </div>
