@@ -7,6 +7,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { WebHost } from "../../../../../MyConstantAdmin";
 import { getMedicalAbstractsFiles, getMedicalAbstractsImages } from "../../../../api/Appointments/Request";
+import DatePicker from 'react-datepicker';
 
 const requestorAppointmentConfirmation = () => {
 
@@ -14,6 +15,8 @@ const requestorAppointmentConfirmation = () => {
   const [requestData, setRequestData] = useState(null); // State to store fetched request details
   const [images, setImages] = useState([])
   const [files, setFiles] = useState([])
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedTime, setSelectedTime] = useState(new Date());
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -29,6 +32,7 @@ const requestorAppointmentConfirmation = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    console.log("Name: ", name)
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -57,9 +61,6 @@ const requestorAppointmentConfirmation = () => {
     fetchRequirements()
   }, [RequestID]);
 
-  console.log("Request Data:", requestData);
-
-  console.log("Request Data:", requestData);
 
   const [showModal, setShowModal] = useState(false);
   const [isDeclineModalOpen, setIsDeclineModalOpen] = useState(false);
@@ -69,7 +70,9 @@ const requestorAppointmentConfirmation = () => {
     try {
       await axios.put(`${WebHost}/kalinga/updateRequestStatus/${RequestID}`, {
         RequestStatus: "Ongoing",
-        BabyCategory: formData.BabyCategory,
+        Date: selectedDate, 
+        Time: selectedTime,
+        medicalCondition: requestData?.Request?.medicalCondition || ''
       });
     } catch (error) {
       console.error("Error updating request status:", error);
@@ -115,6 +118,40 @@ const requestorAppointmentConfirmation = () => {
       BabyCategory: e.target.value,
     }));
   };
+
+
+  const handleSelectChange = (event) => {
+    const { name, value } = event.target;
+    const newRequest = {
+      ...requestData.Request,
+      medicalCondition: value
+    }
+    setRequestData({
+      ...requestData,
+      Request: newRequest
+    })
+  };
+
+  const handleScheduleChange = (name, value) => {
+
+      value = value.toISOString();
+  
+    console.log(name + ": " + value)
+    const newRequest = {
+      ...requestData.Request,
+      [name]: value
+    }
+
+    setRequestData({
+      ...requestData,
+      Request: newRequest
+    })
+    if(name === "Time") setSelectedTime(value)
+      else setSelectedDate(value)
+  }
+
+
+  console.log("Request Data: ", requestData)
 
   const fetchRequirements = async (id) => {
     const Requestor_ID= id.Request.Requestor_ID
@@ -213,20 +250,21 @@ const requestorAppointmentConfirmation = () => {
 
         {/* Medical Condition and Milk Requested Input */}
         <div className="flex gap-x-2">
-          <div className="w-2/3 mt-4">
-            <input
-              type="text"
-              id="medicalCondition"
-              name="medicalCondition"
-              value={`Medical Condition: ${
-                requestData ? requestData.Request.medicalCondition : ""
-              }`}
-              onChange={handleChange}
-              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
-              disabled
-              placeholder="Medical Condition"
-            />
-          </div>
+        <div className="w-2/3 mt-4">
+          <select
+            disabled={requestData?.Request?.RequestStatus !== "Pending"}
+            id="medicalCondition"
+            name="medicalCondition"
+            value={requestData?.Request?.medicalCondition || ''}
+            onChange={handleSelectChange}
+            className="bg-white w-full px-4 py-2 h-14 shadow-md rounded-lg focus:outline-none focus:text-primary-default"
+          >
+            <option value="">Select Medical Condition</option>
+            <option value="Well Baby">Well Baby</option>
+            <option value="Sick Baby">Sick Baby</option>
+            <option value="Medically Fragile Baby">Medically Fragile Baby</option>
+          </select>
+        </div>
           <div className="w-1/3 mt-4">
             <input
               type="text"
@@ -267,7 +305,9 @@ const requestorAppointmentConfirmation = () => {
                 type="text"
                 id="reasonRequest"
                 name="MethodforObtaining"
-                value={`Method for Obtaining: Authorized Person`}
+                value={`Method for Obtaining: ${
+                  requestData ? requestData.Request.method : ""
+                }`}
                 onChange={handleChange}
                 className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
                 disabled
@@ -276,7 +316,84 @@ const requestorAppointmentConfirmation = () => {
             </div>
           </div>
         </div>
-        
+
+        {/* Scheduling Request Appointment */}
+        <div className="flex gap-x-2">
+          <div className="w-1/2 mt-4">
+            <div className="flex flex-col">
+              <label
+                htmlFor="date"
+                className="text-md font-medium font-bold text-primary-default ml-2"
+              >
+                Scheduled Date
+              </label>
+              <DatePicker
+                selected={requestData?.Request?.Date || new Date()}
+                onChange={(date) => handleScheduleChange("Date", date)}
+                dateFormat="dd/MM/yyyy"
+                className={`bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default ${
+                 requestData?.Request?.RequestStatus === "Pending" 
+                    ? "focus: text-primary-default"
+                    : "bg-gray-100 cursor-not-allowed"
+                }`}
+                // Disable date selection if not pending
+                disabled={requestData?.Request?.RequestStatus !== "Pending"}
+              />
+            </div>
+          </div>
+          <div className="w-1/2 mt-4">
+            <label
+              htmlFor="time"
+              className="text-md font-medium font-bold text-primary-default ml-2"
+            >
+              Scheduled Time
+            </label>
+            <input
+              type="time"
+              id="time"
+              value={
+                selectedTime
+                  ? selectedTime.toISOString().substring(11, 16)
+                  : ""
+              }
+              onChange={(e) => {
+                const [hours, minutes] = e.target.value.split(":");
+                const newTime = new Date(selectedTime);
+                
+                // Set the hours and minutes of the new time
+                newTime.setUTCHours(parseInt(hours, 10), parseInt(minutes, 10));
+              
+                // Convert newTime to local time zone (Philippine time)
+                const localTime = newTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+              
+                // Parse the local time string to get the hours, minutes, and AM/PM
+                const [localHours, localMinutes, amPm] = localTime.split(/:| /);
+                
+                // Convert hours to 24-hour format
+                let hours24 = parseInt(localHours, 10);
+                if (amPm.toLowerCase() === 'pm' && hours24 < 12) {
+                  hours24 += 12;
+                } else if (amPm.toLowerCase() === 'am' && hours24 === 12) {
+                  hours24 = 0;
+                }
+              
+                // Set the new time with local hours and minutes
+                newTime.setHours(hours24, parseInt(localMinutes, 10));
+                handleScheduleChange("Time", newTime)
+                setSelectedTime(newTime);
+              }}
+              className={`bg-white w-full py-2 h-14 px-4 shadow-md rounded-lg focus:outline-none focus: text-primary-default ${
+                requestData?.Request?.RequestStatus === "Pending"
+                  ? "focus: text-primary-default"
+                  : "bg-gray-100 cursor-not-allowed"
+              }`}
+              // Disable time selection if not pending
+              disabled={requestData?.Request?.RequestStatus !== "Pending"}
+            />
+          </div>
+        </div>
+         
+    
         <div className="mt-4 flex flex-cols gap-4">
       {images.length !== 0 && images.map(requirement => (
         <>

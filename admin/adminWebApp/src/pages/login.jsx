@@ -167,7 +167,7 @@ export default function Login() {
                           onClick={() => setHidePassword(true)}
                           className="ml-[-11%]"
                           size={24}
-                          color={"black"}
+                          color="#E60965"
                         />
                       )}
                       {hidePassword && (
@@ -175,7 +175,7 @@ export default function Login() {
                           onClick={() => setHidePassword(false)}
                           className="ml-[-11%]"
                           size={24}
-                          color={"black"}
+                          color="#E60965"
                         />
                       )}
                     </div>
