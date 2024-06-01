@@ -8,29 +8,41 @@ const months: string[] = [
 
 export const getTotalCompleteRequestAllMonths = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { year } = req.query;
+    const year: string = req.query.year as string
+    if (!year || isNaN(parseInt(year))) {
+      throw new Error('Invalid year');
+    }
+
+    const selectedYear = year.toString(); // Convert year to string
+    console.log(`Selected Year: ${selectedYear}`);
+
     const monthlyTotals: Record<string, number> = {};
 
-    // Initialize monthlyTotals with zero values for each month
     months.forEach(month => {
       monthlyTotals[month] = 0;
     });
 
+    const startDate = new Date(Date.UTC(parseInt(selectedYear), 0, 1));
+    const endDate = new Date(Date.UTC(parseInt(selectedYear) + 1, 0, 1));
+    console.log(`Start Date: ${startDate.toISOString()}`);
+    console.log(`End Date: ${endDate.toISOString()}`);
+
     const completeRequests = await RequestModel.find({
       RequestStatus: 'Complete',
-      Date: { $gte: new Date(`${year}-01-01`), $lt: new Date(`${year}-12-31T23:59:59`) } // Assuming 'Date' is the field containing the date
+      Date: {
+        $gte: startDate.toISOString(),
+        $lt: endDate.toISOString()
+      }
     });
+
+    console.log(`Complete Requests: ${completeRequests.length}`);
 
     completeRequests.forEach(request => {
       const date = new Date(request.Date);
       const month = date.getMonth();
       const monthName = months[month];
+      console.log(`Request Date: ${date.toISOString()}, Month: ${monthName}`);
       monthlyTotals[monthName]++;
-      
-      // Log specific data for each request
-      console.log('Request ID:', request._id);
-      console.log('Request Date:', request.Date);
-      // Add more fields as needed
     });
 
     const dataForFrontend = months.map(monthName => ({
@@ -38,7 +50,7 @@ export const getTotalCompleteRequestAllMonths = async (req: Request, res: Respon
       totalCompleteRequests: monthlyTotals[monthName]
     }));
 
-    console.log('Data for frontend:', dataForFrontend); // Log the data for frontend
+    console.log('Data for frontend:', dataForFrontend);
 
     res.json(dataForFrontend);
   } catch (error) {
