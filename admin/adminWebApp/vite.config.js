@@ -20,11 +20,6 @@ export default defineConfig({
     port: 3000,
   },
   build: {
-    // generate .vite/manifest.json in outDir
-    manifest: true,
-    rollupOptions: {
-      // overwrite default .html entry
-      input: './src/main.jsx',
-    },
+   outDir:'dist'
   },
 });
