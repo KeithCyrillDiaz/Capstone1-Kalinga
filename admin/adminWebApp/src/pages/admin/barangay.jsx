@@ -45,6 +45,7 @@ useEffect(() => {
   setSelectedBarangay ('Commonwealth')
 }, []);
 
+
 const handleSelectBarangay = (e) => {
   setSelectedBarangay(e.target.value);
 };
@@ -384,13 +385,10 @@ useEffect(() => {
   }
 
   const generateDownloadablePDF = (title, data) => {
-    console.log("Data: ", data)
 
     const filteredData = data.filter(item => item.year === selectedYear.toString());
-    console.log("filteredData: ", filteredData)
 
     const formattedData = filteredData.map((item, index) => [index + 1, item.fullName, item.milkAmount]);
-    console.log("barangay: ", formattedData)
       generatePDF({
         title: title,
         data: formattedData
