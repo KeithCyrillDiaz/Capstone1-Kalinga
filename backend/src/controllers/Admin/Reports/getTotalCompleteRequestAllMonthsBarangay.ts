@@ -14,6 +14,10 @@ export const getTotalCompleteRequestAllMonthsBarangay = async (req: Request, res
       throw new Error('Invalid selectedYear or selectedBarangay');
     }
 
+    const year = parseInt(selectedYear);
+    console.log(`Selected Year: ${year}`);
+    console.log(`Selected Barangay: ${selectedBarangay}`);
+
     const monthlyTotals: Record<string, number> = {};
 
     // Initialize monthlyTotals with zero values for each month
@@ -21,19 +25,27 @@ export const getTotalCompleteRequestAllMonthsBarangay = async (req: Request, res
       monthlyTotals[month] = 0;
     });
 
+    const startDate = new Date(Date.UTC(year, 0, 1));
+    const endDate = new Date(Date.UTC(year + 1, 0, 1));
+    console.log(`Start Date: ${startDate.toISOString()}`);
+    console.log(`End Date: ${endDate.toISOString()}`);
+
     const completeRequests = await RequestModel.find({
       RequestStatus: 'Complete',
       Date: {
-        $gte: new Date(`${selectedYear}-01-01T00:00:00`),
-        $lt: new Date(`${parseInt(selectedYear) + 1}-01-01T00:00:00`)
+        $gte: startDate.toISOString(),
+        $lt: endDate.toISOString()
       },
       barangay: selectedBarangay
     });
+
+    console.log(`Complete Requests: ${completeRequests.length}`);
 
     completeRequests.forEach(request => {
       const date = new Date(request.Date);
       const month = date.getMonth();
       const monthName = months[month];
+      console.log(`Request Date: ${date.toISOString()}, Month: ${monthName}`);
       monthlyTotals[monthName]++;
     });
 
@@ -41,6 +53,8 @@ export const getTotalCompleteRequestAllMonthsBarangay = async (req: Request, res
       month: monthName,
       totalCompleteRequests: monthlyTotals[monthName]
     }));
+
+    console.log('Monthly Totals:', monthlyTotals);
 
     res.json(dataForFrontend);
   } catch (error) {

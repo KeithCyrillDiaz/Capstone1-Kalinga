@@ -14,6 +14,8 @@ export const getTotalDeclineRequestAllMonths = async (req: Request, res: Respons
     }
 
     const selectedYear = parseInt(year as string);
+    console.log(`Selected Year: ${selectedYear}`);
+
     const monthlyTotals: Record<string, number> = {};
 
     // Initialize monthlyTotals with zero values for each month
@@ -21,11 +23,16 @@ export const getTotalDeclineRequestAllMonths = async (req: Request, res: Respons
       monthlyTotals[month] = 0;
     });
 
+    const startDate = new Date(Date.UTC(selectedYear, 0, 1));
+    const endDate = new Date(Date.UTC(selectedYear + 1, 0, 1));
+    console.log(`Start Date: ${startDate.toISOString()}`);
+    console.log(`End Date: ${endDate.toISOString()}`);
+
     const declineRequests = await RequestModel.find({
       RequestStatus: 'Decline',
       Date: {
-        $gte: new Date(`${selectedYear}-01-01T00:00:00`),
-        $lt: new Date(`${selectedYear + 1}-01-01T00:00:00`)
+        $gte: startDate.toISOString(),
+        $lt: endDate.toISOString()
       }
     });
 
