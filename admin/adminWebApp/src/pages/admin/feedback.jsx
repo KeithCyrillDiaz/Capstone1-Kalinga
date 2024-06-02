@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { WebHost } from "../../../MyConstantAdmin";
+import { getId } from "../../functions/Authentication";
 
 const Feedback = () => {
   const [donorFeedback, setDonorFeedback] = useState([]);
@@ -44,7 +45,13 @@ const Feedback = () => {
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
+  const [id, setId] = useState(null)
+  useEffect(() => {
+    const id = getId()
+    if(id)setId(id)
+  },[])
 
+if(id)
   return (
     <section className="w-full min-h-screen bg-neutral-variant p-8">
       <div className="flex justify-center mb-8">
@@ -93,7 +100,7 @@ const Feedback = () => {
                   </p>
                 </div>
                 <div className="mr-8">
-                  <Link to={`/admin/feedbackReport/${feedback.feedBack_ID}`}>
+                  <Link to={`/admin/${id}/feedbackReport/${feedback.feedBack_ID}`}>
                     <button className="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500">
                       Review
                     </button>
@@ -128,7 +135,7 @@ const Feedback = () => {
                   </p>
                 </div>
                 <div className="mr-8">
-                  <Link to={`/admin/feedbackReport/${feedback.feedBack_ID}`}>
+                  <Link to={`/admin/${id}/feedbackReport/${feedback.feedBack_ID}`}>
                     <button className="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500">
                       Review
                     </button>

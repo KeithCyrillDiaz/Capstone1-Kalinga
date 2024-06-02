@@ -5,6 +5,7 @@ import axios from "axios";
 import { WebHost } from "../../../../../MyConstantAdmin";
 import DeleteModal from "../../../../modal/deleteModal";
 import { Loader } from "../../../../components/loader";
+import { getId } from "../../../../functions/Authentication";
 
 export default function RequestorAppointments() {
   const navigate = useNavigate();
@@ -174,6 +175,13 @@ export default function RequestorAppointments() {
     setCurrentPage(page);
   };
 
+  const [id, setId] = useState(null)
+  useEffect(() => {
+    const id = getId()
+    if(id) setId(id)
+  },[])
+
+  if(id)
   return (
     <>
       <section className="w-full h-screen bg-primary-body overflow-hidden">
@@ -428,7 +436,7 @@ export default function RequestorAppointments() {
 
                               <td className="text-center py-4 whitespace-nowrap text-sm font-medium flex items-center justify-center">
                                 <Link
-                                  to={`/admin/requestorAppointmentConfirmation/${appointment.RequestID}`}
+                                  to={`/admin/${id}/requestorAppointmentConfirmation/${appointment.RequestID}`}
                                   className=" px-3 py-1 rounded-full hover:bg-neutral-variant mr-1"
                                 >
                                   <svg

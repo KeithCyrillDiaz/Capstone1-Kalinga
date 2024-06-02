@@ -17,7 +17,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { checkId } from "../../functions/Authentication";
+import { checkId, getId } from "../../functions/Authentication";
 import { NotFound } from "../../layouts/NotFoundExportConst";
 //require("dotenv").config(); // Load environment variables
 
@@ -345,9 +345,13 @@ const formattedDate = `${currentDate.getFullYear()}-${
       </div>
     );
   };
+  const [id, setId]=useState(null)
+  useEffect(() => {
+    const id = getId()
+    if(id) setId(id)
+  },[])
 
-
-
+  if(id)
   return (
     <>
     <div className="overflow-y-auto">
@@ -385,7 +389,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
                   }
                   title="Total Donor Users"
                   count={totalDonors}
-                  seeMore={"/admin/users"}
+                  seeMore={`/admin/${id}/users`}
                 />
                 <DashboardCard
                   icon={
@@ -408,7 +412,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
                   }
                   title="Total Requestor Users"
                   count={totalRequestors}
-                  seeMore={"/admin/users"}
+                  seeMore={`/admin/${id}/users`}
                 />
                 <DashboardCard
                   icon={
@@ -430,7 +434,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
                   }
                   title="Pending Appointment"
                   count={totalPendingAppointments}
-                  seeMore={"/admin/donorAppointManage"}
+                  seeMore={`/admin/${id}/donorAppointManage`}
                 />
                 <DashboardCard
                   icon={
@@ -449,7 +453,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
                   }
                   title="Pending Requests"
                   count={totalPendingRequest}
-                  seeMore={"/admin/requestorManagement"}
+                  seeMore={`/admin/${id}/requestorManagement`}
                 />
               </div>
               <div className="flex items-center justify-center h-32 bg-white rounded-2xl shadow-sm w-2/6">
@@ -483,7 +487,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
                     Transaction Overview
                   </h1>
                   <div className="absolute top-4 -right-1 text-white px-4 py-2">
-                    <a href={"/admin/chart"} className="flex items-center">
+                    <a href={`/admin/${id}/chart`} className="flex items-center">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="35"

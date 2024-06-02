@@ -32,7 +32,7 @@ const DonorPages = ({ currentPage, form }) => {
             Home Address: {form.homeAddress}
           </div>
         </div>
-        <div className="px-16 my-6 ">
+        {/* <div className="px-16 my-6 ">
           <div className="flex font-bold text-2xl text-primary-default font-sans">
             Infant Information
           </div>
@@ -55,7 +55,7 @@ const DonorPages = ({ currentPage, form }) => {
               Birth Weight (kg): {form.birthWeight}
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     ),
 

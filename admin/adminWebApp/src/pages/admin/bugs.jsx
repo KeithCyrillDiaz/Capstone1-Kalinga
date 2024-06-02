@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { WebHost } from "../../../MyConstantAdmin";
+import { getId } from "../../functions/Authentication";
 
 const Bugs = () => {
   const [activeTab, setActiveTab] = useState("report");
@@ -40,6 +41,14 @@ const Bugs = () => {
     setActiveTab(tab);
   };
 
+  const [id, setId] = useState(null)
+
+  useEffect(() => {
+    const id = getId()
+    if(id)setId(id)
+  },[])
+
+  if(id)
   return (
     <section className="w-full min-h-screen bg-neutral-variant p-8">
       {/* Tab buttons */}
@@ -105,7 +114,7 @@ const Bugs = () => {
                   </div>
                 </div>
                 <div className="mr-8">
-                  <Link to={`/admin/bugReport/${bug.ReportBugID}`}>
+                  <Link to={`/admin/${id}/bugReport/${bug.ReportBugID}`}>
                     <button className="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500">
                       Review
                     </button>
@@ -158,7 +167,7 @@ const Bugs = () => {
                   </div>
                 </div>
                 <div className="mr-8">
-                  <Link to={`/admin/bugReport/${bug.ReportBugID}`}>
+                  <Link to={`/admin/${id}/bugReport/${bug.ReportBugID}`}>
                     <button className="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500">
                       Review
                     </button>

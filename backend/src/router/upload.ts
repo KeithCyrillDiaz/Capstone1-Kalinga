@@ -7,6 +7,7 @@ import { getImage } from '../controllers/Admin/getImageByID';
 import { getFile } from '../controllers/Admin/getFileByID';
 import { addProfilePicture } from '../controllers/clientSettings/uploadDpImg';
 import { uploadImageOrFileData, deleteImageFileData } from '../controllers/uploadImage/uploadImageOrFileData';
+import { tokenVerification } from '../middleware/Authentication';
 // import { addMedicalRequirementsAsImage } from '../../test/testImage'
 
 const upload = multer()
@@ -22,7 +23,7 @@ export default (router: express.Router) => {
 
 
     router.post('/kalinga/getMedicalRequirementImage/:ownerID', getImage)
-    router.post('/kalinga/getMedicalRequirementFile/:ownerID', getFile)
+    router.post('/kalinga/getMedicalRequirementFile/:ownerID',  getFile)
     router.post('/kalinga/uploadFileOrImageDataInDatabase/:id', uploadImageOrFileData)
 
     router.post('/kalinga/deleteFiledata/:id', deleteImageFileData)

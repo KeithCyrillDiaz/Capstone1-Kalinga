@@ -4,6 +4,7 @@ import { formatDate } from "../../components/Verification/formatDateFunction";
 import { WebHost } from "../../../MyConstantAdmin";
 import axios from "axios";
 import { DeleteScreeningFormModal } from "../../modal/Verification/DeleteScreeningFormModal";
+import { getId } from "../../functions/Authentication";
 
 export const RenderPendingVerification = ({
   name,
@@ -24,7 +25,6 @@ export const RenderPendingVerification = ({
 
     setFinalDate(newDate);
   };
-
   useEffect(() => {
     setDateFormat();
   }, []);
@@ -48,6 +48,15 @@ export const RenderPendingVerification = ({
     console.log("click");
     setDeleteModal(true);
   };
+
+  const [id, setId] = useState(null)
+  useEffect(() => {
+    setDateFormat();
+    const id = getId()
+    if(id)setId(id)
+  }, []);
+
+  if(id)
   return (
     <div className="bg-white rounded-2xl mb-4 flex items-center border border-primary-default py-2">
       <DeleteScreeningFormModal
@@ -83,12 +92,9 @@ export const RenderPendingVerification = ({
       {/* Button */}
       <div className="flex flex-col gap-y-2 mr-14 p-2">
         <Link
-          to={{
-            pathname:
-              userType === "Donor"
-                ? `/admin/DonorVerification/${form.Applicant_ID}`
-                : `/admin/requestorVerification/${form.Applicant_ID}`,
-          }}
+           to={userType === "Donor" 
+           ? `/admin/${id}/DonorVerification/${form.Applicant_ID}`
+           : `/admin/${id}/requestorVerification/${form.Applicant_ID}`}
         >
           <button className="w-full h-8 px-12 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default">
             View

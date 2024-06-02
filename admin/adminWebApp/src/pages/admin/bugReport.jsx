@@ -44,7 +44,7 @@ const BugReport = () => {
         alert(
           "Great! The bug has been marked as resolved, and the user has already been notified."
         ); // Show the second modal
-        navigate("/admin/bugs"); // Redirect to bugs list or another page
+        navigate(`/admin/${id}/bugs`); // Redirect to bugs list or another page
       } else {
         console.error("Failed to update bug report");
         // Handle the case where the API request was successful but the status code is not 200

@@ -14,7 +14,7 @@ export default function App() {
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [approvalMessage, setApprovalMessage] = useState(false)
 
-  const { id } = useParams();
+  const { Applicant_ID } = useParams();
   const [form, setForm] = useState({});
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
@@ -36,8 +36,8 @@ export default function App() {
       console.log("Sending Email");
       const response =
         status === "approved"
-          ? await axios.post(`${WebHost}/kalinga/sendApprovedEmail/${id}`)
-          : await axios.post(`${WebHost}/kalinga/sendDeclinedEmail/${id}`);
+          ? await axios.post(`${WebHost}/kalinga/sendApprovedEmail/${Applicant_ID}`)
+          : await axios.post(`${WebHost}/kalinga/sendDeclinedEmail/${Applicant_ID}`);
       console.log(response.data.messages.message);
     } catch (error) {
       console.log("Error Sending Email", error);
@@ -52,7 +52,7 @@ export default function App() {
       setLoading(true)
       console.log("Updating Screening Form Status to ", data);
       const response = await axios.patch(
-        `${WebHost}/kalinga/updateScreeningFormStatus/${id}`,
+        `${WebHost}/kalinga/updateScreeningFormStatus/${Applicant_ID}`,
         { status: formatStatus }
       );
       console.log("response: ", response.data.messages.message);
@@ -69,7 +69,7 @@ export default function App() {
     try {
       setLoading(true);
       //axiosToken
-      const response = await axios.get(`${WebHost}/kalinga/getScreeningFormsApplicant_ID/${id}`,)
+      const response = await axios.get(`${WebHost}/kalinga/getScreeningFormsApplicant_ID/${Applicant_ID}`,)
 
       if (!response.data.screeningForms) {
         console.log("Error fetching Screening forms");
@@ -159,7 +159,7 @@ export default function App() {
                   <RequestorMedicalPage
                     form={form}
                     currentPage={currentPage}
-                    id={id}
+                    id={Applicant_ID}
                   />
                 </div>
               </div>

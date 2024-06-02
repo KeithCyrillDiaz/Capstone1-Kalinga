@@ -51,13 +51,13 @@ const router = createBrowserRouter(
         <Route index element={<AdminDashboard />} />
         <Route path="city" element={<City />} />
         <Route path="DonorVerifPendings" element={<DonorVerifPendings />} />
-        <Route path="DonorVerification/:id" element={<DonorVerification />} />
+        <Route path="DonorVerification/:Applicant_ID" element={<DonorVerification />} />
         <Route
           path="RequestorVerifPendings"
           element={<RequestorVerifPendings />}
         />
         <Route
-          path="requestorVerification/:id"
+          path="requestorVerification/:Applicant_ID"
           element={<RequestorVerification />}
         />
         <Route path="chart" element={<Chart />} />

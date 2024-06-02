@@ -9,6 +9,7 @@
   import autoTable from "jspdf-autotable";
   import axios from "axios";
   import { WebHost } from "../../../MyConstantAdmin";
+import { getId } from "../../functions/Authentication";
 
   export default function chart() {
     const [selectedMonth, setSelectedMonth] = useState("");
@@ -319,7 +320,13 @@
         </div>
       );
     };
+    const [id, setId] = useState(null)
+    useEffect(() => {
+      const id = getId()
+      if(id)setId(id)
+    },[])
 
+    if(id)
     return (
       <>
         <section className="w-full h-auto bg-primary-body overflow-hidden">
@@ -449,7 +456,7 @@
                         }
                         title="Added Donor Users"
                         count={totalDonors}
-                        seeMore={"/admin/users"}
+                        seeMore={`/admin/${id}/users`}
                       />
                       <DashboardCard
                         icon={
@@ -472,7 +479,7 @@
                         }
                         title="Added Requestor Users"
                         count={totalRequestors}
-                        seeMore={"/admin/users"}
+                        seeMore={`/admin/${id}/users`}
                       />
                       <DashboardCard
                         icon={
@@ -494,7 +501,7 @@
                         }
                         title="Appointments for the month"
                         count={totalAppointments}
-                        seeMore={"/admin/donorAppointManage"}
+                        seeMore={`/admin/${id}/donorAppointManage`}
                       />
                       <DashboardCard
                         icon={
@@ -513,7 +520,7 @@
                         }
                         title="Requests for the month"
                         count={totalRequests}                      
-                        seeMore={"/admin/requestorManagement"}
+                        seeMore={`/admin/${id}/requestorManagement`}
                       />
                     </div>
                   </div>
@@ -529,7 +536,7 @@
                  
                     
                     <div className="absolute top-4 -right-1 text-white px-4 py-2">
-                      <a href={"/admin/chart"} className="flex items-center">
+                      <a href={`/admin/chart`} className="flex items-center">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="35"

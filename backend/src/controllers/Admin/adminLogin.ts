@@ -1,5 +1,5 @@
 import express from 'express'
-import { createToken } from '../../models/Authentication'
+import { createLogInToken } from '../../models/Authentication'
 import jwt from "jsonwebtoken";
 import moment from 'moment';
 
@@ -37,8 +37,8 @@ export const AdminLogIn = async (req: express.Request, res: express.Response) =>
 
         const user = process.env.USERNAMEE
         const pass = process.env.PASSWORD
-        const newToken: any = await createToken({
-            token: jwt.sign({ user, pass }, process.env.SECRET_KEY, { expiresIn: '1m' }),
+        const newToken: any = await createLogInToken({
+            logInToken: jwt.sign({ user, pass }, process.env.SECRET_KEY, { expiresIn: '1m' }),
             expiresAt: moment().add('1m').toDate()
         });
 

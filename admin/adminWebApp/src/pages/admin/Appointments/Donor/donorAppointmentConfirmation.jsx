@@ -12,6 +12,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { getMedicalAbstractsFiles, getMedicalAbstractsImages } from "../../../../api/Appointments/Request";
 import { getDateTime } from "../../../../functions/ConvertDateandTime";
+import { getToken } from "../../../../functions/Authentication";
 
 const donorAppointmentConfirmation = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -22,6 +23,7 @@ const donorAppointmentConfirmation = () => {
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
   const [images, setImages] = useState([])
   const [files, setFiles] = useState([])
+
 
   const [formData, setFormData] = useState({
     DonationStatus: "",
@@ -169,12 +171,19 @@ const donorAppointmentConfirmation = () => {
     setSelectedTime(time);
   };
 
+  const [token, setToken] = useState(null)
+  useEffect(() => {
+    const token = getToken()
+    console.log("token", token)
+    if(token)setToken(token)
+  },[])
+
    //fetch Image requirements
   const fetchRequirements = async (id) => {
     const Donor_ID = id
     console.log("id: ", id)
-    const files = await getMedicalAbstractsFiles({id: Donor_ID, purpose: "Donate"})
-    const images = await getMedicalAbstractsImages({id: Donor_ID, purpose: "Donate"})
+    const files = await getMedicalAbstractsFiles({id: Donor_ID, purpose: "Donate", token: token})
+    const images = await getMedicalAbstractsImages({id: Donor_ID, purpose: "Donate", token: token})
     if(files) setFiles(files)
       else setFiles([])
     if(images) setImages(images)

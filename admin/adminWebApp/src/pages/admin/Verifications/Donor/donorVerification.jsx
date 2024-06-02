@@ -11,6 +11,7 @@ import {
   MissingRequirements,
 } from "../../../../modal/Verification/ImageModals";
 import { Confirmation, VerificationModal } from "../../../../modal/Verification/VerificationModal";
+import { getToken } from "../../../../functions/Authentication";
 
 export default function () {
   const [activeTab, setActiveTab] = useState("screening");
@@ -32,7 +33,7 @@ export default function () {
   const [imageLink, setImageLink] = useState("");
   const [fileName, setFileName] = useState("");
 
-  const { id } = useParams(); // Applicant ID
+  const { Applicant_ID } = useParams(); // Applicant ID
 
   const [form, setForm] = useState({});
   //const [isRejectConfirmed, setIsRejectConfirmed] = useState(false);
@@ -54,8 +55,8 @@ export default function () {
       console.log("Sending Email");
       const response =
         status === "approved"
-          ? await axios.post(`${WebHost}/kalinga/sendApprovedEmail/${id}`)
-          : await axios.post(`${WebHost}/kalinga/sendDeclinedEmail/${id}`);
+          ? await axios.post(`${WebHost}/kalinga/sendApprovedEmail/${Applicant_ID}`)
+          : await axios.post(`${WebHost}/kalinga/sendDeclinedEmail/${Applicant_ID}`);
       console.log(response.data.messages.message);
     } catch (error) {
       console.log("Error Sending Email", error);
@@ -70,7 +71,7 @@ export default function () {
       setLoading(true)
       console.log("Updating Screening Form Status to ", data);
       const response = await axios.patch(
-        `${WebHost}/kalinga/updateScreeningFormStatus/${id}`,
+        `${WebHost}/kalinga/updateScreeningFormStatus/${Applicant_ID}`,
         { status: formatStatus }
       );
       console.log("response: ", response.data.messages.message);
@@ -86,9 +87,10 @@ export default function () {
   
   const fetchData = async () => {
     try {
+      console.log("Test")
       setLoading(true);
       //axiosToken
-      const response = await axios.get(`${WebHost}/kalinga/getScreeningFormsApplicant_ID/${id}`,)
+      const response = await axios.get(`${WebHost}/kalinga/getScreeningFormsApplicant_ID/${Applicant_ID}`,)
 
       if (!response.data.screeningForms) {
         console.log("Error fetching Screening forms");
@@ -103,14 +105,20 @@ export default function () {
       setLoading(false);
     }
   };
+  const [token, setToken] =useState(null)
+  useEffect(() => {
+    const token = getToken()
+    if(token) setToken(token)
+  }, [])
 
   const fetchImagesAndFiles = async () => {
     try {
       console.log("Fetching Files and Images in database");
       //getFileData in Database
       const getFilesResponse = await axios.post(
-        `${WebHost}/kalinga/getMedicalRequirementFile/${id}`,
-        {purpose: "Application"}
+        `${WebHost}/kalinga/getMedicalRequirementFile/${Applicant_ID}`,
+        {purpose: "Application"},
+        {headers: { Authorization: `Bearer ${token}`}}
       );
       console.log(getFilesResponse.data.messages.message);
       if (getFilesResponse.data.messages.code === 0) {
@@ -119,8 +127,9 @@ export default function () {
 
       //getImageData in Database
       const getImagesResponse = await axios.post(
-        `${WebHost}/kalinga/getMedicalRequirementImage/${id}`,
-        {purpose: "Application"}
+        `${WebHost}/kalinga/getMedicalRequirementImage/${Applicant_ID}`,
+        {purpose: "Application"},
+        {headers: { Authorization: `Bearer ${token}`}}
       );
       console.log(getImagesResponse.data.messages.message);
       if (getImagesResponse.data.messages.code === 0) {
@@ -268,7 +277,7 @@ export default function () {
                 <DonorMedicalPage
                   form={form}
                   currentPage={currentPage}
-                  id={id}
+                  id={Applicant_ID}
                 />
                 <div className="flex justify-end mr-10">
                   <div className="flex flex-col gap-y-2">
