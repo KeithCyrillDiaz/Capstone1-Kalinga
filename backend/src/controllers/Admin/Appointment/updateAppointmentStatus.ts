@@ -5,12 +5,12 @@ const updateDonationStatus = async (req: Request, res: Response, next: NextFunct
   const { AppointmentDonorID } = req.params;
   const { DonationStatus } = req.body;
   const { selectedDate } = req.body;
-  const { selectedTime } = req.body;
+  const { selectedTime, BabyCategory} = req.body;
 
   try {
     const donation = await AppointmentModel.findOneAndUpdate(
       { AppointmentDonorID: AppointmentDonorID }, 
-      { $set: {DonationStatus: DonationStatus, selectedDate: selectedDate, selectedTime: selectedTime }}, 
+      { $set: {DonationStatus: DonationStatus, selectedDate: selectedDate, selectedTime: selectedTime, BabyCategory: BabyCategory }}, 
       { new: true }
     );
 

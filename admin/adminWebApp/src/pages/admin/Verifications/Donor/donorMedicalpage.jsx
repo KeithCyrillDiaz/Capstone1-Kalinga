@@ -80,8 +80,9 @@ const DonorMedicalPage = ({ currentPage, id, form }) => {
   };
 
 
-  const getImageUri = (link) => {
+  const getImageUri = (link, name) => {
     setImageLink(link);
+    setFileName(name)
     setShowImage(true);
 };
 
@@ -124,7 +125,7 @@ const DonorMedicalPage = ({ currentPage, id, form }) => {
                         {images[requirement] && (
                           <div
                             key={requirement}
-                            onClick={() => getImageUri(requirement)}
+                            onClick={() => getImageUri(images[requirement], requirement)}
                             className=" relative border rounded-md border-primary-default bg-white px-4 py-4 my-4 mx-2 w-60 h-60"
                           >
                             <span className="flex justify-center font-sans text-primary-default text-lg font-bold text-center">

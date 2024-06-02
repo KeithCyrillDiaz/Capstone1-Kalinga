@@ -13,6 +13,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import { getMedicalAbstractsFiles, getMedicalAbstractsImages } from "../../../../api/Appointments/Request";
 import { getDateTime } from "../../../../functions/ConvertDateandTime";
 import { getToken } from "../../../../functions/Authentication";
+import { Loader } from "../../../../components/loader";
+import { CustomModal } from "../../../../modal/logIn/AlertModal";
+import { ShowImage } from "../../../../modal/Verification/ImageModals";
 
 const donorAppointmentConfirmation = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -31,7 +34,7 @@ const donorAppointmentConfirmation = () => {
     phoneNumber: "",
     emailAddress: "",
     homeAddress: "",
-    medicalCondition: "",
+    BabyCategory: "",
     milkAmount: "",
     location: "",
     selectedDate: new Date(),
@@ -66,9 +69,12 @@ const donorAppointmentConfirmation = () => {
     fetchAppointmentData();
   }, [AppointmentDonorID]);
 
+  const [loading, setLoading] = useState(false)
   const handleApproved = async () => {
-    setShowModal(true); // Open the modal
+    setShowModal(false); // Close the modal
+ // Open the modal
     try {
+      setLoading(true)
       // Make a PUT request to update the RequestStatus to "Ongoing"
       // const utcTime = new Date(selectedTime.getTime() + (selectedTime.getTimezoneOffset() * 60000));
 
@@ -77,14 +83,18 @@ const donorAppointmentConfirmation = () => {
         {
           DonationStatus: "Ongoing",
           selectedDate: selectedDate.toISOString(),
-          selectedTime: selectedTime.toISOString()
+          selectedTime: selectedTime.toISOString(),
+          BabyCategory: appointmentData?.BabyCategory ?? "Did not set"
         }
       );
-
+      setLoading(false)
+      window.location.reload();
       // Optionally, you can reload the data or do any other action upon successful update
     } catch (error) {
       console.error("Error updating request status:", error);
       // Handle error if needed
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -101,26 +111,32 @@ const donorAppointmentConfirmation = () => {
 
   const handleComplete = async () => {
     // Mark the function as async
-    setIsCompleteModalOpen(true);
+    setIsCompleteModalOpen(false);
 
     try {
+      setLoading(true)
       await axios.put(
         `${WebHost}/kalinga/updateDonationComplete/${AppointmentDonorID}`,
         {
           DonationStatus: "Complete",
         }
       );
-
+      setLoading(false)
+      window.location.reload()
       // Optionally, you can reload the data or do any other action upon successful update
     } catch (error) {
       console.error("Error updating request status:", error);
       // Handle error if needed
+    } finally{
+      setLoading(false)
     }
   };
 
   const handleDeclineConfirm = async () => {
+    setShowModal(false); // Close the modal
     try {
       // Update the DonationStatus to "Ongoing"
+      setLoading(true)
       const response = await axios.put(
         `${WebHost}/kalinga/updateDonationStatus/${AppointmentDonorID}`,
         {
@@ -133,11 +149,14 @@ const donorAppointmentConfirmation = () => {
 
       // Handle success response
       console.log("Donation status updated successfully:", response.data);
-      setShowModal(false); // Close the modal
+      setLoading(false)
+      window.location.reload()
     } catch (error) {
       // Handle error
       console.error("Error updating donation status:", error);
       // You can add a notification or alert here to inform the user about the error
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -145,18 +164,10 @@ const donorAppointmentConfirmation = () => {
     setIsDeclineModalOpen(false); // Close the modal
   };
 
-  const handleApproveConfirm = () => {
-    // Add your logic for handling the "Solved" button action here
-    setShowModal(false); // Close the modal
-  };
-
   const handleApproveCancel = () => {
     setShowModal(false); // Close the modal
   };
 
-  const handleCompleteConfirm = async () => {
-    setIsCompleteModalOpen(false);
-  };
 
   const handleCompleteCancel = () => {
     setIsCompleteModalOpen(false); // Close the modal
@@ -190,12 +201,53 @@ const donorAppointmentConfirmation = () => {
       else setImages([])
   }
 
+
+  const handleSelectChange = (event) => {
+    const { name, value } = event.target;
+    const newAppointmentData = {
+      ...appointmentData,
+      BabyCategory: value
+    }
+    setAppointmentData(newAppointmentData)
+  };
+
+
+  const [alert, setAlert] = useState(false)
+  const confirmation = () => {
+    if(appointmentData?.BabyCategory === "" || appointmentData?.BabyCategory == null ){
+      setAlert(true)
+      return
+    }
+    setShowModal(true)
+    
+  }
+
+  const [imageLink, setImageLink] = useState("");
+  const [showImage, setShowImage] = useState(false);
+  const [fileName, setFileName] = useState("")
+  const getImageUri = (data) => {
+    const {link, originalname} = data
+    setImageLink(link);
+    setFileName(originalname)
+    setShowImage(true);
+};
+
+  if(loading){
+    return(
+      <Loader isLoading={loading}/>
+    )
+  }
+  
   return (
     <section className="w-full h-screen bg-primary-body overflow-hidden relative px-4">
       <div className="p-12 pt-1">
         <h1 className="mt-8 text-3xl text-primary-default font-bold font-sans">
           Appointment Confirmation
         </h1>
+        {alert && (
+          <CustomModal message={"Please add a baby category first"} onClose={() => setAlert(false)}/>
+        )}
+        
         {/* Full Name Input */}
         <div className="mt-8">
           <input
@@ -273,20 +325,28 @@ const donorAppointmentConfirmation = () => {
         </div>
         {/* Medical Condition and Amount Donated Input */}
         <div className="flex gap-x-2">
-          <div className="w-2/3 mt-4">
-            <input
-              type="text"
-              id="medicalCondition"
-              name="medicalCondition"
-              value={`Medical Condition: ${
-                appointmentData ? appointmentData.medicalCondition : ""
-              }`}
-              onChange={handleChange}
-              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
-              disabled
-              placeholder="Medical Condition"
-            />
+          <div className="w-2/3 mt-4 ">
+                <label
+                htmlFor="date"
+                className="text-md z-10 font-medium font-bold text-primary-default ml-2"
+              >
+                Baby Category
+              </label>
+            <select
+              disabled={appointmentData && appointmentData.DonationStatus !== "Pending"}
+              id="BabyCategory"
+              name="BabyCategory"
+              value={appointmentData?.BabyCategory ?? "Did not set"}
+              onChange={handleSelectChange}
+              className={`bg-white w-full px-4 py-2 h-14 shadow-md rounded-lg focus:outline-none focus:text-primary-default ${appointmentData && appointmentData.DonationStatus !== "Pending" ? "text-[#E60965]" : ""}`}
+            >
+              <option value="">Select Baby Category</option>
+              <option value="Well Baby">Well Baby</option>
+              <option value="Sick Baby">Sick Baby</option>
+              <option value="Medically Fragile Baby">Medically Fragile Baby</option>
+            </select>
           </div>
+          
           <div className="w-1/3 mt-4">
             <input
               type="text"
@@ -296,7 +356,7 @@ const donorAppointmentConfirmation = () => {
                 appointmentData ? appointmentData.milkAmount : ""
               }`}
               onChange={handleChange}
-              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+              className="bg-white w-full px-4 py-2 h-14 shadow-md mt-6 rounded-lg focus:outline-none focus: text-primary-default"
               disabled
               placeholder="Amount of Milk Donated"
             />
@@ -437,13 +497,21 @@ const donorAppointmentConfirmation = () => {
             </div>
           </div>
         </div>
-      
+        {showImage && (
+          <ShowImage
+            link={imageLink}
+            fileName={fileName}
+            onClose={() => setShowImage(false)}
+          />
+        )}
           <div
           className="flex flex-row"
           >
             {images.length !== 0 && images.map(requirement => (
               <>
-                    <div key={requirement.originalname} className="bg-white px-4 py-2 w-full h-72 shadow-md rounded-lg focus:outline-none focus: text-primary-default">
+                    <div key={requirement.originalname} 
+                    onClick={() => getImageUri(requirement)}
+                    className="bg-white px-4 py-2 w-full h-72 shadow-md rounded-lg focus:outline-none focus: text-primary-default">
                       <span className="flex justify-center text-primary-default text-lg text-center">
                       {requirement.originalname}
                       </span>
@@ -479,13 +547,13 @@ const donorAppointmentConfirmation = () => {
           <div className="flex justify-end mr-4 mt-10">
             <div className="flex flex-col gap-y-2">
               <button
-                onClick={handleApproved}
+                onClick={() => confirmation()}
                 className="flex justify-end bg-primary-default text-white px-4 py-2 rounded-full hover:bg-pink-600 shadow-md"
               >
                 Approved
               </button>
               <button
-                onClick={handleDecline}
+                onClick={() => isDeclineModalOpen(true)}
                 className="bg-white text-primary-default px-4 py-2 rounded-full border border-pink-500 hover:bg-primary-default hover:text-white"
               >
                 Decline
@@ -496,7 +564,7 @@ const donorAppointmentConfirmation = () => {
         {appointmentData && appointmentData.DonationStatus === "Ongoing" && (
           <div className="flex justify-end mr-4 mt-10">
             <button
-              onClick={handleComplete}
+              onClick={() => setIsCompleteModalOpen(true)}
               className="flex justify-end bg-primary-default text-white px-4 py-2 rounded-full hover:bg-pink-600 shadow-md"
             >
               Complete
@@ -506,8 +574,8 @@ const donorAppointmentConfirmation = () => {
 
         <ConfirmationModal
           isOpen={showModal}
-          onCancel={handleApproveConfirm}
-          onConfirm={handleApproveCancel}
+          onCancel={handleApproveCancel}
+          onConfirm={handleApproved}
           message="Are you sure you want to approve this appointment? Once approved, the appointment will be scheduled."
         />
         <AppointmentDeclineModal
@@ -519,7 +587,7 @@ const donorAppointmentConfirmation = () => {
         />
         <CompleteModal
           isOpen={isCompleteModalOpen}
-          onConfirm={handleCompleteConfirm}
+          onConfirm={handleComplete}
           onCancel={handleCompleteCancel}
           message="Are you sure this appointment is already completed?"
         />
