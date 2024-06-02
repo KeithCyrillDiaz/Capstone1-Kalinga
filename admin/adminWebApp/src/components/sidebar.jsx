@@ -33,7 +33,7 @@ export default function () {
   useEffect(() => {
     setLoading(true)
     const id = getId()
-    setId(id)
+    if(id)setId(id)
     setLoading(false)
   }, [])
   if(loading){
@@ -297,7 +297,7 @@ export default function () {
                   }`}
                 >
                   <h1 className="text-md text-neutral-primary">
-                    Donor Mamangement
+                    Donor Management
                   </h1>
                 </NavLink>
                 <NavLink
@@ -309,7 +309,7 @@ export default function () {
                   }`}
                 >
                   <h1 className="text-md text-neutral-primary">
-                    Requestor Mamangement
+                    Requestor Management
                   </h1>
                 </NavLink>
               </div>

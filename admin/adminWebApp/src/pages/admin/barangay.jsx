@@ -13,6 +13,7 @@ import { getBarangayByCityName } from "../../functions/getBarangay";
 import { TopCard } from "../../components/TopCard/RenderTopCard";
 import { generatePDF } from "../../functions/generatePDF";
 import { getTopByBarangay } from "../../api/report/fetchTopUsers";
+import { getId } from "../../functions/Authentication";
 
 export default function barangay() {
   const [selectedMonth, setSelectedMonth] = useState("");
@@ -395,6 +396,13 @@ useEffect(() => {
       })
   }
 
+  const [id, setId] = useState(null)
+  useEffect(() => {
+    const id = getId()
+    if(id)setId(id)
+  },[])
+
+  if(id)
   return (
     <>
       <section className="w-full h-auto bg-primary-body overflow-hidden">
@@ -539,7 +547,7 @@ useEffect(() => {
                       }
                       title="Added Donor Users"
                       count={totalDonors}
-                      seeMore={"/admin/users"}
+                      seeMore={`/admin/${id}/users`}
                     />
                     <DashboardCard
                       icon={
@@ -562,7 +570,7 @@ useEffect(() => {
                       }
                       title="Added Requestor Users"
                       count={totalRequestors}
-                      seeMore={"/admin/users"}
+                      seeMore={`/admin/${id}/users`}
                     />
                     <DashboardCard
                       icon={
@@ -584,7 +592,7 @@ useEffect(() => {
                       }
                       title="Appointments for the month"
                       count={totalAppointments}
-                      seeMore={"/admin/donorAppointManage"}
+                      seeMore={`/admin/${id}/donorAppointManage`}
                     />
                     <DashboardCard
                       icon={
@@ -603,7 +611,7 @@ useEffect(() => {
                       }
                       title="Requests for the month"
                       count={totalRequests}                      
-                      seeMore={"/admin/requestorManagement"}
+                      seeMore={`/admin/${id}/requestorManagement`}
                     />
 
                     <DashboardCard
@@ -627,7 +635,7 @@ useEffect(() => {
                       }
                       title="Added Requestor Users"
                       count={totalRequestors}
-                      seeMore={"/admin/users"}
+                      seeMore={`/admin/${id}/users`}
                     />
                   </div>
                 </div>
