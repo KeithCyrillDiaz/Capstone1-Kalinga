@@ -10,6 +10,7 @@ import { getMedicalAbstractsFiles, getMedicalAbstractsImages } from "../../../..
 import DatePicker from 'react-datepicker';
 import { CustomModal } from "../../../../modal/logIn/AlertModal";
 import { Loader } from "../../../../components/loader";
+import { ShowImage } from "../../../../modal/Verification/ImageModals";
 
 const requestorAppointmentConfirmation = () => {
 
@@ -187,6 +188,16 @@ const requestorAppointmentConfirmation = () => {
     setShowModal(true)
     
   }
+
+  const [imageLink, setImageLink] = useState("");
+  const [showImage, setShowImage] = useState(false);
+  const [fileName, setFileName] = useState("")
+  const getImageUri = (data) => {
+    const {link, originalname} = data
+    setImageLink(link);
+    setFileName(originalname)
+    setShowImage(true);
+};
 
   if(loading){
     return (
@@ -432,11 +443,20 @@ const requestorAppointmentConfirmation = () => {
           </div>
         </div>
          
-    
+        {showImage && (
+          <ShowImage
+            link={imageLink}
+            fileName={fileName}
+            onClose={() => setShowImage(false)}
+          />
+        )}
+
         <div className="mt-4 flex flex-cols gap-4">
       {images.length !== 0 && images.map(requirement => (
         <>
-              <div key={requirement.originalname} className="bg-white px-4 py-2 w-full h-72 shadow-md rounded-lg focus:outline-none focus: text-primary-default">
+              <div key={requirement.originalname} 
+              onClick={() => getImageUri(requirement)}
+              className="bg-white px-4 py-2 w-full h-72 shadow-md rounded-lg focus:outline-none focus: text-primary-default">
                 <span className="flex justify-center text-primary-default text-lg text-center">
                 {requirement.originalname}
                 </span>
