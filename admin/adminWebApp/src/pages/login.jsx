@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { AlertModal } from "../modal/logIn/AlertModal";
 import { AdminLogin } from "../api/AdminLogin";
+import { generateId, saveId, saveToken } from "../functions/Authentication";
+import { Loader } from "../components/loader";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -17,6 +19,7 @@ export default function Login() {
   const [noPasswordInput, setNoPasswordInput] = useState(false);
   const [invalidCredentials, setInvalidCredentials] = useState(false);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false)
 
   const handleLogin = async () => {
     if (username === "" && password === "") {
@@ -36,28 +39,37 @@ export default function Login() {
     }
 
     try {
+      setLoading(true)
       const result = await AdminLogin({
         username: username,
         password: password,
       });
+      setLoading(false)
       if (result.messages.code === 1) {
         console.log("Invalid Credentials");
         setMessage(result.messages.message);
         setInvalidCredentials(true);
         return;
       } else {
-        navigate("/admin");
+        if(result.token) saveToken(result.token)
+        const id = generateId()
+        saveId({id: id})
+        navigate(`/admin/${id}`);
       }
     } catch (error) {
       console.log("Failed Admin Login", error);
       return;
     }
   };
-
+  if(loading) {
+    return(
+      <Loader isLoading={loading}/>
+    )
+  }
   return (
     <section className="w-full min-h-screen overflow-hidden body-color">
       <div className="lg:relative lg:left-20 xl:left-[-3.5rem] xl:mt-[-.5rem] lg:mt-[-.6rem]">
-        <div className="grid items-center h-screen xl:justify-center lg:justify-start">
+        <div className="grid items-cente  r h-screen xl:justify-center lg:justify-start">
           <div className="flex flex-col">
             <div className="flex flex-row items-center justify-center h-full lg:gap-x-8 xl:gap-x-3">
               <div className="relative xl:top-3 lg:top-[10px] left-[150px] bg-secondary-default xl:p-[7.125rem] lg:p-[5.3rem] rounded-tl-[4.5rem] rounded-bl-[4.5rem]">

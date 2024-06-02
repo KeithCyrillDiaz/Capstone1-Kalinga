@@ -1,4 +1,7 @@
 import express from 'express'
+import { createToken } from '../../models/Authentication'
+import jwt from "jsonwebtoken";
+import moment from 'moment';
 
 export const AdminLogIn = async (req: express.Request, res: express.Response) => {
     try{
@@ -27,14 +30,21 @@ export const AdminLogIn = async (req: express.Request, res: express.Response) =>
                 }
             }).status(400)
         } 
-        
         const user = process.env.USERNAMEE
+        const pass = process.env.PASSWORD
+
+        const newToken: any = await createToken({
+            logInToken: jwt.sign({ user, pass }, process.env.SECRET_KEY, { expiresIn: '1m' }),
+            expiresAt: moment().add('1m').toDate()
+        });
+        
         return res.json({
             messages: {
                 code: 0,
                 message: "Log In Successfully"
             }, 
-            user
+            user,
+            newToken
         }).status(200)
 
 

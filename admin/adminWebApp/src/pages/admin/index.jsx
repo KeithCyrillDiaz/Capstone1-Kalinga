@@ -17,6 +17,8 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { checkId } from "../../functions/Authentication";
+import { NotFound } from "../../layouts/NotFoundExportConst";
 //require("dotenv").config(); // Load environment variables
 
 //const user = process.env.REACT_APP_ADMIN_USERNAME;
@@ -41,6 +43,7 @@ export default function Dashboard() {
   const [topRequestingBarangay, setTopRequestingBarangay] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [notFound, setNotFound] = useState(false)
 
 
 
@@ -308,7 +311,6 @@ const formattedDate = `${currentDate.getFullYear()}-${
     // Check if the download is triggered
     doc.save(`${title.toLowerCase().replace(/\s/g, "_")}.pdf`);
   };
-
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -317,10 +319,10 @@ const formattedDate = `${currentDate.getFullYear()}-${
     return <div>Error: {error}</div>;
   }
 
-
   const DashboardCard = ({ icon, title, count, seeMore }) => {
     return (
       <div className="flex flex-col h-32 p-2 pr-3 bg-white rounded-2xl shadow-sm w-1/4">
+           
         <div className="flex justify-end">
           <span className="text-md font-sans text-primary-default ">
             {title}
