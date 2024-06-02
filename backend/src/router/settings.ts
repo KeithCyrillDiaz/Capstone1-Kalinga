@@ -31,8 +31,9 @@ export default (router: express.Router) => {
   
     //FeedBack
     router.post('/kalinga/createFeedback/:id', tokenVerification, generateFeedback)
-    router.get('/kalinga/getFeedbackByUserType/:userType', tokenVerification, fetchFeedBackByUserType)
-        router.get('/kalinga/getFeedbackByFeedbackID/:feedBack_ID', tokenVerification, getFeedbackByFeedbackID)
+    // router.get('/kalinga/getFeedbackByUserType/:userType', tokenVerification, fetchFeedBackByUserType)
+    router.get('/kalinga/getFeedbackByUserType/:userType',  fetchFeedBackByUserType)
+    router.get('/kalinga/getFeedbackByFeedbackID/:feedBack_ID', tokenVerification, getFeedbackByFeedbackID)
     
     //Help and Support
     router.post('/kalinga/createHelpAndSupportReport/:id', tokenVerification, generateHelpAndSupportReport)

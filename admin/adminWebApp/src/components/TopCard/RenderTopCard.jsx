@@ -2,7 +2,6 @@ import React from 'react'
 
 
 export const TopCard = ({ title, download, data, barangay, userType}) => {
-    console.log("Data: ", data)
     const user = userType === "Donor" ? "donors" : "requestors"
     return (
         <div className="flex flex-col p-4 rounded-2xl shadow-lg relative min-h-[17rem] w-[25rem]">
