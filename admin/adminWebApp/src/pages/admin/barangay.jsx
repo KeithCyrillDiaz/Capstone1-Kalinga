@@ -14,6 +14,7 @@ import { TopCard } from "../../components/TopCard/RenderTopCard";
 import { generatePDF } from "../../functions/generatePDF";
 import { getTopByBarangay } from "../../api/report/fetchTopUsers";
 import { getId } from "../../functions/Authentication";
+import { Link } from 'react-router-dom';
 
 export default function barangay() {
   const [selectedMonth, setSelectedMonth] = useState("");
@@ -363,12 +364,12 @@ useEffect(() => {
           </span>
         </div>
         <div className="flex justify-end mt-2">
-          <a
-            href={seeMore}
-            className="text-sm font-light italic font-sans underline"
-          >
-            See more
-          </a>
+          <Link
+          to={seeMore}
+          className="text-sm font-light italic font-sans underline"
+        >
+          See more
+        </Link>
         </div>
       </div>
     );
