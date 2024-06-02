@@ -40,14 +40,15 @@ const AppointmentSchema: Schema = new Schema({
   homeAddress: { type: String, required: true },
   city: { type: String, required: true },
   barangay: { type: String }, // New field for barangay
-  medicalCondition: String,
+  medicalCondition: {type: String},
   milkAmount: { type: String, required: true, validate: numericValidator },
   selectedDate: { type: String, required: true },
   selectedTime: { type: String, required: true },
   location: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   DonorRemark: { type: String },
-  method: { type: String }
+  method: { type: String },
+  BabyCategory: { type: String },
 });
 
 const AppointmentModel = mongoose.model<Appointment>('Appointment', AppointmentSchema);

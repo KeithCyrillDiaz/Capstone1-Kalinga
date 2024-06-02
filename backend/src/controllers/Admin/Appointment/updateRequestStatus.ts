@@ -3,7 +3,7 @@ import RequestModel from '../../../models/Requestor/RequestorRequestModel';
 
 const updateRequestStatus = async (req: Request, res: Response): Promise<void> => {
   const { RequestID } = req.params;
-  const { RequestStatus, Date, Time, medicalCondition } = req.body; // Extract Date and Time from req.body
+  const { RequestStatus, Date, Time, BabyCategory } = req.body; // Extract Date and Time from req.body
   console.log('RequestID:', RequestID);
   console.log('RequestStatus:', RequestStatus);
   console.log('Date:', Date);
@@ -12,7 +12,7 @@ const updateRequestStatus = async (req: Request, res: Response): Promise<void> =
   try {
     const updatedRequest = await RequestModel.findOneAndUpdate(
       { RequestID: RequestID },
-      { $set: { RequestStatus: RequestStatus, Date: Date, Time: Time, medicalCondition: medicalCondition } }, // Update RequestStatus, Date, and Time
+      { $set: { RequestStatus: RequestStatus, Date: Date, Time: Time, BabyCategory: BabyCategory } }, // Update RequestStatus, Date, and Time
       { new: true }
     );
 

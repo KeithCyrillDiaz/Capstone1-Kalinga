@@ -8,6 +8,9 @@ import { useParams } from "react-router-dom";
 import { WebHost } from "../../../../../MyConstantAdmin";
 import { getMedicalAbstractsFiles, getMedicalAbstractsImages } from "../../../../api/Appointments/Request";
 import DatePicker from 'react-datepicker';
+import { CustomModal } from "../../../../modal/logIn/AlertModal";
+import { Loader } from "../../../../components/loader";
+import { ShowImage } from "../../../../modal/Verification/ImageModals";
 
 const requestorAppointmentConfirmation = () => {
 
@@ -44,10 +47,12 @@ const requestorAppointmentConfirmation = () => {
   useEffect(() => {
     const fetchRequestData = async () => {
       try {
+        setLoading(true)
         console.log("Fetching appointment data for RequestID:", RequestID);
         const response = await axios.get(
           `${WebHost}/kalinga/getRequestByID/${RequestID}`
         );
+        setLoading(false)
         console.log("API Response:", response.data);
         setRequestData(response.data); // Update state with response data
         fetchRequirements(response.data)
@@ -64,18 +69,23 @@ const requestorAppointmentConfirmation = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [isDeclineModalOpen, setIsDeclineModalOpen] = useState(false);
-
+  const [loading, setLoading] = useState(false)
   const handleApproved = async () => {
-    setShowModal(true);
+    setShowModal(false);
     try {
+      setLoading(true)
       await axios.put(`${WebHost}/kalinga/updateRequestStatus/${RequestID}`, {
         RequestStatus: "Ongoing",
         Date: selectedDate, 
         Time: selectedTime,
-        medicalCondition: requestData?.Request?.medicalCondition || ''
+        BabyCategory: requestData?.Request?.BabyCategory || ''
       });
+      setLoading(false)
+      window.location.reload()
     } catch (error) {
       console.error("Error updating request status:", error);
+    } finally {
+      setLoading(false)
     }
   };
   const handleApprovedConfirm = () => {
@@ -86,14 +96,19 @@ const requestorAppointmentConfirmation = () => {
     setShowModal(false);
   };
   const handleDecline = async () => {
-    setIsDeclineModalOpen(true);
+    setIsDeclineModalOpen(false);
 
     try {
+      setLoading(true)
       await axios.put(`${WebHost}/kalinga/updateRequestStatus/${RequestID}`, {
         RequestStatus: "Decline",
       });
+      setLoading(false)
+      window.location.reload()
     } catch (error) {
       console.error("Error updating request status:", error);
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -124,7 +139,7 @@ const requestorAppointmentConfirmation = () => {
     const { name, value } = event.target;
     const newRequest = {
       ...requestData.Request,
-      medicalCondition: value
+      BabyCategory: value
     }
     setRequestData({
       ...requestData,
@@ -163,13 +178,42 @@ const requestorAppointmentConfirmation = () => {
       else setImages([])
   }
 
+
+  const [alert, setAlert] = useState(false)
+  const confirmation = () => {
+    if(requestData?.Request?.BabyCategory === "" || requestData?.Request?.BabyCategory == null ){
+      setAlert(true)
+      return
+    }
+    setShowModal(true)
+    
+  }
+
+  const [imageLink, setImageLink] = useState("");
+  const [showImage, setShowImage] = useState(false);
+  const [fileName, setFileName] = useState("")
+  const getImageUri = (data) => {
+    const {link, originalname} = data
+    setImageLink(link);
+    setFileName(originalname)
+    setShowImage(true);
+};
+
+  if(loading){
+    return (
+      <Loader isLoading={loading}/>
+    )
+  }
+
   return (
     <section className="w-full h-screen bg-primary-body overflow-hidden px-4">
       <div className="p-10 pt-1">
         <h1 className="text-3xl text-primary-default font-bold font-sans py-4 pb-2">
           Request Confirmation
         </h1>
-
+        {alert && (
+          <CustomModal message={"Please add a baby category first"} onClose={() => setAlert(false)}/>
+        )}
         {/* Full Name Input */}
         <div className="mt-2">
           <input
@@ -251,21 +295,27 @@ const requestorAppointmentConfirmation = () => {
         {/* Medical Condition and Milk Requested Input */}
         <div className="flex gap-x-2">
         <div className="w-2/3 mt-4">
-          <select
-            disabled={requestData?.Request?.RequestStatus !== "Pending"}
-            id="medicalCondition"
-            name="medicalCondition"
-            value={requestData?.Request?.medicalCondition || ''}
-            onChange={handleSelectChange}
-            className="bg-white w-full px-4 py-2 h-14 shadow-md rounded-lg focus:outline-none focus:text-primary-default"
-          >
-            <option value="">Select Medical Condition</option>
-            <option value="Well Baby">Well Baby</option>
-            <option value="Sick Baby">Sick Baby</option>
-            <option value="Medically Fragile Baby">Medically Fragile Baby</option>
-          </select>
+          <label
+                htmlFor="date"
+                className="text-md z-10 font-medium font-bold text-primary-default ml-2"
+              >
+                Baby Category
+              </label>
+            <select
+              disabled={requestData?.Request?.RequestStatus !== "Pending"}
+              id="BabyCategory"
+              name="BabyCategory"
+              value={requestData?.Request?.BabyCategory ?? "Did not set"}
+              onChange={handleSelectChange}
+              className={`bg-white w-full px-4 py-2 h-14 shadow-md rounded-lg focus:outline-none focus:text-primary-default ${requestData?.Request?.RequestStatus !== "Pending" ? "text-[#E60965]" : ""}`}
+            >
+              <option value="">Select Baby Category</option>
+              <option value="Well Baby">Well Baby</option>
+              <option value="Sick Baby">Sick Baby</option>
+              <option value="Medically Fragile Baby">Medically Fragile Baby</option>
+            </select>
         </div>
-          <div className="w-1/3 mt-4">
+          <div className="w-1/3 mt-10">
             <input
               type="text"
               id="amountDonated"
@@ -393,11 +443,20 @@ const requestorAppointmentConfirmation = () => {
           </div>
         </div>
          
-    
+        {showImage && (
+          <ShowImage
+            link={imageLink}
+            fileName={fileName}
+            onClose={() => setShowImage(false)}
+          />
+        )}
+
         <div className="mt-4 flex flex-cols gap-4">
       {images.length !== 0 && images.map(requirement => (
         <>
-              <div key={requirement.originalname} className="bg-white px-4 py-2 w-full h-72 shadow-md rounded-lg focus:outline-none focus: text-primary-default">
+              <div key={requirement.originalname} 
+              onClick={() => getImageUri(requirement)}
+              className="bg-white px-4 py-2 w-full h-72 shadow-md rounded-lg focus:outline-none focus: text-primary-default">
                 <span className="flex justify-center text-primary-default text-lg text-center">
                 {requirement.originalname}
                 </span>
@@ -448,7 +507,7 @@ const requestorAppointmentConfirmation = () => {
             </span>
           </div>*/}
         </div> 
-
+{/* 
         <div className="mt-4 ">
           <div className="flex bg-white w-full px-4 py-2 h-30 shadow-md  rounded-lg focus:outline-none focus: text-primary-default">
             <div>
@@ -480,7 +539,7 @@ const requestorAppointmentConfirmation = () => {
                 )}
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="absolute  right-0 mt-8 mr-16 flex flex-col">
           {requestData &&
@@ -490,13 +549,13 @@ const requestorAppointmentConfirmation = () => {
             requestData.Request.RequestStatus !== "Complete" && (
               <>
                 <button
-                  onClick={handleApproved}
+                  onClick={()=> confirmation()}
                   className="bg-primary-default text-white px-4 py-2 rounded-full mb-4"
                 >
                   Approved
                 </button>
                 <button
-                  onClick={handleDecline}
+                  onClick={() => setIsDeclineModalOpen(true)}
                   className="bg-white text-primary-default px-4 py-2 rounded-full border border-primary-default"
                 >
                   Decline
@@ -507,25 +566,25 @@ const requestorAppointmentConfirmation = () => {
 
         <RequestConfirmModal
           isOpen={showModal}
-          onConfirm={handleApprovedCancel}
+          onConfirm={handleApproved}
           onCancel={handleApprovedConfirm}
           message="Are you sure you want to approve this request? Once approved, the request process will proceed."
         />
 
         <RequestDeclineModal
           isOpen={isDeclineModalOpen}
-          onConfirm={handleDeclineConfirm}
+          onConfirm={handleDecline}
           onCancel={handleDeclineCancel}
           message="Are you sure you want to decline this request? Once declined, the request process will not proceed."
         />
-
+{/* 
         <AppointmentRequestDeclineModal
           isOpen={isDeclineModalOpen}
           onConfirm={handleDeclineConfirm}
           onCancel={handleDeclineCancel}
           message="Are you sure you want to decline this appointment? Once declined, the request process will not proceed."
           RequestID={RequestID}
-        />
+        /> */}
       </div>
     </section>
   );

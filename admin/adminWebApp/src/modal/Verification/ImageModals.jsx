@@ -38,7 +38,7 @@ export const MissingRequirements = ({onClose}) => {
 
 
 export const ShowImage = ({link, onClose, fileName}) => {
-
+  console.log("link: ", link)
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex justify-center items-center z-50">
       {/* Overlay */}
