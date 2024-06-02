@@ -233,13 +233,19 @@ export default function UserManagement() {
   };
 
   const [string, setString] = useState(null) // id
-  
+
+
   useEffect(() => {
-    const id = getId()
-    if(id) setString(id)
-  },[])
-
-
+    setDateFormat();
+    const storedId = getId();
+    if (storedId) {
+      setString(storedId);
+    } else {
+      const newId = generateId();
+      saveId({ id: newId });
+      setString(newId);
+    }
+  }, []);
 
 
   if(string)

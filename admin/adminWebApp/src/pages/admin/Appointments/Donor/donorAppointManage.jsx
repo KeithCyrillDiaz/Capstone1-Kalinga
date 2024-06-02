@@ -151,9 +151,17 @@ export default function ({ remarks }) {
   };
   const [id, setId] =useState(null)
   useEffect(() => {
-    const id = getId()
-    if(id)setId(id)
-  },[])
+    setDateFormat();
+    const storedId = getId();
+    if (storedId) {
+      setId(storedId);
+    } else {
+      const newId = generateId();
+      saveId({ id: newId });
+      setId(newId);
+    }
+  }, []);
+
 
   if(id)
   return (
