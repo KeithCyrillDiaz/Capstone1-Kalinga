@@ -10,6 +10,7 @@
   import axios from "axios";
   import { WebHost } from "../../../MyConstantAdmin";
 import { getId } from "../../functions/Authentication";
+import { Link } from 'react-router-dom';
 
   export default function chart() {
     const [selectedMonth, setSelectedMonth] = useState("");
@@ -310,12 +311,12 @@ import { getId } from "../../functions/Authentication";
             </span>
           </div>
           <div className="flex justify-end mt-2">
-            <a
-              href={seeMore}
-              className="text-sm font-light italic font-sans underline"
-            >
-              See more
-            </a>
+          <Link
+            to={seeMore}
+            className="text-sm font-light italic font-sans underline"
+          >
+            See more
+          </Link>
           </div>
         </div>
       );

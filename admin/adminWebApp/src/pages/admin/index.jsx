@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import { BarDonationOverAll, BarRequestOverAll, LineGraphTotalUserPerMonth,BarangayGraph } from "../../components";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { Link } from 'react-router-dom';
 import {
   BarChart,
   Bar,
@@ -335,12 +336,12 @@ const formattedDate = `${currentDate.getFullYear()}-${
           </span>
         </div>
         <div className="flex justify-end mt-2">
-          <a
-            href={seeMore}
-            className="text-sm font-light italic font-sans underline "
+          <Link
+            to={seeMore}
+            className="text-sm font-light italic font-sans underline"
           >
             See more
-          </a>
+          </Link>
         </div>
       </div>
     );
