@@ -47,7 +47,7 @@ const router = createBrowserRouter(
 
       {/* Private Routes */}
 
-      <Route path="admin" element={<AdminLayout />}>
+      <Route path="admin/:id" element={<AdminLayout />}>
         <Route index element={<AdminDashboard />} />
         <Route path="city" element={<City />} />
         <Route path="DonorVerifPendings" element={<DonorVerifPendings />} />
