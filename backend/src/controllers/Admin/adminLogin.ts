@@ -22,32 +22,36 @@ export const AdminLogIn = async (req: express.Request, res: express.Response) =>
                 }
             }).status(400)
         }
-        if(process.env.USERNAMEE !== req.body.username || process.env.PASSWORD !== req.body.password){
+
+        
+        if(process.env.USERNAMEE !== req.body.username && process.env.PASSWORD !== req.body.password){
             return res.json({
                 messages: {
                     code: 1,
                     message: "Invalid Credentials"
-                }
+                }, 
+       
             }).status(400)
-        } 
+        }
+
+
         const user = process.env.USERNAMEE
         const pass = process.env.PASSWORD
-
         const newToken: any = await createToken({
-            logInToken: jwt.sign({ user, pass }, process.env.SECRET_KEY, { expiresIn: '1m' }),
+            token: jwt.sign({ user, pass }, process.env.SECRET_KEY, { expiresIn: '1m' }),
             expiresAt: moment().add('1m').toDate()
         });
+
         
         return res.json({
             messages: {
                 code: 0,
-                message: "Log In Successfully"
-            }, 
+                message:  "Log In Successfully"
+            },
             user,
             newToken
         }).status(200)
-
-
+ 
     }catch(error){
         res.json({
             messages: {
