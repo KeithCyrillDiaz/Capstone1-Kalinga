@@ -4,14 +4,16 @@ import RequestConfirmModal from "../../../../modal/RequestConfirmModal";
 import RequestDeclineModal from "../../../../modal/RequestDeclineModal";
 import AppointmentRequestDeclineModal from "../../../../modal/AppointmentRequestDeclineModal";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { WebHost } from "../../../../../MyConstantAdmin";
 import { getMedicalAbstractsFiles, getMedicalAbstractsImages } from "../../../../api/Appointments/Request";
 import DatePicker from 'react-datepicker';
 import { CustomModal } from "../../../../modal/logIn/AlertModal";
 import { Loader } from "../../../../components/loader";
 import { ShowImage } from "../../../../modal/Verification/ImageModals";
-import { getToken } from "../../../../functions/Authentication";
+import { getId, getToken } from "../../../../functions/Authentication";
+import { sendApprovedAppointmentEmail } from "../../../../api/email/AppointmentEmail";
+import { getDateTime } from "../../../../functions/ConvertDateandTime";
 
 const requestorAppointmentConfirmation = () => {
 
@@ -21,6 +23,8 @@ const requestorAppointmentConfirmation = () => {
   const [files, setFiles] = useState([])
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(new Date());
+  const [formattedTime, setFormattedTime] = useState("");
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -57,6 +61,13 @@ const requestorAppointmentConfirmation = () => {
         console.log("API Response:", response.data);
         setRequestData(response.data); // Update state with response data
         fetchRequirements(response.data)
+        const request  = response.data.Request
+        if(request.RequestStatus === "Ongoing"){
+          const { time } = getDateTime({data: {selectedTime: request.Time}})
+          console.log("time: ", time)
+          setFormattedTime(time)
+        }
+
       } catch (error) {
         console.error("Error fetching appointment data:", error);
       }
@@ -75,18 +86,25 @@ const requestorAppointmentConfirmation = () => {
     setShowModal(false);
     try {
       setLoading(true)
+      console.log("Selected Date: ", selectedDate)
+      console.log("Selected Date: ", selectedDate)
       await axios.put(`${WebHost}/kalinga/updateRequestStatus/${RequestID}`, {
         RequestStatus: "Ongoing",
         Date: selectedDate, 
         Time: selectedTime,
         BabyCategory: requestData?.Request?.BabyCategory || ''
       });
+      const Request = requestData?.Request;
+      const { Requestor_ID } = Request || {};
       setLoading(false)
-      window.location.reload()
+      sendApprovedAppointmentEmail({id:Requestor_ID})
+    
     } catch (error) {
       console.error("Error updating request status:", error);
     } finally {
       setLoading(false)
+      const id = getId()
+      navigate(`/admin/${id}/requestorManagement`)
     }
   };
   const handleApprovedConfirm = () => {
@@ -105,7 +123,8 @@ const requestorAppointmentConfirmation = () => {
         RequestStatus: "Decline",
       });
       setLoading(false)
-      window.location.reload()
+      const id = getId()
+      navigate(`/admin/${id}/DonorAppointManage`)
     } catch (error) {
       console.error("Error updating request status:", error);
     } finally {
@@ -400,48 +419,61 @@ const requestorAppointmentConfirmation = () => {
             >
               Scheduled Time
             </label>
-            <input
-              type="time"
-              id="time"
-              value={
-                selectedTime
-                  ? selectedTime.toISOString().substring(11, 16)
-                  : ""
-              }
-              onChange={(e) => {
-                const [hours, minutes] = e.target.value.split(":");
-                const newTime = new Date(selectedTime);
-                
-                // Set the hours and minutes of the new time
-                newTime.setUTCHours(parseInt(hours, 10), parseInt(minutes, 10));
-              
-                // Convert newTime to local time zone (Philippine time)
-                const localTime = newTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
-              
-                // Parse the local time string to get the hours, minutes, and AM/PM
-                const [localHours, localMinutes, amPm] = localTime.split(/:| /);
-                
-                // Convert hours to 24-hour format
-                let hours24 = parseInt(localHours, 10);
-                if (amPm.toLowerCase() === 'pm' && hours24 < 12) {
-                  hours24 += 12;
-                } else if (amPm.toLowerCase() === 'am' && hours24 === 12) {
-                  hours24 = 0;
+            { requestData?.Request?.RequestStatus === "Pending" && (
+                <input
+                type="time"
+                id="time"
+                value={
+                    selectedTime
+                      ? selectedTime.toISOString().substring(11, 16)
+                      : ""
                 }
-              
-                // Set the new time with local hours and minutes
-                newTime.setHours(hours24, parseInt(localMinutes, 10));
-                handleScheduleChange("Time", newTime)
-                setSelectedTime(newTime);
-              }}
-              className={`bg-white w-full py-2 h-14 px-4 shadow-md rounded-lg focus:outline-none focus: text-primary-default ${
-                requestData?.Request?.RequestStatus === "Pending"
-                  ? "focus: text-primary-default"
-                  : "bg-gray-100 cursor-not-allowed"
-              }`}
-              // Disable time selection if not pending
-              disabled={requestData?.Request?.RequestStatus !== "Pending"}
-            />
+                onChange={(e) => {
+                  const [hours, minutes] = e.target.value.split(":");
+                  const newTime = new Date(selectedTime);
+                  
+                  // Set the hours and minutes of the new time
+                  newTime.setUTCHours(parseInt(hours, 10), parseInt(minutes, 10));
+                
+                  // Convert newTime to local time zone (Philippine time)
+                  const localTime = newTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+                
+                  // Parse the local time string to get the hours, minutes, and AM/PM
+                  const [localHours, localMinutes, amPm] = localTime.split(/:| /);
+                  
+                  // Convert hours to 24-hour format
+                  let hours24 = parseInt(localHours, 10);
+                  if (amPm.toLowerCase() === 'pm' && hours24 < 12) {
+                    hours24 += 12;
+                  } else if (amPm.toLowerCase() === 'am' && hours24 === 12) {
+                    hours24 = 0;
+                  }
+                
+                  // Set the new time with local hours and minutes
+                  newTime.setHours(hours24, parseInt(localMinutes, 10));
+                  handleScheduleChange("Time", newTime)
+                  setSelectedTime(newTime);
+                }}
+                className={`bg-white w-full py-2 h-14 px-4 shadow-md rounded-lg focus:outline-none focus: text-primary-default ${
+                  requestData?.Request?.RequestStatus === "Pending"
+                    ? "focus: text-primary-default"
+                    : "bg-gray-100 cursor-not-allowed"
+                }`}
+                // Disable time selection if not pending
+                disabled={requestData?.Request?.RequestStatus !== "Pending"}
+              />
+            )}
+            { requestData?.Request?.RequestStatus !== "Pending" && (
+              <input
+                type="text"
+                id="time"
+                value={formattedTime}
+                disabled={true}
+                className={`bg-white w-full py-2 h-14 px-4 shadow-md rounded-lg focus:outline-none focus: text-primary-default`}
+              />
+            )}
+
+            
           </div>
         </div>
          

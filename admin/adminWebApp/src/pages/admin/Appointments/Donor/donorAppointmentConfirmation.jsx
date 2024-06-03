@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import ConfirmationModal from "../../../../modal/ConfirmationModal";
 import DeclineModal from "../../../../modal/DeclineModal";
 import axios from "axios";
@@ -12,21 +12,23 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { getMedicalAbstractsFiles, getMedicalAbstractsImages } from "../../../../api/Appointments/Request";
 import { getDateTime } from "../../../../functions/ConvertDateandTime";
-import { getToken } from "../../../../functions/Authentication";
+import { getId, getToken } from "../../../../functions/Authentication";
 import { Loader } from "../../../../components/loader";
 import { CustomModal } from "../../../../modal/logIn/AlertModal";
 import { ShowImage } from "../../../../modal/Verification/ImageModals";
+import { sendApprovedAppointmentEmail } from "../../../../api/email/AppointmentEmail";
 
 const donorAppointmentConfirmation = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(new Date());
+  const [formattedTime, setFormattedTime] = useState("")
   const [appointmentData, setAppointmentData] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [isDeclineModalOpen, setIsDeclineModalOpen] = useState(false);
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
   const [images, setImages] = useState([])
   const [files, setFiles] = useState([])
-
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     DonationStatus: "",
@@ -50,22 +52,29 @@ const donorAppointmentConfirmation = () => {
   };
 
   const { AppointmentDonorID } = useParams();
-  useEffect(() => {
-    const fetchAppointmentData = async () => {
-      try {
-        const response = await axios.get(
-          `${WebHost}/kalinga/getAppointmentsByDonorID/${AppointmentDonorID}`
-        );
-        setAppointmentData(response.data.Appointment);
-        setSelectedDate(new Date(response.data.Appointment.selectedDate));
-        setSelectedTime(new Date(response.data.Appointment.selectedTime));
-        await fetchRequirements(response.data.Appointment.Donor_ID);
-      } catch (error) {
-        console.error("Error fetching appointment data:", error);
-      }
-    };
+  const fetchAppointmentData = async () => {
+    try {
+      setLoading(true)
+      const response = await axios.get(
+        `${WebHost}/kalinga/getAppointmentsByDonorID/${AppointmentDonorID}`
+      );
+      setAppointmentData(response.data.Appointment);
+      const appointment  = response.data.Appointment
+      const { time } = getDateTime({data: appointment})
+      setFormattedTime(time)
+      setSelectedDate(new Date(response.data.Appointment.selectedDate));
+      setSelectedTime(new Date(response.data.Appointment.selectedTime));
+    
+      await fetchRequirements(response.data.Appointment.Donor_ID);
+    } catch (error) {
+      console.error("Error fetching appointment data:", error);
+    } finally {
+      setLoading(false)
+    }
+  };
 
-    console.log("AppointmentDonorID:", AppointmentDonorID);
+  console.log("AppointmentDonorID:", AppointmentDonorID);
+  useEffect(() => {
     fetchAppointmentData();
   }, [AppointmentDonorID]);
 
@@ -88,13 +97,16 @@ const donorAppointmentConfirmation = () => {
         }
       );
       setLoading(false)
-      window.location.reload();
+      await sendApprovedAppointmentEmail({id: appointmentData.Donor_ID})
+  
       // Optionally, you can reload the data or do any other action upon successful update
     } catch (error) {
       console.error("Error updating request status:", error);
       // Handle error if needed
     } finally {
       setLoading(false)
+      const id = getId()
+      navigate(`/admin/${id}/DonorAppointManage`)
     }
   };
 
@@ -122,7 +134,8 @@ const donorAppointmentConfirmation = () => {
         }
       );
       setLoading(false)
-      window.location.reload()
+      const id = getId()
+      navigate(`/admin/${id}/DonorAppointManage`)
       // Optionally, you can reload the data or do any other action upon successful update
     } catch (error) {
       console.error("Error updating request status:", error);
@@ -150,7 +163,8 @@ const donorAppointmentConfirmation = () => {
       // Handle success response
       console.log("Donation status updated successfully:", response.data);
       setLoading(false)
-      window.location.reload()
+      const id = getId()
+      navigate(`/admin/${id}/DonorAppointManage`)
     } catch (error) {
       // Handle error
       console.error("Error updating donation status:", error);
@@ -390,48 +404,54 @@ const donorAppointmentConfirmation = () => {
                 >
                   Scheduled Time
                 </label>
+                { appointmentData.DonationStatus === "Pending" && (
                 <input
-                  type="time"
-                  id="time"
-                  value={
+                type="time"
+                id="time"
+                value={
                     selectedTime
                       ? selectedTime.toISOString().substring(11, 16)
                       : ""
+                }
+                onChange={(e) => {
+                  const [hours, minutes] = e.target.value.split(":");
+                  const newTime = new Date(selectedTime);
+                  
+                  // Set the hours and minutes of the new time
+                  newTime.setUTCHours(parseInt(hours, 10), parseInt(minutes, 10));
+                
+                  // Convert newTime to local time zone (Philippine time)
+                  const localTime = newTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+                
+                  // Parse the local time string to get the hours, minutes, and AM/PM
+                  const [localHours, localMinutes, amPm] = localTime.split(/:| /);
+                  
+                  // Convert hours to 24-hour format
+                  let hours24 = parseInt(localHours, 10);
+                  if (amPm.toLowerCase() === 'pm' && hours24 < 12) {
+                    hours24 += 12;
+                  } else if (amPm.toLowerCase() === 'am' && hours24 === 12) {
+                    hours24 = 0;
                   }
-                  onChange={(e) => {
-                    const [hours, minutes] = e.target.value.split(":");
-                    const newTime = new Date(selectedTime);
-                    
-                    // Set the hours and minutes of the new time
-                    newTime.setUTCHours(parseInt(hours, 10), parseInt(minutes, 10));
-                  
-                    // Convert newTime to local time zone (Philippine time)
-                    const localTime = newTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
-                  
-                    // Parse the local time string to get the hours, minutes, and AM/PM
-                    const [localHours, localMinutes, amPm] = localTime.split(/:| /);
-                    
-                    // Convert hours to 24-hour format
-                    let hours24 = parseInt(localHours, 10);
-                    if (amPm.toLowerCase() === 'pm' && hours24 < 12) {
-                      hours24 += 12;
-                    } else if (amPm.toLowerCase() === 'am' && hours24 === 12) {
-                      hours24 = 0;
-                    }
-                  
-                    // Set the new time with local hours and minutes
-                    newTime.setHours(hours24, parseInt(localMinutes, 10));
-                  
-                    setSelectedTime(newTime);
-                  }}
-                  className={`bg-white w-full py-2 h-14 px-4 shadow-md rounded-lg focus:outline-none focus: text-primary-default ${
-                    appointmentData.DonationStatus === "Pending"
-                      ? "focus: text-primary-default"
-                      : "bg-gray-100 cursor-not-allowed"
-                  }`}
-                  // Disable time selection if not pending
-                  disabled={appointmentData.DonationStatus !== "Pending"}
-                />
+                
+                  // Set the new time with local hours and minutes
+                  newTime.setHours(hours24, parseInt(localMinutes, 10));
+                  setSelectedTime(newTime);
+                }}
+                className={`bg-white w-full py-2 h-14 px-4 shadow-md rounded-lg focus:outline-none focus: text-primary-default`}
+                // Disable time selection if not pending
+                disabled={appointmentData.DonationStatus !== "Pending"}
+              />
+            )}
+            { appointmentData.DonationStatus !== "Pending" && (
+              <input
+                type="text"
+                id="time"
+                value={formattedTime}
+                disabled={true}
+                className={`bg-white w-full py-2 h-14 px-4 shadow-md rounded-lg focus:outline-none focus: text-primary-default`}
+              />
+            )}
               </div>
             </>
           )}

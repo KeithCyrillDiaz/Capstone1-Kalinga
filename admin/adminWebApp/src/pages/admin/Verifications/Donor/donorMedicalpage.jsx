@@ -39,7 +39,6 @@ const DonorMedicalPage = ({ currentPage, id, form }) => {
       setLoading(true);
       console.log("Fetching Files and Images in database");
       const token = getToken()
-      console.log("token: ", token)
       const getFilesResponse = await axios.post(
         `${WebHost}/kalinga/getMedicalRequirementFile/${id}`,
         {purpose: "Application"},

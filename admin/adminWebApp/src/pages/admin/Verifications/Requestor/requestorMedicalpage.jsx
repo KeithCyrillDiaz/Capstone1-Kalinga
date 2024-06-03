@@ -26,7 +26,6 @@ const RequestorMedicalPage = ({ currentPage, id }) => {
       setLoading(true);
       console.log("Fetching Files and Images in database");
       const token = getToken()
-      console.log("token: ", token)
       const getFilesResponse = await axios.post(
         `${WebHost}/kalinga/getMedicalRequirementFile/${id}`,
         {purpose: "Application"},
@@ -41,8 +40,6 @@ const RequestorMedicalPage = ({ currentPage, id }) => {
         setFiles(filesObj)
       }
 
-  
-      console.log("token: ", token)
       const getImagesResponse = await axios.post(
         `${WebHost}/kalinga/getMedicalRequirementImage/${id}`,
         {purpose: "Application"},
