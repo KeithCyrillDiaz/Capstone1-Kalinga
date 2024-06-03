@@ -16,7 +16,7 @@ import { getTopByBarangay } from "../../api/report/fetchTopUsers";
 import { getId } from "../../functions/Authentication";
 import { Link } from 'react-router-dom';
 
-export default function barangay() {
+const barangay = () => {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedBarangay, setSelectedBarangay] = useState("");
@@ -839,3 +839,6 @@ useEffect(() => {
     </>
   );
 }
+
+
+export default barangay
