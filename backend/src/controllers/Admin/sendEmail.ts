@@ -6,6 +6,8 @@ import { getScreeningFormByApplicantID } from "../../models/ApplyAsDonor";
 import { createCode, createPassCode} from "../../models/Authentication";
 import { getDonorByEmail, getRequestorByEmail } from "../../models/users";
 import { random } from "helpers/passwordEncryption";
+import AppointmentModel from "../../models/Donor/DonorSetAppointmentModel";
+import RequestModel from "../../models/Requestor/RequestorRequestModel";
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -689,3 +691,198 @@ export const sendCode = async(req: express.Request, res: express.Response) => {
         })
     }
 }
+
+
+export const sendApprovedAppointmentEmail = async (req: express.Request, res: express.Response) => {
+
+    try {
+        
+        const { id } = req.params
+       
+
+        if(!id){
+            console.log("No Id")
+            return res.json({
+                messages: {
+                    code: 1,
+                    message: "Bad Request"
+                }
+            }).status(400)
+        }
+        console.log("id: ", id)
+        const existingUser = await getScreeningFormByApplicantID(id);
+        if (!existingUser) {
+            return res.status(400).json({
+                messages: {
+                    code: 1,
+                    message: "Non-existent Applicant",
+                },
+            });
+        }
+
+        if (!existingUser.email || existingUser.email === "") {
+            return res.status(400).json({
+                messages: {
+                    code: 1,
+                    message: "User has No Email",
+                },
+            });
+        }
+
+        console.log("id: ",id)
+        const type = existingUser.userType
+        const appointment = type === "Donor" ? await AppointmentModel.findOne({Donor_ID: id, DonationStatus: "Ongoing"}) : null
+        const request = type === "Requestor" ? await RequestModel.findOne({Requestor_ID: id, RequestStatus: "Ongoing"}) : null
+        console.log( "appointment: ", appointment)
+        if (!appointment && !request) {
+            console.log("Appointment or Request Not Found");
+            return res.json({
+                messages: {
+                    code: 1,
+                    message: "Not Found"
+                }
+            }).status(404);
+        }
+        let updateEmail: any
+        if(appointment) {
+            if(appointment.emailAddress !== existingUser.email){
+                console.log("Updating Email")
+                updateEmail = await AppointmentModel.updateMany({Donor_ID: id}, {$set: {emailAddress: existingUser.email}})
+            }
+        } else {
+            if(request.emailAddress !== existingUser.email){
+                console.log("Updating Email")
+                updateEmail = await RequestModel.updateMany({Requestor_ID: id}, {$set: {emailAddress: existingUser.email}})
+            }
+        }
+        console.log("Updated Email: ", updateEmail)
+        if(!updateEmail)console.log("Email is up to date")
+            else console.log("Updated Email Successfully")
+
+    
+
+        const appointmentDate = type === "Donor" ? appointment.selectedDate : null
+        const appointmentTime = type === "Donor" ? appointment.selectedTime : null
+        const requestDate = type === "Requestor" ? request.Date: null
+        const requestTime = type === "Requestor" ? request.Time: null
+
+        const date = type === "Donor" ? appointmentDate : requestDate
+        const time = type === "Donor" ? appointmentTime : requestTime
+        
+        // time:2024-06-03T19:54:06.997Z
+        // Date: 2024-06-03T19:54:06.997Z
+
+        const formattedDate = new Date(date).toLocaleDateString(undefined, {
+            month: '2-digit',
+            day: '2-digit',
+            year: 'numeric'
+          });
+          
+          const dateObj = new Date(time);
+          const hours = dateObj.getUTCHours();
+          const minutes = dateObj.getUTCMinutes();
+          const ampm = hours >= 12 ? 'pm' : 'am';
+          const formattedHours = hours % 12 || 12;
+          const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+          const formattedTime = `${formattedHours}:${formattedMinutes}${ampm}`;
+
+        const location = type === "Donor" ? appointment.location : request.milkBank
+        console.log("date: ", formattedDate)
+        console.log("time: ", formattedTime)
+        
+        const userType = existingUser.userType === "Donor" ? "donor" : "requestor";
+        const duty = existingUser.userType === "Donor" ? "donating" : "requesting";
+        const duty2 = existingUser.userType === "Donor" ? "donation" : "obtaining";
+        const setPasswordURL = "Kalinga://verification-result?success=true";
+
+        const result = await transporter.sendMail({
+            from: process.env.NM_EMAIL,
+            to: existingUser.email,
+            subject: "Appointment Approval Notification",
+            html: `
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Appointment Approval Notification</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            margin: 0;
+                            padding: 0;
+                            background-color: #f4f4f4;
+                        }
+                        .container {
+                            max-width: 600px;
+                            margin: 0 auto;
+                            padding: 20px;
+                            background-color: #fff;
+                            border-radius: 10px;
+                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                        }
+                        h2 {
+                            color: #333;
+                        }
+                        p {
+                            margin-bottom: 20px;
+                            line-height: 1.6;
+                        }
+                        .button {
+                            display: inline-block;
+                            background-color: #E60965;
+                            color: #fff;
+                            text-decoration: none;
+                            padding: 10px 20px;
+                            border-radius: 5px;
+                        }
+                        .footer {
+                            margin-top: 20px;
+                            text-align: left;
+                        }
+                        .highlight {
+                            font-size: 18px;
+                            font-weight: bold;
+                            color: #E60965;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <h2>Appointment Approved</h2>
+                        <p>Dear ${existingUser.fullName},</p>
+                        <p>We are pleased to inform you that your appointment for ${duty} milk has been approved. Please proceed to your chosen milk bank location at the designated date and time to begin the ${duty2} process.</p>
+                        <p>Details of your appointment:</p>
+                        <p>
+                        <span class="highlight">Milk Bank Location:</span> ${location}<br>
+                        <span class="highlight">Date:</span> ${formattedDate}<br>
+                        <span class="highlight">Time:</span> ${formattedTime}
+                        </p>
+                        <p>Thank you for your generous contribution. Your support is invaluable to us and helps save lives.</p>
+                        <div class="footer">
+                            <p>Best Regards,</p>
+                            <p>The Kalinga Team</p>
+                        </div>
+                    </div>
+                </body>
+                </html>`,
+        });
+
+        console.log("Email Sent Successfully");
+        return res.status(200).json({
+            messages: {
+                code: 0,
+                message: "Email Sent Successfully",
+            },
+            result,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            messages: {
+                code: 1,
+                message: "Internal Server Error",
+            },
+            error,
+        });
+    }
+};

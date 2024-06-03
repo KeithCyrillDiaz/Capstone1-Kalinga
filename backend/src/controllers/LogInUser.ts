@@ -83,8 +83,7 @@ export const logInUser = async (req: express.Request, res: express.Response) => 
         console.log("existingUser: ", userInformation)
         console.log("newToken: ", newToken)
         const token = newToken.logInToken
-        console.log("token: ", newToken.logInToken)
-   
+
         return res.json({
             messages: {
                 code: 0,
