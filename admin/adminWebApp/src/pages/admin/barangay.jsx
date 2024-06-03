@@ -13,7 +13,7 @@ import { getBarangayByCityName } from "../../functions/getBarangay";
 import { TopCard } from "../../components/TopCard/RenderTopCard";
 import { generatePDF } from "../../functions/generatePDF";
 import { getTopByBarangay } from "../../api/report/fetchTopUsers";
-import { getId } from "../../functions/Authentication";
+import { getId, getToken } from "../../functions/Authentication";
 import { Link } from 'react-router-dom';
 
 const barangay = () => {
@@ -54,8 +54,11 @@ const handleSelectBarangay = (e) => {
 
 useEffect(() => {
   const fetchBarangays = async () => {
+    const token = getToken()
     try {
-      const response = await axios.get(`${WebHost}/kalinga/getAllBarangay`);
+      const response = await axios.get(`${WebHost}/kalinga/getAllBarangay`,
+        {headers: {Authorization: `Bearer ${token}`}}
+      );
       setBarangays(response.data);
     } catch (error) {
       console.error("Error fetching barangays:", error);
@@ -82,6 +85,7 @@ useEffect(() => {
     setLoading(true);
     setError(null);
   const monthValue = getMonthValue(selectedMonth);
+  const token = getToken()
     try {
       const responseComplete = await axios.get(
         `${WebHost}/kalinga/getTotalCompleteDonationPerBarangay`,
@@ -91,6 +95,7 @@ useEffect(() => {
             selectedYear: parseInt(selectedYear),
             selectedBarangay: selectedBarangay
           },
+          headers: {Authorization: `Bearer ${token}`}
         }
       );
       const totalCompleteDonations = responseComplete.data.totalCompleteAppointments;
@@ -102,8 +107,8 @@ useEffect(() => {
             selectedMonth: monthValue,
             selectedYear: parseInt(selectedYear),
             selectedBarangay: selectedBarangay
-
           },
+          headers: {Authorization: `Bearer ${token}`}
         }
       );
       const totalDeclinedDonations = responseDecline.data.totalDeclineAppointments;
@@ -118,6 +123,7 @@ useEffect(() => {
             selectedYear: parseInt(selectedYear),
             selectedBarangay: selectedBarangay,
           },
+          headers: {Authorization: `Bearer ${token}`}
         }
       );
       const totalCompleteRequests = responseRequests.data.totalCompleteRequests;
@@ -130,6 +136,7 @@ useEffect(() => {
             selectedYear: parseInt(selectedYear),
             selectedBarangay: selectedBarangay,
           },
+          headers: {Authorization: `Bearer ${token}`}
         }
       );
       const totalDeclinedRequests = responseDeclineRequests.data.totalDeclineRequests;
@@ -142,6 +149,8 @@ useEffect(() => {
           selectedYear: parseInt(selectedYear),
           selectedBarangay: selectedBarangay,
         },
+        headers: {Authorization: `Bearer ${token}`}
+        
       });
 
       const requestorsResponse = await axios.get(`${WebHost}/kalinga/getTotalRequestorsPerBarangay`, {
@@ -150,6 +159,7 @@ useEffect(() => {
           selectedYear: parseInt(selectedYear),
           selectedBarangay: selectedBarangay,
         },
+        headers: {Authorization: `Bearer ${token}`}
       });
 
       setTotalDonors(donorsResponse.data.totalDonors);
@@ -163,6 +173,7 @@ useEffect(() => {
             selectedYear: parseInt(selectedYear),
             selectedBarangay: selectedBarangay,
           },
+          headers: {Authorization: `Bearer ${token}`}
         }
       );
       setTotalAppointments(responseAppointments.data.totalAppointments);   
@@ -172,18 +183,28 @@ useEffect(() => {
           selectedMonth: monthValue,
           selectedYear: parseInt(selectedYear),
           selectedBarangay: selectedBarangay,
-        },        
+        },     
+        headers: {Authorization: `Bearer ${token}`}
 
       });
       setTotalRequest(response.data.totalRequests);  
-      const responseAllComplete = await axios.get(`${WebHost}/kalinga/getTotalCompleteDonationsAllMonthsBarangay`, { params: { selectedYear: selectedYear, selectedBarangay: selectedBarangay, } });
+      const responseAllComplete = await axios.get(`${WebHost}/kalinga/getTotalCompleteDonationsAllMonthsBarangay`, 
+      { 
+        params: { selectedYear: selectedYear, selectedBarangay: selectedBarangay, },
+        headers: {Authorization: `Bearer ${token}`} 
+      },
+    );
       const totalAllMonthCompleteDonations = responseAllComplete.data.reduce((acc, curr) => acc + curr.totalCompleteDonations, 0);
       setTotalAllMonthCompleteDonations(totalAllMonthCompleteDonations);
       console.log ("All Months", totalAllMonthCompleteDonations )
       console.log ("response", responseAllComplete )
 
 
-      const responseAllRequests = await axios.get(`${WebHost}/kalinga/getTotalCompleteRequestAllMonthsBarangay`, { params: { selectedYear: selectedYear, selectedBarangay: selectedBarangay,  } });
+      const responseAllRequests = await axios.get(`${WebHost}/kalinga/getTotalCompleteRequestAllMonthsBarangay`, 
+      { 
+        params: { selectedYear: selectedYear, selectedBarangay: selectedBarangay,  },
+        headers: {Authorization: `Bearer ${token}`} 
+      });
       const totalAllMonthCompleteRequests = responseAllRequests.data.reduce((acc, curr) => acc + curr.totalCompleteRequests, 0);
       setTotalAllMonthCompleteRequests(totalAllMonthCompleteRequests);
 

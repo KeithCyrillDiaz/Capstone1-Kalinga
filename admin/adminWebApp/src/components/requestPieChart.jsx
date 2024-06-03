@@ -9,12 +9,16 @@ export default function RequestPieChart({ name }) {
 
   useEffect(() => {
     const fetchRequestsData = async () => {
+      const token = getToken()
+      
       try {
         const responseComplete = await axios.get(
-          `${WebHost}/kalinga/getCompleteRequestsTotal`
+          `${WebHost}/kalinga/getCompleteRequestsTotal`,
+          {headers: {Authorization: `Bearer ${token}`}}
         );
         const responseDeclined = await axios.get(
-          `${WebHost}/kalinga/getDeclinedRequestsTotal`
+          `${WebHost}/kalinga/getDeclinedRequestsTotal`,
+          {headers: {Authorization: `Bearer ${token}`}}
         );
 
         setTotalCompleteRequests(responseComplete.data.totalCompleteRequests);

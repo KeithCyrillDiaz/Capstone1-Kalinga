@@ -9,7 +9,7 @@ import { CgUnblock } from "react-icons/cg";
 
 //API
 import { BlockdUser } from "../../api/blockUsers/BlockUsers";
-import { getId } from "../../functions/Authentication";
+import { getId, getToken } from "../../functions/Authentication";
 
 export default function UserManagement() {
   const navigate = useNavigate();
@@ -52,8 +52,11 @@ export default function UserManagement() {
   useEffect(() => {
     setLoading(true);
     async function fetchData() {
+      const token = getToken()
       try {
-        const response = await fetch(`${WebHost}/kalinga/getAllUsers`);
+        const response = await fetch(`${WebHost}/kalinga/getAllUsers`,
+        {headers: {Authorization: `Bearer ${token}`}}
+        );
         const data = await response.json();
         if (response.ok) {
           setUsers([...data.donors, ...data.requestors]);

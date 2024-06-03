@@ -2,6 +2,7 @@ import axios from "axios";
 import { WebHost } from "../../../MyConstantAdmin";
 
 export const getMedicalAbstractsImages = async ({id, purpose, token}) => {
+    console.log("token", token)
     try {
         console.log("fethcing Medical Abstract")
         const response = await axios.post(`${WebHost}/kalinga/getMedicalRequirementImage/${id}`,

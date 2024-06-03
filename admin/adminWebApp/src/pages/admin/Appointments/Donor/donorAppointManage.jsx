@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { WebHost } from "../../../../../MyConstantAdmin";
 import DeleteModal from "../../../../modal/deleteModal";
-import { getId } from "../../../../functions/Authentication";
+import { getId, getToken } from "../../../../functions/Authentication";
 
 export default function ({ remarks }) {
   const navigate = useNavigate();
@@ -132,9 +132,11 @@ export default function ({ remarks }) {
   };
 
   const handleDelete = async (AppointmentDonorID) => {
+    const token = getToken()
     try {
       const response = await axios.delete(
-        `${WebHost}/kalinga/deleteAppointmentDonor/${AppointmentDonorID}`
+        `${WebHost}/kalinga/deleteAppointmentDonor/${AppointmentDonorID}`,
+        {headers: {Authorization: `Bearer ${token}`}}
       );
       if (response.status === 200) {
         const updatedAppointments = appointments.filter(

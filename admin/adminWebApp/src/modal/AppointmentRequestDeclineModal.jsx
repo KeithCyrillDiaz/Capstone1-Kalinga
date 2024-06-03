@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { WebHost } from "../../MyConstantAdmin";
 import axios from "axios";
+import { getToken } from "../functions/Authentication";
 
 const AppointmentRequestDeclineModal = ({
   isOpen,
@@ -44,6 +45,7 @@ const AppointmentRequestDeclineModal = ({
   };
 
   const putRequestRemarkToServer = async (remark) => {
+    const token = getToken()
     try {
       const requestBody = {
         RequestRemark: remark,
@@ -52,13 +54,14 @@ const AppointmentRequestDeclineModal = ({
 
       console.log(
         "Sending PUT request to:",
-        `${WebHost}/kalinga/updateRequestRemark/${RequestID}`
+        `${WebHost}/kalinga/updateRequestRemark/${RequestID}`,
       );
       console.log("Request Body:", requestBody);
 
       const response = await axios.put(
         `${WebHost}/kalinga/updateRequestRemark/${RequestID}`,
-        requestBody
+        requestBody,
+        {headers: {Authorization: `Bearer ${token}`}}
       );
 
       console.log("Remark posted successfully:", response.data);

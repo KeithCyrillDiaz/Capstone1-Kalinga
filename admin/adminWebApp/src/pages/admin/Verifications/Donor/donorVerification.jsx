@@ -126,6 +126,8 @@ export default function () {
       }
 
       //getImageData in Database
+      const token = getToken()
+      console.log("token: ", token)
       const getImagesResponse = await axios.post(
         `${WebHost}/kalinga/getMedicalRequirementImage/${Applicant_ID}`,
         {purpose: "Application"},

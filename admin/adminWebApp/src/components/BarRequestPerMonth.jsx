@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { getToken } from "../functions/Authentication";
 
 export default function BarDonatePerMonth({ name }) {
   const [monthlyData, setMonthlyData] = useState([]);
@@ -23,14 +24,18 @@ export default function BarDonatePerMonth({ name }) {
     const fetchData = async () => {
       setLoading(true);
       setError(null);
+
+      const token = getToken()
       try {
         // Fetch total complete donations
         const responseComplete = await axios.get(
-          `${WebHost}/kalinga/getTotalCompleteDonationsAllMonths`
+          `${WebHost}/kalinga/getTotalCompleteDonationsAllMonths`,
+            {headers: {Authorization: `Bearer ${token}`}}
         );
         // Fetch total complete requests
         const responseRequests = await axios.get(
-          `${WebHost}/kalinga/getTotalCompleteRequestAllMonths`
+          `${WebHost}/kalinga/getTotalCompleteRequestAllMonths`,
+          {headers: {Authorization: `Bearer ${token}`}}
         );
         // Merge the data from both responses
         const mergedData = mergeData(

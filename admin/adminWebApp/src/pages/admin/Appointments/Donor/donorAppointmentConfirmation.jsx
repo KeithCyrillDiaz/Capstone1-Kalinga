@@ -182,17 +182,12 @@ const donorAppointmentConfirmation = () => {
     setSelectedTime(time);
   };
 
-  const [token, setToken] = useState(null)
-  useEffect(() => {
-    const token = getToken()
-    console.log("token", token)
-    if(token)setToken(token)
-  },[])
 
    //fetch Image requirements
   const fetchRequirements = async (id) => {
     const Donor_ID = id
     console.log("id: ", id)
+    const token = getToken()
     const files = await getMedicalAbstractsFiles({id: Donor_ID, purpose: "Donate", token: token})
     const images = await getMedicalAbstractsImages({id: Donor_ID, purpose: "Donate", token: token})
     if(files) setFiles(files)

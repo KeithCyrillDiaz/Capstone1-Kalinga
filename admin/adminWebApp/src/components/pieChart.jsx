@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { WebHost } from "../../MyConstantAdmin";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import { getToken } from "../functions/Authentication";
 
 export default function ({ name }) {
   const [totalCompleteDonations, setTotalCompleteDonations] = useState(0);
@@ -9,12 +10,15 @@ export default function ({ name }) {
 
   useEffect(() => {
     const fetchDonationsData = async () => {
+      const token = getToken()
       try {
         const responseComplete = await axios.get(
-          `${WebHost}/kalinga/getCompleteDonationsTotal`
+          `${WebHost}/kalinga/getCompleteDonationsTotal`,
+          {headers: {Authorization: `Bearer ${token}`}}
         );
         const responseDeclined = await axios.get(
-          `${WebHost}/kalinga/getDeclinedDonationsTotal`
+          `${WebHost}/kalinga/getDeclinedDonationsTotal`,
+          {headers: {Authorization: `Bearer ${token}`}}
         );
 
         setTotalCompleteDonations(responseComplete.data.totalCompleteDonations);

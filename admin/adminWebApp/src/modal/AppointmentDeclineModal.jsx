@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { WebHost } from "../../MyConstantAdmin";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { getToken } from "../functions/Authentication";
 
 const AppointmentDeclineModal = ({
   isOpen,
@@ -46,6 +47,7 @@ const AppointmentDeclineModal = ({
   };
 
   const putDonorRemarkToServer = async (remark) => {
+    const token = getToken()
     try {
       const requestBody = {
         DonorRemark: remark,
@@ -60,7 +62,8 @@ const AppointmentDeclineModal = ({
 
       const response = await axios.put(
         `${WebHost}/kalinga/updateDonorRemark/${AppointmentDonorID}`,
-        requestBody
+        requestBody,
+        {headers: {Authorization: `Bearer ${token}`}}
       );
 
       console.log("Remark posted successfully:", response.data);

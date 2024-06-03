@@ -3,6 +3,7 @@ import axios from "axios";
 import { WebHost } from "../../../MyConstantAdmin";
 import { Pie } from "react-chartjs-2";
 import Chart from "chart.js/auto";
+import { getToken } from "../../functions/Authentication";
 
 export default function () {
   const [city, setCity] = useState(""); // State to hold the selected city
@@ -12,17 +13,19 @@ export default function () {
 
   useEffect(() => {
     const fetchData = async () => {
+      const token = getToken()
       try {
         const donationResponse = await axios.get(
           `${WebHost}/kalinga/getDonationStatusTotal?city=${encodeURIComponent(
             city
-          )}`
+          )}`, {headers: {Authorization: `Bearer ${token}`}}
+
         );
 
         const requestResponse = await axios.get(
           `${WebHost}/kalinga/getRequestStatusTotal?city=${encodeURIComponent(
             city
-          )}`
+          )}` , {headers: {Authorization: `Bearer ${token}`}}
         );
 
         console.log("Donation Response:", donationResponse.data);

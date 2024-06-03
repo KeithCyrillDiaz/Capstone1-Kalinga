@@ -3,6 +3,7 @@ import axios from "axios";
 import { WebHost } from "../../MyConstantAdmin";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import { getToken } from "../functions/Authentication";
 
 export default function DonatePerMonthBarangay({ name, selectedMonth, selectedYear, selectedBarangay }) {
   const [totalCompleteDonations, setTotalCompleteDonations] = useState(0);
@@ -14,7 +15,7 @@ export default function DonatePerMonthBarangay({ name, selectedMonth, selectedYe
     const fetchData = async () => {
       setLoading(true);
       setError(null);
-
+      const token = getToken()
       const monthValue = isNaN(parseInt(selectedMonth))
         ? getMonthValue(selectedMonth)
         : parseInt(selectedMonth);
@@ -28,6 +29,7 @@ export default function DonatePerMonthBarangay({ name, selectedMonth, selectedYe
               selectedYear: parseInt(selectedYear),
               selectedBarangay: selectedBarangay,
             },
+            headers: {Authorization: `Bearer ${token}`}
           }
         );
 
@@ -42,6 +44,8 @@ export default function DonatePerMonthBarangay({ name, selectedMonth, selectedYe
               selectedYear: parseInt(selectedYear),
               selectedBarangay: selectedBarangay,
             },
+            headers: {Authorization: `Bearer ${token}`}
+            
           }
         );
 

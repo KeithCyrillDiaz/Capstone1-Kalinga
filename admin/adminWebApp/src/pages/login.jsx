@@ -51,7 +51,7 @@ export default function Login() {
         setInvalidCredentials(true);
         return;
       } else {
-        if(result.token) saveToken(result.token)
+        if(result.token) saveToken({token: result.token})
         const id = generateId()
         saveId({id: id})
         navigate(`/admin/${id}`);

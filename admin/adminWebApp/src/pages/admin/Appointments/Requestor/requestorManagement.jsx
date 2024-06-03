@@ -5,7 +5,7 @@ import axios from "axios";
 import { WebHost } from "../../../../../MyConstantAdmin";
 import DeleteModal from "../../../../modal/deleteModal";
 import { Loader } from "../../../../components/loader";
-import { getId } from "../../../../functions/Authentication";
+import { getId, getToken } from "../../../../functions/Authentication";
 
 export default function RequestorAppointments() {
   const navigate = useNavigate();
@@ -120,9 +120,11 @@ export default function RequestorAppointments() {
   const totalPages = Math.ceil(filteredAppointments.length / requestPerPage);
 
   const handleDelete = async (RequestID) => {
+    const token = getToken()
     try {
       const response = await axios.delete(
-        `${WebHost}/kalinga/deleteAppointmentRequestor/${RequestID}`
+        `${WebHost}/kalinga/deleteAppointmentRequestor/${RequestID}`,
+        {headers: {Authorization: `Bearer ${token}`}}
       );
       if (response.status === 200) {
         // Appointment deleted successfully

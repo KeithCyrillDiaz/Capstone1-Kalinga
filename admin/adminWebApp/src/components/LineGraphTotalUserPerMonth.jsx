@@ -2,14 +2,18 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Line } from "react-chartjs-2";
 import { WebHost } from "../../MyConstantAdmin";
+import { getToken } from "../functions/Authentication";
 
 const LineGraphTotalUserPerMonth = () => {
     const [graphData, setGraphData] = useState({});
 
     useEffect(() => {
         const fetchData = async () => {
+            const token = getToken()
             try {
-                const response = await axios.get(`${WebHost}/kalinga/getTotalUserPerMonth`);
+                const response = await axios.get(`${WebHost}/kalinga/getTotalUserPerMonth`,
+                {headers: {Authorization: `Bearer ${token}`}}
+                );
                 console.log('Response data User:', response.data); // Log the response data to check its structure
                 const data = response.data.data;
                 console.log('Data:', data); // Log the extracted data to check its structure

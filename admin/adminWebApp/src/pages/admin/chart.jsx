@@ -9,7 +9,7 @@
   import autoTable from "jspdf-autotable";
   import axios from "axios";
   import { WebHost } from "../../../MyConstantAdmin";
-import { getId } from "../../functions/Authentication";
+import { getId, getToken } from "../../functions/Authentication";
 import { Link } from 'react-router-dom';
 
   export default function chart() {
@@ -61,6 +61,7 @@ import { Link } from 'react-router-dom';
       setError(null);
     const monthValue = getMonthValue(selectedMonth);
       try {
+        const token = getToken()
         const responseComplete = await axios.get(
           `${WebHost}/kalinga/getTotalCompleteDonationPerMonth`,
           {
@@ -68,6 +69,9 @@ import { Link } from 'react-router-dom';
               selectedMonth: monthValue,
               selectedYear: parseInt(selectedYear),
             },
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
         );
         const totalCompleteDonations = responseComplete.data.totalCompleteAppointments;
@@ -79,6 +83,9 @@ import { Link } from 'react-router-dom';
               selectedMonth: monthValue,
               selectedYear: parseInt(selectedYear),
             },
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
         );
         const totalDeclinedDonations = responseDecline.data.totalDeclineAppointments;
@@ -92,6 +99,7 @@ import { Link } from 'react-router-dom';
               selectedMonth: monthValue,
               selectedYear: parseInt(selectedYear),
             },
+            headers: {Authorization: `Bearer ${token}`}
           }
         );
         const totalCompleteRequests = responseRequests.data.totalCompleteRequest;
@@ -104,6 +112,7 @@ import { Link } from 'react-router-dom';
               selectedMonth: monthValue,
               selectedYear: parseInt(selectedYear),
             },
+            headers: {Authorization: `Bearer ${token}`}
           }
         );
         const totalDeclinedRequests = responseDeclineRequests.data.totalDeclineRequest;
@@ -112,11 +121,15 @@ import { Link } from 'react-router-dom';
         
         const donorsResponse = await axios.get(`${WebHost}/kalinga/getTotalDonorsPerMonth`, {
           params: { month: monthValue, year: parseInt(selectedYear) },
-        });
+          headers: {Authorization: `Bearer ${token}`}
+        },
+      );
 
         const requestorsResponse = await axios.get(`${WebHost}/kalinga/getTotalRequestorsPerMonth`, {
           params: { month: monthValue, year: parseInt(selectedYear) },
-        });
+          headers: {Authorization: `Bearer ${token}`}
+        },
+      );
 
         setTotalDonors(donorsResponse.data.totalDonors);
         setTotalRequestors(requestorsResponse.data.totalRequestors);
@@ -125,20 +138,33 @@ import { Link } from 'react-router-dom';
           `${WebHost}/kalinga/getTotalAppointmentsPerMonth`,
           {
             params: { month: monthValue, year: parseInt(selectedYear) },
-          }
+            headers: {Authorization: `Bearer ${token}`}
+          },
         );
         setTotalAppointments(responseAppointments.data.totalAppointments);   
         
         const response = await axios.get(`${WebHost}/kalinga/getTotalRequestsPerMonthAndYear`, {
           params: { month: monthValue, year: parseInt(selectedYear) },
-        });
+          headers: {Authorization: `Bearer ${token}`}
+        },
+      );
         setTotalRequest(response.data.totalRequests);  
 
-        const responseAllComplete = await axios.get(`${WebHost}/kalinga/getTotalCompleteDonationsAllMonths`, { params: { year: selectedYear } });
+        const responseAllComplete = await axios.get(`${WebHost}/kalinga/getTotalCompleteDonationsAllMonths`, 
+        { 
+          params: { year: selectedYear },
+          headers: {Authorization: `Bearer ${token}`},
+        }
+
+      );
         const totalAllMonthCompleteDonations = responseAllComplete.data.reduce((acc, curr) => acc + curr.totalCompleteDonations, 0);
         setTotalAllMonthCompleteDonations(totalAllMonthCompleteDonations);
 
-        const responseAllRequests = await axios.get(`${WebHost}/kalinga/getTotalCompleteRequestAllMonths`, { params: { year: selectedYear } });
+        const responseAllRequests = await axios.get(`${WebHost}/kalinga/getTotalCompleteRequestAllMonths`,
+         { 
+          params: { year: selectedYear },
+          headers: {Authorization: `Bearer ${token}`} 
+        });
         const totalAllMonthCompleteRequests = responseAllRequests.data.reduce((acc, curr) => acc + curr.totalCompleteRequests, 0);
         setTotalAllMonthCompleteRequests(totalAllMonthCompleteRequests);
 
