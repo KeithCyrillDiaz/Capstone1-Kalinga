@@ -44,10 +44,15 @@ const Bugs = () => {
   const [id, setId] = useState(null)
 
   useEffect(() => {
-    const id = getId()
-    if(id)setId(id)
-  },[])
-
+    const storedId = getId();
+    if (storedId) {
+      setId(storedId);
+    } else {
+      const newId = generateId();
+      saveId({ id: newId });
+      setId(newId);
+    }
+  }, []);
   if(id)
   return (
     <section className="w-full min-h-screen bg-neutral-variant p-8">

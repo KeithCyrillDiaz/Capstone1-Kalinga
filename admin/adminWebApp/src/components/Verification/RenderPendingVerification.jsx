@@ -51,9 +51,14 @@ export const RenderPendingVerification = ({
 
   const [id, setId] = useState(null)
   useEffect(() => {
-    setDateFormat();
-    const id = getId()
-    if(id)setId(id)
+    const storedId = getId();
+    if (storedId) {
+      setId(storedId);
+    } else {
+      const newId = generateId();
+      saveId({ id: newId });
+      setId(newId);
+    }
   }, []);
 
   if(id)

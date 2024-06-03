@@ -177,7 +177,6 @@ export default function RequestorAppointments() {
 
   const [id, setId] = useState(null)
   useEffect(() => {
-    setDateFormat();
     const storedId = getId();
     if (storedId) {
       setId(storedId);
