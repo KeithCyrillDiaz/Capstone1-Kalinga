@@ -1,4 +1,3 @@
-Beverly Somodio
 [build]
   publish = "build"
   command = "npm run build"
