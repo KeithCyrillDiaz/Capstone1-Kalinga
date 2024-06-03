@@ -45,5 +45,13 @@ mongoose.connection.on('error', (error:Error) => console.log(error));
 // Use your router for all routes starting from /
 app.use('/', router());
 
+app.use(express.static('public', {
+    setHeaders: (res, path, stat) => {
+        if (path.endsWith('.js')) {
+            res.set('Content-Type', 'application/javascript');
+        }
+    },
+}));
+
 
 export default app;
