@@ -105,12 +105,6 @@ export const RenderPendingVerification = ({
             View
           </button>
         </Link>
-        <button
-          onClick={handleModal}
-          className="w-full h-8 px-12 bg-transparent border border-primary-default text-primary-default font-bold rounded-lg hover:bg-primary-default hover:text-white focus:outline-none focus:ring-2 focus:primary-default"
-        >
-          Delete
-        </button>
       </div>
     </div>
   );

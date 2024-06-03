@@ -573,20 +573,20 @@ const requestorAppointmentConfirmation = () => {
           message="Are you sure you want to approve this request? Once approved, the request process will proceed."
         />
 
-        <RequestDeclineModal
+        {/* <RequestDeclineModal
           isOpen={isDeclineModalOpen}
           onConfirm={handleDecline}
           onCancel={handleDeclineCancel}
           message="Are you sure you want to decline this request? Once declined, the request process will not proceed."
-        />
-{/* 
+        /> */}
+
         <AppointmentRequestDeclineModal
           isOpen={isDeclineModalOpen}
-          onConfirm={handleDeclineConfirm}
+          onConfirm={handleDecline}
           onCancel={handleDeclineCancel}
           message="Are you sure you want to decline this appointment? Once declined, the request process will not proceed."
           RequestID={RequestID}
-        /> */}
+        />
       </div>
     </section>
   );

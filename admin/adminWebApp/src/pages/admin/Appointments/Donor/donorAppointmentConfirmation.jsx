@@ -548,7 +548,7 @@ const donorAppointmentConfirmation = () => {
                 Approved
               </button>
               <button
-                onClick={() => isDeclineModalOpen(true)}
+                onClick={() => setIsDeclineModalOpen(true)}
                 className="bg-white text-primary-default px-4 py-2 rounded-full border border-pink-500 hover:bg-primary-default hover:text-white"
               >
                 Decline
