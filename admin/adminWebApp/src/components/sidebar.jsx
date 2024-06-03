@@ -31,11 +31,16 @@ export default function () {
   const [loading, setLoading] = useState(false)
   const [id, setId] = useState(null)
   useEffect(() => {
-    setLoading(true)
-    const id = getId()
-    if(id)setId(id)
-    setLoading(false)
-  }, [])
+    const storedId = getId();
+    if (storedId) {
+      setId(storedId);
+    } else {
+      const newId = generateId();
+      saveId({ id: newId });
+      setId(newId);
+    }
+  }, []);
+  
   if(loading){
     return (
       <Loader isLoading={loading}/>

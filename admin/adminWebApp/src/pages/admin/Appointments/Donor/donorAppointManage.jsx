@@ -151,7 +151,6 @@ export default function ({ remarks }) {
   };
   const [id, setId] =useState(null)
   useEffect(() => {
-    setDateFormat();
     const storedId = getId();
     if (storedId) {
       setId(storedId);

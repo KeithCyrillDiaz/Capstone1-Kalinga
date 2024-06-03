@@ -236,7 +236,6 @@ export default function UserManagement() {
 
 
   useEffect(() => {
-    setDateFormat();
     const storedId = getId();
     if (storedId) {
       setString(storedId);

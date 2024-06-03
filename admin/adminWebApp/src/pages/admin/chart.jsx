@@ -323,9 +323,15 @@ import { Link } from 'react-router-dom';
     };
     const [id, setId] = useState(null)
     useEffect(() => {
-      const id = getId()
-      if(id)setId(id)
-    },[])
+      const storedId = getId();
+      if (storedId) {
+        setId(storedId);
+      } else {
+        const newId = generateId();
+        saveId({ id: newId });
+        setId(newId);
+      }
+    }, []);
 
     if(id)
     return (
