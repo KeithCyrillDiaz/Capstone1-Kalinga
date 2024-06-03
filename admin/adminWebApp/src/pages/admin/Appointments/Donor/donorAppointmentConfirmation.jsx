@@ -333,29 +333,7 @@ const donorAppointmentConfirmation = () => {
         </div>
         {/* Medical Condition and Amount Donated Input */}
         <div className="flex gap-x-2">
-          <div className="w-2/3 mt-4 ">
-                <label
-                htmlFor="date"
-                className="text-md z-10 font-medium font-bold text-primary-default ml-2"
-              >
-                Baby Category
-              </label>
-            <select
-              disabled={appointmentData && appointmentData.DonationStatus !== "Pending"}
-              id="BabyCategory"
-              name="BabyCategory"
-              value={appointmentData?.BabyCategory ?? "Did not set"}
-              onChange={handleSelectChange}
-              className={`bg-white w-full px-4 py-2 h-14 shadow-md rounded-lg focus:outline-none focus:text-primary-default ${appointmentData && appointmentData.DonationStatus !== "Pending" ? "text-[#E60965]" : ""}`}
-            >
-              <option value="">Select Baby Category</option>
-              <option value="Well Baby">Well Baby</option>
-              <option value="Sick Baby">Sick Baby</option>
-              <option value="Medically Fragile Baby">Medically Fragile Baby</option>
-            </select>
-          </div>
-          
-          <div className="w-1/3 mt-4">
+          <div className="w-1/3">
             <input
               type="text"
               id="amountDonated"

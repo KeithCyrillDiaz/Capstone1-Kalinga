@@ -302,12 +302,6 @@ export default function ({ remarks }) {
                             scope="col"
                             className="px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
                           >
-                            Baby Category
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-6 py-2 text-left text-md font-sans text-primary-default uppercase tracking-wider"
-                          >
                             Status
                           </th>
                           <th
@@ -360,11 +354,6 @@ export default function ({ remarks }) {
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="text-center text-sm text-gray-500 flex items-center justify-center">
                               {appointment.method}
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-center text-sm text-gray-500 flex items-center justify-center">
-                              {appointment.BabyCategory}
                               </div>
                             </td>
                             <td className="px-6 py-1 whitespace-nowrap">
