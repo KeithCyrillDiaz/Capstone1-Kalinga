@@ -20,6 +20,7 @@ export default defineConfig({
     port: 3000,
   },
   build: {
-    
-  }
+    outDir: 'dist', // Ensure the build output directory is correctly set
+  },
+    base: './',
 });
