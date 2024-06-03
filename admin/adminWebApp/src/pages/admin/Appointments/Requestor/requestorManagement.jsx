@@ -5,7 +5,7 @@ import axios from "axios";
 import { WebHost } from "../../../../../MyConstantAdmin";
 import DeleteModal from "../../../../modal/deleteModal";
 import { Loader } from "../../../../components/loader";
-import { getId } from "../../../../functions/Authentication";
+import { getId, getToken } from "../../../../functions/Authentication";
 
 export default function RequestorAppointments() {
   const navigate = useNavigate();
@@ -16,6 +16,7 @@ export default function RequestorAppointments() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // State for delete modal
   const [loading, setLoading] = useState(false);
   const requestPerPage = 10; // Adjust as needed
+  const [requestID, setRequestID] = useState(null)
 
   // FILTERS
   const toggleFilterVisibility = () => {
@@ -119,15 +120,18 @@ export default function RequestorAppointments() {
   );
   const totalPages = Math.ceil(filteredAppointments.length / requestPerPage);
 
-  const handleDelete = async (RequestID) => {
+  const handleDelete = async () => {
+    console.log("Request ID: ", requestID)
+    const token = getToken()
     try {
       const response = await axios.delete(
-        `${WebHost}/kalinga/deleteAppointmentRequestor/${RequestID}`
+        `${WebHost}/kalinga/deleteAppointmentRequestor/${requestID}`,
+        {headers: {Authorization: `Bearer ${token}`}}
       );
       if (response.status === 200) {
         // Appointment deleted successfully
         const updatedAppointments = requestData.filter(
-          (request) => request.RequestID !== RequestID
+          (request) => request.RequestID !== requestID
         );
         setRequestData(updatedAppointments);
         setIsDeleteModalOpen(true); // Open delete confirmation modal
@@ -465,9 +469,10 @@ export default function RequestorAppointments() {
                                   </svg>
                                 </Link>
                                 <button
-                                  onClick={() =>
-                                    handleDelete(appointment.RequestID)
-                                  }
+                                  onClick={() =>{
+                                    setRequestID(appointment.RequestID)
+                                    setIsDeleteModalOpen(true)
+                                  }}
                                   className="px-3 py-1 rounded-full hover:bg-neutral-variant"
                                 >
                                   <svg
@@ -533,7 +538,7 @@ export default function RequestorAppointments() {
       </section>
       <DeleteModal
         isOpen={isDeleteModalOpen}
-        onConfirm={handleDeleteConfirm}
+        onConfirm={handleDelete}
         onCancel={handleDeleteCancel}
         message="Are you sure you want to delete this request?"
       />

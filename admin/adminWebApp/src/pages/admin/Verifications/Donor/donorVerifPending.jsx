@@ -3,6 +3,7 @@ import axios from "axios";
 import { WebHost } from "../../../../../MyConstantAdmin";
 import { Loader } from "../../../../components/loader";
 import { RenderPendingVerification } from "../../../../components/Verification/RenderPendingVerification";
+import { getToken } from "../../../../functions/Authentication";
 
 export default function () {
   useEffect(() => {
@@ -18,14 +19,24 @@ export default function () {
   const [loading, setLoading] = useState(false);
   const userType = "Donor";
 
+  const [token, setToken] = useState(null)
+
+  useEffect(() => {
+    const token =getToken()
+    if(token)setToken(token)
+  },[])
+
   const fetchData = async () => {
     try {
       setLoading(true);
       console.log("Fetching Data");
+      const token = getToken()
       const response = await axios.post(`${WebHost}/kalinga/fetchPendingScreeningFormByUserType/${userType}`,
-      { status: "Pending"}
+      { status: "Pending"},
+      { headers: {Authorization: `Bearer ${token}`}}
     )
       // console.log("response: ", response.data.screeningForms)
+      console.log(response.data.messages.message)
       if (!response.data.screeningForms) {
         console.log("Error fetching Screening Forms");
       } else {

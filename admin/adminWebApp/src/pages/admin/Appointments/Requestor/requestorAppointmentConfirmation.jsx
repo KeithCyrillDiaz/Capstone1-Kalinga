@@ -11,6 +11,7 @@ import DatePicker from 'react-datepicker';
 import { CustomModal } from "../../../../modal/logIn/AlertModal";
 import { Loader } from "../../../../components/loader";
 import { ShowImage } from "../../../../modal/Verification/ImageModals";
+import { getToken } from "../../../../functions/Authentication";
 
 const requestorAppointmentConfirmation = () => {
 
@@ -170,8 +171,9 @@ const requestorAppointmentConfirmation = () => {
 
   const fetchRequirements = async (id) => {
     const Requestor_ID= id.Request.Requestor_ID
-    const files = await getMedicalAbstractsFiles({id: Requestor_ID, purpose: "Request"})
-    const images = await getMedicalAbstractsImages({id: Requestor_ID, purpose: "Request"})
+    const token = getToken()
+    const files = await getMedicalAbstractsFiles({id: Requestor_ID, purpose: "Request", token: token})
+    const images = await getMedicalAbstractsImages({id: Requestor_ID, purpose: "Request", token: token})
     if(files) setFiles(files)
       else setFiles([])
     if(images) setImages(images)
@@ -571,20 +573,20 @@ const requestorAppointmentConfirmation = () => {
           message="Are you sure you want to approve this request? Once approved, the request process will proceed."
         />
 
-        <RequestDeclineModal
+        {/* <RequestDeclineModal
           isOpen={isDeclineModalOpen}
           onConfirm={handleDecline}
           onCancel={handleDeclineCancel}
           message="Are you sure you want to decline this request? Once declined, the request process will not proceed."
-        />
-{/* 
+        /> */}
+
         <AppointmentRequestDeclineModal
           isOpen={isDeclineModalOpen}
-          onConfirm={handleDeclineConfirm}
+          onConfirm={handleDecline}
           onCancel={handleDeclineCancel}
           message="Are you sure you want to decline this appointment? Once declined, the request process will not proceed."
           RequestID={RequestID}
-        /> */}
+        />
       </div>
     </section>
   );

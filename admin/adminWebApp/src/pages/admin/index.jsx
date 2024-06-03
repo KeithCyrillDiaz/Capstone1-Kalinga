@@ -18,7 +18,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { checkId, getId } from "../../functions/Authentication";
+import { checkId, getId, getToken } from "../../functions/Authentication";
 import { NotFound } from "../../layouts/NotFoundExportConst";
 //require("dotenv").config(); // Load environment variables
 
@@ -57,9 +57,12 @@ const formattedDate = `${currentDate.getFullYear()}-${
   useEffect(() => {
     console.log("Fetching data...");
     const fetchCounts = async () => {
+      const token = getToken()
       try {
+
         const responseDonors = await axios.get(
-          `${WebHost}/kalinga/getTotalDonor`
+          `${WebHost}/kalinga/getTotalDonor`,
+          {headers: {Authorization: `Bearer ${token}`}}
         );
         setTotalDonors(responseDonors.data.totalDonors || 0);
       } catch (error) {
@@ -68,7 +71,8 @@ const formattedDate = `${currentDate.getFullYear()}-${
 
       try {
         const responseRequestors = await axios.get(
-          `${WebHost}/kalinga/getTotalRequestor`
+          `${WebHost}/kalinga/getTotalRequestor`,
+          {headers: {Authorization: `Bearer ${token}`}}
         );
         setTotalRequestors(responseRequestors.data.totalRequestors || 0);
       } catch (error) {
@@ -77,7 +81,8 @@ const formattedDate = `${currentDate.getFullYear()}-${
 
       try {
         const responseUsers = await axios.get(
-          `${WebHost}/kalinga/getTotalUser`
+          `${WebHost}/kalinga/getTotalUser`,
+          {headers: {Authorization: `Bearer ${token}`}}
         );
         setTotalUsers(responseUsers.data.totalUsers || 0);
       } catch (error) {
@@ -86,7 +91,9 @@ const formattedDate = `${currentDate.getFullYear()}-${
 
       try {
         const responsePendingAppointments = await axios.get(
-          `${WebHost}/kalinga/getTotalPendingAppointment`
+          `${WebHost}/kalinga/getTotalPendingAppointment`,
+          {headers: {Authorization: `Bearer ${token}`}}
+          
         );
         setTotalPendingAppointments(
           responsePendingAppointments.data.totalPendingAppointments || 0
@@ -97,7 +104,9 @@ const formattedDate = `${currentDate.getFullYear()}-${
 
       try {
         const responsePendingRequest = await axios.get(
-          `${WebHost}/kalinga/getTotalPendingRequest`
+          `${WebHost}/kalinga/getTotalPendingRequest`,
+          {headers: {Authorization: `Bearer ${token}`}}
+
         );
         setTotalPendingRequest(
           responsePendingRequest.data.totalPendingRequest || 0
@@ -112,9 +121,11 @@ const formattedDate = `${currentDate.getFullYear()}-${
 
   useEffect(() => {
     const fetchUsersPerCity = async () => {
+      const token = getToken()
       try {
         const response = await axios.get(
-          `${WebHost}/kalinga/getTotalUsersPerCity`
+          `${WebHost}/kalinga/getTotalUsersPerCity`,
+          {headers: {Authorization: `Bearer ${token}`}}
         );
         console.log("Users Per City Response:", response.data); // Log the response data
         setUsersPerCity(response.data || []);
@@ -128,9 +139,11 @@ const formattedDate = `${currentDate.getFullYear()}-${
 
   useEffect(() => {
     const fetchData = async () => {
+      const token = getToken()
       try {
         const response = await axios.get(
-          `${WebHost}/kalinga/getTotalUsersPerBarangay`
+          `${WebHost}/kalinga/getTotalUsersPerBarangay`,
+          {headers: {Authorization: `Bearer ${token}`}}
         );
         const { totalRequestorsPerBarangay, totalDonorsPerBarangay } =
           response.data;
@@ -156,12 +169,17 @@ const formattedDate = `${currentDate.getFullYear()}-${
 
   useEffect(() => {
     const fetchData = async () => {
+      const token = getToken()
       try {
-        const responseCompleteDonation = await axios.get(`${WebHost}/kalinga/getCompleteDonationsTotal`);
+        const responseCompleteDonation = await axios.get(`${WebHost}/kalinga/getCompleteDonationsTotal`,
+        {headers: {Authorization: `Bearer ${token}`}}
+        );
         console.log("Response Complete Donations:", responseCompleteDonation.data);
         setTotalCompleteDonations(responseCompleteDonation.data.totalCompleteDonations);
         
-        const responseCompleteRequest = await axios.get(`${WebHost}/kalinga/getCompleteRequestsTotal`);
+        const responseCompleteRequest = await axios.get(`${WebHost}/kalinga/getCompleteRequestsTotal`,
+        {headers: {Authorization: `Bearer ${token}`}}
+        );
         console.log("Response Complete Requests:", responseCompleteRequest.data);
         setTotalCompleteRequests(responseCompleteRequest.data.totalCompleteRequests);
       } catch (error) {
@@ -177,9 +195,14 @@ const formattedDate = `${currentDate.getFullYear()}-${
 
   useEffect(() => {
     const fetchData = async () => {
+      const token = getToken()
       try {
-        const Donationresponse = await axios.get(`${WebHost}/kalinga/getHighestDonation`);
-        const Requestresponse = await axios.get(`${WebHost}/kalinga/getHighestRequestors`);
+        const Donationresponse = await axios.get(`${WebHost}/kalinga/getHighestDonation`,
+        {headers: {Authorization: `Bearer ${token}`}}
+        );
+        const Requestresponse = await axios.get(`${WebHost}/kalinga/getHighestRequestors`,
+        {headers: {Authorization: `Bearer ${token}`}}
+        );
         console.log("Top Donating Users Response:", Donationresponse.data); 
         console.log("Top Donating Users Response:", Requestresponse.data); 
 
@@ -196,9 +219,14 @@ const formattedDate = `${currentDate.getFullYear()}-${
 
   useEffect(() => {
     const fetchData = async () => {
+      const token = getToken()
       try {
-        const BarangayDonationresponse = await axios.get(`${WebHost}/kalinga/getHighestDonationBarangay`);
-        const BarangayRequestresponse = await axios.get(`${WebHost}/kalinga/getHighestRequestBarangay`);
+        const BarangayDonationresponse = await axios.get(`${WebHost}/kalinga/getHighestDonationBarangay`,
+        {headers: {Authorization: `Bearer ${token}`}}
+        );
+        const BarangayRequestresponse = await axios.get(`${WebHost}/kalinga/getHighestRequestBarangay`,
+        {headers: {Authorization: `Bearer ${token}`}}
+        );
         console.log("Top Donating Users Response:", BarangayDonationresponse.data); 
         console.log("Top Donating Users Response:", BarangayRequestresponse.data); 
 

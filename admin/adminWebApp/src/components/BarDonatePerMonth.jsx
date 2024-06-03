@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { getToken } from "../functions/Authentication";
 
 export default function BarDonatePerMonth({ name, selectedYear }) {
   const [monthlyData, setMonthlyData] = useState([]);
@@ -22,15 +23,22 @@ export default function BarDonatePerMonth({ name, selectedYear }) {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-
+      const token = getToken()
       try {
+        
         const responseComplete = await axios.get(
           `${WebHost}/kalinga/getTotalCompleteDonationsAllMonths`,
-          { params: { year: selectedYear } }
+          { 
+            params: { year: selectedYear },
+            headers: {Authorization: `Bearer ${token}`}
+          },
         );
         const responseRequests = await axios.get(
           `${WebHost}/kalinga/getTotalCompleteRequestAllMonths`,
-          { params: { year: selectedYear } }
+          { 
+            params: { year: selectedYear },
+            headers: {Authorization: `Bearer ${token}`}
+           },
         );
         const mergedData = mergeData(
           responseComplete.data,

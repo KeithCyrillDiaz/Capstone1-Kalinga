@@ -7,6 +7,7 @@ import {
   ShowImage,
   MissingRequirements,
 } from "../../../../modal/Verification/ImageModals";
+import { getToken } from "../../../../functions/Authentication";
 
 const RequestorMedicalPage = ({ currentPage, id }) => {
   const [images, setImages] = useState({});
@@ -24,10 +25,12 @@ const RequestorMedicalPage = ({ currentPage, id }) => {
     try {
       setLoading(true);
       console.log("Fetching Files and Images in database");
-
+      const token = getToken()
+      console.log("token: ", token)
       const getFilesResponse = await axios.post(
         `${WebHost}/kalinga/getMedicalRequirementFile/${id}`,
-        {purpose: "Application"}
+        {purpose: "Application"},
+        {headers: { Authorization: `Bearer ${token}`}}
       );
       console.log(getFilesResponse.data.messages.message);
       if (getFilesResponse.data.messages.code === 0) {
@@ -38,9 +41,12 @@ const RequestorMedicalPage = ({ currentPage, id }) => {
         setFiles(filesObj)
       }
 
+  
+      console.log("token: ", token)
       const getImagesResponse = await axios.post(
         `${WebHost}/kalinga/getMedicalRequirementImage/${id}`,
-        {purpose: "Application"}
+        {purpose: "Application"},
+        {headers: { Authorization: `Bearer ${token}`}}
       );
       console.log(getImagesResponse.data.messages.message);
       if (getImagesResponse.data.messages.code === 0) {

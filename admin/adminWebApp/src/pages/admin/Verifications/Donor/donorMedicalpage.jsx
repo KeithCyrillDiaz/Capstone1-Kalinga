@@ -7,6 +7,7 @@ import {
   ShowImage,
   MissingRequirements,
 } from "../../../../modal/Verification/ImageModals";
+import { getToken } from "../../../../functions/Authentication";
 
 const DonorMedicalPage = ({ currentPage, id, form }) => {
   const totalPages = 5;
@@ -24,34 +25,25 @@ const DonorMedicalPage = ({ currentPage, id, form }) => {
   const [imageLink, setImageLink] = useState("");
   const [fileName, setFileName] = useState("");
 
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.post(`${WebHost}/kalinga/fetchPendingScreeningFormByUserType/${form.userType}`,
-      { status: "Pending"}
-    )
-      if (!response.data.screeningForms) {
-        console.log("Error fetching Screening forms");
-        return;
-      }
+  const [token, setToken] = useState(null)
 
-      console.log("Successfully retrieved screeningForms");
-      setForm(response.data.screeningForms);
-    } catch (error) {
-      console.log("Something went wrong", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    const token =getToken()
+    if(token)setToken(token)
+  },[])
+
+  
 
   const fetchImagesAndFiles = async () => {
     try {
       setLoading(true);
       console.log("Fetching Files and Images in database");
-
+      const token = getToken()
+      console.log("token: ", token)
       const getFilesResponse = await axios.post(
         `${WebHost}/kalinga/getMedicalRequirementFile/${id}`,
-        {purpose: "Application"}
+        {purpose: "Application"},
+        {headers: { Authorization: `Bearer ${token}`}}
       );
       console.log(getFilesResponse.data.messages.message);
       if (getFilesResponse.data.messages.code === 0) {
@@ -61,8 +53,10 @@ const DonorMedicalPage = ({ currentPage, id, form }) => {
         });
         setFiles(filesObj)
       }
+  
       const getImagesResponse = await axios.post(`${WebHost}/kalinga/getMedicalRequirementImage/${id}`,
-      {purpose: "Application"}
+      {purpose: "Application"},
+      {headers: { Authorization: `Bearer ${token}`}}
     )
       console.log(getImagesResponse.data.messages.message);
       if (getImagesResponse.data.messages.code === 0) {
@@ -87,7 +81,6 @@ const DonorMedicalPage = ({ currentPage, id, form }) => {
 };
 
   useEffect(() => {
-    fetchData();
     fetchImagesAndFiles();
   }, []);
   const pageContents = {

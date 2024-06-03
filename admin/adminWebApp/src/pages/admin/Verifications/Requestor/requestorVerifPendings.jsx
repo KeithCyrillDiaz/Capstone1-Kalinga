@@ -3,6 +3,7 @@ import axios from "axios";
 import { RenderPendingVerification } from "../../../../components/Verification/RenderPendingVerification";
 import { WebHost } from "../../../../../MyConstantAdmin";
 import { Loader } from "../../../../components/loader";
+import { getToken } from "../../../../functions/Authentication";
 
 export default function () {
   useEffect(() => {
@@ -22,8 +23,10 @@ export default function () {
     try {
       setLoading(true);
       console.log("Fetching Data");
+      const token = getToken()
       const response = await axios.post(`${WebHost}/kalinga/fetchPendingScreeningFormByUserType/${userType}`,
-      { status: "Pending"}
+      { status: "Pending"},
+      { headers: {Authorization: `Bearer ${token}`}}
     )
       console.log(response.data.screeningForms);
       if (!response.data.screeningForms) {

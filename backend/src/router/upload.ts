@@ -22,8 +22,8 @@ export default (router: express.Router) => {
     router.post('/kalinga/uploadDP', upload.array('ProfilePicture'), addProfilePicture), 
 
 
-    router.post('/kalinga/getMedicalRequirementImage/:ownerID', getImage)
-    router.post('/kalinga/getMedicalRequirementFile/:ownerID',  getFile)
+    router.post('/kalinga/getMedicalRequirementImage/:ownerID', tokenVerification, getImage)
+    router.post('/kalinga/getMedicalRequirementFile/:ownerID', tokenVerification, getFile)
     router.post('/kalinga/uploadFileOrImageDataInDatabase/:id', uploadImageOrFileData)
 
     router.post('/kalinga/deleteFiledata/:id', deleteImageFileData)

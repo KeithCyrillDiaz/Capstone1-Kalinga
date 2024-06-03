@@ -21,7 +21,9 @@ const Bugs = () => {
     try {
       let response;
       if (activeTab === "report") {
-        response = await axios.get(`${WebHost}/kalinga/getReports`);
+        response = await axios.get(`${WebHost}/kalinga/getReports`,
+        {headers: {Authorization: `Bearer ${token}`}}
+        );
       } else if (activeTab === "resolved") {
         response = await axios.get(`${WebHost}/kalinga/getResolvedReports`);
       }

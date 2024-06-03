@@ -42,14 +42,14 @@ export const AdminLogIn = async (req: express.Request, res: express.Response) =>
             expiresAt: moment().add('1m').toDate()
         });
 
-        
+        const token = newToken.logInToken
         return res.json({
             messages: {
                 code: 0,
                 message:  "Log In Successfully"
             },
             user,
-            newToken
+            token
         }).status(200)
  
     }catch(error){

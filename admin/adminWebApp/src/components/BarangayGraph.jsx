@@ -4,6 +4,7 @@ import axios from "axios";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { getToken } from "../functions/Authentication";
 
 export default function BarangayGraph({ name }) {
   const [barangaysData, setBarangaysData] = useState([]);
@@ -14,8 +15,11 @@ export default function BarangayGraph({ name }) {
     const fetchData = async () => {
       setLoading(true);
       setError(null);
+      const token = getToken()
       try {
-        const response = await axios.get(`${WebHost}/kalinga/getTotalUsersPerBarangay`);
+        const response = await axios.get(`${WebHost}/kalinga/getTotalUsersPerBarangay`,
+            {headers: {Authorization: `Bearer ${token}`}}
+        );
         console.log("Response from API:", response.data);
 
         const mergedData = response.data.totalRequestorsPerBarangay.map((requestor) => {
