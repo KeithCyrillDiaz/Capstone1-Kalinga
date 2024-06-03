@@ -98,15 +98,14 @@ const donorAppointmentConfirmation = () => {
       );
       setLoading(false)
       await sendApprovedAppointmentEmail({id: appointmentData.Donor_ID})
-  
+      const id = getId()
+      navigate(`/admin/${id}/DonorAppointManage`)
       // Optionally, you can reload the data or do any other action upon successful update
     } catch (error) {
       console.error("Error updating request status:", error);
       // Handle error if needed
     } finally {
       setLoading(false)
-      const id = getId()
-      navigate(`/admin/${id}/DonorAppointManage`)
     }
   };
 
