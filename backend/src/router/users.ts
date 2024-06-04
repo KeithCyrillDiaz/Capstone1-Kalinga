@@ -92,6 +92,7 @@ export default (router: express.Router) => {
     router.post('/kalinga/registerRequestor', registerRequestor);
     router.post('/kalinga/userLogin', checkIfBlock, logInUser)
     router.get('/kalinga/userLogout/:token', logOutUser)
+    router.get('/kalinga/userLogoutAdmin/:token', tokenVerification, logOutUser)
     router.post('/kalinga/superAdminLogin', superAdminLogIn)
     router.post('/kalinga/adminLogin', AdminLogIn)
     router.get('/kalinga/isApproved/:Applicant_ID', isApproved)
