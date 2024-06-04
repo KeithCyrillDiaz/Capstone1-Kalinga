@@ -36,7 +36,7 @@ export default function Dashboard() {
   const [barangaysData, setBarangaysData] = useState([]);
   const [totalPendingAppointments, setTotalPendingAppointments] = useState(0);
   const [totalPendingRequest, setTotalPendingRequest] = useState(0);
-  const [totalCompleteDonations, setTotalCompleteDonations] = useState(0);
+  const [totalCompleteDonations, setTotalCompleteDonations] = useState([]);
   const [totalCompleteRequests, setTotalCompleteRequests] = useState(0);
   const [topDonatingUsers, setTopDonatingUsers] = useState([]);
   const [topRequestingUsers, setTopRequestingUsers] = useState([]);
@@ -170,8 +170,9 @@ const formattedDate = `${currentDate.getFullYear()}-${
   useEffect(() => {
     const fetchData = async () => {
       const token = getToken()
+      const selectedYear = "2024"
       try {
-        const responseCompleteDonation = await axios.get(`${WebHost}/kalinga/getCompleteDonationsTotal`,
+        const responseCompleteDonation = await axios.get(`${WebHost}/kalinga/getCompleteDonationsTotal/${selectedYear}`,
         {headers: {Authorization: `Bearer ${token}`}}
         );
         console.log("Response Complete Donations:", responseCompleteDonation.data);
@@ -340,6 +341,20 @@ const formattedDate = `${currentDate.getFullYear()}-${
     // Check if the download is triggered
     doc.save(`${title.toLowerCase().replace(/\s/g, "_")}.pdf`);
   };
+
+  const [id, setId]=useState(null)
+  useEffect(() => {
+    const storedId = getId();
+    if (storedId) {
+      setId(storedId);
+    } else {
+      const newId = generateId();
+      saveId({ id: newId });
+      setId(newId);
+    }
+  }, []);
+
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -374,17 +389,6 @@ const formattedDate = `${currentDate.getFullYear()}-${
       </div>
     );
   };
-  const [id, setId]=useState(null)
-  useEffect(() => {
-    const storedId = getId();
-    if (storedId) {
-      setId(storedId);
-    } else {
-      const newId = generateId();
-      saveId({ id: newId });
-      setId(newId);
-    }
-  }, []);
 
   if(id)
   return (
@@ -543,25 +547,25 @@ const formattedDate = `${currentDate.getFullYear()}-${
                     <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
                       Donations
                     </h1>
-                    <h1 className="text-4xl text-primary-default font-sans font-bold text-start ml-4">
-                    {totalCompleteDonations}
+                    {/* <h1 className="text-4xl text-primary-default font-sans font-bold text-start ml-4">
+                    {totalCompleteDonations.length}
                     </h1>
                     <h3 className="text-sm font-sans font-light text-start ml-4">
                       Total Overall Donations
-                    </h3>
+                    </h3> */}
                     <div><BarDonationOverAll/></div>
                   </div>
                   <div className="py-2 ml-4">
                     <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
                       Requests
                     </h1>
-                    <h1 className="text-4xl text-primary-default font-sans font-bold text-start ml-4">
+                    {/* <h1 className="text-4xl text-primary-default font-sans font-bold text-start ml-4">
                     {totalCompleteRequests}
 
                     </h1>
                     <h3 className="text-sm font-sans font-light text-start ml-4">
                       Total Overall Requests
-                    </h3>
+                    </h3> */}
                     <div><BarRequestOverAll/></div>
                   </div>
                 </div>
