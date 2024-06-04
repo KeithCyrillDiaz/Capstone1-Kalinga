@@ -61,6 +61,13 @@ export default function Login() {
       return;
     }
   };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      handleLogin();
+    }
+  };
+
   if(loading) {
     return(
       <Loader isLoading={loading}/>
@@ -150,6 +157,7 @@ export default function Login() {
                       className="py-4 text-xl border shadow-xl pr-7 pl-14 rounded-2xl border-primary-default focus:outline-none focus:ring-2 focus:ring-primary-default focus:border-transparent placeholder:text-primary-default text-primary-default"
                       onChange={(event) => setUsername(event.target.value)}
                       value={username}
+                      onKeyDown={handleKeyDown}
                     />
                   </div>
                   <div className="absolute xl:top-[22rem] lg:top-[18rem] xl:left-[13rem] lg:left-[10rem]">
@@ -173,6 +181,7 @@ export default function Login() {
                         className="py-4 text-xl border shadow-xl pr-7 pl-14 rounded-2xl border-primary-default focus:outline-none focus:ring-2 focus:ring-primary-default focus:border-transparent placeholder:text-primary-default text-primary-default"
                         onChange={(event) => setPassword(event.target.value)}
                         value={password}
+                        onKeyDown={handleKeyDown}
                       />
                       {!hidePassword && (
                         <FaEye
