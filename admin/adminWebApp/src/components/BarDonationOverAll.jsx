@@ -15,7 +15,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { getToken } from "../functions/Authentication";
 
-export default function BarDonationOverAll({ name }) {
+export default function BarDonationOverAll({ name, onYearSelect }) {
   const [monthlyData, setMonthlyData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -121,6 +121,7 @@ export default function BarDonationOverAll({ name }) {
 
   const handleYearChange = (e) => {
     setSelectedYear(parseInt(e.target.value));
+    onYearSelect(parseInt(e.target.value))
   };
 
   if (loading) {
