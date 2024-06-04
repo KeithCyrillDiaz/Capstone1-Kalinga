@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios'
+import { WebHost } from '../../MyConstantAdmin'
+import { getToken, removeId, removeToken, getId } from '../functions/Authentication'
 
 export default function () {
   const navigate = useNavigate();
@@ -18,8 +21,18 @@ export default function () {
     return () => clearInterval(timer); // Clear interval on component unmount
   }, []);
 
-  const handleSignOut = () => {
-    navigate("/");
+  const handleSignOut = async () => {
+    const token = getToken()
+    const response = await axios.get(`${WebHost}/kalinga/userLogoutAdmin/${token}`, {
+      headers: {Authorization: `Bearer ${token}`}
+    })
+    if(response.data.messages.code === 0){
+      removeToken({token})
+      const id = getId()
+      removeId({id: id})
+      navigate("/");
+    }
+   
   };
 
   const dropdownRef = useRef(null);
@@ -121,7 +134,7 @@ export default function () {
 
               <div className="flex flex-row py-1">
                 <button
-                  onClick={handleSignOut}
+                  onClick={() => handleSignOut()}
                   className="flex items-center px-4 mx-2 py-2 text-sm text-primary-default w-full rounded-lg hover:bg-primary-default hover:text-white"
                   role="menuitem"
                 >
