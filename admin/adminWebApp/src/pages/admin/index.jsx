@@ -172,7 +172,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
       const token = getToken()
       const selectedYear = "2024"
       try {
-        const responseCompleteDonation = await axios.get(`${WebHost}/kalinga/getCompleteDonationsTotal/${selectedYear}`,
+        const responseCompleteDonation = await axios.get(`${WebHost}/kalinga/getCompleteDonationsTotal`,
         {headers: {Authorization: `Bearer ${token}`}}
         );
         console.log("Response Complete Donations:", responseCompleteDonation.data);
