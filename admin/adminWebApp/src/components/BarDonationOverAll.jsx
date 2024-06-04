@@ -101,14 +101,19 @@ export default function BarDonationOverAll({ name }) {
       head: [tableColumn],
       body: tableRows,
       startY: 60,
-      headStyles: { fillColor: "#ED5077" },
+      headStyles: { fillColor: [255, 105, 180], halign: "center" },
       bodyStyles: { textColor: "#000000" },
       footStyles: { fillColor: "##ED5077", textColor: "#FFFFFF" },
       didDrawCell: (data) => {
         if (data.section === 'body' && data.column.index === 0) {
           doc.setTextColor("#000000"); // reset to black for table content
         }
-      }
+      },
+      columnStyles: {
+        0: { halign: "center" },
+        1: { halign: "center" },
+        2: { halign: "center" },
+      },
     });
 
     doc.save("KALINGA_OVERALL_DONATION_REPORT.pdf");

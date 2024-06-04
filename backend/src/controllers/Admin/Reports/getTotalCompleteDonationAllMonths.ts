@@ -21,11 +21,16 @@ export const getTotalCompleteDonationsAllMonths = async (req: Request, res: Resp
       monthlyTotals[month] = 0;
     });
 
+    const startDate = new Date(Date.UTC(selectedYear, 0, 1));
+    const endDate = new Date(Date.UTC(selectedYear + 1, 0, 1));
+    console.log(`Start Date: ${startDate.toISOString()}`);
+    console.log(`End Date: ${endDate.toISOString()}`);
+
     const completeDonations = await AppointmentModel.find({
       DonationStatus: 'Complete',
       selectedDate: {
-        $gte: new Date(`${selectedYear}-01-01T00:00:00`),
-        $lt: new Date(`${selectedYear + 1}-01-01T00:00:00`)
+        $gte: startDate.toISOString(),
+        $lt: endDate.toISOString()
       }
     });
 

@@ -1,10 +1,14 @@
 import axios from 'axios'
 import { WebHost } from '../../../MyConstantSuperAdmin'
+import { getToken } from '../../../../../admin/adminWebApp/src/functions/Authentication'
 
 export const fetchFormsByUserType = async ({userType}) => {
     try {
+        const token = getToken()
         console.log("Fetching Screening Forms")
-        const response = await axios.get(`${WebHost}/kalinga/getScreeningFormsUserType/${userType}`)
+        const response = await axios.get(`${WebHost}/kalinga/getScreeningFormsUserType/${userType}`,
+            {headers: { Authorization: `Bearer ${token}`}}
+        )
         console.log(response.data.messages.message)
 
         if(!response.data.screeningForms)

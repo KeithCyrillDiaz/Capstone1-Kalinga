@@ -54,37 +54,7 @@ export default function () {
             <h1 className="text-3xl text-primary-default font-bold font-sans py-4">
               Requestor Pendings
             </h1>
-            <div className="relative flex items-center bg-white border border-primary-default w-1/4 rounded-full">
-              <input
-                type="text"
-                className="w-56 h-8 text-xl bg-transparent border-none outline-none pl-5 placeholder:text-primary-default text-primary-default"
-                placeholder="Search"
-              />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="1.3em"
-                height="1.3em"
-                viewBox="0 0 24 24"
-                className="text-primary-default ml-28"
-              >
-                <path
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M21 21l-6-6"
-                />
-                <circle
-                  cx="10"
-                  cy="10"
-                  r="8"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                />
-              </svg>
-            </div>
+           
           </div>
 
           <div

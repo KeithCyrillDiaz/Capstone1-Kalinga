@@ -52,12 +52,8 @@ export default function BarangayGraph({ name }) {
     const tableColumn = ["Barangay", "Total Requestors", "Total Donors"];
     const tableRows = [];
 
-    barangaysData.forEach(item => {
-      const rowData = [
-        item._id,
-        item.totalRequestors,
-        item.totalDonors,
-      ];
+    barangaysData.forEach((item) => {
+      const rowData = [item._id, item.totalRequestors, item.totalDonors];
       tableRows.push(rowData);
     });
 
@@ -65,12 +61,17 @@ export default function BarangayGraph({ name }) {
       head: [tableColumn],
       body: tableRows,
       startY: 20,
-      headStyles: { fillColor: "#ED5077" }, 
+      headStyles: { fillColor: [255, 105, 180], halign: "center" },
       didDrawCell: (data) => {
-        if (data.section === 'body' && data.column.index === 0) {
-          doc.setTextColor("#ED5077"); 
+        if (data.section === "body" && data.column.index === 0) {
+          doc.setTextColor("#ED5077");
         }
-      }
+      },
+      columnStyles: {
+        0: { halign: "center" },
+        1: { halign: "center" },
+        2: { halign: "center" },
+      },
     });
 
     doc.save("Kalinga_Barangay_Report.pdf");

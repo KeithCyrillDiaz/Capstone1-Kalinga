@@ -492,7 +492,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
                 />
               </div>
               <div className="flex items-center justify-center h-32 bg-white rounded-2xl shadow-sm w-2/6">
-                <div className="flex items-center -ml-28 h-full bg-primary-default rounded-l-2xl p-4 ">
+                <div className="flex items-center -ml-28 h-full bg-primary-default rounded-l-2xl p-8 mr-52 ">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="50"
@@ -505,8 +505,8 @@ const formattedDate = `${currentDate.getFullYear()}-${
                     ></path>
                   </svg>
                 </div>
-                <div className="flex flex-col justify-center ml-10">
-                  <div className="flex items-top font-sans ">Today is</div>
+                <div className="flex flex-col justify-center  ">
+                  <div className="flex items-top font-sans pr-36 ">Today is</div>
                   <p className="text-2xl font-bold text-primary-default font-sans">
                     {formattedDate}
                   </p>

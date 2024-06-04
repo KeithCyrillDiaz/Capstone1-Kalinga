@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
+import { getToken } from "../../../../admin/adminWebApp/src/functions/Authentication";
 
 export default function Dashboard() {
   const [totalUsers, setTotalUsers] = useState(0);
@@ -16,9 +17,12 @@ export default function Dashboard() {
   useEffect(() => {
     console.log("Fetching data...");
     const fetchCounts = async () => {
+      const token = getToken()
       try {
         const responseUsers = await axios.get(
-          `${WebHost}/kalinga/getTotalUser`
+          `${WebHost}/kalinga/getTotalUser`,
+          {headers: {Authorization: `Bearer ${token}`}}
+
         );
         console.log("Users Response:", responseUsers.data); // Log the response data
         setTotalUsers(responseUsers.data.totalUsers);
