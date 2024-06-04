@@ -539,7 +539,7 @@ const donorAppointmentConfirmation = () => {
           <div className="flex justify-end mr-4 mt-10">
             <div className="flex flex-col gap-y-2">
               <button
-                onClick={() => confirmation()}
+                onClick={() => setShowModal(true)}
                 className="flex justify-end bg-primary-default text-white px-4 py-2 rounded-full hover:bg-pink-600 shadow-md"
               >
                 Approved
