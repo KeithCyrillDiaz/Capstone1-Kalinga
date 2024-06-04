@@ -252,7 +252,7 @@ import { Link } from 'react-router-dom';
         });
   
         doc.text(
-          "Request Monthly Report",
+          "Request Report",
           14,
           doc.autoTable.previous.finalY + 10
         );
@@ -281,7 +281,7 @@ import { Link } from 'react-router-dom';
         });
   
         doc.text(
-          "Overview Monthly Report for",
+          "Overview Report",
           14,
           doc.autoTable.previous.finalY + 10
         );

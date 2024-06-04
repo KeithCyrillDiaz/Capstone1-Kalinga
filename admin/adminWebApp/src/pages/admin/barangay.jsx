@@ -300,7 +300,7 @@ useEffect(() => {
       });
 
       doc.text(
-        `Request Monthly Report`,
+        `Request Report`,
         14,
         doc.autoTable.previous.finalY + 10
       );
@@ -326,7 +326,7 @@ useEffect(() => {
       });
 
       doc.text(
-       ` Overview Monthly Report `,
+       ` Overview Report `,
         14,
         doc.autoTable.previous.finalY + 10
       );
@@ -355,7 +355,7 @@ useEffect(() => {
         },
       });
 
-      doc.save(`${selectedBarangay} monthly_reports.pdf`);
+      doc.save(`${selectedBarangay} monthly_reports.pdf`);  
     } catch (error) {
       console.error("Error downloading PDF:", error);
       setError("Error downloading PDF");
