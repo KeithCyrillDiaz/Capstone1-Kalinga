@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DonorMedicalPage from "./donorMedicalpage";
 import DonorPages from "./donorpages";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { WebHost } from "../../../../../MyConstantAdmin";
 import { Loader } from "../../../../components/loader";
@@ -11,7 +11,7 @@ import {
   MissingRequirements,
 } from "../../../../modal/Verification/ImageModals";
 import { Confirmation, VerificationModal } from "../../../../modal/Verification/VerificationModal";
-import { getToken } from "../../../../functions/Authentication";
+import { getId, getToken } from "../../../../functions/Authentication";
 
 export default function () {
   const [activeTab, setActiveTab] = useState("screening");
@@ -28,6 +28,8 @@ export default function () {
   const [openMissingRequirements, setOpenMissingRequirements] = useState(false);
   const [showImage, setShowImage] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate()
 
   //Image Modal Info
   const [imageLink, setImageLink] = useState("");
@@ -335,7 +337,11 @@ export default function () {
             status={status}
             name={form.fullName}
             userType={form.userType}
-            onClose={() => setApprovalMessage(false)}
+            onClose={() => {
+              setApprovalMessage(false)
+              const id = getId()
+              navigate(`/admin/${id}/DonorVerifPendings`)
+            }}
           />
         </>
       )}
