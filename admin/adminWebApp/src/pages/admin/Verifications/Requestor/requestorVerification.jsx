@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import RequestorPages from "./requestorPages";
 import RequestorMedicalPage from "./requestorMedicalpage";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { WebHost } from "../../../../../MyConstantAdmin";
 import { Loader } from "../../../../components/loader";
 import { Confirmation, VerificationModal } from "../../../../modal/Verification/VerificationModal";
+import { getId } from "../../../../functions/Authentication";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState("screening");
@@ -18,6 +19,7 @@ export default function App() {
   const [form, setForm] = useState({});
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -216,7 +218,10 @@ export default function App() {
             status={status}
             name={form.fullName}
             userType={form.userType}
-            onClose={() => setApprovalMessage(false)}
+            onClose={() => {
+              setApprovalMessage(false)
+              const id = getId()
+              navigate(`/admin/${id}/RequestorVerifPendings`)}}
           />
         </>
       )}

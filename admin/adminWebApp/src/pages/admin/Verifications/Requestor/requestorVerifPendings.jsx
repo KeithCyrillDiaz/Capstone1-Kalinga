@@ -109,7 +109,7 @@ export default function () {
                     ))
                   ) : (
                     <div className="bg-white rounded-2xl mb-4 flex items-center justify-center border border-primary-default py-2">
-                      No Pending Donor Application at the moment
+                      No Pending Requestor Application at the moment
                     </div>
                   )}
                 </>
