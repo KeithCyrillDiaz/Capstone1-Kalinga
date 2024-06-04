@@ -11,6 +11,7 @@ import {
   MissingRequirements,
 } from "../../../../Modal/Verification/ImageModals";
 import { Confirmation, VerificationModal } from "../../../../Modal/Verification/VerificationModal";
+import { getToken } from "../../../../../../../admin/adminWebApp/src/functions/Authentication";
 
 export default function () {
   const [activeTab, setActiveTab] = useState("screening");
@@ -118,9 +119,11 @@ export default function () {
       }
 
       //getImageData in Database
+      const token = getToken()
       const getImagesResponse = await axios.post(
         `${WebHost}/kalinga/getMedicalRequirementImage/${id}`,
-        {purpose: "Application"}
+        {purpose: "Application"},
+        {headers: { Authorization: `Bearer ${null}`}}
       );
       console.log(getImagesResponse.data.messages.message);
       if (getImagesResponse.data.messages.code === 0) {

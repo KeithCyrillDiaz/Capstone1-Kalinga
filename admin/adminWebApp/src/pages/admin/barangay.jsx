@@ -244,87 +244,118 @@ useEffect(() => {
     try {
       setLoading(true);
       setError(null);
-  
+
       const {
         responseComplete,
         responseDecline,
         responseRequests,
         responseDeclineRequests,
       } = await fetchData(selectedMonth, selectedYear, selectedBarangay);
-  
+
       console.log("Donate Data:", responseComplete);
       console.log("Request Data:", responseRequests);
-  
+
       const doc = new jsPDF();
-  
-      doc.setTextColor("#000000");
-      doc.setFont("helvetica", "bold")
-      doc.setFontSize(20);
-      doc.text("KALINGA MONTHLY REPORT", 105, 15, { align: "center" });
-      doc.text(`${selectedBarangay} ${selectedMonth} ${selectedYear}`, 105, 30, { align: "center" });
 
       doc.setTextColor("#000000");
-  
-      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(20);
+      doc.text("KALINGA MONTHLY REPORT", 105, 15, { align: "center" });
       doc.text(
-        `Donation Report`,
-        14,
-        40
+        `${selectedBarangay} ${selectedMonth} ${selectedYear}`,
+        105,
+        30,
+        { align: "center" }
       );
-  
+
+      doc.setTextColor("#000000");
+
+      doc.setFontSize(14);
+      doc.text(`Donation Report`, 14, 40);
+
       // Set table header fill color to pink
       doc.setFillColor("#FF69B4");
-  
+
       doc.autoTable({
         startY: 45,
-        headStyles: { fillColor: "#ED5077" },   // Pink color
-        head: [["Category", "Value"]],
-        body: [
-          ["Total Complete Donations", responseComplete.totalCompleteAppointments],
-          ["Total Declined Donations", responseDecline.totalDeclineAppointments],
+        headStyles: { fillColor: "#ED5077" }, // Pink color
+        columns: [
+          { header: "Category", dataKey: "category" },
+          { header: "Value", dataKey: "value", styles: { halign: "right" } },
         ],
+        body: [
+          [
+            "Total Complete Donations",
+            responseComplete.totalCompleteAppointments,
+          ],
+          [
+            "Total Declined Donations",
+            responseDecline.totalDeclineAppointments,
+          ],
+        ],
+        columnStyles: {
+          category: { cellWidth: 100 }, // Adjust the width as needed
+          value: { cellWidth: 75 }, // Align text to the right
+        },
       });
-  
+
       doc.text(
         `Request Monthly Report`,
         14,
         doc.autoTable.previous.finalY + 10
       );
-  
+
       doc.autoTable({
         startY: doc.autoTable.previous.finalY + 20,
-        headStyles: { fillColor: "#ED5077" },   // Pink color
-        head: [["Category", "Value"]],
+        headStyles: { fillColor: "#ED5077" }, // Pink color
+        columns: [
+          { header: "Category", dataKey: "category" },
+          { header: "Value", dataKey: "value", styles: { halign: "right" } },
+        ],
         body: [
           ["Total Complete Requests", responseRequests.totalCompleteRequests],
-          ["Total Declined Requests", responseDeclineRequests.totalDeclineRequests],
+          [
+            "Total Declined Requests",
+            responseDeclineRequests.totalDeclineRequests,
+          ],
         ],
+        columnStyles: {
+          category: { cellWidth: 100 }, // Adjust the width as needed
+          value: { cellWidth: 75 }, // Align text to the right
+        },
       });
 
       doc.text(
-        `Overview Monthly Report`,
+       ` Overview Monthly Report `,
         14,
         doc.autoTable.previous.finalY + 10
       );
-  
+
       doc.autoTable({
         startY: doc.autoTable.previous.finalY + 20,
-        headStyles: { fillColor: "#ED5077" },   // Pink color
-        head: [["Category", "Value"]],
+        headStyles: { fillColor: "#ED5077" }, // Pink color
+        columns: [
+          { header: "Category", dataKey: "category" },
+          { header: "Value", dataKey: "value", styles: { halign: "right" } },
+        ],
         body: [
           ["Added Donor Users", totalDonors],
           ["Added Requestor Users", totalRequestors],
           ["Total Appointments", totalAppointments],
           ["Total Requests", totalRequests],
-          ["Total All Month Complete Requests", totalAllMonthCompleteRequests], 
-          ["Total All Month Complete Donations", totalAllMonthCompleteDonations], 
-
+          ["Total All Month Complete Requests", totalAllMonthCompleteRequests],
+          [
+            "Total All Month Complete Donations",
+            totalAllMonthCompleteDonations,
+          ],
         ],
+        columnStyles: {
+          category: { cellWidth: 100 }, // Adjust the width as needed
+          value: { cellWidth: 75 }, // Align text to the right
+        },
       });
 
-      
-  
-      doc.save( `${selectedBarangay} monthly_reports.pdf`);
+      doc.save(`${selectedBarangay} monthly_reports.pdf`);
     } catch (error) {
       console.error("Error downloading PDF:", error);
       setError("Error downloading PDF");

@@ -26,6 +26,7 @@ export default function BarDonationOverAll({ name }) {
       setLoading(true);
       setError(null);
       const token = getToken()
+      console.log("year: ", selectedYear)
       try {
         const responseComplete = await axios.get(`${WebHost}/kalinga/getTotalCompleteDonationsAllMonths?year=${selectedYear}`, 
         {headers: {Authorization: `Bearer ${token}`}}
@@ -35,6 +36,7 @@ export default function BarDonationOverAll({ name }) {
         );
         const mergedData = mergeData(responseComplete.data, responseDecline.data);
         setMonthlyData(mergedData);
+        console.log("mergedData: ", mergedData)
       } catch (error) {
         console.error('Error fetching donations:', error);
         setError('Error fetching data');
@@ -99,14 +101,19 @@ export default function BarDonationOverAll({ name }) {
       head: [tableColumn],
       body: tableRows,
       startY: 60,
-      headStyles: { fillColor: "#ED5077" },
+      headStyles: { fillColor: [255, 105, 180], halign: "center" },
       bodyStyles: { textColor: "#000000" },
       footStyles: { fillColor: "##ED5077", textColor: "#FFFFFF" },
       didDrawCell: (data) => {
         if (data.section === 'body' && data.column.index === 0) {
           doc.setTextColor("#000000"); // reset to black for table content
         }
-      }
+      },
+      columnStyles: {
+        0: { halign: "center" },
+        1: { halign: "center" },
+        2: { halign: "center" },
+      },
     });
 
     doc.save("KALINGA_OVERALL_DONATION_REPORT.pdf");
@@ -118,10 +125,6 @@ export default function BarDonationOverAll({ name }) {
 
   if (loading) {
     return <div className="flex justify-center items-center h-screen">Loading...</div>;
-  }
-
-  if (error) {
-    return <div className="flex justify-center items-center h-screen">Error: {error}</div>;
   }
 
   return (

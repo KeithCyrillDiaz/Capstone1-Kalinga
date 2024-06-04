@@ -75,10 +75,15 @@ export default function BarDonatePerMonth({ name, selectedYear }) {
   
     doc.setTextColor("#000000");
     autoTable(doc, {
-      headStyles: { fillColor: "#ED5077" },
+      headStyles: { fillColor: [255, 105, 180], halign: "center" },
       head: [["Month", "Total Complete Donations", "Total Complete Requests"]],
       body: monthlyData.map(({ month, totalCompleteDonations, totalCompleteRequests }) => [month, totalCompleteDonations, totalCompleteRequests]),
-      startY: 40, // Adjust startY value to leave space for the title
+      startY: 40, 
+      columnStyles: {
+        0: { halign: "center" },
+        1: { halign: "center" },
+        2: { halign: "center" },
+      },// Adjust startY value to leave space for the title
     });
     doc.save(`${name}_report.pdf`);
   };

@@ -24,24 +24,6 @@ const DonorMedicalPage = ({ currentPage, id, form }) => {
   const [imageLink, setImageLink] = useState("");
   const [fileName, setFileName] = useState("");
 
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.post(`${WebHost}/kalinga/fetchPendingScreeningFormByUserType/${form.userType}`,
-      { status: "Pending"}
-    )
-      if (!response.data.screeningForms) {
-        console.log("Error fetching Screening forms");
-        return;
-      }
-
-      console.log("Successfully retrieved screeningForms");
-    } catch (error) {
-      console.log("Something went wrong", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
    const fetchImagesAndFiles = async () => {
     try {
@@ -84,7 +66,6 @@ const DonorMedicalPage = ({ currentPage, id, form }) => {
 };
 
   useEffect(() => {
-    fetchData();
     fetchImagesAndFiles();
   }, []);
   const pageContents = {
