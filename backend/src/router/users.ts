@@ -127,7 +127,7 @@ export default (router: express.Router) => {
     //SuperAdmin // Admin
     router.get('/kalinga/getTotalDonor', tokenVerification, getTotalDonor )
     router.get('/kalinga/getTotalRequestor', tokenVerification, getTotalRequestor)
-    router.get('/kalinga/getCompleteDonationsTotal/:year', tokenVerification, getCompleteDonationsTotal)
+    router.get('/kalinga/getCompleteDonationsTotal', tokenVerification, getCompleteDonationsTotal)
     router.get('/kalinga/getDeclinedDonationsTotal', tokenVerification, getDeclinedDonationsTotal)
     router.get('/kalinga/getCompleteRequestsTotal', tokenVerification, getCompleteRequestsTotal)
     router.get('/kalinga/getDeclinedRequestsTotal', tokenVerification, getDeclinedRequestsTotal)
