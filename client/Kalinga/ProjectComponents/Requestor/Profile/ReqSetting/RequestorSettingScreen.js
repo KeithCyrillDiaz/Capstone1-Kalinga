@@ -110,7 +110,7 @@ export default function SettingScreen({route}) {
         <Header title="Settings" />
         <ScrollView 
           style={{flex: 1, paddingVertical:"7%"}}
-          contentContainerStyle={bodyStyle.container}
+          contentContainerStyle={[bodyStyle.container, {borderWidth: 0}]}
           >
         <View style={bodyStyle.section}>
         <LoadingSpinner loading={isLoading}/>

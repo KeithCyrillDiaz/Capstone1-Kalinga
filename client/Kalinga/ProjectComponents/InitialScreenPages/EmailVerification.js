@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios'
 import { BASED_URL } from '../../MyConstants';
+import { globalStyles } from '../../styles_kit/globalStyles';
 
 const EmailVerification = ({route}) => {
     
@@ -53,7 +54,9 @@ const EmailVerification = ({route}) => {
                     style={styles.SecondContainer}
                 >
                     <Text style={styles.FirstText}>Email Verification</Text>
-                    <Text style={[styles.SecondText, {textAlign: "center"}]}>{`Hi there! Thank you for applying. Please click the button below to receive a verification code so you'll be updated in your ${screeningForm.userType} application.`}</Text>
+                    {/* <Text style={[styles.SecondText, {textAlign: "center"}]}>{`Hi there! Thank you for applying. Please click the button below to receive a verification code so you'll be updated in your ${screeningForm.userType} application.`}</Text>
+                    <Text style = {[styles.SecondText, {marginTop: 20, textAlign: "center"}]}>Note: Kindly check your spam inbox as well</Text> */}
+                     <Text style={[styles.SecondText, {textAlign: "center"}]}>{`Hi there! Thank you for applying. Please click the button below to receive a verification code so you'll be updated in your Donor application.`}</Text>
                     <Text style = {[styles.SecondText, {marginTop: 20, textAlign: "center"}]}>Note: Kindly check your spam inbox as well</Text>
         
                     <Image
@@ -97,7 +100,7 @@ const styles = StyleSheet.create({
         flexGrow: 1,
     },
     SecondContainer: {
-        backgroundColor: '#FFF8EB',
+        backgroundColor: 'white',
         justifyContent: 'center',
         alignItems: 'center',
         paddingVertical: 30,

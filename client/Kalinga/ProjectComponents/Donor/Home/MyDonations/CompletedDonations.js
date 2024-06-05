@@ -8,6 +8,8 @@ import { format } from 'date-fns';
 import { BASED_URL } from '../../../../MyConstants.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import { getDateTime } from '../../../functions/formatDateAndTime.js';
+import BabyCategoryModal from '../../../modal/BabyCategory.js';
+import { AntDesign } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator()
 
@@ -23,6 +25,7 @@ const CompleteDonations = ({route}) => {
   const [formData, setFormData] = useState(null); 
 
   const [loading, setLoading] = useState(true);
+  const [babyModal, setBabyModal]= useState(true); 
 
   useFocusEffect(
     React.useCallback(() => {
@@ -44,9 +47,11 @@ const CompleteDonations = ({route}) => {
                 milkAmount: item.milkAmount,
                 location: item.location,
                 ...getDateTime({ data: item }),
+                BabyCategory: item.BabyCategory
             }));
             
             setFormData(formattedData);
+            console.log("data: ", formattedData)
         } else {
             Alert.alert("No Ongoing Donation", "You currently don't have any ongoing donations.");
             console.log('No completed donations found for the specified Donor_ID.');
@@ -95,17 +100,19 @@ if (loading) {
             </View>
               
             )}
+
             {formData && formData.map((data, index) => (
                     <View key={index} style={styles.columnContainer}>
                         <View style={styles.boxColContainer}>
                             <View style={styles.boxContentContainer}>
-                                <Text style={styles.boxContentBold}>Amount of milk requested:</Text>
+                                <Text style={styles.boxContentBold}>Amount of milk donated:</Text>
                                 <Text style={[styles.boxContent, styles.limitText]}>{data.milkAmount} ml</Text>
                             </View>
                             <View style={styles.boxContentContainer}>
                                 <Text style={styles.boxContentBold}>Milk Bank:</Text>
                                 <Text style={[styles.boxContent, {width: "70%"}]}>{data.location}</Text>
                             </View>
+                          
                             <View style={styles.boxContentContainer}>
                                 <Text style={styles.boxContentBold}>Date:</Text>
                                 <Text style={[styles.boxContent, styles.limitText]}>

@@ -28,6 +28,7 @@ import ImageZoom from 'react-native-image-pan-zoom';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import { BASED_URL } from '../../../../MyConstants.js';
+import { getFormFormat } from '../../../../Kalinga_API/AppointmentFormConfiguration.js';
 
 
 export default function RequestorProfile({route}) {
@@ -81,7 +82,7 @@ export default function RequestorProfile({route}) {
       emailAddress: userInformation.email,
       homeAddress: userInformation.homeAddress,
       childBirthDate: '',
-      city: '',
+      city: 'Quezon CIty',
       milkBank: "",
       milkAmount: '',
       ReasonForRequesting: '',
@@ -196,6 +197,33 @@ const handleChange = (name, value) => {
   }));
 };
 
+  const [formFormat, setFormFormat] = useState({})
+  const [loading, setLoading] = useState(false)
+
+  const fetchFormat = async () => {
+    setLoading(true)
+    const result = await getFormFormat({navigation: navigation})
+    setLoading(false)
+    const { requestAppointmentConfig } = result
+    console.log("requestAppointmentConfig: ",requestAppointmentConfig)
+    setFormFormat(requestAppointmentConfig)
+  }
+
+  useEffect(() => {
+    fetchFormat()
+  },[])
+
+if(isLoading && Object.keys(formFormat).length === 0) {
+  return (
+    <Spinner
+    visible={isLoading}
+    textContent={'Loading...'}
+    textStyle={{ color: '#FFF' }}
+  />
+  )
+  
+}
+
 if(!isLoading){
   return (
       
@@ -220,7 +248,6 @@ if(!isLoading){
                 textContent={'Loading...'}
                 textStyle={{ color: '#FFF' }}
               />
-
               <View style={styles.body}>
               <Text 
                 style = {{
@@ -232,113 +259,91 @@ if(!isLoading){
 
                 }}
                 >Personal Information</Text>
-                  <Text style={styles.bodyNote}>Note: Bold fields are not editable.</Text>
-                  <TextInput
-                  style={[styles.form1, {fontFamily:"Open-Sans-SemiBold"}]}
-                  value={formData.fullName}
-                  placeholder="Full Name *"
-                  placeholderTextColor="#E60965"
-                  onChangeText={(text) => handleInputChange('fullName', text)}
-                  editable={false}
-              />
-              <TextInput
-                  style={[styles.form1, {fontFamily:"Open-Sans-SemiBold"}]}
-                  value={formData.phoneNumber}
-                  placeholder="Phone Number *"
-                  placeholderTextColor="#E60965"
-                  maxLength={11}
-                  onChangeText={(text) => handleInputChange('phoneNumber', text)}
-                  editable={false}
-                  
-              />
-              <TextInput
-                  style={[styles.form1, {fontFamily:"Open-Sans-SemiBold"}]}
-                  value={formData.emailAddress}
-                  placeholder="Email Address *"
-                  placeholderTextColor="#E60965"
-                  onChangeText={(text) => handleInputChange('emailAddress', text)}
-                  editable={false}
-              />
-              <TextInput
-                  style={[styles.form2, {fontFamily:"Open-Sans-SemiBold"}]}
-                  value={formData.homeAddress}
-                  multiline={true}
-                  placeholder="Home Address *"
-                  placeholderTextColor="#E60965"
-                  onChangeText={(text) => handleInputChange('homeAddress', text)}
-                  editable={false}
-              />
-               
-              <TextInput
-                      style={styles.form2}
-                      value={formData.ReasonForRequesting}
-                      placeholder="Reason for Requesting *"
-                      placeholderTextColor="#E60965"
-                      onChangeText={(text) => handleInputChange('ReasonForRequesting', text)}
-                      /> 
-                {/* <View style={styles.dropdownContainer1}>
-                  <Picker
-                    selectedValue={formData.ageOfGestation}
-                    style={{ height: 30, width: "100%", color: '#E60965',}}
-                    onValueChange={(text) => handleInputChange('ageOfGestation', text)} 
-                  >
-                    <Picker.Item label="Select Age of Gestation" value="" />
-                    <Picker.Item label="Early Term" value="Early Term" />
-                    <Picker.Item label="Full Term" value="Full Term" />
-                    <Picker.Item label="Late Term" value="Late Term" />
-                    <Picker.Item label="Post Term" value="Post Term" />
-                  </Picker>
-              </View> */}
-       
+                <Text style={styles.bodyNote}>Note: Bold fields are not editable.</Text>
 
-                <View style={styles.dropdownContainer1}>
-                    <Picker
-                      selectedValue={formData.city}
-                      style={{ height: 30, width: "100%", color: '#E60965'}}
-                      onValueChange={(text) => handleInputChange('city', text)} 
-
-                    >
-                      <Picker.Item label="Select City" value="" />
-                      <Picker.Item label="Manila City" value="Manila City" />
-                      <Picker.Item label="Quezon City" value="Quezon City" />
-                    </Picker>
-                </View>
-
-              <Text 
-                style = {{
-                  marginLeft: 20,
-                  color: "#E60965",
-                  fontSize: 20,
-                  fontFamily: "Open-Sans-Bold",
-                  marginTop:20,
-                  marginBottom: 10,
-
-                }}
-                >Infant Information</Text>
-                <TextInput
-                  style={[styles.form1, {paddingLeft: 25, fontFamily: "Open-Sans-SemiBold"}]}
-                  value={formData.childBirthDate}
-                  placeholder="Child Birthday *"
-                  placeholderTextColor="#E60965"
-                  onChangeText={(text) => handleInputChange('emailAddress', text)}
-                  editable={false}
-              />         
-    
+                {Object.entries(formFormat).map(([fieldName, fieldConfig]) => {
+                  if (fieldName === "infantInformation" && fieldConfig === true) {
+                    return (
+                        <Text 
+                            key={fieldName}
+                            style={{
+                                marginLeft: 20,
+                                color: "#E60965",
+                                fontSize: 20,
+                                fontFamily: "Open-Sans-Bold",
+                                marginTop: 20,
+                                marginBottom: 10,
+                            }}
+                        >
+                            Infant Information
+                        </Text>
+                    );
+                } else if (fieldName !== "milkAmount" && fieldConfig === true) {
+                    return (
+                        <TextInput
+                            key={fieldName}
+                            style={[
+                                styles.form1,
+                                {
+                                    fontFamily: (
+                                      formData[fieldName]?.trim() === "" ? "Open-Sans-Regular" : "Open-Sans-SemiBold"
+                                    ),
+                                    color: (
+                                      fieldName === "fullName" || 
+                                      fieldName === "phoneNumber" || 
+                                      fieldName === "emailAddress" ||
+                                      fieldName === "childBirthDate"
+                                    ) 
+                                      ? "gray" : "#E60965"
+                                }
+                            ]}
+                            
+                            placeholder={formFormat.placeholder[fieldName]}
+                            placeholderTextColor="#E60965"
+                            multiline= {fieldName === "homeAddress" || fieldName === "ReasonForRequesting" }
+                            onChangeText={(text) => handleInputChange(fieldName, text)}
+                            value={formData[fieldName]}
+                            editable={!(fieldName === "fullName" || fieldName === "phoneNumber" || fieldName === "emailAddress")}
+                        />
+                    );
+                } else if (fieldName === "milkAmount" && fieldConfig === true) {
+                  return (
+                    <View style={styles.dropDown}>
+                        <Picker
+                            selectedValue={formData.milkAmount}
+                            style ={{
+                              color: '#E60965', 
+                            }}
+                            onValueChange={(itemValue) =>
+                              handleChange(fieldName, itemValue)
+                            }
+                            >
+                            <Picker.Item label={formFormat.placeholder[fieldName]} value="" />
+                            {formFormat.options[fieldName].map((item, index) =>(
+                              <Picker.Item key={index} label={item} value={item} />
+                            ))}
+                        </Picker>              
+                    </View>
+                  )
+                } else {
+                    return null; 
+                }
+              })}
+                 {Object.keys(formFormat).length !== 0 && (
                   <View style={styles.dropDown}>
-                    <Picker
-                      selectedValue={formData.milkBank}
-                      style ={{color: '#E60965'}}
-                      onValueChange={(itemValue) =>
-                        handleChange("milkBank", itemValue)
-                  
-                      }
-                      >
-                      <Picker.Item label="Choose Milk Bank" value="" />
-                      <Picker.Item label="Quezon City General Hospital - Human Milk Bank" value="Quezon City General Hospital - Human Milk Bank" />
-                  </Picker>
-                </View>   
-                
-            <View style={styles.dropDown}>
+                      <Picker
+                        selectedValue={formData.milkBank}
+                        style ={{color: '#E60965'}}
+                        onValueChange={(itemValue) =>
+                          handleChange("milkBank", itemValue)
+                        }
+                        >
+                        <Picker.Item label="Choose Milk Bank" value="" />
+                        <Picker.Item label="Quezon City General Hospital - Human Milk Bank" value="Quezon City General Hospital - Human Milk Bank" />
+                    </Picker>
+                  </View>   
+                 )}
+            {/* <View style={styles.dropDown}>
                   <Picker
                       selectedValue={formData.milkAmount}
                       style ={{
@@ -352,7 +357,7 @@ if(!isLoading){
                       <Picker.Item label="100 ml" value="100" />
                       <Picker.Item label="200 ml" value="200" />
                   </Picker>              
-            </View>
+            </View> */}
                     
 
                   {/* <TouchableOpacity onPress={() => handleImageUpload("Prescription")} style = {styles.uploadContainer}>

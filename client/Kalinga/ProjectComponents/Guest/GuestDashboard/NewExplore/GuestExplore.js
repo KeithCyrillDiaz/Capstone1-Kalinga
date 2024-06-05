@@ -53,11 +53,11 @@ const GuestExplore = () => {
         <View style= {globalStyles.defaultBackgroundColor}>
             <SmallHeader title = {"Explore"} />
             <SearchBox data = {MilkBankList} onSelect={handleSearch} onClear = {handleSearchClear}/>
-            <MapComponent regionLat={region.latitude} initialRegion={initial} regionLong={region.longitude}/>
+            <MapComponent regionLat={region.latitude} initialRegion={initial} regionLong={region.longitude} showMilkBank={handleSearch}/>
             {/* {id && (
                 <MilkBankDetails id={id} onSelect={handleSetRegion}/>
             )} */}
-            <MilkBankDetails id={id} onSelect={handleSetRegion} userType={"Guest"}/>
+            <MilkBankDetails id={id} onSelect={handleSetRegion} userType={"Guest"} openSpreadsheet={id}/>
             
         </View>
           

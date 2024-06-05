@@ -460,38 +460,24 @@ const saveDetails = async () => {
             </View>
           </View>
   
-          <View style={{ flexDirection: "row", paddingHorizontal: 16, gap: 16 }}>
-            <View
-              style={{
-                width: Dimensions.get("screen").width / 2.3,
-              }}>
-              <View style={inputStyle.container}>
-                <Text style={inputStyle.label}>Age: </Text>
-                <TextInput style={inputStyle.primary} 
+          <View style={[inputStyle.container, {width: "90.5%", alignSelf: "center", marginLeft: -4}]}>
+                <Text style={[inputStyle.label, {color: onEdit ? "gray" : "#E60965"}]}>UID: </Text>
+                <TextInput style={[inputStyle.primary, {color: onEdit ? "gray" : "#E60965"}]}
+                  value={userData.Donor_ID} 
+                  editable={false}
+                />
+              </View>
+          <View style={{ flexDirection: "row", paddingHorizontal: 16, gap:17 }}>
+          <View style={[inputStyle.container, {width: "27%"}]}>
+                <Text style={[inputStyle.label, {color: onEdit ? "gray" : "#E60965"}]}>Age: </Text>
+                <TextInput style={[inputStyle.primary , {color: onEdit ? "gray" : "#E60965"}]} 
                   value={userData.age}
                   editable={false}
                 />
               </View>
-            </View>
-  
-            <View
-              style={{
-                width: Dimensions.get("screen").width / 2.3,
-              }}>
-              <View style={inputStyle.container}>
-                <Text style={inputStyle.label}>Gender: </Text>
-                <TextInput style={inputStyle.primary}
-                  value={"Female"} 
-                  editable={false}
-                />
-              </View>
-            </View>
-          </View>
-  
-          <View style={{ paddingHorizontal: 16 }}>
-            <View style={inputStyle.container}>
-              <Text style={inputStyle.label}>Birthday: </Text>
-              <TextInput style={inputStyle.primary} 
+            <View style={[inputStyle.container, {width: "67%"}]}>
+              <Text style={[inputStyle.label, {color: onEdit ? "gray" : "#E60965"}]}>Birthday: </Text>
+              <TextInput style={[inputStyle.primary, , {color: onEdit ? "gray" : "#E60965"}]} 
                value = {userData.birthDate}
               editable={false}
               />
