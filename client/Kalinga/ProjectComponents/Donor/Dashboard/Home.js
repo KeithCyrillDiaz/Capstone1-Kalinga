@@ -225,22 +225,7 @@ useFocusEffect(
               <View style = {styles.flex_start}>
                 <Text style = {styles.title}>Donor's Dashboard</Text>
               </View>
-              <View style = {styles.boxRowContainer}>
-
-                <TouchableOpacity style = {styles.box} onPress={() => navigatePage("ValidUserExplore")}>
-                    <MaterialIcons name="location-pin" size={70} color="#E60965" />
-                    <Text style = {styles.boxTitle}>Milk Bank Locator</Text>
-                    <Text style = {styles.subLabel}>Easily find human milk banks near you</Text>
-                </TouchableOpacity>
-                
-                  <TouchableOpacity style = {styles.box}  onPress={() => navigatePage("Donor Educational Library")}>
-                      <Ionicons name="book" size={70} color="#E60965" />
-                      <Text style = {styles.boxTitle}>Educational Library</Text>
-                      <Text style = {styles.subLabel}>Explore our educational articles on breastfeeding and maternal health</Text>
-                  </TouchableOpacity>
-                
-
-              </View>
+             
 
               <View style = {styles.boxRowContainer}>
               <TouchableOpacity style={[styles.box, {position: "relative"}]} onPress={handleMakeDonation}>
@@ -265,21 +250,37 @@ useFocusEffect(
                     <Text style = {styles.subLabel}>View Milk Donation History</Text>
                 </TouchableOpacity>
               </View>
+              <View style = {styles.boxRowContainer}>
+
+              <TouchableOpacity style = {styles.box} onPress={() => navigatePage("ValidUserExplore")}>
+                  <MaterialIcons name="location-pin" size={70} color="#E60965" />
+                  <Text style = {styles.boxTitle}>Milk Bank Locator</Text>
+                  <Text style = {styles.subLabel}>Easily find human milk banks near you</Text>
+              </TouchableOpacity>
+
+                {/* <TouchableOpacity style = {styles.box}  onPress={() => navigatePage("Donor Educational Library")}>
+                    <Ionicons name="book" size={70} color="#E60965" />
+                    <Text style = {styles.boxTitle}>Educational Library</Text>
+                    <Text style = {styles.subLabel}>Explore our educational articles on breastfeeding and maternal health</Text>
+                </TouchableOpacity> */}
+
+
+              </View>
 
               
-              <View style = {styles.boxRowContainer}>
+              {/* <View style = {styles.boxRowContainer}>
                 <TouchableOpacity style = {styles.box} onPress={() => navigatePage("Chat Assistance")}>
                     <FontAwesome5 name="robot" size={70} color="#E60965"/>
                     <Text style = {styles.boxTitle}>Instant Messaging</Text>
                     <Text style = {styles.subLabel}>Chat with our chatbot for quick respond to FAQs </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
 {/* 
                 <TouchableOpacity style = {styles.box} onPress={() => navigatePage("DonorForum", userInformation)}>
                     <MaterialIcons name="forum" size={70} color="#E60965" />
                     <Text style = {styles.boxTitle}>Forum</Text>
                     <Text style = {styles.ShortLabel}>Engage with user discussions</Text>
                 </TouchableOpacity> */}
-              </View>
+              {/* </View> */}
               {openReminder && (
                  <ReminderModal 
                  onClose={() => setOpenReminder(false)}/>

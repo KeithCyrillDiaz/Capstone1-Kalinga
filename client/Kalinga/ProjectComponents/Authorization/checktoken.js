@@ -22,3 +22,27 @@ export const CheckToken = async ({ navigation, message }) => {
     return;
   }
 };
+
+export const getToken = async () => {
+  const token = AsyncStorage.getItem("token")
+  if(token) return token
+  else return null
+}
+
+
+export const logOutUser = async ({navigation}) => {
+      await AsyncStorage.multiRemove(['token', 'userInformation', 'DPLink', 'Image_ID']);
+      Alert.alert("Session Expired", "Your session has expired. Please log in again.", [
+        {
+          text: "OK",
+          onPress: () =>
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'LogIn' }],
+              })
+            ),
+        },
+      ]);
+      return;
+}

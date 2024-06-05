@@ -7,7 +7,8 @@ import {
 	StatusBar, 
 	StyleSheet, 
 	Alert,
-	ActivityIndicator
+	ActivityIndicator,
+	TouchableOpacity
 } from 'react-native';
 //import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -15,6 +16,8 @@ import axios from 'axios'; // Import axios for API requests
 import { BASED_URL } from '../../../../MyConstants.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import { getDateTime } from '../../../functions/formatDateAndTime.js';
+import BabyCategoryModal from '../../../modal/BabyCategory.js';
+import { AntDesign } from '@expo/vector-icons';
 
 const CompletedTabRequest = ({route}) => {
 	const userInformation = route.params.userInformation
@@ -24,6 +27,7 @@ const CompletedTabRequest = ({route}) => {
 	const [formDataList, setFormDataList] = useState([]);
     const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false)
+	const [babyModal, setBabyModal]= useState(false); 
 
     useFocusEffect(
 		React.useCallback(() => {
@@ -92,7 +96,7 @@ const CompletedTabRequest = ({route}) => {
 	  };
 
 	if (loading) {
-		return <ActivityIndicator size="large" color="#E60965" />;
+		return <ActivityIndicator size="large" color="#E60965" />
 	}
   
     return (
@@ -126,6 +130,7 @@ const CompletedTabRequest = ({route}) => {
 						}}>No completed at the moment.</Text>
 						</View>
 					)}
+				
 					{formDataList.map((formData, index) => (
                     <View key={index} style={{paddingBottom: 17}}>
                         <View style={styles.boxColContainer}>
@@ -142,10 +147,14 @@ const CompletedTabRequest = ({route}) => {
                                 <Text style={[styles.boxContent, styles.limitText, {marginTop: 2}]}>{formData.method}</Text>
                             </View>
 							{formData.BabyCategory && (
-								  <View style={[styles.boxContentContainer, {gap: 4}]}>
-									<Text style={styles.boxContentBold}>Baby Category:</Text>
-									<Text style={[styles.boxContent, styles.limitText, {marginTop: 2}]}>{formData.BabyCategory}</Text>
-							  	  </View>
+								  <View style = {{flexDirection: "row", alignItems: "center", justifyContent: "space-between"}}>
+									<View style={[styles.boxContentContainer, {gap: 4}]}>
+										<Text style={styles.boxContentBold}>Baby Category:</Text>
+										<Text style={[styles.boxContent, styles.limitText, {marginTop: 2}]}>{formData.BabyCategory}</Text>
+									</View>
+
+								  </View>
+								
 							)}
                           
 							<View style={[styles.boxContentContainer, {gap: 4}]}>

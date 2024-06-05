@@ -16,7 +16,8 @@ import axios from 'axios'; // Import axios for API requests
 import { BASED_URL } from '../../../../MyConstants.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
 import { getDateTime } from '../../../functions/formatDateAndTime.js';
- 
+import BabyCategoryModal from '../../../modal/BabyCategory.js';
+import { AntDesign } from '@expo/vector-icons';
 
 const ApprovedTabRequest = ({route}) => {
 
@@ -31,6 +32,7 @@ const ApprovedTabRequest = ({route}) => {
 	const [error, setError] = useState(false)
 	const [time, setTime] = useState("")
 	const [date, setDate] = useState("")
+	const [babyModal, setBabyModal]= useState(false); 
 
     useFocusEffect(
 		React.useCallback(() => {
@@ -144,6 +146,7 @@ const ApprovedTabRequest = ({route}) => {
 						}}>No approved request at the moment.</Text>
 						</View>
 					)}
+					<BabyCategoryModal visible={babyModal} onClose={() => setBabyModal(false)}/>
 					{Object.keys(formData).length !== 0 && (
 						<>
 							<View style ={styles.boxContainer}>
@@ -170,9 +173,16 @@ const ApprovedTabRequest = ({route}) => {
 									<Text style={[styles.boxContent, styles.limitText]}>{formData[0].method}</Text>
 								</View>
 								{formData[0].BabyCategory && (
+									<View style={{ flexDirection: "row", alignItems: "center"}}>
 									<View style={styles.boxContentContainer}>
 										<Text style={styles.boxContentBold}>Baby Category: </Text>
 										<Text style={[styles.boxContent, styles.limitText]}>{formData[0].BabyCategory}</Text>
+									</View>
+									<TouchableOpacity
+									onPress={() => setBabyModal(true)}
+									>
+										<AntDesign name="questioncircle" size={24} color="pink" />
+									</TouchableOpacity>		
 									</View>
 								)}
 								
