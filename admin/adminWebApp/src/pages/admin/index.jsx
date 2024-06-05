@@ -139,26 +139,44 @@ const formattedDate = `${currentDate.getFullYear()}-${
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = getToken()
+      const token = getToken();
       try {
-        const response = await axios.get(
-          `${WebHost}/kalinga/getTotalUsersPerBarangay`,
-          {headers: {Authorization: `Bearer ${token}`}}
-        );
-        const { totalRequestorsPerBarangay, totalDonorsPerBarangay } =
-          response.data;
+        const response = await axios.get(`${WebHost}/kalinga/getTotalUsersPerBarangay`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-        // Merge data for each barangay
-        const mergedData = totalRequestorsPerBarangay.map((requestor) => ({
-          ...requestor,
-          totalDonors:
-            totalDonorsPerBarangay.find((donor) => donor._id === requestor._id)
-              ?.totalDonors || 0,
-        }));
+        const { totalRequestorsPerBarangay, totalDonorsPerBarangay } = response.data;
 
-        setBarangaysData(mergedData); 
+        // Create a map of all barangays
+        const barangayMap = {};
+
+     
+        totalRequestorsPerBarangay.forEach((requestor) => {
+          barangayMap[requestor._id] = {
+            barangay: requestor._id,
+            totalRequestors: requestor.totalRequestors,
+            totalDonors: 0, 
+          };
+        });
+
+        
+        totalDonorsPerBarangay.forEach((donor) => {
+          if (barangayMap[donor._id]) {
+            barangayMap[donor._id].totalDonors = donor.totalDonors;
+          } else {
+            barangayMap[donor._id] = {
+              barangay: donor._id,
+              totalRequestors: 0, 
+              totalDonors: donor.totalDonors,
+            };
+          }
+        });
+
+        const mergedData = Object.values(barangayMap);
+
+        setBarangaysData(mergedData);
         console.log("Barangays Data:", mergedData);
-        console.log("response Data:", response.data); 
+        console.log("response Data:", response.data);
       } catch (error) {
         console.error("Error fetching total users per barangay:", error);
       }
@@ -394,7 +412,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
   return (
     <>
     <div className="overflow-y-auto">
-    <section className="w-full h-full bg-primary-body overflow-y-auto rounded-xl">
+      <section className="w-full h-full bg-primary-body overflow-y-auto rounded-xl">
         <div className="p-12 pt-2">
           <div className="py-4">
             <h1 className="text-2xl text-primary-default font-bold font-sans py-">
@@ -406,7 +424,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
           </div>
           <div className="flex flex-wrap gap-4 justify-center">
             <div className="flex w-full justify-center gap-4">
-              <div className="flex items-center justify-center gap-x-4 w-4/6">
+              <div className="flex items-center justify-center gap-x-4 w-full md:w-4/6">
                 <DashboardCard
                   icon={
                     <svg
@@ -495,7 +513,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
                   seeMore={`/admin/${id}/requestorManagement`}
                 />
               </div>
-              <div className="flex items-center justify-center h-32 bg-white rounded-2xl shadow-sm w-2/6">
+              <div className="flex items-center justify-center h-32 bg-white rounded-2xl shadow-sm w-full md:w-2/6">
                 <div className="flex items-center -ml-28 h-full bg-primary-default rounded-l-2xl p-8 mr-52 ">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -519,7 +537,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
             </div>
 
             <div className="w-full flex justify-center gap-4">
-              <div className="flex flex-col w-4/6 gap-4">
+              <div className="flex flex-col w-full gap-4 md:w-4/6">
                 {/* Transactions */}
                 <div className="flex flex-col  p-4 bg-white rounded-2xl shadow-sm relative">
                   <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
@@ -601,7 +619,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col w-2/6 gap-4">
+              <div className="flex flex-col w-full gap-4 md:w-2/6">
                 <div className="flex flex-col p-4 bg-white rounded-2xl shadow-sm relative">
                   <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
                     Total App Users
@@ -791,55 +809,6 @@ const formattedDate = `${currentDate.getFullYear()}-${
 
               </div>
             </div>
-
-            {/* <div className="flex w-full justify-center gap-4">
-              <div className="flex flex-col items-center justify-center col-span-2 px-8 py-2 bg-white rounded-lg shadow-md w-1.5/5">
-                <h2 className="text-2xl text-center text-primary-default mt-2">
-                  QCGH Human Milk Bank User Demographics
-                </h2>
-                <p className="text-md text-center text-primary-default font-sans">
-                  Participating Barangays: {barangaysData.length}
-                </p>
-                {barangaysData &&
-                  barangaysData.map((barangayData) => (
-                    <div className="grid grid-flow-row-dense grid-cols-3 grid-rows-3 gap-x-2 mt-10 px-10">
-                      <div className="col-span-3">
-                        <span className="text-lg text-primary-default font-bold mt-6">
-                          {barangayData._id}
-                        </span>
-                      </div>
-                      <div className="col-span-2">
-                        <span className="text-md text-primary-default font-sans">
-                          Requestor
-                        </span>
-                      </div>
-                      <div className="col-span-2">
-                        <span className="text-md text-primary-default font-sans">
-                          Donor
-                        </span>
-                      </div>
-                      <div className="text-md text-primary-default font-sans text-right">
-                        {barangayData.totalRequestors || 0}
-                      </div>
-                      <div className="text-md text-primary-default font-sans text-right">
-                        {barangayData.totalDonors || 0}
-                      </div>
-                    </div>
-                  ))}
-              </div>
-              <div className="flex flex-col items-center justify-center col-span-3 px-8 py-8 bg-white rounded-lg shadow-md w-4/5">
-                <h2 className="text-2xl text-primary-default text-center mb-4">
-                  App Users per Barangay
-                </h2>
-                <div className="w-full p-4">
-                  <div className="py-3 bg-white rounded-2xl">
-                    <span className="lg:pt-4 lg:pb-8 xl:p-0 mt-8">
-                      <BarangayGraph name="" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div> */}
           </div>
         </div>
       </section>
