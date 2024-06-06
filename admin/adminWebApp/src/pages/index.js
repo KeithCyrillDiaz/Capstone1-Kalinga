@@ -21,7 +21,8 @@ import Users from "./admin/users";
 import DonorAppointManage from "./admin/Appointments/Donor/donorAppointManage";
 import RequestorManagement from "./admin/Appointments/Requestor/requestorManagement";
 import Barangay from "./admin/barangay";
-
+import DonorAppointmentForm from './admin/Configurations/DonorAppointmentForm'
+import RequestorAppointmentForm from './admin/Configurations/RequestorAppointmentForm'
 
 export {
   Login,
@@ -46,5 +47,7 @@ export {
   Users,
   DonorAppointManage,
   RequestorManagement,
-  Barangay
+  Barangay,
+  DonorAppointmentForm,
+  RequestorAppointmentForm
 };
