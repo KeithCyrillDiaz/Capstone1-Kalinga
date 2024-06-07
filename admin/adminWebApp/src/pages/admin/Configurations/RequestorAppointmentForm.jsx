@@ -3,7 +3,7 @@ import {
     IoIosCheckbox, 
     IoIosCheckboxOutline 
 } from "react-icons/io";
-import { getFormFormat } from '../../../api/Configurations/getFormsFormat';
+import { getFormFormat, updateRequestorFormFormat } from '../../../api/Configurations/FormsFormat';
 import { RenderRequestorCheckBoxField } from '../../../components/Configurations/RenderCheckBoxField';
 import Toggle from 'react-toggle';
 import 'react-toggle/style.css'; 
@@ -12,7 +12,6 @@ import { getMaintenace, updateMaintenaceStatus } from '../../../api/Configuratio
 import Modal from '../../../modal/Modal';
 import { Loader } from '../../../components/loader';
 import { AddMilkAmountOption } from '../../../modal/Configurations/AddMilkAmountOption';
-import { getId } from '../../../functions/Authentication';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -32,11 +31,16 @@ const RequestorAppointmentForm = () => {
     
 
     const saveDetails = async () => {
+        setSaveDetailsModal(false)
         setLoading(true)
-        await updateMaintenaceStatus({value: maintenance.maintenanceStatus})
+        const result = await updateRequestorFormFormat({value: formFormatConfiguration})
+        const { updateResult } = result.data
+        console.log("updateResult: ", updateResult)
+        await updateMaintenaceStatus({value: false})
+        fetchFormatConfiguration()
+        fetchMaintenance()
+        setMaintenace(false)
         setLoading(false)
-        const id = getId()
-        navigate(`/admin/${id}/RequestorAppointmentForm`);
     }
 
     const handleChange = async (name, value, actionType) => {
@@ -183,8 +187,7 @@ const RequestorAppointmentForm = () => {
                                 className="mt-4 px-4 py-2 mr-4 bg-white text-xs text-primary-default rounded-lg hover:bg-pink-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-md transition-all duration-300 ease-in-out"
                                 onClick={() => {
                                     handleChange("maintenanceStatus", false)
-                                    const id = getId()
-                                    navigate(`/admin/${id}`);
+                                    fetchFormatConfiguration()
                                 }}
                             >
                                 Cancel
@@ -193,14 +196,14 @@ const RequestorAppointmentForm = () => {
 
                    )}
             </div>  
-                        {saveDetailsModal && (
-                             <Modal 
-                             isOpen={openModal}
-                             message = {message}
-                             onConfirm={() => saveDetails()}
-                             onCancel={() => setOpenModal(false)}
-                             />
-                        )}
+                    {saveDetailsModal && (
+                            <Modal 
+                            isOpen={saveDetailsModal}
+                            message = {message}
+                            onConfirm={() => saveDetails()}
+                            onCancel={() => setSaveDetailsModal(false)}
+                            />
+                    )}
                     {openModal && (
                         <Modal 
                         isOpen={openModal}

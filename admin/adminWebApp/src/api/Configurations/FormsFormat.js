@@ -25,3 +25,24 @@ export const getFormFormat = async () => {
         console.log("Error: ", error);
     }
 };
+
+
+export const updateRequestorFormFormat = async ({value}) => {
+  try {
+    const token = getToken()
+    if (!token) {
+         // signOutUser(); // Force sign out if token is null
+        return
+    }
+    console.log("value: ",value)
+    const result = await axios.put(`${WebHost}/kalinga/updateRequestorAppointmentsConfiguration/`,
+        value,
+        {headers: {Authorization: `Bearer ${token}`}}
+    )
+    const { updateResult } = result.data // format
+    return result
+  } catch (error) {
+    console.log("Error", error)
+  }
+    
+}
