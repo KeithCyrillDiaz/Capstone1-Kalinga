@@ -47,24 +47,11 @@ export const getAppointmentsConfiguration = async (req: express.Request, res: ex
 
 export const updateDonationAppointmentsConfiguration = async (req: express.Request, res: express.Response) => {
     try {
-        const {
-            amountOfMilkDonatedField
-        } = req.body
+       const updates = req.body
 
-        
-
-        if(typeof amountOfMilkDonatedField !== 'boolean') {
-            console.log("invalid value of amountOfMilkDonatedField")
-            return res.status(400).json({
-                messages: {
-                    code: 1,
-                    message: "Bad Request"
-                }
-            })
-        }
         const updateResult = await QCGHDonorAppointmentConfigModel.findOneAndUpdate(
             {}, 
-            { amountOfMilkDonatedField },
+            updates,
             { new: true, upsert: true } 
         );
 
@@ -91,18 +78,7 @@ export const updateDonationAppointmentsConfiguration = async (req: express.Reque
 
 export const updateRequestorAppointmentsConfiguration = async (req: express.Request, res: express.Response) => {
     try {
-        
-        const {
-            reasonForRequestingField,
-            infantInformationField,
-            infantBirthDayField,
-            amountOfMilkRequestedField,
-            reasonForRequestingPlaceHolder,
-            infantBirthDayPlaceHolder,
-            amountOfMilkRequestedPlaceHolder,
-            amountOfMilkOptions
-        } = req.body
-
+    
         const updates = req.body
 
         const updateResult = await QCGHRequestorAppointmentConfigModel.findOneAndUpdate(
