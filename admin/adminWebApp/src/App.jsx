@@ -29,6 +29,8 @@ import {
   DonorAppointManage,
   RequestorManagement,
   Barangay,
+  DonorAppointmentForm,
+  RequestorAppointmentForm
 } from "@/pages";
 import { RootLayout, NotFound, MainLayout, AdminLayout } from "@/layouts";
 import { MobileChecker } from "@/components";
@@ -82,6 +84,8 @@ const router = createBrowserRouter(
         <Route path="users" element={<Users />} />
         <Route path="DonorAppointManage" element={<DonorAppointManage />} />
         <Route path="requestorManagement" element={<RequestorManagement />} />
+        <Route path="DonorAppointmentForm" element={<DonorAppointmentForm/>} />
+        <Route path="RequestorAppointmentForm" element={<RequestorAppointmentForm/>} />
       </Route>
 
       {/* 404 */}
