@@ -9,8 +9,16 @@ const QCGHDonorAppointmentConfigSchema = new mongoose.Schema({
     milkAmount: {type: Boolean, default: true},
     placeholder: { 
         type: {
+            fullName: String,
+            phoneNumber: String,
+            emailAddress: String,
+            homeAddress: String,
             milkAmount: String,
         }, default: {
+            fullName: "Full Name",
+            phoneNumber: "Phone Number",
+            emailAddress: "Email Address",
+            homeAddress: "Complete Address",
             milkAmount: "Amount of milk to be donated (ml)",
         }
 },
