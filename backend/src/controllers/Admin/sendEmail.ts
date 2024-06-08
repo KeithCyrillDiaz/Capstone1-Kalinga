@@ -461,6 +461,7 @@ export const sendApprovedEmail = async (req: express.Request, res: express.Respo
 export const sendDeclinedEmail = async (req: express.Request, res: express.Response) => {
     try {
         console.log(req.params)
+        const { reason } = req.body
         const existingUser = await getScreeningFormByApplicantID(req.params.Applicant_ID)
         if(!existingUser){
             return res.status(400).json({
@@ -497,60 +498,76 @@ export const sendDeclinedEmail = async (req: express.Request, res: express.Respo
             subject: `${existingUser.userType} Application Rejection Notification`,
             html:
             `<!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Donor Rejection Notification</title>
-                <style>
-                    body {
-                        font-family: Arial, sans-serif;
-                        line-height: 1.6;
-                        margin: 0;
-                        padding: 0;
-                    }
-                    .container {
-                        max-width: 600px;
-                        margin: 20px auto;
-                        padding: 20px;
-                        border: 1px solid #ccc;
-                        border-radius: 10px;
-                    }
-                    h2 {
-                        color: #333;
-                    }
-                    p {
-                        margin-bottom: 20px;
-                    }
-                    .button {
-                        display: inline-block;
-                        background-color: #E60965;
-                        color: #fff;
-                        text-decoration: none;
-                        padding: 10px 20px;
-                        border-radius: 5px;
-                    }
-                    .footer {
-                        margin-top: 20px;
-                        text-align: left;
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <h2>${existingUser.userType} Rejection Notification</h2>
-                    <p>We regret to inform you that your application as a ${existingUser.userType} has been rejected.</p>
-                    <p>We appreciate your interest in joining our mission, but unfortunately, we are unable to approve your application at this time.</p>
-                    <p>If you have any questions or concerns regarding this decision, please feel free to contact us.</p>
-                    <p>Thank you for your understanding.</p>
-                    <a href="${process.env.NM_EMAIL}" class="button">Contact Us</a>
-                    <div class="footer">
-                        <p>Best Regards,</p>
-                        <p>Kalinga Team</p>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Application Rejection Notification</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            line-height: 1.6;
+                            margin: 0;
+                            padding: 0;
+                            background-color: #f9f9f9;
+                        }
+                        .container {
+                            max-width: 600px;
+                            margin: 40px auto;
+                            padding: 20px;
+                            border: 1px solid #e0e0e0;
+                            border-radius: 10px;
+                            background-color: #ffffff;
+                            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                        }
+                        h2 {
+                            color: #333;
+                            font-size: 24px;
+                            margin-bottom: 20px;
+                        }
+                        p {
+                            margin-bottom: 20px;
+                            color: #555;
+                            font-size: 16px;
+                        }
+                        .reason {
+                            color: #e60965;
+                            font-weight: bold;
+                        }
+                        .button {
+                            display: inline-block;
+                            background-color: #e60965;
+                            color: #ffffff;
+                            text-decoration: none;
+                            padding: 10px 20px;
+                            border-radius: 5px;
+                            font-size: 16px;
+                            margin-top: 20px;
+                        }
+                        .footer {
+                            margin-top: 30px;
+                            font-size: 14px;
+                            color: #999;
+                            text-align: left;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <h2>${existingUser.userType} Application Rejection</h2>
+                        <p>Dear ${existingUser.fullName},</p>
+                        <p>We regret to inform you that your application to become a ${existingUser.userType} has been rejected for the following reason:</p>
+                        <p class="reason">"${reason}"</p>
+                        <p>We appreciate your interest in joining our mission. However, your application did not meet our current requirements.</p>
+                        <p>If you have any questions or need further clarification regarding this decision, please don't hesitate to contact us. We are here to help you.</p>
+                        <p>Thank you for your understanding.</p>
+                        <a href="mailto:${process.env.NM_EMAIL}" class="button">Contact Us</a>
+                        <div class="footer">
+                            <p>Best Regards,</p>
+                            <p>The Kalinga Team</p>
+                        </div>
                     </div>
-                </div>
-               
-            </body>
+                </body>
             </html>`
         })
 

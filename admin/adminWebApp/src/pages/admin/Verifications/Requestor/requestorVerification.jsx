@@ -5,8 +5,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { WebHost } from "../../../../../MyConstantAdmin";
 import { Loader } from "../../../../components/loader";
-import { Confirmation, VerificationModal } from "../../../../modal/Verification/VerificationModal";
-import { getId } from "../../../../functions/Authentication";
+import { Confirmation, RejectionRemarks, VerificationModal } from "../../../../modal/Verification/VerificationModal";
+import { getId, getToken } from "../../../../functions/Authentication";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState("screening");
@@ -14,10 +14,12 @@ export default function App() {
   const totalPages = 2;
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [approvalMessage, setApprovalMessage] = useState(false)
+  const [openRejectionRemarks, setOpenRejectionRemarks]  = useState(false);
 
   const { Applicant_ID } = useParams();
   const [form, setForm] = useState({});
   const [status, setStatus] = useState("");
+  const [ remark, setRemarks]= useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate()
 
@@ -35,11 +37,18 @@ export default function App() {
 
   const sendEmail = async (status) => {
     try {
+      const token = getToken()
       console.log("Sending Email");
       const response =
         status === "approved"
-          ? await axios.post(`${WebHost}/kalinga/sendApprovedEmail/${Applicant_ID}`)
-          : await axios.post(`${WebHost}/kalinga/sendDeclinedEmail/${Applicant_ID}`);
+          ? await axios.post(`${WebHost}/kalinga/sendApprovedEmail/${Applicant_ID}`,
+            null,
+            {headers: {Authorization: `Bearer ${token}`}}
+          )
+          : await axios.post(`${WebHost}/kalinga/sendDeclinedEmail/${Applicant_ID}`,
+            {reason: remark},
+            {headers: {Authorization: `Bearer ${token}`}}
+          );
       console.log(response.data.messages.message);
     } catch (error) {
       console.log("Error Sending Email", error);
@@ -47,6 +56,11 @@ export default function App() {
   };
 
   const updateStatus = async (data) => {
+    if(remark === "") {
+      console.log("remark is an empty string")
+      console.log("remark: ", remark)
+      return
+    }
     setIsConfirmationModalOpen(false)
     const formatStatus = data === "declined" ? "Rejected" : "Approved";
     console.log("formatStatus: ", formatStatus);
@@ -86,6 +100,11 @@ export default function App() {
       setLoading(false);
     }
   };
+
+  const handleRejectionRemarks = (value) => {
+    setRemarks(value)
+    console.log("remark: ", value)
+   }
 
   useEffect(() => {
     fetchData();
@@ -208,7 +227,10 @@ export default function App() {
             name={form.fullName}
             userType={form.userType}
             onClose={() => setIsConfirmationModalOpen(false)}
-            onConfirm = {() => updateStatus(status)}
+            onConfirm = {() =>{
+              setIsConfirmationModalOpen(false)
+              setOpenRejectionRemarks(true)
+            }}
           />
         </>
       )}
@@ -224,6 +246,16 @@ export default function App() {
               navigate(`/admin/${id}/RequestorVerifPendings`)}}
           />
         </>
+      )}
+       {openRejectionRemarks && (
+        <RejectionRemarks
+          remark = {handleRejectionRemarks}
+          onClose={() => {
+            setOpenRejectionRemarks(false)
+            updateStatus(status)
+          }}
+          onCancel={() => setOpenRejectionRemarks(false)}
+        />
       )}
     </>
   );

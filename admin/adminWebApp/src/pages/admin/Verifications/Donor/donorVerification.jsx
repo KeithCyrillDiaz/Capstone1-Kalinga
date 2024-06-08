@@ -10,7 +10,7 @@ import {
   ShowImage,
   MissingRequirements,
 } from "../../../../modal/Verification/ImageModals";
-import { Confirmation, VerificationModal } from "../../../../modal/Verification/VerificationModal";
+import { Confirmation, RejectionRemarks, VerificationModal } from "../../../../modal/Verification/VerificationModal";
 import { getId, getToken } from "../../../../functions/Authentication";
 
 export default function () {
@@ -20,6 +20,7 @@ export default function () {
   const [status, setStatus] = useState("");
   const [images, setImages] = useState([]);
   const [files, setFiles] = useState([]);
+  const [ remark, setRemarks]= useState("");
 
   //Modals
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
@@ -28,6 +29,7 @@ export default function () {
   const [openMissingRequirements, setOpenMissingRequirements] = useState(false);
   const [showImage, setShowImage] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [openRejectionRemarks, setOpenRejectionRemarks]  = useState(false);
 
   const navigate = useNavigate()
 
@@ -53,12 +55,20 @@ export default function () {
   };
 
   const sendEmail = async (status) => {
+ 
     try {
+      const token = getToken()
       console.log("Sending Email");
       const response =
         status === "approved"
-          ? await axios.post(`${WebHost}/kalinga/sendApprovedEmail/${Applicant_ID}`)
-          : await axios.post(`${WebHost}/kalinga/sendDeclinedEmail/${Applicant_ID}`);
+          ? await axios.post(`${WebHost}/kalinga/sendApprovedEmail/${Applicant_ID}`,
+            null,
+            {headers: {Authorization: `Bearer ${token}`}}
+          )
+          : await axios.post(`${WebHost}/kalinga/sendDeclinedEmail/${Applicant_ID}`,
+            {reason: remark},
+            {headers: {Authorization: `Bearer ${token}`}}
+          );
       console.log(response.data.messages.message);
     } catch (error) {
       console.log("Error Sending Email", error);
@@ -66,6 +76,11 @@ export default function () {
   };
 
   const updateStatus = async (data) => {
+    if(remark === "") {
+      console.log("remark is an empty string")
+      console.log("remark: ", remark)
+      return
+    }
     setIsConfirmationModalOpen(false)
     const formatStatus = data === "declined" ? "Rejected" : "Approved";
     console.log("formatStatus: ", formatStatus);
@@ -187,6 +202,11 @@ export default function () {
       }
     }
   };
+
+   const handleRejectionRemarks = (value) => {
+    setRemarks(value)
+    console.log("remark: ", value)
+   }
 
   useEffect(() => {
     fetchData();
@@ -327,7 +347,10 @@ export default function () {
             name={form.fullName}
             userType={form.userType}
             onClose={() => setIsConfirmationModalOpen(false)}
-            onConfirm = {() => updateStatus(status)}
+            onConfirm = {() =>{
+              setIsConfirmationModalOpen(false)
+              setOpenRejectionRemarks(true)
+            }}
           />
         </>
       )}
@@ -344,6 +367,17 @@ export default function () {
             }}
           />
         </>
+      )}
+
+      {openRejectionRemarks && (
+        <RejectionRemarks
+          remark = {handleRejectionRemarks}
+          onClose={() => {
+            setOpenRejectionRemarks(false)
+            updateStatus(status)
+          }}
+          onCancel={() => setOpenRejectionRemarks(false)}
+        />
       )}
     </>
   );
