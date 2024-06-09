@@ -6,6 +6,7 @@ import { WebHost } from "../../../../../MyConstantAdmin";
 import DeleteModal from "../../../../modal/deleteModal";
 import { Loader } from "../../../../components/loader";
 import { getId, getToken } from "../../../../functions/Authentication";
+import { getFormFormat } from "../../../../api/Configurations/FormsFormat";
 
 export default function RequestorAppointments() {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ export default function RequestorAppointments() {
   const [loading, setLoading] = useState(false);
   const requestPerPage = 10; // Adjust as needed
   const [requestID, setRequestID] = useState(null)
+  
 
   // FILTERS
   const toggleFilterVisibility = () => {
@@ -179,6 +181,22 @@ export default function RequestorAppointments() {
     setCurrentPage(page);
   };
 
+  const [babyCategories, setBabyCategories] = useState([])
+
+  const fetchFormatBabyCategories = async () => {
+    const result = await getFormFormat()
+    if(!result)return
+    const { requestAppointmentConfig } = result
+    const { BabyCategory } = requestAppointmentConfig.options
+    console.log("Baby Category: ", BabyCategory)
+    if(BabyCategory)setBabyCategories(BabyCategory)
+
+  }
+
+  useEffect(() => {
+    fetchFormatBabyCategories()
+  },[])
+
   const [id, setId] = useState(null)
   useEffect(() => {
     const storedId = getId();
@@ -190,6 +208,7 @@ export default function RequestorAppointments() {
       setId(newId);
     }
   }, []);
+
 
 
   if(id)
@@ -256,13 +275,13 @@ export default function RequestorAppointments() {
                       <select
                         className="bg-white text-primary-default text-lg py-1 pl-2 rounded-sm hover:cursor-pointer w-full"
                         name="monthScheduled"
-                        value={filters.babyCategory}
+                        value={filters.BabyCategory}
                         onChange={handleFilterChange}
                       >
                         <option value="">Select Baby Category</option>
-                        <option value="Complete">Well Baby</option>
-                        <option value="Ongoing">Sick Baby</option>
-                        <option value="Pending">Medically Fragile Baby</option>
+                        {babyCategories.map((category, index) => (
+                          <option key={index} value={category}>{category}</option>
+                        ))}
                       </select>
                     </div>
                     <div className="border-b border-primary-default">
