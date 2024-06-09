@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { WebHost } from "../../../../../MyConstantAdmin";
 import DeleteModal from "../../../../modal/deleteModal";
+import { generateId, getId } from "../../../../functions/Authentication";
 
 export default function ({ remarks }) {
   const navigate = useNavigate();
@@ -148,6 +149,22 @@ export default function ({ remarks }) {
       console.error("Error deleting appointment:", error);
     }
   };
+
+  const [id, setId] = useState(null)
+  useEffect(() => {
+    const storedId = getId();
+    if (storedId) {
+      setId(storedId);
+    } else {
+      const newId = generateId();
+      saveId({ id: newId });
+      setId(newId);
+    }
+  }, []);
+
+
+
+  if(id)
 
   return (
     <>
@@ -370,7 +387,7 @@ export default function ({ remarks }) {
                               {/* LINKING */}
                             <td className="text-center  py-4 whitespace-nowrap text-sm font-medium flex items-center justify-center gap-2">
                               <Link
-                                to={`/admin/donorAppointmentConfirmation/${appointment.AppointmentDonorID}`}
+                                to={`/admin/${id}/donorAppointmentConfirmation/${appointment.AppointmentDonorID}`}
                                 className=" px-3 py-1 rounded-full hover:bg-neutral-variant mr-1"
                               >
                                 <svg

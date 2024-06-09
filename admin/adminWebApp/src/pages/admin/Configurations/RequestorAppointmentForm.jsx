@@ -11,7 +11,7 @@ import '../../../components/Configurations/toggle.css'
 import { getMaintenace, updateMaintenaceStatus } from '../../../api/Configurations/Maintenance';
 import Modal from '../../../modal/Modal';
 import { Loader } from '../../../components/loader';
-import { AddMilkAmountOption } from '../../../modal/Configurations/AddMilkAmountOption';
+import { AddBabyCategoryOption, AddMethodCategoryOption, AddMilkAmountOption } from '../../../modal/Configurations/AddNewOptions';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -27,6 +27,8 @@ const RequestorAppointmentForm = () => {
     //Modal
     const [openModal, setOpenModal] = useState(false)
     const [openAddAmountModal, setOpenAddAmountModal] = useState(false)
+    const [openAddCategoryModal, setOpenAddCategoryModal] = useState(false)
+    const [openAddMethodModal, setOpenAddMethodModal] = useState(false)
     const [saveDetailsModal, setSaveDetailsModal] = useState(false)
     
 
@@ -43,7 +45,7 @@ const RequestorAppointmentForm = () => {
         setLoading(false)
     }
 
-    const handleChange = async (name, value, actionType) => {
+    const handleChange = async (name, value, actionType, subName) => {
         if(name === "maintenanceStatus"){
             setOpenModal(false)
             setMaintenace({
@@ -55,14 +57,15 @@ const RequestorAppointmentForm = () => {
         }   
         if(name === "options"){
             if(actionType === "Add"){
-                const isOptionExist = formFormatConfiguration.options.milkAmount.includes(value);
+                console.log("subName Add: ", subName)
+                const isOptionExist = formFormatConfiguration.options[subName].includes(value);
                 if(isOptionExist)return
                 setFormFormatConfiguration({
                     ...formFormatConfiguration,
                     options: {
                         ...formFormatConfiguration.options,
-                        milkAmount: [
-                            ...formFormatConfiguration.options.milkAmount, 
+                        [subName]: [
+                            ...formFormatConfiguration.options[subName], 
                             value
                         ]
                     }
@@ -70,16 +73,17 @@ const RequestorAppointmentForm = () => {
                 return
             } else {
                 console.log("value: ", value)
-                const updatedMilkAmount = formFormatConfiguration.options.milkAmount.filter(item => item !== value);
+                console.log("subName Remove: ", subName)
+                const updated = formFormatConfiguration.options[subName].filter(item => item !== value);
                     setFormFormatConfiguration({
                         ...formFormatConfiguration,
                         options: {
                             ...formFormatConfiguration.options,
-                            milkAmount: updatedMilkAmount
+                            [subName]: updated
                         }
                     })
                 return
-            }
+            } 
            
         }
 
@@ -116,6 +120,17 @@ const RequestorAppointmentForm = () => {
         fetchMaintenance()
     },[])
 
+    const handleAddCategory = () => {
+        if (newCategory && !babyCategories.includes(newCategory)) {
+          setBabyCategories([...babyCategories, newCategory]);
+          setNewCategory('');
+    
+          // Optionally, send the new category to the server
+          axios.post('/api/categories', { newCategory })
+            .then(response => console.log('Category added:', response.data))
+            .catch(error => console.error('Error adding category:', error));
+        }
+      };
 
     if(loading) {
         return (
@@ -170,6 +185,8 @@ const RequestorAppointmentForm = () => {
                         handleChange={handleChange} 
                         editable={maintenance.maintenanceStatus}
                         openAddModal={() => setOpenAddAmountModal(true)}
+                        openAddCategory ={() => setOpenAddCategoryModal(true)}
+                        openAddMethod = {() => setOpenAddMethodModal(true)}
                         />
                     )}
                    {maintenance.maintenanceStatus === true && (
@@ -217,6 +234,20 @@ const RequestorAppointmentForm = () => {
                         isOpen={true}
                         onConfirm={handleChange}
                         onCancel={() => setOpenAddAmountModal(false)}
+                        />
+                    )}
+                    {openAddCategoryModal && (
+                        <AddBabyCategoryOption
+                        isOpen={true}
+                        onConfirm={handleChange}
+                        onCancel={() => setOpenAddCategoryModal(false)}
+                        />
+                    )}
+                     {openAddMethodModal && (
+                        <AddMethodCategoryOption
+                        isOpen={true}
+                        onConfirm={handleChange}
+                        onCancel={() => setOpenAddMethodModal(false)}
                         />
                     )}
         </section>

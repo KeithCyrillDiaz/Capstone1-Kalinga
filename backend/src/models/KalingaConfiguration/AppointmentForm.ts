@@ -14,14 +14,27 @@ const QCGHDonorAppointmentConfigSchema = new mongoose.Schema({
             emailAddress: String,
             homeAddress: String,
             milkAmount: String,
+            method: String,
         }, default: {
             fullName: "Full Name",
             phoneNumber: "Phone Number",
             emailAddress: "Email Address",
             homeAddress: "Complete Address",
             milkAmount: "Amount of milk to be donated (ml)",
+            method: "Method of Delivery",
         }
-},
+    },
+    options: {
+        type:{
+            method: [String]
+        },
+        default: {
+            method: [
+                "In house", 
+                "Pick-Up",
+            ]
+        }
+    }
 })
 
 const QCGHRequestorAppointmentConfigSchema = new mongoose.Schema({
@@ -34,6 +47,7 @@ const QCGHRequestorAppointmentConfigSchema = new mongoose.Schema({
     infantInformation: {type: Boolean, default: true},
     childBirthDate: {type: Boolean, default: true},
     milkAmount: {type: Boolean, default: true},
+    BabyCategory: {type: Boolean, default: true},
     placeholder: { 
         type: {
             fullName: String,
@@ -43,6 +57,8 @@ const QCGHRequestorAppointmentConfigSchema = new mongoose.Schema({
             ReasonForRequesting: String,
             childBirthDate: String,
             milkAmount: String,
+            BabyCategory: String,
+            method: String,
         }, default: {
             fullName: "Full Name",
             phoneNumber: "Phone Number",
@@ -51,14 +67,27 @@ const QCGHRequestorAppointmentConfigSchema = new mongoose.Schema({
             ReasonForRequesting: "Reason for Requesting",
             childBirthDate: "Child Birthday",
             milkAmount: "Amount of Milk to be requested",
+            BabyCategory: "Select Baby Category",
+            method: "Method of Delivery",
         }
     },
     options: {
         type:{
-            milkAmount: [String]
+            milkAmount: [String],
+            BabyCategory: [String],
+            method: [String],
         },
         default: {
-            milkAmount: ["100ml", "200ml"]
+            milkAmount: ["100ml", "200ml"],
+            BabyCategory: [
+                "Well Baby", 
+                "Sick Baby",
+                "Medically Fragile Baby"
+            ],
+            method: [
+                "Authorized Person", 
+                "Self Pick-up",
+            ]
         }
     }
 })

@@ -9,6 +9,7 @@ import { getMaintenace, updateMaintenaceStatus } from '../../../api/Configuratio
 import { RenderDonorCheckBoxField } from '../../../components/Configurations/RenderCheckBoxField';
 import Modal from '../../../modal/Modal';
 import { getId } from '../../../functions/Authentication';
+import { AddMethodCategoryOption } from '../../../modal/Configurations/AddNewOptions';
 
 const DonorAppointmentForm = () => {
 
@@ -21,7 +22,7 @@ const DonorAppointmentForm = () => {
 
     //Modal
     const [openModal, setOpenModal] = useState(false)
-    const [openAddAmountModal, setOpenAddAmountModal] = useState(false)
+    const [openAddMethodModal, setOpenAddMethodModal] = useState(false)
     const [saveDetailsModal, setSaveDetailsModal] = useState(false)
 
 
@@ -38,7 +39,7 @@ const DonorAppointmentForm = () => {
         setLoading(false)
     }
 
-    const handleChange = async (name, value, actionType) => {
+    const handleChange = async (name, value, actionType, subName) => {
         if(name === "maintenanceStatus"){
             setOpenModal(false)
             setMaintenace({
@@ -50,14 +51,14 @@ const DonorAppointmentForm = () => {
         }   
         if(name === "options"){
             if(actionType === "Add"){
-                const isOptionExist = formFormatConfiguration.options.milkAmount.includes(value);
+                const isOptionExist = formFormatConfiguration.options[subName].includes(value);
                 if(isOptionExist)return
                 setFormFormatConfiguration({
                     ...formFormatConfiguration,
                     options: {
                         ...formFormatConfiguration.options,
-                        milkAmount: [
-                            ...formFormatConfiguration.options.milkAmount, 
+                        [subName]: [
+                            ...formFormatConfiguration.options[subName], 
                             value
                         ]
                     }
@@ -65,12 +66,12 @@ const DonorAppointmentForm = () => {
                 return
             } else {
                 console.log("value: ", value)
-                const updatedMilkAmount = formFormatConfiguration.options.milkAmount.filter(item => item !== value);
+                const updated = formFormatConfiguration.options[subName].filter(item => item !== value);
                     setFormFormatConfiguration({
                         ...formFormatConfiguration,
                         options: {
                             ...formFormatConfiguration.options,
-                            milkAmount: updatedMilkAmount
+                            [subName]: updated
                         }
                     })
                 return
@@ -167,7 +168,7 @@ const DonorAppointmentForm = () => {
                         data={formFormatConfiguration} 
                         handleChange={handleChange} 
                         editable={maintenance.maintenanceStatus}
-                        openAddModal={() => setOpenAddAmountModal(true)}
+                        openAddMethod = {() => setOpenAddMethodModal(true)}
                         />
                     )}
                     {maintenance.maintenanceStatus === true && (
@@ -208,6 +209,14 @@ const DonorAppointmentForm = () => {
                         message = {message}
                         onConfirm={() =>handleChange("maintenanceStatus", !maintenance.maintenanceStatus)}
                         onCancel={() => setOpenModal(false)}
+                        />
+                    )}
+                                        
+                    {openAddMethodModal && (
+                        <AddMethodCategoryOption
+                        isOpen={true}
+                        onConfirm={handleChange}
+                        onCancel={() => setOpenAddMethodModal(false)}
                         />
                     )}
         </section>

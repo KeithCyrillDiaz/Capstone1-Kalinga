@@ -5,6 +5,8 @@ import axios from "axios";
 import { WebHost } from "../../../../../MyConstantAdmin";
 import DeleteModal from "../../../../modal/deleteModal";
 import { Loader } from "../../../../components/loader";
+import { getId, getToken } from "../../../../functions/Authentication";
+import { getFormFormat } from "../../../../api/Configurations/FormsFormat";
 
 export default function RequestorAppointments() {
   const navigate = useNavigate();
@@ -14,7 +16,9 @@ export default function RequestorAppointments() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const requestPerPage = 10;
+  const requestPerPage = 10; // Adjust as needed
+  const [requestID, setRequestID] = useState(null)
+  
 
   // FILTERS
   const toggleFilterVisibility = () => {
@@ -52,8 +56,8 @@ export default function RequestorAppointments() {
             month: "long",
           }) === filters.monthOfCreation
         : true;
-      const matchBabyCategory = filters.babyCategory
-        ? appointment.BabyCategory === filters.babyCategory
+      const matchBabyCategory = filters.BabyCategory
+        ? appointment.BabyCategory === filters.BabyCategory
         : true;
       const matchStatus = filters.status
         ? appointment.RequestStatus === filters.status
@@ -178,6 +182,38 @@ export default function RequestorAppointments() {
   const goToPage = (page) => {
     setCurrentPage(page);
   };
+
+  const [babyCategories, setBabyCategories] = useState([])
+
+  const fetchFormatBabyCategories = async () => {
+    const result = await getFormFormat()
+    if(!result)return
+    const { requestAppointmentConfig } = result
+    const { BabyCategory } = requestAppointmentConfig.options
+    console.log("Baby Category: ", BabyCategory)
+    if(BabyCategory)setBabyCategories(BabyCategory)
+
+  }
+
+  useEffect(() => {
+    fetchFormatBabyCategories()
+  },[])
+
+  const [id, setId] = useState(null)
+  useEffect(() => {
+    const storedId = getId();
+    if (storedId) {
+      setId(storedId);
+    } else {
+      const newId = generateId();
+      saveId({ id: newId });
+      setId(newId);
+    }
+  }, []);
+
+
+
+  if(id)
   return (
     <>
       <section className="w-full h-screen bg-primary-body overflow-hidden">
@@ -240,14 +276,14 @@ export default function RequestorAppointments() {
                       </label>
                       <select
                         className="bg-white text-primary-default text-lg py-1 pl-2 rounded-sm hover:cursor-pointer w-full"
-                        name="babyCategory"
-                        value={filters.babyCategory}
+                        name="BabyCategory"
+                        value={filters.BabyCategory}
                         onChange={handleFilterChange}
                       >
                         <option value="">Select Baby Category</option>
-                        <option value="Well Baby">Well Baby</option>
-                        <option value="Sick Baby">Sick Baby</option>
-                        <option value="Medically Fragile Baby">Medically Fragile Baby</option>
+                        {babyCategories.map((category, index) => (
+                          <option key={index} value={category}>{category}</option>
+                        ))}
                       </select>
                     </div>
                     <div className="border-b border-primary-default">
@@ -432,7 +468,7 @@ export default function RequestorAppointments() {
                                 {/* LINKING */}
                               <td className="text-center py-4 whitespace-nowrap text-sm font-medium flex items-center justify-center">
                                 <Link
-                                  to={`/admin/requestorAppointmentConfirmation/${appointment.RequestID}`}
+                                  to={`/admin/${id}/requestorAppointmentConfirmation/${appointment.RequestID}`}
                                   className=" px-3 py-1 rounded-full hover:bg-neutral-variant mr-1"
                                 >
                                   <svg
