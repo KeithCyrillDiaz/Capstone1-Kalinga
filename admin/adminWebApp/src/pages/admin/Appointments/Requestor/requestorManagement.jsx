@@ -12,9 +12,9 @@ export default function RequestorAppointments() {
   const navigate = useNavigate();
   const [isRemarksModalOpen, setRemarksModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [requestData, setRequestData] = useState([]); // Changed initial state to empty array
+  const [requestData, setRequestData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // State for delete modal
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const requestPerPage = 10; // Adjust as needed
   const [requestID, setRequestID] = useState(null)
@@ -56,10 +56,8 @@ export default function RequestorAppointments() {
             month: "long",
           }) === filters.monthOfCreation
         : true;
-      const matchMonthScheduled = filters.monthScheduled
-        ? new Date(appointment.selectedDate).toLocaleString("default", {
-            month: "long",
-          }) === filters.monthScheduled
+      const matchBabyCategory = filters.BabyCategory
+        ? appointment.BabyCategory === filters.BabyCategory
         : true;
       const matchStatus = filters.status
         ? appointment.RequestStatus === filters.status
@@ -69,7 +67,7 @@ export default function RequestorAppointments() {
         : true;
       return (
         matchMonthOfCreation &&
-        matchMonthScheduled &&
+        matchBabyCategory &&
         matchStatus &&
         matchRemarks
       );
@@ -82,14 +80,12 @@ export default function RequestorAppointments() {
 
   useEffect(() => {
     setLoading(true);
-    console.log("Fetching data...");
     const fetchRequestData = async () => {
       try {
         const response = await axios.get(
           `${WebHost}/kalinga/getRequestByUserType/Requestor`
         );
         const userData = response.data.request;
-        console.log("Fetched data:", userData);
         setRequestData(userData);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -101,7 +97,6 @@ export default function RequestorAppointments() {
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    console.log(`Filter change - ${name}: ${value}`);
     setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
   };
 
@@ -112,49 +107,56 @@ export default function RequestorAppointments() {
         .includes(searchQuery.trim().toLowerCase())
   );
 
-  console.log("Filtered appointments:", filteredAppointments);
+  const sortedAppointments = filteredAppointments.sort((a, b) => {
+    const dateA = new Date(a.createdAt);
+    const dateB = new Date(b.createdAt);
+
+    if (a.BabyCategory === b.BabyCategory) {
+      return dateB - dateA;
+    }
+
+    const categoryOrder = {
+      "Medically Fragile Baby": 1,
+      "Sick Baby": 2,
+      "Well Baby": 3,
+    };
+
+    return categoryOrder[a.BabyCategory] - categoryOrder[b.BabyCategory];
+  });
 
   const indexOfLastRequest = currentPage * requestPerPage;
   const indexOfFirstRequest = indexOfLastRequest - requestPerPage;
-  const currentRequest = filteredAppointments.slice(
+  const currentRequest = sortedAppointments.slice(
     indexOfFirstRequest,
     indexOfLastRequest
   );
   const totalPages = Math.ceil(filteredAppointments.length / requestPerPage);
 
-  const handleDelete = async () => {
-    console.log("Request ID: ", requestID)
-    const token = getToken()
+  const handleDelete = async (RequestID) => {
     try {
       const response = await axios.delete(
-        `${WebHost}/kalinga/deleteAppointmentRequestor/${requestID}`,
-        {headers: {Authorization: `Bearer ${token}`}}
+        `${WebHost}/kalinga/deleteAppointmentRequestor/${RequestID}`
       );
       if (response.status === 200) {
-        // Appointment deleted successfully
         const updatedAppointments = requestData.filter(
-          (request) => request.RequestID !== requestID
+          (request) => request.RequestID !== RequestID
         );
         setRequestData(updatedAppointments);
-        setIsDeleteModalOpen(true); // Open delete confirmation modal
+        setIsDeleteModalOpen(true);
       } else {
         console.error("Error deleting appointment:", response.data);
-        // Handle error (e.g., display error message to user)
       }
     } catch (error) {
       console.error("Error deleting appointment:", error);
-      // Handle error (e.g., display error message to user)
     }
   };
 
   const handleDeleteConfirm = () => {
-    setIsDeleteModalOpen(false); // Close the delete modal
-    // Additional logic after confirming deletion
+    setIsDeleteModalOpen(false);
   };
 
   const handleDeleteCancel = () => {
-    setIsDeleteModalOpen(false); // Close the delete modal
-    // Additional logic if deletion is canceled
+    setIsDeleteModalOpen(false);
   };
 
   const [selectedUser, setSelectedUser] = useState(null);
@@ -274,7 +276,7 @@ export default function RequestorAppointments() {
                       </label>
                       <select
                         className="bg-white text-primary-default text-lg py-1 pl-2 rounded-sm hover:cursor-pointer w-full"
-                        name="monthScheduled"
+                        name="BabyCategory"
                         value={filters.BabyCategory}
                         onChange={handleFilterChange}
                       >
@@ -312,8 +314,8 @@ export default function RequestorAppointments() {
                         onChange={handleFilterChange}
                       >
                         <option value="">Select Remarks</option>
-                        <option value="Complete">Insufficient Supply</option>
-                        <option value="Approved">
+                        <option value="Insufficient Supply">Insufficient Supply</option>
+                        <option value="Prioritization of Recipients">
                           Prioritization of Recipients
                         </option>
                         <option value="No Office Hours">
@@ -488,10 +490,9 @@ export default function RequestorAppointments() {
                                   </svg>
                                 </Link>
                                 <button
-                                  onClick={() =>{
-                                    setRequestID(appointment.RequestID)
-                                    setIsDeleteModalOpen(true)
-                                  }}
+                                  onClick={() =>
+                                    handleDelete(appointment.RequestID)
+                                  }
                                   className="px-3 py-1 rounded-full hover:bg-neutral-variant"
                                 >
                                   <svg
@@ -557,7 +558,7 @@ export default function RequestorAppointments() {
       </section>
       <DeleteModal
         isOpen={isDeleteModalOpen}
-        onConfirm={handleDelete}
+        onConfirm={handleDeleteConfirm}
         onCancel={handleDeleteCancel}
         message="Are you sure you want to delete this request?"
       />

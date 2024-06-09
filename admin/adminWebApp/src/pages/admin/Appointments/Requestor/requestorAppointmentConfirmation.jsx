@@ -14,6 +14,7 @@ import { ShowImage } from "../../../../modal/Verification/ImageModals";
 import { getId, getToken } from "../../../../functions/Authentication";
 import { sendApprovedAppointmentEmail } from "../../../../api/email/AppointmentEmail";
 import { getDateTime } from "../../../../functions/ConvertDateandTime";
+import { getFormFormat } from "../../../../api/Configurations/FormsFormat";
 
 const requestorAppointmentConfirmation = () => {
 
@@ -220,6 +221,23 @@ const requestorAppointmentConfirmation = () => {
     setShowImage(true);
 };
 
+const [babyCategories, setBabyCategories] = useState([])
+
+const fetchFormatBabyCategories = async () => {
+  const result = await getFormFormat()
+  if(!result)return
+  const { requestAppointmentConfig } = result
+  const { BabyCategory } = requestAppointmentConfig.options
+  console.log("Baby Category: ", BabyCategory)
+  if(BabyCategory)setBabyCategories(BabyCategory)
+
+}
+
+useEffect(() => {
+  fetchFormatBabyCategories()
+},[])
+
+
   if(loading){
     return (
       <Loader isLoading={loading}/>
@@ -331,9 +349,9 @@ const requestorAppointmentConfirmation = () => {
               className={`bg-white w-full px-4 py-2 h-14 shadow-md rounded-lg focus:outline-none focus:text-primary-default ${requestData?.Request?.RequestStatus !== "Pending" ? "text-[#E60965]" : ""}`}
             >
               <option value="">Select Baby Category</option>
-              <option value="Well Baby">Well Baby</option>
-              <option value="Sick Baby">Sick Baby</option>
-              <option value="Medically Fragile Baby">Medically Fragile Baby</option>
+              {babyCategories.map((category, index) => (
+                <option key={index} value={category}>{category}</option>
+              ))}
             </select>
         </div>
           <div className="w-1/3 mt-10">

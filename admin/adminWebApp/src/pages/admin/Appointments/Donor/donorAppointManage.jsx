@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { WebHost } from "../../../../../MyConstantAdmin";
 import DeleteModal from "../../../../modal/deleteModal";
-import { getId, getToken } from "../../../../functions/Authentication";
+import { generateId, getId } from "../../../../functions/Authentication";
 
 export default function ({ remarks }) {
   const navigate = useNavigate();
@@ -132,11 +132,9 @@ export default function ({ remarks }) {
   };
 
   const handleDelete = async (AppointmentDonorID) => {
-    const token = getToken()
     try {
       const response = await axios.delete(
-        `${WebHost}/kalinga/deleteAppointmentDonor/${AppointmentDonorID}`,
-        {headers: {Authorization: `Bearer ${token}`}}
+        `${WebHost}/kalinga/deleteAppointmentDonor/${AppointmentDonorID}`
       );
       if (response.status === 200) {
         const updatedAppointments = appointments.filter(
@@ -151,7 +149,8 @@ export default function ({ remarks }) {
       console.error("Error deleting appointment:", error);
     }
   };
-  const [id, setId] =useState(null)
+
+  const [id, setId] = useState(null)
   useEffect(() => {
     const storedId = getId();
     if (storedId) {
@@ -164,7 +163,9 @@ export default function ({ remarks }) {
   }, []);
 
 
+
   if(id)
+
   return (
     <>
       <section className="w-full h-full bg-primary-body overflow-hidden">
@@ -252,8 +253,8 @@ export default function ({ remarks }) {
                         <option value="Full Schedule">Full Schedule</option>
                         <option value="Holiday">Holiday</option>
                         <option value="No Office Hours">No Office Hours</option>
-                        <option value="Insufficient Requirement">
-                          Insufficient Requirement
+                        <option value="Insufficient Requirements">
+                          Insufficient Requirements
                         </option>
                       </select>
                     </div>

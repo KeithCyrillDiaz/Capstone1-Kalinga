@@ -13,36 +13,52 @@ export default function BarangayGraph({ name }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-      const token = getToken()
+      const token = getToken();
       try {
-        const response = await axios.get(`${WebHost}/kalinga/getTotalUsersPerBarangay`,
-            {headers: {Authorization: `Bearer ${token}`}}
-        );
-        console.log("Response from API:", response.data);
+        const response = await axios.get(`${WebHost}/kalinga/getTotalUsersPerBarangay`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-        const mergedData = response.data.totalRequestorsPerBarangay.map((requestor) => {
-          const donor = response.data.totalDonorsPerBarangay.find((d) => d._id === requestor._id);
-          return {
-            _id: requestor._id,
+        const { totalRequestorsPerBarangay, totalDonorsPerBarangay } = response.data;
+
+        // Create a map of all barangays
+        const barangayMap = {};
+
+     
+        totalRequestorsPerBarangay.forEach((requestor) => {
+          barangayMap[requestor._id] = {
+            barangay: requestor._id,
             totalRequestors: requestor.totalRequestors,
-            totalDonors: donor ? donor.totalDonors : 0,
+            totalDonors: 0, 
           };
         });
 
+        
+        totalDonorsPerBarangay.forEach((donor) => {
+          if (barangayMap[donor._id]) {
+            barangayMap[donor._id].totalDonors = donor.totalDonors;
+          } else {
+            barangayMap[donor._id] = {
+              barangay: donor._id,
+              totalRequestors: 0, 
+              totalDonors: donor.totalDonors,
+            };
+          }
+        });
+
+        const mergedData = Object.values(barangayMap);
+
         setBarangaysData(mergedData);
+        console.log("Barangays Data:", mergedData);
+        console.log("response Data:", response.data);
       } catch (error) {
         console.error("Error fetching total users per barangay:", error);
-        setError("Error fetching data");
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchData();
   }, []);
-
+  
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
     doc.setTextColor("#000000");
