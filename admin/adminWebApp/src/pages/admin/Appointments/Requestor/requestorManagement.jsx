@@ -429,7 +429,7 @@ export default function RequestorAppointments() {
                                     : `This request is declined due to ${appointment.RequestRemark}`}
                                 </div>
                               </td>
-
+                                {/* LINKING */}
                               <td className="text-center py-4 whitespace-nowrap text-sm font-medium flex items-center justify-center">
                                 <Link
                                   to={`/admin/requestorAppointmentConfirmation/${appointment.RequestID}`}

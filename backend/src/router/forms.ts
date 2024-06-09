@@ -7,12 +7,14 @@ import { updateStatus, fetchPendingScreeningForm, softDeleteScreeningFormByID } 
 import { retrieveSoftDeletedForm } from '../controllers/Admin/retrieveScreeningForm';
 import { checkEmail } from '../controllers/checkEmailValidity';
 import { tokenVerification } from '../middleware/Authentication';
+import { getScreeningFormByEmail } from '../controllers/Admin/ScreeningForm';
 
 export default (router: express.Router) => {
   
     router.post('/kalinga/addScreeningForm', addScreeningForm);
     router.post('/req_MedAbstract', reqMedAbstractForm);
     router.get('/kalinga/checkEmail/:email', checkEmail)
+    router.post('/kalinga/fetchScreeningFormByEmail', getScreeningFormByEmail)
 
     router.get('/kalinga/getScreeningFormsUserType/:userType', tokenVerification, getScreeningFormsUserType)
     router.get('/kalinga/getScreeningFormsRequestorApplicant_ID/:Applicant_ID', getScreeningFormApplicantID)
