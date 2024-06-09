@@ -17,98 +17,93 @@ import axios from "axios"
 import { BASED_URL } from '../../../MyConstants.js'
 import { globalStyles } from "../../../styles_kit/globalStyles.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getDateTime } from "../../functions/formatDateAndTime.js";
+import moment from 'moment-timezone';
 
 const RequestorNotification = ({route}) => {
+  const userInformation = route.params.userInformation;
+  const token = route.params.token.trim();
 
-  const userInformation = route.params.userInformation
-  const token = route.params.token.trim()
-
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   const [readNotifications, setReadNotifications] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState({});
-  const [notifications, setNotification] = useState([])
-
+  const [notifications, setNotifications] = useState([]);
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
 
   const toggleReadStatus = (index) => {
-    setReadNotifications([...readNotifications, index]);
+    setReadNotifications(prev => [...prev, index]);
   };
 
   const isRead = (index) => {
     return readNotifications.includes(index);
   };
 
-  const openModal = (index) => {
-    const createdAt = new Date(index.createdAt);
-    const formatDate = {
-      ...index,
-      createdAt: `${createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${createdAt.toLocaleDateString()}`
-    }
-
-    console.log("Date: ", formatDate.createdAt)
-    setSelectedNotification(formatDate);
+  const openModal = (notification) => {
+    const { time, date } = getDateTime({ data: { selectedTime: notification.time, selectedDate: notification.date } });
+    setTime(time);
+    setDate(date);
+    setSelectedNotification(notification);
     setModalVisible(true);
-    toggleReadStatus(index);
+    toggleReadStatus(notification.notificationId);
   };
 
   const closeModal = () => {
+    setSelectedNotification({});
     setModalVisible(false);
   };
 
-  const fetchNotification = async () => {
-    console.log("Fetching Notifications")
+  const fetchNotifications = async () => {
+    console.log("Fetching Notifications");
+    try {
+      const response = await axios.get(`${BASED_URL}/kalinga/fetchUnreadNotification/${userInformation.Requestor_ID}`, { 
+        headers: { Authorization: `Bearer ${token}` }
+      });
 
-    const response = await axios.get(`${BASED_URL}/kalinga/fetchUnreadNotification/${userInformation.Requestor_ID}`,
-      { 
-        headers: {
-          Authorization: `Bearer ${token}`,
-        }
+      if (response.data.messages.code === 1) {
+        console.log("Error fetching Notification: ", response.data.messages.message);
+        return;
       }
-    )
-      if(response.data.messages.code === 1) {
-        console.log("Error fetching Notification: ", response.data.messages.message)
-        Alert.alert("No Notifications", "You currently don't have any notifications.");
-        return
-      }
-      console.log(response.data.messages.message)
-      setNotification(response.data.notifications)
-      return
-  }
+      console.log(response.data.messages.message);
+      setNotifications(response.data.notifications);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+      Alert.alert("Error", "An error occurred while fetching notifications.");
+    }
+  };
 
   const updateStatus = async (id) => {
-  
-    const response  = await axios.patch(`${BASED_URL}/kalinga/updateStatus/${id}`, null,
-    {
-        headers: {
-        Authorization: `Bearer ${token}`,
+    try {
+      const response = await axios.patch(`${BASED_URL}/kalinga/updateStatus/${id}`, null, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (response.data.messages.message === "Unauthorized User") {
+        await AsyncStorage.multiRemove(['token', 'userInformation', 'DPLink', 'Image_ID']);
+        Alert.alert("Session Expired", "Your session has expired. Please log in again.", [
+          {
+            text: "OK",
+            onPress: () => navigation.dispatch(
+              CommonActions.reset({ index: 0, routes: [{ name: 'LogIn' }] })
+            ),
+          },
+        ]);
+        return;
       }
-    })
-
-    if(response.data.messages.message === "Unauthorized User"){
-      await AsyncStorage.multiRemove(['token', 'userInformation', 'DPLink', 'Image_ID']);
-      Alert.alert("Session Expired", "Your session has expired. Please log in again.", [
-        {
-          text: "OK",
-          onPress: () => navigation.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [{ name: 'LogIn' }],
-            })
-          ),
-        },
-      ]);
-      return
+      const newNotification = response.data.notification;
+      setSelectedNotification(newNotification);
+    } catch (error) {
+      setNotifications([])
+      console.error("Error updating notification status:", error);
     }
-
-    const newNotificaiton = response.data.notification
-    setSelectedNotification(newNotificaiton)
-  }
+  };
 
   useFocusEffect(
     React.useCallback(() => {
-      fetchNotification()
-      return
+      fetchNotifications();
+      return;
     }, [])
   );
 
@@ -123,8 +118,30 @@ const RequestorNotification = ({route}) => {
         overScrollMode='never'
         nestedScrollEnabled={true} 
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: 20}}
+        contentContainerStyle={{paddingVertical: 20}}
       >
+        {notifications.length === 0 && (
+          <View style={{
+            backgroundColor: "white",
+            width: "90%",
+            alignItems: "center",
+            justifyContent: "center",
+            paddingHorizontal: 7,
+            paddingVertical: 17,
+            elevation: 7,
+            borderRadius: 17,
+            marginTop: "7%",
+            alignSelf: "center"
+          }}>
+            <Text style={{
+              fontFamily: "Open-Sans-SemiBold",
+              color: '#E60965',
+              textAlign: "center"
+            }}>
+              No donation notifications available at the moment.
+            </Text>
+          </View>
+        )}
         {notifications.length !== 0 && notifications.map((notification) => (
           <TouchableOpacity
             key={notification.notificationId}
@@ -134,14 +151,17 @@ const RequestorNotification = ({route}) => {
             }}
             style={[
               styles.notificationItem,
-              isRead(notification) && styles.readNotificationItem,
+              isRead(notification.notificationId) && styles.readNotificationItem,
             ]}
           >
-            {!isRead(notification) && notification.status === "Unread" && <View style={styles.dot}></View>}
+            {!isRead(notification.notificationId) && notification.status === "Unread" && <View style={styles.dot}></View>}
             <View style={styles.notificationContent}>
               <Text style={styles.notificationTitle}>{notification.title}</Text>
               <Text style={styles.notificationDescription}>
                 {notification.content}
+              </Text>
+              <Text style={styles.expiry}>
+                This notification will expire on: {moment(notification.expiresAt).tz('Asia/Manila').format('MMMM Do YYYY, h:mm:ss a')}
               </Text>
             </View>
           </TouchableOpacity>
@@ -163,15 +183,13 @@ const RequestorNotification = ({route}) => {
                {selectedNotification.content}
               </Text>
               <View style={styles.notificationMeta}>
-                <Text style={styles.metaText}>Date and Time: {selectedNotification.createdAt}</Text>
+                <Text style={styles.metaText}>Date and Time: {time} - {date}</Text>
                 <Text style={styles.metaText}>MilkBank Location: {selectedNotification.milkBank}</Text>
               </View>
             </View>
           </View>
         </Modal>
-
       </ScrollView>
-
     </SafeAreaView>
   );
 };
@@ -187,8 +205,10 @@ const styles = StyleSheet.create({
     padding: 20,
     margin: 10,
     marginBottom: 2,
-    elevation: 5,
+    elevation: 7,
     position: 'relative', // Make sure the container is positioned relatively
+    width: "90%",
+    alignSelf: "center"
   },
   readNotificationItem: {
     backgroundColor: "#EDEDED",
@@ -196,8 +216,10 @@ const styles = StyleSheet.create({
     padding: 20,
     margin: 10,
     marginBottom: 2,
-    elevation: 2,
+    elevation: 7,
     position: 'relative', // Make sure the container is positioned relatively
+    width: "90%",
+    alignSelf: "center"
   },
   dot: {
     width: 10,
@@ -214,12 +236,21 @@ const styles = StyleSheet.create({
   notificationTitle: {
     fontSize: 18,
     fontWeight: "bold",
+    color: "#E60965",
     marginBottom: 5,
   },
   notificationDescription: {
     fontSize: 16,
     marginBottom: 10,
+    textAlign: "justify"
   },
+
+  expiry: {
+    fontFamily: "Open-Sans-Regular",
+    color: "#E60965",
+    fontSize: 14,
+  },
+
   modalContainer: {
     flex: 1,
     justifyContent: "center",
@@ -236,8 +267,9 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: "absolute",
-    top: 10,
+    top: 7,
     right: 10,
+    zIndex:10
   },
   notificationMeta: {
     borderTopWidth: 1,

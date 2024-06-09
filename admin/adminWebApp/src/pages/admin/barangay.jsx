@@ -9,8 +9,14 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import axios from "axios";
 import { WebHost } from "../../../MyConstantAdmin";
+import { getBarangayByCityName } from "../../functions/getBarangay";
+import { TopCard } from "../../components/TopCard/RenderTopCard";
+import { generatePDF } from "../../functions/generatePDF";
+import { getTopByBarangay } from "../../api/report/fetchTopUsers";
+import { getId, getToken } from "../../functions/Authentication";
+import { Link } from 'react-router-dom';
 
-export default function barangay() {
+const barangay = () => {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedBarangay, setSelectedBarangay] = useState("");
@@ -28,7 +34,9 @@ export default function barangay() {
   const [totalRequestors, setTotalRequestors] = useState(0);
   const [totalAppointments, setTotalAppointments] = useState(0);
   const [totalRequests, setTotalRequest] = useState(0);
-
+  const [topDonorPerBarangay, setTopDonorPerBarangay] = useState([])
+  const [topRequestorPerBarangay, setTopRequestorPerBarangay] = useState([])
+  
   const currentDate = new Date();
   const currentMonth = currentDate.toLocaleString("default", { month: "long" });
   const currentYear = currentDate.getFullYear();
@@ -39,14 +47,18 @@ useEffect(() => {
   setSelectedBarangay ('Commonwealth')
 }, []);
 
+
 const handleSelectBarangay = (e) => {
   setSelectedBarangay(e.target.value);
 };
 
 useEffect(() => {
   const fetchBarangays = async () => {
+    const token = getToken()
     try {
-      const response = await axios.get(`${WebHost}/kalinga/getAllBarangay`);
+      const response = await axios.get(`${WebHost}/kalinga/getAllBarangay`,
+        {headers: {Authorization: `Bearer ${token}`}}
+      );
       setBarangays(response.data);
     } catch (error) {
       console.error("Error fetching barangays:", error);
@@ -73,6 +85,7 @@ useEffect(() => {
     setLoading(true);
     setError(null);
   const monthValue = getMonthValue(selectedMonth);
+  const token = getToken()
     try {
       const responseComplete = await axios.get(
         `${WebHost}/kalinga/getTotalCompleteDonationPerBarangay`,
@@ -82,6 +95,7 @@ useEffect(() => {
             selectedYear: parseInt(selectedYear),
             selectedBarangay: selectedBarangay
           },
+          headers: {Authorization: `Bearer ${token}`}
         }
       );
       const totalCompleteDonations = responseComplete.data.totalCompleteAppointments;
@@ -93,8 +107,8 @@ useEffect(() => {
             selectedMonth: monthValue,
             selectedYear: parseInt(selectedYear),
             selectedBarangay: selectedBarangay
-
           },
+          headers: {Authorization: `Bearer ${token}`}
         }
       );
       const totalDeclinedDonations = responseDecline.data.totalDeclineAppointments;
@@ -109,6 +123,7 @@ useEffect(() => {
             selectedYear: parseInt(selectedYear),
             selectedBarangay: selectedBarangay,
           },
+          headers: {Authorization: `Bearer ${token}`}
         }
       );
       const totalCompleteRequests = responseRequests.data.totalCompleteRequests;
@@ -121,6 +136,7 @@ useEffect(() => {
             selectedYear: parseInt(selectedYear),
             selectedBarangay: selectedBarangay,
           },
+          headers: {Authorization: `Bearer ${token}`}
         }
       );
       const totalDeclinedRequests = responseDeclineRequests.data.totalDeclineRequests;
@@ -133,6 +149,8 @@ useEffect(() => {
           selectedYear: parseInt(selectedYear),
           selectedBarangay: selectedBarangay,
         },
+        headers: {Authorization: `Bearer ${token}`}
+        
       });
 
       const requestorsResponse = await axios.get(`${WebHost}/kalinga/getTotalRequestorsPerBarangay`, {
@@ -141,6 +159,7 @@ useEffect(() => {
           selectedYear: parseInt(selectedYear),
           selectedBarangay: selectedBarangay,
         },
+        headers: {Authorization: `Bearer ${token}`}
       });
 
       setTotalDonors(donorsResponse.data.totalDonors);
@@ -154,6 +173,7 @@ useEffect(() => {
             selectedYear: parseInt(selectedYear),
             selectedBarangay: selectedBarangay,
           },
+          headers: {Authorization: `Bearer ${token}`}
         }
       );
       setTotalAppointments(responseAppointments.data.totalAppointments);   
@@ -163,18 +183,28 @@ useEffect(() => {
           selectedMonth: monthValue,
           selectedYear: parseInt(selectedYear),
           selectedBarangay: selectedBarangay,
-        },        
+        },     
+        headers: {Authorization: `Bearer ${token}`}
 
       });
       setTotalRequest(response.data.totalRequests);  
-      const responseAllComplete = await axios.get(`${WebHost}/kalinga/getTotalCompleteDonationsAllMonthsBarangay`, { params: { selectedYear: selectedYear, selectedBarangay: selectedBarangay, } });
+      const responseAllComplete = await axios.get(`${WebHost}/kalinga/getTotalCompleteDonationsAllMonthsBarangay`, 
+      { 
+        params: { selectedYear: selectedYear, selectedBarangay: selectedBarangay, },
+        headers: {Authorization: `Bearer ${token}`} 
+      },
+    );
       const totalAllMonthCompleteDonations = responseAllComplete.data.reduce((acc, curr) => acc + curr.totalCompleteDonations, 0);
       setTotalAllMonthCompleteDonations(totalAllMonthCompleteDonations);
       console.log ("All Months", totalAllMonthCompleteDonations )
       console.log ("response", responseAllComplete )
 
 
-      const responseAllRequests = await axios.get(`${WebHost}/kalinga/getTotalCompleteRequestAllMonthsBarangay`, { params: { selectedYear: selectedYear, selectedBarangay: selectedBarangay,  } });
+      const responseAllRequests = await axios.get(`${WebHost}/kalinga/getTotalCompleteRequestAllMonthsBarangay`, 
+      { 
+        params: { selectedYear: selectedYear, selectedBarangay: selectedBarangay,  },
+        headers: {Authorization: `Bearer ${token}`} 
+      });
       const totalAllMonthCompleteRequests = responseAllRequests.data.reduce((acc, curr) => acc + curr.totalCompleteRequests, 0);
       setTotalAllMonthCompleteRequests(totalAllMonthCompleteRequests);
 
@@ -214,87 +244,118 @@ useEffect(() => {
     try {
       setLoading(true);
       setError(null);
-  
+
       const {
         responseComplete,
         responseDecline,
         responseRequests,
         responseDeclineRequests,
       } = await fetchData(selectedMonth, selectedYear, selectedBarangay);
-  
+
       console.log("Donate Data:", responseComplete);
       console.log("Request Data:", responseRequests);
-  
+
       const doc = new jsPDF();
-  
+
       doc.setTextColor("#000000");
-      doc.setFont("helvetica", "bold")
+      doc.setFont("helvetica", "bold");
       doc.setFontSize(20);
       doc.text("KALINGA MONTHLY REPORT", 105, 15, { align: "center" });
-      doc.text(`${selectedBarangay} ${selectedMonth} ${selectedYear}`, 105, 30, { align: "center" });
+      doc.text(
+        `${selectedBarangay} ${selectedMonth} ${selectedYear}`,
+        105,
+        30,
+        { align: "center" }
+      );
 
       doc.setTextColor("#000000");
-  
+
       doc.setFontSize(14);
-      doc.text(
-        `Donation Report`,
-        14,
-        40
-      );
-  
+      doc.text(`Donation Report`, 14, 40);
+
       // Set table header fill color to pink
       doc.setFillColor("#FF69B4");
-  
+
       doc.autoTable({
         startY: 45,
-        headStyles: { fillColor: "#ED5077" },   // Pink color
-        head: [["Category", "Value"]],
-        body: [
-          ["Total Complete Donations", responseComplete.totalCompleteAppointments],
-          ["Total Declined Donations", responseDecline.totalDeclineAppointments],
+        headStyles: { fillColor: "#ED5077" }, // Pink color
+        columns: [
+          { header: "Category", dataKey: "category" },
+          { header: "Value", dataKey: "value", styles: { halign: "right" } },
         ],
-      });
-  
-      doc.text(
-        `Request Monthly Report`,
-        14,
-        doc.autoTable.previous.finalY + 10
-      );
-  
-      doc.autoTable({
-        startY: doc.autoTable.previous.finalY + 20,
-        headStyles: { fillColor: "#ED5077" },   // Pink color
-        head: [["Category", "Value"]],
         body: [
-          ["Total Complete Requests", responseRequests.totalCompleteRequests],
-          ["Total Declined Requests", responseDeclineRequests.totalDeclineRequests],
+          [
+            "Total Complete Donations",
+            responseComplete.totalCompleteAppointments,
+          ],
+          [
+            "Total Declined Donations",
+            responseDecline.totalDeclineAppointments,
+          ],
         ],
+        columnStyles: {
+          category: { cellWidth: 100 }, // Adjust the width as needed
+          value: { cellWidth: 75 }, // Align text to the right
+        },
       });
 
       doc.text(
-        `Overview Monthly Report`,
+        `Request Report`,
         14,
         doc.autoTable.previous.finalY + 10
       );
-  
+
       doc.autoTable({
         startY: doc.autoTable.previous.finalY + 20,
-        headStyles: { fillColor: "#ED5077" },   // Pink color
-        head: [["Category", "Value"]],
+        headStyles: { fillColor: "#ED5077" }, // Pink color
+        columns: [
+          { header: "Category", dataKey: "category" },
+          { header: "Value", dataKey: "value", styles: { halign: "right" } },
+        ],
+        body: [
+          ["Total Complete Requests", responseRequests.totalCompleteRequests],
+          [
+            "Total Declined Requests",
+            responseDeclineRequests.totalDeclineRequests,
+          ],
+        ],
+        columnStyles: {
+          category: { cellWidth: 100 }, // Adjust the width as needed
+          value: { cellWidth: 75 }, // Align text to the right
+        },
+      });
+
+      doc.text(
+       ` Overview Report `,
+        14,
+        doc.autoTable.previous.finalY + 10
+      );
+
+      doc.autoTable({
+        startY: doc.autoTable.previous.finalY + 20,
+        headStyles: { fillColor: "#ED5077" }, // Pink color
+        columns: [
+          { header: "Category", dataKey: "category" },
+          { header: "Value", dataKey: "value", styles: { halign: "right" } },
+        ],
         body: [
           ["Added Donor Users", totalDonors],
           ["Added Requestor Users", totalRequestors],
           ["Total Appointments", totalAppointments],
           ["Total Requests", totalRequests],
-          ["Total All Month Complete Requests", totalAllMonthCompleteRequests], 
-          ["Total All Month Complete Donations", totalAllMonthCompleteDonations], 
-
+          ["Total All Month Complete Requests", totalAllMonthCompleteRequests],
+          [
+            "Total All Month Complete Donations",
+            totalAllMonthCompleteDonations,
+          ],
         ],
+        columnStyles: {
+          category: { cellWidth: 100 }, // Adjust the width as needed
+          value: { cellWidth: 75 }, // Align text to the right
+        },
       });
 
-      
-  
-      doc.save( `${selectedBarangay} monthly_reports.pdf`);
+      doc.save(`${selectedBarangay} monthly_reports.pdf`);  
     } catch (error) {
       console.error("Error downloading PDF:", error);
       setError("Error downloading PDF");
@@ -355,17 +416,51 @@ useEffect(() => {
           </span>
         </div>
         <div className="flex justify-end mt-2">
-          <a
-            href={seeMore}
-            className="text-sm font-light italic font-sans underline"
-          >
-            See more
-          </a>
+          <Link
+          to={seeMore}
+          className="text-sm font-light italic font-sans underline"
+        >
+          See more
+        </Link>
         </div>
       </div>
     );
   };
 
+  useEffect(() => {
+    fetchTopDonorAndRequestorByBarangay()
+  }, [selectedBarangay])
+
+  const fetchTopDonorAndRequestorByBarangay = async() => {
+    const donors = await getTopByBarangay({barangay: selectedBarangay, userType: "Donor"})
+    const requestor = await getTopByBarangay({barangay: selectedBarangay, userType: "Requestor"})
+    setTopDonorPerBarangay(donors)
+    setTopRequestorPerBarangay(requestor)
+  }
+
+  const generateDownloadablePDF = (title, data) => {
+
+    const filteredData = data.filter(item => item.year === selectedYear.toString());
+
+    const formattedData = filteredData.map((item, index) => [index + 1, item.fullName, item.milkAmount]);
+      generatePDF({
+        title: title,
+        data: formattedData
+      })
+  }
+
+  const [id, setId] = useState(null)
+  useEffect(() => {
+    const storedId = getId();
+    if (storedId) {
+      setId(storedId);
+    } else {
+      const newId = generateId();
+      saveId({ id: newId });
+      setId(newId);
+    }
+  }, []);
+  if(id)
   return (
     <>
       <section className="w-full h-auto bg-primary-body overflow-hidden">
@@ -510,7 +605,7 @@ useEffect(() => {
                       }
                       title="Added Donor Users"
                       count={totalDonors}
-                      seeMore={"/admin/users"}
+                      seeMore={`/admin/${id}/users`}
                     />
                     <DashboardCard
                       icon={
@@ -533,7 +628,7 @@ useEffect(() => {
                       }
                       title="Added Requestor Users"
                       count={totalRequestors}
-                      seeMore={"/admin/users"}
+                      seeMore={`/admin/${id}/users`}
                     />
                     <DashboardCard
                       icon={
@@ -555,7 +650,7 @@ useEffect(() => {
                       }
                       title="Appointments for the month"
                       count={totalAppointments}
-                      seeMore={"/admin/donorAppointManage"}
+                      seeMore={`/admin/${id}/donorAppointManage`}
                     />
                     <DashboardCard
                       icon={
@@ -574,7 +669,31 @@ useEffect(() => {
                       }
                       title="Requests for the month"
                       count={totalRequests}                      
-                      seeMore={"/admin/requestorManagement"}
+                      seeMore={`/admin/${id}/requestorManagement`}
+                    />
+
+                    <DashboardCard
+                      icon={
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="50"
+                          height="50"
+                          viewBox="0 0 24 24"
+                          className="rounded-full bg-primary-default p-2 ml-2"
+                        >
+                          <path
+                            fill="none"
+                            stroke="#FFFFFF"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1.5"
+                            d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0-8 0M6 21v-2a4 4 0 0 1 4-4h3m3 7l5-5m0 4.5V17h-4.5"
+                          ></path>
+                        </svg>
+                      }
+                      title="Added Requestor Users"
+                      count={totalRequestors}
+                      seeMore={`/admin/${id}/users`}
                     />
                   </div>
                 </div>
@@ -607,7 +726,7 @@ useEffect(() => {
                       </svg>
                     </a>
                   </div>
-                  <div className="flex flex-row">
+                  <div className="flex flex-row ">
                     <div className="py-2 ml-4">
                     
                       <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
@@ -633,14 +752,29 @@ useEffect(() => {
                       </h3>
                     </div>
                   </div>
-                  <div>
                   <BarPerMonthBarangay name="Total Requests" selectedYear={selectedYear} selectedBarangay={selectedBarangay}/>
-                    
-                  </div>
+             
                 </div>
+                {/* Top Donating Per Barangay    */}
+              <div className="flex flex-row gap-7 items-center justify-center bg-white">
+                    <TopCard 
+                    title={`Top Requestors in ${selectedBarangay}`} 
+                    data={topRequestorPerBarangay}
+                    barangay={selectedBarangay}
+                    userType={"Requestor"}
+                    download={() => generateDownloadablePDF(`Top Requestors in ${selectedBarangay} for ${selectedYear}`, topRequestorPerBarangay)}/>
+
+                    <TopCard 
+                    title={`Top Donors in ${selectedBarangay}`} 
+                    data={topDonorPerBarangay}
+                    barangay={selectedBarangay}
+                    userType={"Donor"}
+                    download={() => generateDownloadablePDF(`Top Donor in ${selectedBarangay} for ${selectedYear}`, topDonorPerBarangay)}/>
+                  </div>
               </div>
+              
               {/* Analysis */}
-              <div className="flex flex-col w-2/6 gap-4">
+              <div className="flex flex-col w-2/6 gap-4 ">
                 <div className="flex flex-col p-4 bg-white rounded-2xl shadow-sm relative">
                   <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
                     Analysis
@@ -710,7 +844,8 @@ useEffect(() => {
                       selectedMonth={selectedMonth}
                       selectedYear={selectedYear}
                       selectedBarangay = {selectedBarangay}
-                    /></div>
+                    />
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -756,3 +891,6 @@ useEffect(() => {
     </>
   );
 }
+
+
+export default barangay

@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { getToken } from "../functions/Authentication";
 
 export default function BarPerMonthBarangay({ name, selectedYear, selectedBarangay }) {
   const [monthlyData, setMonthlyData] = useState([]);
@@ -22,15 +23,21 @@ export default function BarPerMonthBarangay({ name, selectedYear, selectedBarang
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-
+      const token = getToken()
       try {
         const responseComplete = await axios.get(
           `${WebHost}/kalinga/getTotalCompleteDonationsAllMonthsBarangay`,
-          { params: { selectedYear: selectedYear, selectedBarangay: selectedBarangay} }
+          { 
+            params: { selectedYear: selectedYear, selectedBarangay: selectedBarangay},
+            headers: {Authorization: `Bearer ${token}`} 
+          },
         );
         const responseRequests = await axios.get(
           `${WebHost}/kalinga/getTotalCompleteRequestAllMonthsBarangay`,
-          { params: { selectedYear: selectedYear, selectedBarangay: selectedBarangay } }
+          { 
+            params: { selectedYear: selectedYear, selectedBarangay: selectedBarangay},
+            headers: {Authorization: `Bearer ${token}`}
+           },
         );
         const mergedData = mergeData(
           responseComplete.data,
@@ -68,10 +75,15 @@ export default function BarPerMonthBarangay({ name, selectedYear, selectedBarang
   
     doc.setTextColor("#000000");
     autoTable(doc, {
-      headStyles: { fillColor: "#ED5077" },
+      headStyles: { fillColor: [255, 105, 180], halign: "center" },
       head: [["Month", "Total Complete Donations", "Total Complete Requests"]],
       body: monthlyData.map(({ month, totalCompleteDonations, totalCompleteRequests }) => [month, totalCompleteDonations, totalCompleteRequests]),
       startY: 40, 
+      columnStyles: {
+        0: { halign: "center" },
+        1: { halign: "center" },
+        2: { halign: "center" },
+      },
     });
     doc.save(`Total Report_${selectedBarangay} report.pdf`);
   };

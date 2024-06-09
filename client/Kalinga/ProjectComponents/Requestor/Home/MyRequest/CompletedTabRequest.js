@@ -6,13 +6,18 @@ import {
 	ScrollView, 
 	StatusBar, 
 	StyleSheet, 
-	Alert
+	Alert,
+	ActivityIndicator,
+	TouchableOpacity
 } from 'react-native';
 //import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import axios from 'axios'; // Import axios for API requests
 import { BASED_URL } from '../../../../MyConstants.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
+import { getDateTime } from '../../../functions/formatDateAndTime.js';
+import BabyCategoryModal from '../../../modal/BabyCategory.js';
+import { AntDesign } from '@expo/vector-icons';
 
 const CompletedTabRequest = ({route}) => {
 	const userInformation = route.params.userInformation
@@ -22,20 +27,21 @@ const CompletedTabRequest = ({route}) => {
 	const [formDataList, setFormDataList] = useState([]);
     const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false)
+	const [babyModal, setBabyModal]= useState(false); 
 
     useFocusEffect(
 		React.useCallback(() => {
 			fetchData();	
+			
 		}, [])
 	);
 
     const fetchData = async () => {
         try {
+			setLoading(true)
             const response = await axios.get(`${BASED_URL}/kalinga/getCompletedRequests/${Requestor_ID}`);
             const responseData = response.data;
-			console.log(responseData)
 			if(responseData.messages.success === false){
-				Alert.alert("No Completed Request", "You currently don't have any completed requests.");
 				setLoading(false); 
 				return
 			}
@@ -59,15 +65,40 @@ const CompletedTabRequest = ({route}) => {
             // } else {
             //     console.log('No completed requests found for the specified Requestor_ID.');
             // }
-
+			formatDateTime(responseData.RequestData)
             setLoading(false);
         } catch (error) {
 			setError(true)
             // console.log('Error fetching data:', error);
             setLoading(false);
-        }
+        } finally {
+			setLoading(false)
+		}
     };
 
+	const formatDateTime = (data) => {
+		if (data.length === 0) return;
+		const updatedList = data.map(formData => {
+		  const newForm = {
+			...formData,
+			selectedDate: formData.Date,
+			selectedTime: formData.Time,
+		  }
+		  const { time, date } = getDateTime({ data: newForm }); 
+	  
+		  return {
+			...formData,
+			date,
+			time,
+		};
+		});
+		setFormDataList(updatedList); // Update the formDataList with the updated items
+	  };
+
+	if (loading) {
+		return <ActivityIndicator size="large" color="#E60965" />
+	}
+  
     return (
 			<SafeAreaView style = {globalStyles.defaultBackgroundColor}>
 				<StatusBar barStyle="dark-content" translucent backgroundColor="white" />
@@ -79,6 +110,27 @@ const CompletedTabRequest = ({route}) => {
 					showsVerticalScrollIndicator={false}
 				>
 				<View style={styles.body}>
+				{formDataList.length === 0 && (
+						<View style ={{
+							backgroundColor: "white",
+							width: "90%",
+							alignItems: "center",
+							justifyContent: "center",
+							paddingHorizontal:7,
+							paddingVertical:17,
+							elevation:7,
+							borderRadius: 17,
+							marginTop: "7%",
+							alignSelf: "center",
+							marginVertical: "7%"
+						}}>
+						<Text style={{
+						fontFamily: "Open-Sans-SemiBold",
+						color:  '#E60965',
+						}}>No completed at the moment.</Text>
+						</View>
+					)}
+				
 					{formDataList.map((formData, index) => (
                     <View key={index} style={{paddingBottom: 17}}>
                         <View style={styles.boxColContainer}>
@@ -95,15 +147,23 @@ const CompletedTabRequest = ({route}) => {
                                 <Text style={[styles.boxContent, styles.limitText, {marginTop: 2}]}>{formData.method}</Text>
                             </View>
 							{formData.BabyCategory && (
-								  <View style={[styles.boxContentContainer, {gap: 4}]}>
-									<Text style={styles.boxContentBold}>Baby Category:</Text>
-									<Text style={[styles.boxContent, styles.limitText, {marginTop: 2}]}>{formData.BabyCategory}</Text>
-							  	  </View>
+								  <View style = {{flexDirection: "row", alignItems: "center", justifyContent: "space-between"}}>
+									<View style={[styles.boxContentContainer, {gap: 4}]}>
+										<Text style={styles.boxContentBold}>Baby Category:</Text>
+										<Text style={[styles.boxContent, styles.limitText, {marginTop: 2}]}>{formData.BabyCategory}</Text>
+									</View>
+
+								  </View>
+								
 							)}
                           
 							<View style={[styles.boxContentContainer, {gap: 4}]}>
-                                <Text style={styles.boxContentBold}>Date:</Text>
-                                <Text style={[styles.boxContent, styles.limitText, {marginTop: 2}]}>{formData.Date}</Text>
+                                <Text style={styles.boxContentBold}>Scheduled Date:</Text>
+                                <Text style={[styles.boxContent, styles.limitText, {marginTop: 2}]}>{formData.date}</Text>
+                            </View>
+							<View style={[styles.boxContentContainer, {gap: 4}]}>
+                                <Text style={styles.boxContentBold}>Scheduled Time:</Text>
+                                <Text style={[styles.boxContent, styles.limitText, {marginTop: 2}]}>{formData.time}</Text>
                             </View>
 							
                         </View>

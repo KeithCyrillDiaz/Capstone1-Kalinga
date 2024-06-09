@@ -9,6 +9,8 @@
   import autoTable from "jspdf-autotable";
   import axios from "axios";
   import { WebHost } from "../../../MyConstantAdmin";
+import { getId, getToken } from "../../functions/Authentication";
+import { Link } from 'react-router-dom';
 
   export default function chart() {
     const [selectedMonth, setSelectedMonth] = useState("");
@@ -59,6 +61,7 @@
       setError(null);
     const monthValue = getMonthValue(selectedMonth);
       try {
+        const token = getToken()
         const responseComplete = await axios.get(
           `${WebHost}/kalinga/getTotalCompleteDonationPerMonth`,
           {
@@ -66,6 +69,9 @@
               selectedMonth: monthValue,
               selectedYear: parseInt(selectedYear),
             },
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
         );
         const totalCompleteDonations = responseComplete.data.totalCompleteAppointments;
@@ -77,6 +83,9 @@
               selectedMonth: monthValue,
               selectedYear: parseInt(selectedYear),
             },
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
         );
         const totalDeclinedDonations = responseDecline.data.totalDeclineAppointments;
@@ -90,6 +99,7 @@
               selectedMonth: monthValue,
               selectedYear: parseInt(selectedYear),
             },
+            headers: {Authorization: `Bearer ${token}`}
           }
         );
         const totalCompleteRequests = responseRequests.data.totalCompleteRequest;
@@ -102,6 +112,7 @@
               selectedMonth: monthValue,
               selectedYear: parseInt(selectedYear),
             },
+            headers: {Authorization: `Bearer ${token}`}
           }
         );
         const totalDeclinedRequests = responseDeclineRequests.data.totalDeclineRequest;
@@ -110,11 +121,15 @@
         
         const donorsResponse = await axios.get(`${WebHost}/kalinga/getTotalDonorsPerMonth`, {
           params: { month: monthValue, year: parseInt(selectedYear) },
-        });
+          headers: {Authorization: `Bearer ${token}`}
+        },
+      );
 
         const requestorsResponse = await axios.get(`${WebHost}/kalinga/getTotalRequestorsPerMonth`, {
           params: { month: monthValue, year: parseInt(selectedYear) },
-        });
+          headers: {Authorization: `Bearer ${token}`}
+        },
+      );
 
         setTotalDonors(donorsResponse.data.totalDonors);
         setTotalRequestors(requestorsResponse.data.totalRequestors);
@@ -123,20 +138,33 @@
           `${WebHost}/kalinga/getTotalAppointmentsPerMonth`,
           {
             params: { month: monthValue, year: parseInt(selectedYear) },
-          }
+            headers: {Authorization: `Bearer ${token}`}
+          },
         );
         setTotalAppointments(responseAppointments.data.totalAppointments);   
         
         const response = await axios.get(`${WebHost}/kalinga/getTotalRequestsPerMonthAndYear`, {
           params: { month: monthValue, year: parseInt(selectedYear) },
-        });
+          headers: {Authorization: `Bearer ${token}`}
+        },
+      );
         setTotalRequest(response.data.totalRequests);  
 
-        const responseAllComplete = await axios.get(`${WebHost}/kalinga/getTotalCompleteDonationsAllMonths`, { params: { year: selectedYear } });
+        const responseAllComplete = await axios.get(`${WebHost}/kalinga/getTotalCompleteDonationsAllMonths`, 
+        { 
+          params: { year: selectedYear },
+          headers: {Authorization: `Bearer ${token}`},
+        }
+
+      );
         const totalAllMonthCompleteDonations = responseAllComplete.data.reduce((acc, curr) => acc + curr.totalCompleteDonations, 0);
         setTotalAllMonthCompleteDonations(totalAllMonthCompleteDonations);
 
-        const responseAllRequests = await axios.get(`${WebHost}/kalinga/getTotalCompleteRequestAllMonths`, { params: { year: selectedYear } });
+        const responseAllRequests = await axios.get(`${WebHost}/kalinga/getTotalCompleteRequestAllMonths`,
+         { 
+          params: { year: selectedYear },
+          headers: {Authorization: `Bearer ${token}`} 
+        });
         const totalAllMonthCompleteRequests = responseAllRequests.data.reduce((acc, curr) => acc + curr.totalCompleteRequests, 0);
         setTotalAllMonthCompleteRequests(totalAllMonthCompleteRequests);
 
@@ -172,83 +200,119 @@
       try {
         setLoading(true);
         setError(null);
-    
+  
         const {
           responseComplete,
           responseDecline,
           responseRequests,
           responseDeclineRequests,
         } = await fetchData(selectedMonth, selectedYear);
-    
+  
         console.log("Donate Data:", responseComplete);
         console.log("Request Data:", responseRequests);
-    
+  
         const doc = new jsPDF();
-    
+  
         doc.setTextColor("#000000");
-        doc.setFont("helvetica", "bold")
+        doc.setFont("helvetica", "bold");
         doc.setFontSize(20);
         doc.text("KALINGA MONTHLY REPORT", 105, 15, { align: "center" });
-        doc.text(`${selectedMonth} ${selectedYear}`, 105, 30, { align: "center" });
-    
+        doc.text(`${selectedMonth} ${selectedYear}`, 105, 30, {
+          align: "center",
+        });
+  
         doc.setTextColor("#000000");
-    
+  
         doc.setFontSize(14);
-        doc.text(
-          `Donation Report`,
-          14,
-          35
-        );
-    
+        doc.text("Donation Report", 14, 35);
+  
         doc.setFillColor("#ED5077");
-    
+  
         doc.autoTable({
           startY: 40,
-          headStyles: { fillColor: "#ED5077" }, 
-          head: [["Category", "Value"]],
-          body: [
-            ["Total Complete Donations", responseComplete.totalCompleteAppointments],
-            ["Total Declined Donations", responseDecline.totalDeclineAppointments],
+          headStyles: { fillColor: "#ED5077" },
+          columns: [
+            { header: "Category", dataKey: "category" },
+            { header: "Value", dataKey: "value", styles: { halign: "right" } },
           ],
+          body: [
+            {
+              category: "Total Complete Donations",
+              value: responseComplete.totalCompleteAppointments,
+            },
+            {
+              category: "Total Declined Donations",
+              value: responseDecline.totalDeclineAppointments,
+            },
+          ],
+          columnStyles: {
+            category: { cellWidth: 100 }, // Adjust the width as needed
+            value: { cellWidth: 75 }, // Align text to the right
+          },
         });
-    
+  
         doc.text(
-          `Request Monthly Report`,
+          "Request Report",
           14,
           doc.autoTable.previous.finalY + 10
         );
-    
+  
         doc.autoTable({
           startY: doc.autoTable.previous.finalY + 20,
-          headStyles: { fillColor: "#ED5077" },  
-          head: [["Category", "Value"]],
-          body: [
-            ["Total Complete Requests", responseRequests.totalCompleteRequest],
-            ["Total Declined Requests", responseDeclineRequests.totalDeclineRequest],
+          headStyles: { fillColor: "#ED5077" },
+          columns: [
+            { header: "Category", dataKey: "category" },
+            { header: "Value", dataKey: "value", styles: { halign: "right" } },
           ],
+          body: [
+            {
+              category: "Total Complete Requests",
+              value: responseRequests.totalCompleteRequest,
+            },
+            {
+              category: "Total Declined Requests",
+              value: responseDeclineRequests.totalDeclineRequest,
+            },
+          ],
+          columnStyles: {
+            category: { cellWidth: 100 }, // Adjust the width as needed
+            value: { cellWidth: 75 }, // Align text to the right
+          },
         });
-
+  
         doc.text(
-          `Overview Monthly Report for`,
+          "Overview Report",
           14,
           doc.autoTable.previous.finalY + 10
         );
-    
+  
         doc.autoTable({
           startY: doc.autoTable.previous.finalY + 20,
-          headStyles: { fillColor: "#ED5077" }, 
-          head: [["Category", "Value"]],
-          body: [
-            ["Added Donor Users", totalDonors],
-            ["Added Requestor Users", totalRequestors],
-            ["Total Appointments", totalAppointments],
-            ["Total Requests", totalRequests],
-            ["Total All Month Complete Requests", totalAllMonthCompleteRequests], 
-            ["Total All Month Complete Donations", totalAllMonthCompleteDonations], 
-
+          headStyles: { fillColor: "#ED5077" },
+          columns: [
+            { header: "Category", dataKey: "category" },
+            { header: "Value", dataKey: "value", styles: { halign: "right" } },
           ],
+          body: [
+            { category: "Added Donor Users", value: totalDonors },
+            { category: "Added Requestor Users", value: totalRequestors },
+            { category: "Total Appointments", value: totalAppointments },
+            { category: "Total Requests", value: totalRequests },
+            {
+              category: "Total All Month Complete Requests",
+              value: totalAllMonthCompleteRequests,
+            },
+            {
+              category: "Total All Month Complete Donations",
+              value: totalAllMonthCompleteDonations,
+            },
+          ],
+          columnStyles: {
+            category: { cellWidth: 100 }, // Adjust the width as needed
+            value: { cellWidth: 75 }, // Align text to the right
+          },
         });
-
+  
         doc.save("monthly_reports.pdf");
       } catch (error) {
         console.error("Error downloading PDF:", error);
@@ -257,6 +321,7 @@
         setLoading(false);
       }
     };
+    
     
   
 
@@ -309,17 +374,29 @@
             </span>
           </div>
           <div className="flex justify-end mt-2">
-            <a
-              href={seeMore}
-              className="text-sm font-light italic font-sans underline"
-            >
-              See more
-            </a>
+          <Link
+            to={seeMore}
+            className="text-sm font-light italic font-sans underline"
+          >
+            See more
+          </Link>
           </div>
         </div>
       );
     };
+    const [id, setId] = useState(null)
+    useEffect(() => {
+      const storedId = getId();
+      if (storedId) {
+        setId(storedId);
+      } else {
+        const newId = generateId();
+        saveId({ id: newId });
+        setId(newId);
+      }
+    }, []);
 
+    if(id)
     return (
       <>
         <section className="w-full h-auto bg-primary-body overflow-hidden">
@@ -449,7 +526,7 @@
                         }
                         title="Added Donor Users"
                         count={totalDonors}
-                        seeMore={"/admin/users"}
+                        seeMore={`/admin/${id}/users`}
                       />
                       <DashboardCard
                         icon={
@@ -472,7 +549,7 @@
                         }
                         title="Added Requestor Users"
                         count={totalRequestors}
-                        seeMore={"/admin/users"}
+                        seeMore={`/admin/${id}/users`}
                       />
                       <DashboardCard
                         icon={
@@ -494,7 +571,7 @@
                         }
                         title="Appointments for the month"
                         count={totalAppointments}
-                        seeMore={"/admin/donorAppointManage"}
+                        seeMore={`/admin/${id}/donorAppointManage`}
                       />
                       <DashboardCard
                         icon={
@@ -513,7 +590,7 @@
                         }
                         title="Requests for the month"
                         count={totalRequests}                      
-                        seeMore={"/admin/requestorManagement"}
+                        seeMore={`/admin/${id}/requestorManagement`}
                       />
                     </div>
                   </div>
@@ -529,7 +606,7 @@
                  
                     
                     <div className="absolute top-4 -right-1 text-white px-4 py-2">
-                      <a href={"/admin/chart"} className="flex items-center">
+                      <a href={`/admin/chart`} className="flex items-center">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="35"
@@ -574,6 +651,7 @@
                     </div>
                     <div>
                     <BarDonatePerMonth name="Total Requests" selectedYear={selectedYear} />
+                    
                       
                     </div>
                   </div>

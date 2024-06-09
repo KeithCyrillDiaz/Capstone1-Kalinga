@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import KalingaLogo from "@assets/Kalinga-Logo-Small.png";
-import { useNavigate, NavLink, useParams } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
+import { getId } from "../functions/Authentication";
+import { Loader } from "./loader";
+import { TbDeviceMobileCog } from "react-icons/tb";
 
 export default function () {
   const navigate = useNavigate();
@@ -21,11 +24,30 @@ export default function () {
     return false;
   };
 
+  
   const toggleDropdown = (dropdown) => {
     setOpenedDropdown(openedDropdown === dropdown ? null : dropdown);
   };
   
-
+  const [loading, setLoading] = useState(false)
+  const [id, setId] = useState(null)
+  useEffect(() => {
+    const storedId = getId();
+    if (storedId) {
+      setId(storedId);
+    } else {
+      const newId = generateId();
+      saveId({ id: newId });
+      setId(newId);
+    }
+  }, []);
+  
+  if(loading){
+    return (
+      <Loader isLoading={loading}/>
+    )
+  }
+  if(id)
   return (
     <>
       <section
@@ -46,7 +68,7 @@ export default function () {
           </div>
           {/* DASHBOARD */}
           <NavLink
-            to={`/admin`}
+            to={`/admin/${id}`}
             className={`flex items-center cursor-pointer w-full rounded-2xl py-1 mb-1 ${
               isActiveRoute("admin")
                 ? "bg-secondary-default"
@@ -118,7 +140,7 @@ export default function () {
               {openedDropdown === "reports" && (
                 <div className="p-2 w-full bg-secondary-default rounded-b-2xl pb-2 mb-2">
                   <NavLink
-                    to="/admin/chart"
+                    to={`/admin/${id}/chart`}
                     className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-5 py-1 mb-1 ${
                       isActiveRoute("chart")
                         ? "bg-primary-default"
@@ -130,7 +152,7 @@ export default function () {
                     </h1>
                   </NavLink>
                   <NavLink
-                    to="/admin/barangay"
+                    to={`/admin/${id}/barangay`}
                     className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-5 py-1 mb-1 ${
                       isActiveRoute("barangay")
                         ? "bg-primary-default"
@@ -189,7 +211,7 @@ export default function () {
               {openedDropdown === "verification" && (
                 <div className="p-2 w-full bg-secondary-default rounded-b-2xl pb-2 mb-2">
                 <NavLink
-                  to="/admin/DonorVerifPendings"
+                  to={`/admin/${id}/DonorVerifPendings`}
                   className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-5 py-1 mb-1 ${
                     isActiveRoute("donor verif")
                       ? "bg-primary-default"
@@ -201,7 +223,7 @@ export default function () {
                   </h1>
                 </NavLink>
                 <NavLink
-                  to="/admin/RequestorVerifPendings"
+                  to={`/admin/${id}/RequestorVerifPendings`}
                   className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
                     isActiveRoute("requestor")
                       ? "bg-primary-default"
@@ -213,7 +235,7 @@ export default function () {
                   </h1>
                 </NavLink>
                 <NavLink
-                  to="/admin/users"
+                  to={`/admin/${id}/users`}
                   className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
                     isActiveRoute("users")
                       ? "bg-primary-default"
@@ -273,7 +295,7 @@ export default function () {
               {openedDropdown === "appointments" && (
                 <div className="p-2 w-full bg-secondary-default rounded-b-2xl pb-2 mb-2">
                 <NavLink
-                  to="/admin/donorAppointManage"
+                  to={`/admin/${id}/donorAppointManage`}
                   className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
                     isActiveRoute("city")
                       ? "bg-primary-default"
@@ -281,11 +303,11 @@ export default function () {
                   }`}
                 >
                   <h1 className="text-md text-neutral-primary">
-                    Donor Mamangement
+                    Donor Management
                   </h1>
                 </NavLink>
                 <NavLink
-                  to="/admin/requestorManagement"
+                  to={`/admin/${id}/requestorManagement`}
                   className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
                     isActiveRoute("requestorManagement")
                       ? "bg-primary-default"
@@ -293,7 +315,69 @@ export default function () {
                   }`}
                 >
                   <h1 className="text-md text-neutral-primary">
-                    Requestor Mamangement
+                    Requestor Management
+                  </h1>
+                </NavLink>
+              </div>
+              )}
+            </div>
+          </div>
+
+          {/* CONFIGURATIONS */}
+          <div>
+            <div className="relative">
+              <div
+                onClick={() => toggleDropdown("configurations")}
+                className={`flex items-center cursor-pointer w-full rounded-t-2xl pt-1 pb-1 ${
+                  openedDropdown === "configurations" ? "bg-secondary-default" : ""
+                }`}
+              >
+                <TbDeviceMobileCog 
+                className="ml-8"
+                style={{flexShrink: 0}}
+                size={30} 
+                color="#FFEECC"/>
+                <h1 className="ml-2 mr-2 text-lg text-neutral-primary">
+                  Configurations
+                </h1>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="30"
+                  height="30"
+                  viewBox="0 0 24 24"
+                  className={`absolute right-2 transform transition-transform duration-300 ${
+                    openedDropdown === "configurations" ? "rotate-0" : "rotate-180"
+                  }`}
+                >
+                  <path fill="#FFEECC" d="m7 10l5 5l5-5z" />
+                </svg>
+              </div>
+
+              {openedDropdown === "configurations" && (
+                <div className="p-2 w-full bg-secondary-default rounded-b-2xl pb-2 mb-2">
+                <NavLink
+                  to={`/admin/${id}/DonorAppointmentForm`}
+                  className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
+                    isActiveRoute("city")
+                      ? "bg-primary-default"
+                      : "bg-transparent hover:bg-primary-default"
+                  }`}
+                >
+                  <h1 className="text-md text-neutral-primary">
+                    Donor Appointment Form
+                  </h1>
+                </NavLink>
+                <NavLink
+                  to={`/admin/${id}/RequestorAppointmentForm`}
+                  className={`grid grid-flow-col-dense items-center justify-center cursor-pointer w-full rounded-2xl gap-x-10 py-2   ${
+                    isActiveRoute("requestorManagement")
+                      ? "bg-primary-default"
+                      : "bg-transparent hover:bg-primary-default"
+                  }`}
+                >
+                  <h1 className="text-md text-neutral-primary">
+                    Requestor Appointment Form
                   </h1>
                 </NavLink>
               </div>

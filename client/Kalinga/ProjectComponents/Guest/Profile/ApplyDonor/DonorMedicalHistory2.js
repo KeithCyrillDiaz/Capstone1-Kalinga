@@ -43,6 +43,15 @@ const DonorMedicalHistory2 = ({route}) => {
         setIsFormFilled(false)
         return
       }
+
+      if(formData.MH14 === "Yes" && formData.MH14_Reason.length < 5){
+        Alert.alert(
+          "Detailed Reason Required",
+          "Please provide a detailed reason for selecting 'Yes' to question 14. Your explanation should be at least 5 characters long."
+        )
+        setIsFormFilled(false)
+        return
+      } 
   
       checkForm()
       if(!isFormFilled) {
@@ -53,26 +62,7 @@ const DonorMedicalHistory2 = ({route}) => {
       navigation.navigate(Page, data);
     };
     
-    const checkForm = () => {
-      let keysToCheck = [
-        'MH12',
-        'MH13',
-        'MH14',
-        'SH1',
-        'SH2',
-        ];
-    
-        const isFormDataValid = keysToCheck.every(key => formData[key].trim() !== '');
-    
-        if (isFormDataValid) {
-            console.log('All values until medical condition are valid');
-            setIsFormFilled(true)
-        } else {
-            console.log('Some values until medical condition are empty');
-            setIsFormFilled(false)
-        }
-    }
-    
+  
 
     const handleChangeText = (value) => {
       setFormData(prevData => ({...prevData, 
@@ -82,9 +72,7 @@ const DonorMedicalHistory2 = ({route}) => {
       // setScreeningFormData({ ...screeningFormData, [name]: value });
   };
 
-  useEffect(() => {
-    checkForm()
-  }, [formData.SH2])
+
 
   useEffect(() => {
     console.log("formData.MH14_Reason: ", formData.MH14_Reason)
@@ -117,7 +105,39 @@ const DonorMedicalHistory2 = ({route}) => {
               }))
         }
     };
+
+    const checkForm = () => {
+      let keysToCheck = [
+        'MH12',
+        'MH13',
+        'MH14',
+        'MH15',
+        'SH1',
+        'SH2',
+        ];
     
+        const isFormDataValid = keysToCheck.every(key => formData[key].trim() !== '');
+    
+        if (isFormDataValid) {
+          if(!isFormDataValid)console.log('All values until medical condition are valid');
+          setIsFormFilled(true)
+        } else {
+          if(isFormDataValid)console.log('Some values until medical condition are empty');
+            setIsFormFilled(false)
+        }
+    }
+
+    useEffect(() => {
+      checkForm()
+    }, [
+      formData.MH12,
+      formData.MH13,
+      formData.MH14,
+      formData.MH14_Reason,
+      formData.MH15,
+      formData.SH1,
+      formData.SH2
+    ])
 
     const renderQuestion = (questionId, questionText, questionType) => {
         let isChecked;
@@ -128,7 +148,7 @@ const DonorMedicalHistory2 = ({route}) => {
         }
     
         return (
-            <View style={styles.rowAlignment} key={questionId}>
+            <View style={[styles.rowAlignment, {marginVertical: 7}]} key={questionId}>
                 <TouchableOpacity onPress={() => pressOption(questionId, 'Yes', questionType)}>
                     <View style={[styles.circle, isChecked === 'Yes' && styles.checkedCircle]}>
                         {isChecked === 'Yes' && <AntDesign name="checkcircle" size={18} color="#E60965" />}
@@ -153,6 +173,7 @@ const DonorMedicalHistory2 = ({route}) => {
                       width: "85%",
                       maxWidth:210,
                       marginLeft: 20,
+                      maxHeight: 70,
                       color: "black",
                       paddingBottom: 2,
                       fontFamily: "Open-Sans-SemiBold"
@@ -173,7 +194,7 @@ const DonorMedicalHistory2 = ({route}) => {
 
    
     return (
-      <View style={globalStyles.container}>
+      <View style={globalStyles.defaultBackgroundColor}>
          <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style = {globalHeader.SmallHeader}>
               <Text style = {globalHeader.SmallHeaderTitle}>Apply as Donor</Text>
@@ -222,7 +243,9 @@ const DonorMedicalHistory2 = ({route}) => {
                    
             </View>
                       <TouchableOpacity style = {[styles.button,
-                        {opacity: !isFormFilled ? 0.5 : 1}
+                        {opacity: !isFormFilled 
+                          || (formData.MH14 === "Yes" && formData.MH14_Reason === "") 
+                          ? 0.5 : 1}
                         ]}  
                       onPress={() => navigatePage("DonorUploadMedicalRequirements", { screeningFormData: formData })}>
                             <Text style = {styles.buttonTitle}>Next</Text>
@@ -292,29 +315,33 @@ const DonorMedicalHistory2 = ({route}) => {
       color: '#E60965',
       fontFamily: "Open-Sans-Light",
       marginBottom: 10,
-      fontSize: 13
+      fontSize: 13,
+      marginLeft: 17,
     },
     
     form: {
-
       borderRadius: 10,
       borderColor: '#E60965',
       paddingBottom: 20,
       paddingRight: 10,
       marginBottom: 10,
       backgroundColor: "#FFFFFF",
-      elevation: 7
+      elevation: 7,
+      width:"90%",
+      alignSelf: "center"
     },
 
     form2: {
 
         borderRadius: 10,
         borderColor: '#E60965',
-        height: 190,
+        height: 200,
         paddingRight: 10,
         marginBottom: 10,
         backgroundColor: "#FFFFFF",
-        elevation: 7
+        elevation: 7,
+        width:"90%",
+        alignSelf: "center"
       },
 
     row: {
@@ -347,10 +374,10 @@ const DonorMedicalHistory2 = ({route}) => {
     question: {
       marginTop: 10,
       color: "#E60965",
-      //backgroundColor: "gray",
-      width: 220,
+      width: 230,
       marginLeft: 20,
-      fontFamily: "Open-Sans-SemiBold"
+      fontFamily: "Open-Sans-SemiBold",
+      textAlign: "justify"
     }
 
    

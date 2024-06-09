@@ -17,7 +17,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from "axios";
 import { globalStyles } from "../../../../styles_kit/globalStyles";
-
+import { LoadingSpinner } from "../../../uploader/LoadingSpinner";
 export default function ChangePasswordScreen({route}) {
 
   const {token, userInformation} = route.params
@@ -25,7 +25,7 @@ export default function ChangePasswordScreen({route}) {
 
   const navigation = useNavigation()
   const [showPassword, setShowPassword] = useState(false)
-
+  const [loading, setLoading]= useState(false)
   const navigate = (Page) => {
     navigation.navigate(Page, {token: token})
   }
@@ -66,7 +66,7 @@ export default function ChangePasswordScreen({route}) {
       );
       return
     }
-
+    setLoading(true)
     try {
 
       const id = userInformation.Requestor_ID
@@ -121,6 +121,8 @@ export default function ChangePasswordScreen({route}) {
     } catch(error) {
       console.log("Change password Error", error)
       Alert.alert("Something Went Wrong",  "We apologize for the inconvinience. Please try again later")
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -129,7 +131,7 @@ export default function ChangePasswordScreen({route}) {
       <ScrollView contentContainerStyle={bodyStyle.container}>
         <StatusBar />
         <Header title="Change Password" />
-
+        <LoadingSpinner loading={loading}/>
         <View
           style={{
             paddingHorizontal: 16,

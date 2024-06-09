@@ -71,19 +71,6 @@ const getData = async () => {
         nestedScrollEnabled={true}>
           
       <View style={styles.boxRowContainer}>
-        <TouchableOpacity style={styles.box} onPress={() => navigatePage("Guest Explore")} >
-              <MaterialIcons style={{flexShrink: 0}} name="location-on" size={70} color="#E60965" />   
-              <Text style={styles.boxTitle}>Milk Bank Locator</Text>     
-              <Text style={styles.boxMinitext}>Easily find human milk banks near you</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.box} onPress={() => navigatePage("Instant Messages")} >
-              <MaterialCommunityIcons style={{flexShrink: 0}} name="robot" size={70} color="#E60965" />                
-              <Text style={styles.boxTitle}> Instant Chat</Text>
-              <Text style={styles.boxMinitext}>Chatbot assistance for FAQs</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.boxRowContainer}>
         <TouchableOpacity style={styles.box} onPress={() => navigatePage("ApplyAsRequestorStack")} >
               <FontAwesome5 style={{flexShrink: 0}} name="hand-holding-water" size={70} color="#E60965" />   
               <Text style={styles.boxTitle}>{userType !== "Requestor" ? "Apply as Requestor" : "You're already a Requestor"}</Text>     
@@ -93,6 +80,13 @@ const getData = async () => {
               <FontAwesome style={{flexShrink: 0}} name="handshake-o" size={70} color="#E60965" />               
               <Text style={styles.boxTitle}>{userType !== "Donor" ? "Apply as Donor" : "You're already a Donor"}</Text>
               <Text style={styles.boxMinitext}>Offer your surplus breast milk for donation.</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.boxRowContainer}>
+        <TouchableOpacity style={styles.box} onPress={() => navigatePage("Guest Explore")} >
+              <MaterialIcons style={{flexShrink: 0}} name="location-on" size={70} color="#E60965" />   
+              <Text style={styles.boxTitle}>Milk Bank Locator</Text>     
+              <Text style={styles.boxMinitext}>Easily find human milk banks near you</Text>
         </TouchableOpacity>
       </View>
 

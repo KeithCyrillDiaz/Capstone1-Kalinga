@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import { BarDonationOverAll, BarRequestOverAll, LineGraphTotalUserPerMonth,BarangayGraph } from "../../components";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { Link } from 'react-router-dom';
 import {
   BarChart,
   Bar,
@@ -17,6 +18,8 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { checkId, getId, getToken } from "../../functions/Authentication";
+import { NotFound } from "../../layouts/NotFoundExportConst";
 //require("dotenv").config(); // Load environment variables
 
 //const user = process.env.REACT_APP_ADMIN_USERNAME;
@@ -33,7 +36,7 @@ export default function Dashboard() {
   const [barangaysData, setBarangaysData] = useState([]);
   const [totalPendingAppointments, setTotalPendingAppointments] = useState(0);
   const [totalPendingRequest, setTotalPendingRequest] = useState(0);
-  const [totalCompleteDonations, setTotalCompleteDonations] = useState(0);
+  const [totalCompleteDonations, setTotalCompleteDonations] = useState([]);
   const [totalCompleteRequests, setTotalCompleteRequests] = useState(0);
   const [topDonatingUsers, setTopDonatingUsers] = useState([]);
   const [topRequestingUsers, setTopRequestingUsers] = useState([]);
@@ -41,6 +44,7 @@ export default function Dashboard() {
   const [topRequestingBarangay, setTopRequestingBarangay] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [notFound, setNotFound] = useState(false)
 
 
 
@@ -53,9 +57,12 @@ const formattedDate = `${currentDate.getFullYear()}-${
   useEffect(() => {
     console.log("Fetching data...");
     const fetchCounts = async () => {
+      const token = getToken()
       try {
+
         const responseDonors = await axios.get(
-          `${WebHost}/kalinga/getTotalDonor`
+          `${WebHost}/kalinga/getTotalDonor`,
+          {headers: {Authorization: `Bearer ${token}`}}
         );
         setTotalDonors(responseDonors.data.totalDonors || 0);
       } catch (error) {
@@ -64,7 +71,8 @@ const formattedDate = `${currentDate.getFullYear()}-${
 
       try {
         const responseRequestors = await axios.get(
-          `${WebHost}/kalinga/getTotalRequestor`
+          `${WebHost}/kalinga/getTotalRequestor`,
+          {headers: {Authorization: `Bearer ${token}`}}
         );
         setTotalRequestors(responseRequestors.data.totalRequestors || 0);
       } catch (error) {
@@ -73,7 +81,8 @@ const formattedDate = `${currentDate.getFullYear()}-${
 
       try {
         const responseUsers = await axios.get(
-          `${WebHost}/kalinga/getTotalUser`
+          `${WebHost}/kalinga/getTotalUser`,
+          {headers: {Authorization: `Bearer ${token}`}}
         );
         setTotalUsers(responseUsers.data.totalUsers || 0);
       } catch (error) {
@@ -82,7 +91,9 @@ const formattedDate = `${currentDate.getFullYear()}-${
 
       try {
         const responsePendingAppointments = await axios.get(
-          `${WebHost}/kalinga/getTotalPendingAppointment`
+          `${WebHost}/kalinga/getTotalPendingAppointment`,
+          {headers: {Authorization: `Bearer ${token}`}}
+          
         );
         setTotalPendingAppointments(
           responsePendingAppointments.data.totalPendingAppointments || 0
@@ -93,7 +104,9 @@ const formattedDate = `${currentDate.getFullYear()}-${
 
       try {
         const responsePendingRequest = await axios.get(
-          `${WebHost}/kalinga/getTotalPendingRequest`
+          `${WebHost}/kalinga/getTotalPendingRequest`,
+          {headers: {Authorization: `Bearer ${token}`}}
+
         );
         setTotalPendingRequest(
           responsePendingRequest.data.totalPendingRequest || 0
@@ -108,9 +121,11 @@ const formattedDate = `${currentDate.getFullYear()}-${
 
   useEffect(() => {
     const fetchUsersPerCity = async () => {
+      const token = getToken()
       try {
         const response = await axios.get(
-          `${WebHost}/kalinga/getTotalUsersPerCity`
+          `${WebHost}/kalinga/getTotalUsersPerCity`,
+          {headers: {Authorization: `Bearer ${token}`}}
         );
         console.log("Users Per City Response:", response.data); // Log the response data
         setUsersPerCity(response.data || []);
@@ -124,24 +139,44 @@ const formattedDate = `${currentDate.getFullYear()}-${
 
   useEffect(() => {
     const fetchData = async () => {
+      const token = getToken();
       try {
-        const response = await axios.get(
-          `${WebHost}/kalinga/getTotalUsersPerBarangay`
-        );
-        const { totalRequestorsPerBarangay, totalDonorsPerBarangay } =
-          response.data;
+        const response = await axios.get(`${WebHost}/kalinga/getTotalUsersPerBarangay`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-        // Merge data for each barangay
-        const mergedData = totalRequestorsPerBarangay.map((requestor) => ({
-          ...requestor,
-          totalDonors:
-            totalDonorsPerBarangay.find((donor) => donor._id === requestor._id)
-              ?.totalDonors || 0,
-        }));
+        const { totalRequestorsPerBarangay, totalDonorsPerBarangay } = response.data;
 
-        setBarangaysData(mergedData); 
+        // Create a map of all barangays
+        const barangayMap = {};
+
+     
+        totalRequestorsPerBarangay.forEach((requestor) => {
+          barangayMap[requestor._id] = {
+            barangay: requestor._id,
+            totalRequestors: requestor.totalRequestors,
+            totalDonors: 0, 
+          };
+        });
+
+        
+        totalDonorsPerBarangay.forEach((donor) => {
+          if (barangayMap[donor._id]) {
+            barangayMap[donor._id].totalDonors = donor.totalDonors;
+          } else {
+            barangayMap[donor._id] = {
+              barangay: donor._id,
+              totalRequestors: 0, 
+              totalDonors: donor.totalDonors,
+            };
+          }
+        });
+
+        const mergedData = Object.values(barangayMap);
+
+        setBarangaysData(mergedData);
         console.log("Barangays Data:", mergedData);
-        console.log("response Data:", response.data); 
+        console.log("response Data:", response.data);
       } catch (error) {
         console.error("Error fetching total users per barangay:", error);
       }
@@ -152,12 +187,18 @@ const formattedDate = `${currentDate.getFullYear()}-${
 
   useEffect(() => {
     const fetchData = async () => {
+      const token = getToken()
+      const selectedYear = "2024"
       try {
-        const responseCompleteDonation = await axios.get(`${WebHost}/kalinga/getCompleteDonationsTotal`);
+        const responseCompleteDonation = await axios.get(`${WebHost}/kalinga/getCompleteDonationsTotal`,
+        {headers: {Authorization: `Bearer ${token}`}}
+        );
         console.log("Response Complete Donations:", responseCompleteDonation.data);
         setTotalCompleteDonations(responseCompleteDonation.data.totalCompleteDonations);
         
-        const responseCompleteRequest = await axios.get(`${WebHost}/kalinga/getCompleteRequestsTotal`);
+        const responseCompleteRequest = await axios.get(`${WebHost}/kalinga/getCompleteRequestsTotal`,
+        {headers: {Authorization: `Bearer ${token}`}}
+        );
         console.log("Response Complete Requests:", responseCompleteRequest.data);
         setTotalCompleteRequests(responseCompleteRequest.data.totalCompleteRequests);
       } catch (error) {
@@ -173,9 +214,14 @@ const formattedDate = `${currentDate.getFullYear()}-${
 
   useEffect(() => {
     const fetchData = async () => {
+      const token = getToken()
       try {
-        const Donationresponse = await axios.get(`${WebHost}/kalinga/getHighestDonation`);
-        const Requestresponse = await axios.get(`${WebHost}/kalinga/getHighestRequestors`);
+        const Donationresponse = await axios.get(`${WebHost}/kalinga/getHighestDonation`,
+        {headers: {Authorization: `Bearer ${token}`}}
+        );
+        const Requestresponse = await axios.get(`${WebHost}/kalinga/getHighestRequestors`,
+        {headers: {Authorization: `Bearer ${token}`}}
+        );
         console.log("Top Donating Users Response:", Donationresponse.data); 
         console.log("Top Donating Users Response:", Requestresponse.data); 
 
@@ -192,9 +238,14 @@ const formattedDate = `${currentDate.getFullYear()}-${
 
   useEffect(() => {
     const fetchData = async () => {
+      const token = getToken()
       try {
-        const BarangayDonationresponse = await axios.get(`${WebHost}/kalinga/getHighestDonationBarangay`);
-        const BarangayRequestresponse = await axios.get(`${WebHost}/kalinga/getHighestRequestBarangay`);
+        const BarangayDonationresponse = await axios.get(`${WebHost}/kalinga/getHighestDonationBarangay`,
+        {headers: {Authorization: `Bearer ${token}`}}
+        );
+        const BarangayRequestresponse = await axios.get(`${WebHost}/kalinga/getHighestRequestBarangay`,
+        {headers: {Authorization: `Bearer ${token}`}}
+        );
         console.log("Top Donating Users Response:", BarangayDonationresponse.data); 
         console.log("Top Donating Users Response:", BarangayRequestresponse.data); 
 
@@ -309,6 +360,19 @@ const formattedDate = `${currentDate.getFullYear()}-${
     doc.save(`${title.toLowerCase().replace(/\s/g, "_")}.pdf`);
   };
 
+  const [id, setId]=useState(null)
+  useEffect(() => {
+    const storedId = getId();
+    if (storedId) {
+      setId(storedId);
+    } else {
+      const newId = generateId();
+      saveId({ id: newId });
+      setId(newId);
+    }
+  }, []);
+
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -317,10 +381,10 @@ const formattedDate = `${currentDate.getFullYear()}-${
     return <div>Error: {error}</div>;
   }
 
-
   const DashboardCard = ({ icon, title, count, seeMore }) => {
     return (
       <div className="flex flex-col h-32 p-2 pr-3 bg-white rounded-2xl shadow-sm w-1/4">
+           
         <div className="flex justify-end">
           <span className="text-md font-sans text-primary-default ">
             {title}
@@ -333,23 +397,22 @@ const formattedDate = `${currentDate.getFullYear()}-${
           </span>
         </div>
         <div className="flex justify-end mt-2">
-          <a
-            href={seeMore}
-            className="text-sm font-light italic font-sans underline "
+          <Link
+            to={seeMore}
+            className="text-sm font-light italic font-sans underline"
           >
             See more
-          </a>
+          </Link>
         </div>
       </div>
     );
   };
 
-
-
+  if(id)
   return (
     <>
     <div className="overflow-y-auto">
-    <section className="w-full h-full bg-primary-body overflow-y-auto rounded-xl">
+      <section className="w-full h-full bg-primary-body overflow-y-auto rounded-xl">
         <div className="p-12 pt-2">
           <div className="py-4">
             <h1 className="text-2xl text-primary-default font-bold font-sans py-">
@@ -361,7 +424,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
           </div>
           <div className="flex flex-wrap gap-4 justify-center">
             <div className="flex w-full justify-center gap-4">
-              <div className="flex items-center justify-center gap-x-4 w-4/6">
+              <div className="flex items-center justify-center gap-x-4 w-full md:w-4/6">
                 <DashboardCard
                   icon={
                     <svg
@@ -383,7 +446,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
                   }
                   title="Total Donor Users"
                   count={totalDonors}
-                  seeMore={"/admin/users"}
+                  seeMore={`/admin/${id}/users`}
                 />
                 <DashboardCard
                   icon={
@@ -406,7 +469,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
                   }
                   title="Total Requestor Users"
                   count={totalRequestors}
-                  seeMore={"/admin/users"}
+                  seeMore={`/admin/${id}/users`}
                 />
                 <DashboardCard
                   icon={
@@ -428,7 +491,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
                   }
                   title="Pending Appointment"
                   count={totalPendingAppointments}
-                  seeMore={"/admin/donorAppointManage"}
+                  seeMore={`/admin/${id}/donorAppointManage`}
                 />
                 <DashboardCard
                   icon={
@@ -447,11 +510,11 @@ const formattedDate = `${currentDate.getFullYear()}-${
                   }
                   title="Pending Requests"
                   count={totalPendingRequest}
-                  seeMore={"/admin/requestorManagement"}
+                  seeMore={`/admin/${id}/requestorManagement`}
                 />
               </div>
-              <div className="flex items-center justify-center h-32 bg-white rounded-2xl shadow-sm w-2/6">
-                <div className="flex items-center -ml-28 h-full bg-primary-default rounded-l-2xl p-4 ">
+              <div className="flex items-center justify-center h-32 bg-white rounded-2xl shadow-sm w-full md:w-2/6">
+                <div className="flex items-center -ml-28 h-full bg-primary-default rounded-l-2xl p-8 mr-52 ">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="50"
@@ -464,8 +527,8 @@ const formattedDate = `${currentDate.getFullYear()}-${
                     ></path>
                   </svg>
                 </div>
-                <div className="flex flex-col justify-center ml-10">
-                  <div className="flex items-top font-sans ">Today is</div>
+                <div className="flex flex-col justify-center  ">
+                  <div className="flex items-top font-sans pr-36 ">Today is</div>
                   <p className="text-2xl font-bold text-primary-default font-sans">
                     {formattedDate}
                   </p>
@@ -474,14 +537,14 @@ const formattedDate = `${currentDate.getFullYear()}-${
             </div>
 
             <div className="w-full flex justify-center gap-4">
-              <div className="flex flex-col w-4/6 gap-4">
+              <div className="flex flex-col w-full gap-4 md:w-4/6">
                 {/* Transactions */}
                 <div className="flex flex-col  p-4 bg-white rounded-2xl shadow-sm relative">
                   <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
                     Transaction Overview
                   </h1>
                   <div className="absolute top-4 -right-1 text-white px-4 py-2">
-                    <a href={"/admin/chart"} className="flex items-center">
+                    <a href={`/admin/${id}/chart`} className="flex items-center">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="35"
@@ -502,25 +565,25 @@ const formattedDate = `${currentDate.getFullYear()}-${
                     <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
                       Donations
                     </h1>
-                    <h1 className="text-4xl text-primary-default font-sans font-bold text-start ml-4">
-                    {totalCompleteDonations}
+                    {/* <h1 className="text-4xl text-primary-default font-sans font-bold text-start ml-4">
+                    {totalCompleteDonations.length}
                     </h1>
                     <h3 className="text-sm font-sans font-light text-start ml-4">
                       Total Overall Donations
-                    </h3>
+                    </h3> */}
                     <div><BarDonationOverAll/></div>
                   </div>
                   <div className="py-2 ml-4">
                     <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
                       Requests
                     </h1>
-                    <h1 className="text-4xl text-primary-default font-sans font-bold text-start ml-4">
+                    {/* <h1 className="text-4xl text-primary-default font-sans font-bold text-start ml-4">
                     {totalCompleteRequests}
 
                     </h1>
                     <h3 className="text-sm font-sans font-light text-start ml-4">
                       Total Overall Requests
-                    </h3>
+                    </h3> */}
                     <div><BarRequestOverAll/></div>
                   </div>
                 </div>
@@ -556,7 +619,7 @@ const formattedDate = `${currentDate.getFullYear()}-${
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col w-2/6 gap-4">
+              <div className="flex flex-col w-full gap-4 md:w-2/6">
                 <div className="flex flex-col p-4 bg-white rounded-2xl shadow-sm relative">
                   <h1 className="text-2xl text-primary-default font-sans font-semibold text-start ml-4">
                     Total App Users
@@ -746,55 +809,6 @@ const formattedDate = `${currentDate.getFullYear()}-${
 
               </div>
             </div>
-
-            {/* <div className="flex w-full justify-center gap-4">
-              <div className="flex flex-col items-center justify-center col-span-2 px-8 py-2 bg-white rounded-lg shadow-md w-1.5/5">
-                <h2 className="text-2xl text-center text-primary-default mt-2">
-                  QCGH Human Milk Bank User Demographics
-                </h2>
-                <p className="text-md text-center text-primary-default font-sans">
-                  Participating Barangays: {barangaysData.length}
-                </p>
-                {barangaysData &&
-                  barangaysData.map((barangayData) => (
-                    <div className="grid grid-flow-row-dense grid-cols-3 grid-rows-3 gap-x-2 mt-10 px-10">
-                      <div className="col-span-3">
-                        <span className="text-lg text-primary-default font-bold mt-6">
-                          {barangayData._id}
-                        </span>
-                      </div>
-                      <div className="col-span-2">
-                        <span className="text-md text-primary-default font-sans">
-                          Requestor
-                        </span>
-                      </div>
-                      <div className="col-span-2">
-                        <span className="text-md text-primary-default font-sans">
-                          Donor
-                        </span>
-                      </div>
-                      <div className="text-md text-primary-default font-sans text-right">
-                        {barangayData.totalRequestors || 0}
-                      </div>
-                      <div className="text-md text-primary-default font-sans text-right">
-                        {barangayData.totalDonors || 0}
-                      </div>
-                    </div>
-                  ))}
-              </div>
-              <div className="flex flex-col items-center justify-center col-span-3 px-8 py-8 bg-white rounded-lg shadow-md w-4/5">
-                <h2 className="text-2xl text-primary-default text-center mb-4">
-                  App Users per Barangay
-                </h2>
-                <div className="w-full p-4">
-                  <div className="py-3 bg-white rounded-2xl">
-                    <span className="lg:pt-4 lg:pb-8 xl:p-0 mt-8">
-                      <BarangayGraph name="" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div> */}
           </div>
         </div>
       </section>

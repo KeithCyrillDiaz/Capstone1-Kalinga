@@ -99,8 +99,8 @@ const ValidUserExplore = ({route}) => {
     return (   
         <View style= {globalStyles.defaultBackgroundColor}>
             <SmallHeader title = {"Explore"} />
-            <SearchBox data = {MilkBankList} onSelect={handleSearch} onClear = {handleSearchClear}/>
-            <MapComponent regionLat={region.latitude} regionLong={region.longitude}/>
+            <SearchBox data = {MilkBankList} onSelect={handleSearch} onClear = {handleSearchClear} />
+            <MapComponent regionLat={region.latitude} regionLong={region.longitude} showMilkBank={handleSearch}/>
             {/* {id && (
                 <MilkBankDetails id={id} onSelect={handleSetRegion}/>
             )} */}

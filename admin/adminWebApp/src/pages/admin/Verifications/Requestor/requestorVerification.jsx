@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import RequestorPages from "./requestorPages";
 import RequestorMedicalPage from "./requestorMedicalpage";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { WebHost } from "../../../../../MyConstantAdmin";
 import { Loader } from "../../../../components/loader";
-import { Confirmation, VerificationModal } from "../../../../modal/Verification/VerificationModal";
+import { Confirmation, RejectionRemarks, VerificationModal } from "../../../../modal/Verification/VerificationModal";
+import { getId, getToken } from "../../../../functions/Authentication";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState("screening");
@@ -13,11 +14,14 @@ export default function App() {
   const totalPages = 2;
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [approvalMessage, setApprovalMessage] = useState(false)
+  const [openRejectionRemarks, setOpenRejectionRemarks]  = useState(false);
 
-  const { id } = useParams();
+  const { Applicant_ID } = useParams();
   const [form, setForm] = useState({});
   const [status, setStatus] = useState("");
+  const [ remark, setRemarks]= useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -33,11 +37,18 @@ export default function App() {
 
   const sendEmail = async (status) => {
     try {
+      const token = getToken()
       console.log("Sending Email");
       const response =
         status === "approved"
-          ? await axios.post(`${WebHost}/kalinga/sendApprovedEmail/${id}`)
-          : await axios.post(`${WebHost}/kalinga/sendDeclinedEmail/${id}`);
+          ? await axios.post(`${WebHost}/kalinga/sendApprovedEmail/${Applicant_ID}`,
+            null,
+            {headers: {Authorization: `Bearer ${token}`}}
+          )
+          : await axios.post(`${WebHost}/kalinga/sendDeclinedEmail/${Applicant_ID}`,
+            {reason: remark},
+            {headers: {Authorization: `Bearer ${token}`}}
+          );
       console.log(response.data.messages.message);
     } catch (error) {
       console.log("Error Sending Email", error);
@@ -45,6 +56,11 @@ export default function App() {
   };
 
   const updateStatus = async (data) => {
+    if(remark === "") {
+      console.log("remark is an empty string")
+      console.log("remark: ", remark)
+      return
+    }
     setIsConfirmationModalOpen(false)
     const formatStatus = data === "declined" ? "Rejected" : "Approved";
     console.log("formatStatus: ", formatStatus);
@@ -52,7 +68,7 @@ export default function App() {
       setLoading(true)
       console.log("Updating Screening Form Status to ", data);
       const response = await axios.patch(
-        `${WebHost}/kalinga/updateScreeningFormStatus/${id}`,
+        `${WebHost}/kalinga/updateScreeningFormStatus/${Applicant_ID}`,
         { status: formatStatus }
       );
       console.log("response: ", response.data.messages.message);
@@ -69,7 +85,7 @@ export default function App() {
     try {
       setLoading(true);
       //axiosToken
-      const response = await axios.get(`${WebHost}/kalinga/getScreeningFormsApplicant_ID/${id}`,)
+      const response = await axios.get(`${WebHost}/kalinga/getScreeningFormsApplicant_ID/${Applicant_ID}`,)
 
       if (!response.data.screeningForms) {
         console.log("Error fetching Screening forms");
@@ -84,6 +100,11 @@ export default function App() {
       setLoading(false);
     }
   };
+
+  const handleRejectionRemarks = (value) => {
+    setRemarks(value)
+    console.log("remark: ", value)
+   }
 
   useEffect(() => {
     fetchData();
@@ -159,7 +180,7 @@ export default function App() {
                   <RequestorMedicalPage
                     form={form}
                     currentPage={currentPage}
-                    id={id}
+                    id={Applicant_ID}
                   />
                 </div>
               </div>
@@ -206,7 +227,10 @@ export default function App() {
             name={form.fullName}
             userType={form.userType}
             onClose={() => setIsConfirmationModalOpen(false)}
-            onConfirm = {() => updateStatus(status)}
+            onConfirm = {() =>{
+              setIsConfirmationModalOpen(false)
+              setOpenRejectionRemarks(true)
+            }}
           />
         </>
       )}
@@ -216,9 +240,22 @@ export default function App() {
             status={status}
             name={form.fullName}
             userType={form.userType}
-            onClose={() => setApprovalMessage(false)}
+            onClose={() => {
+              setApprovalMessage(false)
+              const id = getId()
+              navigate(`/admin/${id}/RequestorVerifPendings`)}}
           />
         </>
+      )}
+       {openRejectionRemarks && (
+        <RejectionRemarks
+          remark = {handleRejectionRemarks}
+          onClose={() => {
+            setOpenRejectionRemarks(false)
+            updateStatus(status)
+          }}
+          onCancel={() => setOpenRejectionRemarks(false)}
+        />
       )}
     </>
   );

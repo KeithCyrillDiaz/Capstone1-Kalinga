@@ -7,6 +7,9 @@ import axios from 'axios'; // Import axios for API requests
 import { format } from 'date-fns';
 import { BASED_URL } from '../../../../MyConstants.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
+import { getDateTime } from '../../../functions/formatDateAndTime.js';
+import BabyCategoryModal from '../../../modal/BabyCategory.js';
+import { AntDesign } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator()
 
@@ -19,9 +22,10 @@ const CompleteDonations = ({route}) => {
   const navigation = useNavigation();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(new Date());
-  const [formData, setFormData] = useState([]); 
+  const [formData, setFormData] = useState(null); 
 
   const [loading, setLoading] = useState(true);
+  const [babyModal, setBabyModal]= useState(true); 
 
   useFocusEffect(
     React.useCallback(() => {
@@ -34,6 +38,7 @@ const CompleteDonations = ({route}) => {
 
   const fetchData = async () => {
     try {
+        setLoading(true)
         const response = await axios.get(`${BASED_URL}/kalinga/getCompletedDonation/${Donor_ID}`);
         const responseData = response.data;
 
@@ -41,11 +46,12 @@ const CompleteDonations = ({route}) => {
             const formattedData = responseData.DonorData.map(item => ({
                 milkAmount: item.milkAmount,
                 location: item.location,
-                selectedDate: format(new Date(item.selectedDate), 'EEE MMM dd yyyy HH:mm:ss'),
-                selectedTime: format(new Date(item.selectedTime), 'EEE MMM dd yyyy HH:mm:ss'),
+                ...getDateTime({ data: item }),
+                BabyCategory: item.BabyCategory
             }));
             
             setFormData(formattedData);
+            console.log("data: ", formattedData)
         } else {
             Alert.alert("No Ongoing Donation", "You currently don't have any ongoing donations.");
             console.log('No completed donations found for the specified Donor_ID.');
@@ -55,12 +61,15 @@ const CompleteDonations = ({route}) => {
     } catch (error) {
         console.log('Error fetching data:', error);
         setLoading(false);
+    } finally {
+        setLoading(false)
     }
 
-
-  
-
 };
+
+if (loading) {
+    return <ActivityIndicator size="large" color="#E60965" />;
+}
     return (
              <SafeAreaView style = {globalStyles.defaultBackgroundColor}>
                 <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
@@ -71,35 +80,49 @@ const CompleteDonations = ({route}) => {
                 
                 >
             <View style={styles.columnContainer}>
-            {formData.length === 0 && (
-                
-                <View style = {{
-                    justifyContent: "center",
+            {!loading && formData && formData.length === 0 && (
+                 <View style ={{
+                    backgroundColor: "white",
+                    width: "90%",
                     alignItems: "center",
-                    marginTop: 20
-                }}>
-                    <Text style ={{
-                        fontFamily: "Open-Sans-Regular",
-                        color:  '#E60965',
-                    }}>No completed donations at the moment</Text>
-                </View>
+                    justifyContent: "center",
+                    paddingHorizontal:7,
+                    paddingVertical:17,
+                    elevation:7,
+                    borderRadius: 17,
+                    marginTop: "7%",
+                    alignSelf: "center"
+                  }}>
+                <Text style ={{
+                fontFamily: "Open-Sans-SemiBold",
+                color:  '#E60965',
+            }}>No completed donations at the moment</Text>
+            </View>
               
             )}
-            {formData.map((data, index) => (
+
+            {formData && formData.map((data, index) => (
                     <View key={index} style={styles.columnContainer}>
                         <View style={styles.boxColContainer}>
                             <View style={styles.boxContentContainer}>
-                                <Text style={styles.boxContentBold}>Amount of milk requested:</Text>
+                                <Text style={styles.boxContentBold}>Amount of milk donated:</Text>
                                 <Text style={[styles.boxContent, styles.limitText]}>{data.milkAmount} ml</Text>
                             </View>
                             <View style={styles.boxContentContainer}>
                                 <Text style={styles.boxContentBold}>Milk Bank:</Text>
                                 <Text style={[styles.boxContent, {width: "70%"}]}>{data.location}</Text>
                             </View>
+                          
                             <View style={styles.boxContentContainer}>
-                                <Text style={styles.boxContentBold}>Time and Date:</Text>
+                                <Text style={styles.boxContentBold}>Date:</Text>
                                 <Text style={[styles.boxContent, styles.limitText]}>
-                                    {data.selectedDate}
+                                    {data.date}
+                                </Text>
+                            </View>
+                            <View style={styles.boxContentContainer}>
+                                <Text style={styles.boxContentBold}>Time:</Text>
+                                <Text style={[styles.boxContent, styles.limitText]}>
+                                    {data.time}
                                 </Text>
                             </View>
                         </View>

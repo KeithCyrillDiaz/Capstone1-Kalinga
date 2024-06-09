@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import ConfirmationModal from "../../../../modal/ConfirmationModal";
 import DeclineModal from "../../../../modal/DeclineModal";
 import axios from "axios";
@@ -12,16 +12,23 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { getMedicalAbstractsFiles, getMedicalAbstractsImages } from "../../../../api/Appointments/Request";
 import { getDateTime } from "../../../../functions/ConvertDateandTime";
+import { getId, getToken } from "../../../../functions/Authentication";
+import { Loader } from "../../../../components/loader";
+import { CustomModal } from "../../../../modal/logIn/AlertModal";
+import { ShowImage } from "../../../../modal/Verification/ImageModals";
+import { sendApprovedAppointmentEmail } from "../../../../api/email/AppointmentEmail";
 
 const donorAppointmentConfirmation = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(new Date());
+  const [formattedTime, setFormattedTime] = useState("")
   const [appointmentData, setAppointmentData] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [isDeclineModalOpen, setIsDeclineModalOpen] = useState(false);
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
   const [images, setImages] = useState([])
   const [files, setFiles] = useState([])
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     DonationStatus: "",
@@ -29,11 +36,11 @@ const donorAppointmentConfirmation = () => {
     phoneNumber: "",
     emailAddress: "",
     homeAddress: "",
-    medicalCondition: "",
+    BabyCategory: "",
     milkAmount: "",
     location: "",
-    selectedDate: selectedDate.toISOString(),
-    selectedTime: selectedTime.toISOString(),
+    selectedDate: new Date(),
+    selectedTime: new Date(),
   });
 
   const handleChange = (e) => {
@@ -45,44 +52,60 @@ const donorAppointmentConfirmation = () => {
   };
 
   const { AppointmentDonorID } = useParams();
-  useEffect(() => {
-    const fetchAppointmentData = async () => {
-      try {
-        const response = await axios.get(
-          `${WebHost}/kalinga/getAppointmentsByDonorID/${AppointmentDonorID}`
-        );
-        setAppointmentData(response.data.Appointment);
-        setSelectedDate(new Date(response.data.Appointment.selectedDate));
-        setSelectedTime(new Date(response.data.Appointment.selectedTime));
-        await fetchRequirements(response.data.Appointment.Donor_ID);
-      } catch (error) {
-        console.error("Error fetching appointment data:", error);
-      }
-    };
+  const fetchAppointmentData = async () => {
+    try {
+      setLoading(true)
+      const response = await axios.get(
+        `${WebHost}/kalinga/getAppointmentsByDonorID/${AppointmentDonorID}`
+      );
+      setAppointmentData(response.data.Appointment);
+      const appointment  = response.data.Appointment
+      const { time } = getDateTime({data: appointment})
+      setFormattedTime(time)
+      setSelectedDate(new Date(response.data.Appointment.selectedDate));
+      setSelectedTime(new Date(response.data.Appointment.selectedTime));
+    
+      await fetchRequirements(response.data.Appointment.Donor_ID);
+    } catch (error) {
+      console.error("Error fetching appointment data:", error);
+    } finally {
+      setLoading(false)
+    }
+  };
 
-    console.log("AppointmentDonorID:", AppointmentDonorID);
+  console.log("AppointmentDonorID:", AppointmentDonorID);
+  useEffect(() => {
     fetchAppointmentData();
   }, [AppointmentDonorID]);
 
+  const [loading, setLoading] = useState(false)
   const handleApproved = async () => {
-    setShowModal(true); // Open the modal
+    setShowModal(false); // Close the modal
+ // Open the modal
     try {
+      setLoading(true)
       // Make a PUT request to update the RequestStatus to "Ongoing"
-      const utcTime = new Date(selectedTime.getTime() + (selectedTime.getTimezoneOffset() * 60000));
+      // const utcTime = new Date(selectedTime.getTime() + (selectedTime.getTimezoneOffset() * 60000));
 
       await axios.put(
         `${WebHost}/kalinga/updateDonationStatus/${AppointmentDonorID}`,
         {
           DonationStatus: "Ongoing",
           selectedDate: selectedDate.toISOString(),
-          selectedTime: utcTime.toISOString()
+          selectedTime: selectedTime.toISOString(),
+          BabyCategory: appointmentData?.BabyCategory ?? "Did not set"
         }
       );
-
+      setLoading(false)
+      await sendApprovedAppointmentEmail({id: appointmentData.Donor_ID})
+      const id = getId()
+      navigate(`/admin/${id}/DonorAppointManage`)
       // Optionally, you can reload the data or do any other action upon successful update
     } catch (error) {
       console.error("Error updating request status:", error);
       // Handle error if needed
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -99,26 +122,33 @@ const donorAppointmentConfirmation = () => {
 
   const handleComplete = async () => {
     // Mark the function as async
-    setIsCompleteModalOpen(true);
+    setIsCompleteModalOpen(false);
 
     try {
+      setLoading(true)
       await axios.put(
         `${WebHost}/kalinga/updateDonationComplete/${AppointmentDonorID}`,
         {
           DonationStatus: "Complete",
         }
       );
-
+      setLoading(false)
+      const id = getId()
+      navigate(`/admin/${id}/DonorAppointManage`)
       // Optionally, you can reload the data or do any other action upon successful update
     } catch (error) {
       console.error("Error updating request status:", error);
       // Handle error if needed
+    } finally{
+      setLoading(false)
     }
   };
 
   const handleDeclineConfirm = async () => {
+    setShowModal(false); // Close the modal
     try {
       // Update the DonationStatus to "Ongoing"
+      setLoading(true)
       const response = await axios.put(
         `${WebHost}/kalinga/updateDonationStatus/${AppointmentDonorID}`,
         {
@@ -131,11 +161,15 @@ const donorAppointmentConfirmation = () => {
 
       // Handle success response
       console.log("Donation status updated successfully:", response.data);
-      setShowModal(false); // Close the modal
+      setLoading(false)
+      const id = getId()
+      navigate(`/admin/${id}/DonorAppointManage`)
     } catch (error) {
       // Handle error
       console.error("Error updating donation status:", error);
       // You can add a notification or alert here to inform the user about the error
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -143,18 +177,10 @@ const donorAppointmentConfirmation = () => {
     setIsDeclineModalOpen(false); // Close the modal
   };
 
-  const handleApproveConfirm = () => {
-    // Add your logic for handling the "Solved" button action here
-    setShowModal(false); // Close the modal
-  };
-
   const handleApproveCancel = () => {
     setShowModal(false); // Close the modal
   };
 
-  const handleCompleteConfirm = async () => {
-    setIsCompleteModalOpen(false);
-  };
 
   const handleCompleteCancel = () => {
     setIsCompleteModalOpen(false); // Close the modal
@@ -169,24 +195,67 @@ const donorAppointmentConfirmation = () => {
     setSelectedTime(time);
   };
 
+
    //fetch Image requirements
   const fetchRequirements = async (id) => {
     const Donor_ID = id
     console.log("id: ", id)
-    const files = await getMedicalAbstractsFiles({id: Donor_ID, purpose: "Donate"})
-    const images = await getMedicalAbstractsImages({id: Donor_ID, purpose: "Donate"})
+    const token = getToken()
+    const files = await getMedicalAbstractsFiles({id: Donor_ID, purpose: "Donate", token: token})
+    const images = await getMedicalAbstractsImages({id: Donor_ID, purpose: "Donate", token: token})
     if(files) setFiles(files)
       else setFiles([])
     if(images) setImages(images)
       else setImages([])
   }
 
+
+  const handleSelectChange = (event) => {
+    const { name, value } = event.target;
+    const newAppointmentData = {
+      ...appointmentData,
+      BabyCategory: value
+    }
+    setAppointmentData(newAppointmentData)
+  };
+
+
+  const [alert, setAlert] = useState(false)
+  const confirmation = () => {
+    if(appointmentData?.BabyCategory === "" || appointmentData?.BabyCategory == null ){
+      setAlert(true)
+      return
+    }
+    setShowModal(true)
+    
+  }
+
+  const [imageLink, setImageLink] = useState("");
+  const [showImage, setShowImage] = useState(false);
+  const [fileName, setFileName] = useState("")
+  const getImageUri = (data) => {
+    const {link, originalname} = data
+    setImageLink(link);
+    setFileName(originalname)
+    setShowImage(true);
+};
+
+  if(loading){
+    return(
+      <Loader isLoading={loading}/>
+    )
+  }
+  
   return (
     <section className="w-full h-screen bg-primary-body overflow-hidden relative px-4">
       <div className="p-12 pt-1">
         <h1 className="mt-8 text-3xl text-primary-default font-bold font-sans">
           Appointment Confirmation
         </h1>
+        {alert && (
+          <CustomModal message={"Please add a baby category first"} onClose={() => setAlert(false)}/>
+        )}
+        
         {/* Full Name Input */}
         <div className="mt-8">
           <input
@@ -264,21 +333,7 @@ const donorAppointmentConfirmation = () => {
         </div>
         {/* Medical Condition and Amount Donated Input */}
         <div className="flex gap-x-2">
-          <div className="w-2/3 mt-4">
-            <input
-              type="text"
-              id="medicalCondition"
-              name="medicalCondition"
-              value={`Medical Condition: ${
-                appointmentData ? appointmentData.medicalCondition : ""
-              }`}
-              onChange={handleChange}
-              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
-              disabled
-              placeholder="Medical Condition"
-            />
-          </div>
-          <div className="w-1/3 mt-4">
+          <div className="w-1/3">
             <input
               type="text"
               id="amountDonated"
@@ -287,7 +342,7 @@ const donorAppointmentConfirmation = () => {
                 appointmentData ? appointmentData.milkAmount : ""
               }`}
               onChange={handleChange}
-              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
+              className="bg-white w-full px-4 py-2 h-14 shadow-md mt-6 rounded-lg focus:outline-none focus: text-primary-default"
               disabled
               placeholder="Amount of Milk Donated"
             />
@@ -326,48 +381,54 @@ const donorAppointmentConfirmation = () => {
                 >
                   Scheduled Time
                 </label>
+                { appointmentData.DonationStatus === "Pending" && (
                 <input
-                  type="time"
-                  id="time"
-                  value={
+                type="time"
+                id="time"
+                value={
                     selectedTime
                       ? selectedTime.toISOString().substring(11, 16)
                       : ""
+                }
+                onChange={(e) => {
+                  const [hours, minutes] = e.target.value.split(":");
+                  const newTime = new Date(selectedTime);
+                  
+                  // Set the hours and minutes of the new time
+                  newTime.setUTCHours(parseInt(hours, 10), parseInt(minutes, 10));
+                
+                  // Convert newTime to local time zone (Philippine time)
+                  const localTime = newTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+                
+                  // Parse the local time string to get the hours, minutes, and AM/PM
+                  const [localHours, localMinutes, amPm] = localTime.split(/:| /);
+                  
+                  // Convert hours to 24-hour format
+                  let hours24 = parseInt(localHours, 10);
+                  if (amPm.toLowerCase() === 'pm' && hours24 < 12) {
+                    hours24 += 12;
+                  } else if (amPm.toLowerCase() === 'am' && hours24 === 12) {
+                    hours24 = 0;
                   }
-                  onChange={(e) => {
-                    const [hours, minutes] = e.target.value.split(":");
-                    const newTime = new Date(selectedTime);
-                    
-                    // Set the hours and minutes of the new time
-                    newTime.setUTCHours(parseInt(hours, 10), parseInt(minutes, 10));
-                  
-                    // Convert newTime to local time zone (Philippine time)
-                    const localTime = newTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
-                  
-                    // Parse the local time string to get the hours, minutes, and AM/PM
-                    const [localHours, localMinutes, amPm] = localTime.split(/:| /);
-                    
-                    // Convert hours to 24-hour format
-                    let hours24 = parseInt(localHours, 10);
-                    if (amPm.toLowerCase() === 'pm' && hours24 < 12) {
-                      hours24 += 12;
-                    } else if (amPm.toLowerCase() === 'am' && hours24 === 12) {
-                      hours24 = 0;
-                    }
-                  
-                    // Set the new time with local hours and minutes
-                    newTime.setHours(hours24, parseInt(localMinutes, 10));
-                  
-                    setSelectedTime(newTime);
-                  }}
-                  className={`bg-white w-full py-2 h-14 px-4 shadow-md rounded-lg focus:outline-none focus: text-primary-default ${
-                    appointmentData.DonationStatus === "Pending"
-                      ? "focus: text-primary-default"
-                      : "bg-gray-100 cursor-not-allowed"
-                  }`}
-                  // Disable time selection if not pending
-                  disabled={appointmentData.DonationStatus !== "Pending"}
-                />
+                
+                  // Set the new time with local hours and minutes
+                  newTime.setHours(hours24, parseInt(localMinutes, 10));
+                  setSelectedTime(newTime);
+                }}
+                className={`bg-white w-full py-2 h-14 px-4 shadow-md rounded-lg focus:outline-none focus: text-primary-default`}
+                // Disable time selection if not pending
+                disabled={appointmentData.DonationStatus !== "Pending"}
+              />
+            )}
+            { appointmentData.DonationStatus !== "Pending" && (
+              <input
+                type="text"
+                id="time"
+                value={formattedTime}
+                disabled={true}
+                className={`bg-white w-full py-2 h-14 px-4 shadow-md rounded-lg focus:outline-none focus: text-primary-default`}
+              />
+            )}
               </div>
             </>
           )}
@@ -428,13 +489,21 @@ const donorAppointmentConfirmation = () => {
             </div>
           </div>
         </div>
-      
+        {showImage && (
+          <ShowImage
+            link={imageLink}
+            fileName={fileName}
+            onClose={() => setShowImage(false)}
+          />
+        )}
           <div
           className="flex flex-row"
           >
             {images.length !== 0 && images.map(requirement => (
               <>
-                    <div key={requirement.originalname} className="bg-white px-4 py-2 w-full h-72 shadow-md rounded-lg focus:outline-none focus: text-primary-default">
+                    <div key={requirement.originalname} 
+                    onClick={() => getImageUri(requirement)}
+                    className="bg-white px-4 py-2 w-full h-72 shadow-md rounded-lg focus:outline-none focus: text-primary-default">
                       <span className="flex justify-center text-primary-default text-lg text-center">
                       {requirement.originalname}
                       </span>
@@ -470,13 +539,13 @@ const donorAppointmentConfirmation = () => {
           <div className="flex justify-end mr-4 mt-10">
             <div className="flex flex-col gap-y-2">
               <button
-                onClick={handleApproved}
+                onClick={() => setShowModal(true)}
                 className="flex justify-end bg-primary-default text-white px-4 py-2 rounded-full hover:bg-pink-600 shadow-md"
               >
                 Approved
               </button>
               <button
-                onClick={handleDecline}
+                onClick={() => setIsDeclineModalOpen(true)}
                 className="bg-white text-primary-default px-4 py-2 rounded-full border border-pink-500 hover:bg-primary-default hover:text-white"
               >
                 Decline
@@ -487,7 +556,7 @@ const donorAppointmentConfirmation = () => {
         {appointmentData && appointmentData.DonationStatus === "Ongoing" && (
           <div className="flex justify-end mr-4 mt-10">
             <button
-              onClick={handleComplete}
+              onClick={() => setIsCompleteModalOpen(true)}
               className="flex justify-end bg-primary-default text-white px-4 py-2 rounded-full hover:bg-pink-600 shadow-md"
             >
               Complete
@@ -497,8 +566,8 @@ const donorAppointmentConfirmation = () => {
 
         <ConfirmationModal
           isOpen={showModal}
-          onCancel={handleApproveConfirm}
-          onConfirm={handleApproveCancel}
+          onCancel={handleApproveCancel}
+          onConfirm={handleApproved}
           message="Are you sure you want to approve this appointment? Once approved, the appointment will be scheduled."
         />
         <AppointmentDeclineModal
@@ -510,7 +579,7 @@ const donorAppointmentConfirmation = () => {
         />
         <CompleteModal
           isOpen={isCompleteModalOpen}
-          onConfirm={handleCompleteConfirm}
+          onConfirm={handleComplete}
           onCancel={handleCompleteCancel}
           message="Are you sure this appointment is already completed?"
         />

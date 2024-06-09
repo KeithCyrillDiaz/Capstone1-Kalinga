@@ -3,8 +3,7 @@ import {
     updateBlockStatusDonor, 
     updateBlockStatusRequestor, 
     getBlockedRequestors, getBlockedDonors 
-} from '../../models/users'
-import { nextTick } from 'process'
+} from '../../../models/users'
 
 
 export const updateBlockStatus = async (req: express.Request, res: express.Response, next: express.NextFunction) => {

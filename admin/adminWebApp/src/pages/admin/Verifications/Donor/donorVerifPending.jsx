@@ -3,6 +3,7 @@ import axios from "axios";
 import { WebHost } from "../../../../../MyConstantAdmin";
 import { Loader } from "../../../../components/loader";
 import { RenderPendingVerification } from "../../../../components/Verification/RenderPendingVerification";
+import { getToken } from "../../../../functions/Authentication";
 
 export default function () {
   useEffect(() => {
@@ -18,14 +19,24 @@ export default function () {
   const [loading, setLoading] = useState(false);
   const userType = "Donor";
 
+  const [token, setToken] = useState(null)
+
+  useEffect(() => {
+    const token =getToken()
+    if(token)setToken(token)
+  },[])
+
   const fetchData = async () => {
     try {
       setLoading(true);
       console.log("Fetching Data");
+      const token = getToken()
       const response = await axios.post(`${WebHost}/kalinga/fetchPendingScreeningFormByUserType/${userType}`,
-      { status: "Pending"}
+      { status: "Pending"},
+      { headers: {Authorization: `Bearer ${token}`}}
     )
       // console.log("response: ", response.data.screeningForms)
+      console.log(response.data.messages.message)
       if (!response.data.screeningForms) {
         console.log("Error fetching Screening Forms");
       } else {
@@ -51,37 +62,7 @@ export default function () {
             <h1 className="text-3xl text-primary-default font-bold font-sans py-4">
               Donor Pendings
             </h1>
-            <div className="relative flex items-center bg-white border border-primary-default w-1/4 rounded-full">
-              <input
-                type="text"
-                className="w-56 h-8 text-xl bg-transparent border-none outline-none pl-5 placeholder:text-primary-default text-primary-default"
-                placeholder="Search"
-              />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="1.3em"
-                height="1.3em"
-                viewBox="0 0 24 24"
-                className="text-primary-default ml-28"
-              >
-                <path
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M21 21l-6-6"
-                />
-                <circle
-                  cx="10"
-                  cy="10"
-                  r="8"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                />
-              </svg>
-            </div>
+            
           </div>
 
           <div

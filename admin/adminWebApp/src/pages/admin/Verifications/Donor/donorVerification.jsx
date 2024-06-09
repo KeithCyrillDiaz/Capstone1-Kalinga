@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DonorMedicalPage from "./donorMedicalpage";
 import DonorPages from "./donorpages";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { WebHost } from "../../../../../MyConstantAdmin";
 import { Loader } from "../../../../components/loader";
@@ -10,7 +10,8 @@ import {
   ShowImage,
   MissingRequirements,
 } from "../../../../modal/Verification/ImageModals";
-import { Confirmation, VerificationModal } from "../../../../modal/Verification/VerificationModal";
+import { Confirmation, RejectionRemarks, VerificationModal } from "../../../../modal/Verification/VerificationModal";
+import { getId, getToken } from "../../../../functions/Authentication";
 
 export default function () {
   const [activeTab, setActiveTab] = useState("screening");
@@ -19,6 +20,7 @@ export default function () {
   const [status, setStatus] = useState("");
   const [images, setImages] = useState([]);
   const [files, setFiles] = useState([]);
+  const [ remark, setRemarks]= useState("");
 
   //Modals
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
@@ -27,12 +29,15 @@ export default function () {
   const [openMissingRequirements, setOpenMissingRequirements] = useState(false);
   const [showImage, setShowImage] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [openRejectionRemarks, setOpenRejectionRemarks]  = useState(false);
+
+  const navigate = useNavigate()
 
   //Image Modal Info
   const [imageLink, setImageLink] = useState("");
   const [fileName, setFileName] = useState("");
 
-  const { id } = useParams(); // Applicant ID
+  const { Applicant_ID } = useParams(); // Applicant ID
 
   const [form, setForm] = useState({});
   //const [isRejectConfirmed, setIsRejectConfirmed] = useState(false);
@@ -50,12 +55,20 @@ export default function () {
   };
 
   const sendEmail = async (status) => {
+ 
     try {
+      const token = getToken()
       console.log("Sending Email");
       const response =
         status === "approved"
-          ? await axios.post(`${WebHost}/kalinga/sendApprovedEmail/${id}`)
-          : await axios.post(`${WebHost}/kalinga/sendDeclinedEmail/${id}`);
+          ? await axios.post(`${WebHost}/kalinga/sendApprovedEmail/${Applicant_ID}`,
+            null,
+            {headers: {Authorization: `Bearer ${token}`}}
+          )
+          : await axios.post(`${WebHost}/kalinga/sendDeclinedEmail/${Applicant_ID}`,
+            {reason: remark},
+            {headers: {Authorization: `Bearer ${token}`}}
+          );
       console.log(response.data.messages.message);
     } catch (error) {
       console.log("Error Sending Email", error);
@@ -63,6 +76,11 @@ export default function () {
   };
 
   const updateStatus = async (data) => {
+    if(remark === "") {
+      console.log("remark is an empty string")
+      console.log("remark: ", remark)
+      return
+    }
     setIsConfirmationModalOpen(false)
     const formatStatus = data === "declined" ? "Rejected" : "Approved";
     console.log("formatStatus: ", formatStatus);
@@ -70,7 +88,7 @@ export default function () {
       setLoading(true)
       console.log("Updating Screening Form Status to ", data);
       const response = await axios.patch(
-        `${WebHost}/kalinga/updateScreeningFormStatus/${id}`,
+        `${WebHost}/kalinga/updateScreeningFormStatus/${Applicant_ID}`,
         { status: formatStatus }
       );
       console.log("response: ", response.data.messages.message);
@@ -86,9 +104,10 @@ export default function () {
   
   const fetchData = async () => {
     try {
+      console.log("Test")
       setLoading(true);
       //axiosToken
-      const response = await axios.get(`${WebHost}/kalinga/getScreeningFormsApplicant_ID/${id}`,)
+      const response = await axios.get(`${WebHost}/kalinga/getScreeningFormsApplicant_ID/${Applicant_ID}`,)
 
       if (!response.data.screeningForms) {
         console.log("Error fetching Screening forms");
@@ -103,14 +122,20 @@ export default function () {
       setLoading(false);
     }
   };
+  const [token, setToken] =useState(null)
+  useEffect(() => {
+    const token = getToken()
+    if(token) setToken(token)
+  }, [])
 
   const fetchImagesAndFiles = async () => {
     try {
       console.log("Fetching Files and Images in database");
       //getFileData in Database
       const getFilesResponse = await axios.post(
-        `${WebHost}/kalinga/getMedicalRequirementFile/${id}`,
-        {purpose: "Application"}
+        `${WebHost}/kalinga/getMedicalRequirementFile/${Applicant_ID}`,
+        {purpose: "Application"},
+        {headers: { Authorization: `Bearer ${token}`}}
       );
       console.log(getFilesResponse.data.messages.message);
       if (getFilesResponse.data.messages.code === 0) {
@@ -118,9 +143,11 @@ export default function () {
       }
 
       //getImageData in Database
+      const token = getToken()
       const getImagesResponse = await axios.post(
-        `${WebHost}/kalinga/getMedicalRequirementImage/${id}`,
-        {purpose: "Application"}
+        `${WebHost}/kalinga/getMedicalRequirementImage/${Applicant_ID}`,
+        {purpose: "Application"},
+        {headers: { Authorization: `Bearer ${token}`}}
       );
       console.log(getImagesResponse.data.messages.message);
       if (getImagesResponse.data.messages.code === 0) {
@@ -175,6 +202,11 @@ export default function () {
       }
     }
   };
+
+   const handleRejectionRemarks = (value) => {
+    setRemarks(value)
+    console.log("remark: ", value)
+   }
 
   useEffect(() => {
     fetchData();
@@ -268,7 +300,7 @@ export default function () {
                 <DonorMedicalPage
                   form={form}
                   currentPage={currentPage}
-                  id={id}
+                  id={Applicant_ID}
                 />
                 <div className="flex justify-end mr-10">
                   <div className="flex flex-col gap-y-2">
@@ -315,7 +347,10 @@ export default function () {
             name={form.fullName}
             userType={form.userType}
             onClose={() => setIsConfirmationModalOpen(false)}
-            onConfirm = {() => updateStatus(status)}
+            onConfirm = {() =>{
+              setIsConfirmationModalOpen(false)
+              setOpenRejectionRemarks(true)
+            }}
           />
         </>
       )}
@@ -325,9 +360,24 @@ export default function () {
             status={status}
             name={form.fullName}
             userType={form.userType}
-            onClose={() => setApprovalMessage(false)}
+            onClose={() => {
+              setApprovalMessage(false)
+              const id = getId()
+              navigate(`/admin/${id}/DonorVerifPendings`)
+            }}
           />
         </>
+      )}
+
+      {openRejectionRemarks && (
+        <RejectionRemarks
+          remark = {handleRejectionRemarks}
+          onClose={() => {
+            setOpenRejectionRemarks(false)
+            updateStatus(status)
+          }}
+          onCancel={() => setOpenRejectionRemarks(false)}
+        />
       )}
     </>
   );

@@ -10,6 +10,7 @@ const DeleteModal = ({ isOpen, message, onConfirm, onCancel }) => {
   
     const handleConfirm = () => {
       setIsSecondModalOpen(true);
+      onConfirm();
     };
   
     const handleSecondModalConfirm = () => {

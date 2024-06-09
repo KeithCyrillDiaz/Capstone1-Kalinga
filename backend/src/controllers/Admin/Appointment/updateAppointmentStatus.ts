@@ -1,16 +1,16 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import AppointmentModel from '../../../models/Donor/DonorSetAppointmentModel';
 
-const updateDonationStatus = async (req: Request, res: Response): Promise<void> => {
+const updateDonationStatus = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { AppointmentDonorID } = req.params;
   const { DonationStatus } = req.body;
   const { selectedDate } = req.body;
-  const { selectedTime } = req.body;
+  const { selectedTime, BabyCategory} = req.body;
 
   try {
     const donation = await AppointmentModel.findOneAndUpdate(
       { AppointmentDonorID: AppointmentDonorID }, 
-      { $set: {DonationStatus: DonationStatus, selectedDate: selectedDate, selectedTime: selectedTime }}, 
+      { $set: {DonationStatus: DonationStatus, selectedDate: selectedDate, selectedTime: selectedTime, BabyCategory: BabyCategory }}, 
       { new: true }
     );
 
@@ -23,6 +23,8 @@ const updateDonationStatus = async (req: Request, res: Response): Promise<void> 
     }
 
     res.json({ message: 'Donation status updated successfully', donation });
+
+    next()
   } catch (error) {
     console.error('Error updating donation status:', error);
     res.status(500).json({ error: 'Internal server error' });

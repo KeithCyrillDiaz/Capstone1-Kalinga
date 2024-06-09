@@ -3,6 +3,7 @@ import axios from "axios";
 import { WebHost } from "../../MyConstantAdmin";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import { getToken } from "../functions/Authentication";
 
 export default function RequestPerMonthBarangay({ name, selectedMonth, selectedYear, selectedBarangay }) {
   const [totalCompleteRequests, setTotalCompleteRequests] = useState(0);
@@ -18,7 +19,7 @@ export default function RequestPerMonthBarangay({ name, selectedMonth, selectedY
       const monthValue = isNaN(parseInt(selectedMonth))
         ? getMonthValue(selectedMonth)
         : parseInt(selectedMonth);
-
+      const token = getToken()
       try {
         const response = await axios.get(
           `${WebHost}/kalinga/getTotalCompleteRequestBarangay`,
@@ -28,6 +29,7 @@ export default function RequestPerMonthBarangay({ name, selectedMonth, selectedY
               selectedYear: parseInt(selectedYear),
               selectedBarangay: selectedBarangay
             },
+            headers: {Authorization: `Bearer ${token}`}
           }
         );
         const completeData = response.data;
@@ -41,6 +43,7 @@ export default function RequestPerMonthBarangay({ name, selectedMonth, selectedY
               selectedYear: parseInt(selectedYear),
               selectedBarangay: selectedBarangay
             },
+            headers: {Authorization: `Bearer ${token}`}
           }
         );
         const declineData = Declineresponse.data;

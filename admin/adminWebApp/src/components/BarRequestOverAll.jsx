@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { getToken } from "../functions/Authentication";
 
 export default function BarRequestOverAll({ name }) {
   const [monthlyData, setMonthlyData] = useState([]);
@@ -24,9 +25,14 @@ export default function BarRequestOverAll({ name }) {
     const fetchData = async () => {
       setLoading(true);
       setError(null);
+      const token = getToken()
       try {
-        const responseComplete = await axios.get(`${WebHost}/kalinga/getTotalCompleteRequestAllMonths?year=${selectedYear}`);
-        const responseDecline = await axios.get(`${WebHost}/kalinga/getTotalDeclineRequestAllMonths?year=${selectedYear}`);
+        const responseComplete = await axios.get(`${WebHost}/kalinga/getTotalCompleteRequestAllMonths?year=${selectedYear}`, 
+        {headers: {Authorization: `Bearer ${token}`}}
+        );
+        const responseDecline = await axios.get(`${WebHost}/kalinga/getTotalDeclineRequestAllMonths?year=${selectedYear}`,
+        {headers: {Authorization: `Bearer ${token}`}}
+        );
         const mergedData = mergeData(responseComplete.data, responseDecline.data);
         setMonthlyData(mergedData);
       } catch (error) {
@@ -96,14 +102,19 @@ export default function BarRequestOverAll({ name }) {
       head: [tableColumn],
       body: tableRows,
       startY: 60,
-      headStyles: { fillColor: "#ED5077" },
+      headStyles: { fillColor: [255, 105, 180], halign: "center" },
       bodyStyles: { textColor: "#000000" },
       footStyles: { fillColor: "#ED5077", textColor: "#FFFFFF" },
       didDrawCell: (data) => {
         if (data.section === 'body' && data.column.index === 0) {
           doc.setTextColor("#000000"); // reset to black for table content
         }
-      }
+      },
+      columnStyles: {
+        0: { halign: "center" },
+        1: { halign: "center" },
+        2: { halign: "center" },
+      },
     });
 
     doc.save("KALINGA_OVERALL_REQUEST_REPORT.pdf");

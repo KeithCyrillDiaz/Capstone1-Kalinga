@@ -7,6 +7,7 @@ import {
   ShowImage,
   MissingRequirements,
 } from "../../../../modal/Verification/ImageModals";
+import { getToken } from "../../../../functions/Authentication";
 
 const RequestorMedicalPage = ({ currentPage, id }) => {
   const [images, setImages] = useState({});
@@ -24,10 +25,11 @@ const RequestorMedicalPage = ({ currentPage, id }) => {
     try {
       setLoading(true);
       console.log("Fetching Files and Images in database");
-
+      const token = getToken()
       const getFilesResponse = await axios.post(
         `${WebHost}/kalinga/getMedicalRequirementFile/${id}`,
-        {purpose: "Application"}
+        {purpose: "Application"},
+        {headers: { Authorization: `Bearer ${token}`}}
       );
       console.log(getFilesResponse.data.messages.message);
       if (getFilesResponse.data.messages.code === 0) {
@@ -40,7 +42,8 @@ const RequestorMedicalPage = ({ currentPage, id }) => {
 
       const getImagesResponse = await axios.post(
         `${WebHost}/kalinga/getMedicalRequirementImage/${id}`,
-        {purpose: "Application"}
+        {purpose: "Application"},
+        {headers: { Authorization: `Bearer ${token}`}}
       );
       console.log(getImagesResponse.data.messages.message);
       if (getImagesResponse.data.messages.code === 0) {
@@ -57,8 +60,9 @@ const RequestorMedicalPage = ({ currentPage, id }) => {
     }
   };
 
-  const getImageUri = (link) => {
+  const getImageUri = (link, name) => {
         setImageLink(link);
+        setFileName(name)
         setShowImage(true);
   };
 
@@ -105,7 +109,7 @@ const RequestorMedicalPage = ({ currentPage, id }) => {
                         {images[requirement] && (
                           <div
                             key={requirement}
-                            onClick={() => getImageUri(images[requirement])}
+                            onClick={() => getImageUri(images[requirement], requirement)}
                             className="relative border rounded-md border-primary-default bg-white px-4 py-4 my-4 mx-2 w-60 h-60"
                           >
                             <span className="flex justify-center font-sans text-primary-default text-lg font-bold text-center">

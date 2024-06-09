@@ -14,6 +14,7 @@ import { CommonActions } from '@react-navigation/native';
 import ImageZoom from 'react-native-image-pan-zoom';
 import { Uploading } from '../../../uploader/Uploading.js';
 import { UploadImageOrFileToFirebase } from '../../../uploader/fireBaseUploader.js'
+import { ImagePickerModal } from '../../../modal/ImagePickerModal.js';
 const AppointmentUploads = ({route}) => {
 
   const { formData } = route.params;
@@ -33,6 +34,12 @@ const AppointmentUploads = ({route}) => {
   const [imageUri, setIMageUri] = useState("")
   const [loaderLabel, setLoaderLabel] = useState("")
 
+  
+  //imagePicker
+  const [showImagePicker, setShowImagePicker] = useState(false)
+  const [selectedType, setSelectedType] = useState("")
+
+
 
   const navigatePage = async () => {
     try {
@@ -51,63 +58,88 @@ const AppointmentUploads = ({route}) => {
     } 
 };
 
-  const handleImageUpload = async (attachmentType) => {
-    try {
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-            Alert.alert('Permission Denied', 'Sorry, we need camera roll permissions to make this work!');
-            return;
-        }
-
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [Dimensions.get('window').width, Dimensions.get('window').height],
-            quality: 1,
-        });
-
-        if (!result.canceled && result.assets && result.assets.length > 0) {
-          delete selectedFile[attachmentType]
-          if(Object.keys(selectedFile).length===0)setFileContainer(false)
-            let fileType = ''
-          result.assets.forEach(image => {
-
-            if (image.type === 'image' || !image.type.includes('/')) {
-                      fileType = image.type + "/jpeg"
-
-            } else {
-
-              fileType = image.type
-
-            }
-          });
-
-          setSelectedImage(prevState => ({
-              ...prevState,
-            
-
-              [attachmentType]: ({
-                uri: result.assets[0].uri,
-                name: attachmentType, 
-                type: fileType,
-                userType: "Donor",
-                owner: formData.fullName,
-                ownerID: formData.Donor_ID
-            
-              })
-              
-          }));
-
-          const numberOfObjects = Object.keys(selectedImage).length;
-          if (numberOfObjects >= 3) setScrollableHorizontal(true);
-
-          setImageContainer(true)
+const chooseImagePicker = async (value) => {
+  setShowImagePicker(false)
+  if(value === "Camera"){
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      if (status !== 'granted') {
+          console.error('Camera permission not granted');
+          return;
       }
-          
+      
+      const result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [Dimensions.get('window').width, Dimensions.get('window').height],
+        quality: 1,
+      });
+
+      return result
+  } else {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+          Alert.alert('Permission Denied', 'Sorry, we need camera roll permissions to make this work!');
+          return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [Dimensions.get('window').width, Dimensions.get('window').height],
+          quality: 1,
+          multiple: true, 
+      });
+
+      return result
+  }
+ 
+}
+
+const handleImageUpload = async (attachmentType, value) => {
+  try {
+
+     const result = await chooseImagePicker(value)
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        delete selectedFile[attachmentType]
+        if(Object.keys(selectedFile).length===0)setFileContainer(false)
+          let fileType = ''
+        result.assets.forEach(image => {
+
+          if (image.type === 'image' || !image.type.includes('/')) {
+                    fileType = image.type + "/jpeg"
+
+          } else {
+
+            fileType = image.type
+
+          }
+        });
+        setSelectedImage(prevState => ({
+            ...prevState,
         
-    } catch (error) {
-        Alert.alert('Error', 'Failed to pick an image.');
+            [attachmentType]: ({
+              uri: result.assets[0].uri,
+              name: attachmentType, 
+              type: fileType,
+              userType: "Requestor",
+              owner: formData.fullName,
+              ownerID: formData.Requestor_ID
+          
+            })
+            
+        }));
+        setImageContainer(true)
+  
     }
+        
+      
+  } catch (error) {
+      Alert.alert('Error', 'Failed to pick an image.');
+      console.log(error)
+  }
+
+  // console.log("selectedImage:", JSON.stringify(selectedImage, null, 2));
 };
 
 const handleFileUpload = async (attachmentType) => {
@@ -178,7 +210,7 @@ const handleFileUpload = async (attachmentType) => {
       <View style={globalStyles.container}>
          <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
             <View style = {globalHeader.SmallHeader}>
-              <Text style = {globalHeader.SmallHeaderTitle}>Apply as Donor</Text>
+              <Text style = {globalHeader.SmallHeaderTitle}>Set Appointment</Text>
             </View>
         <ScrollView 
         showsVerticalScrollIndicator = {false}
@@ -193,6 +225,12 @@ const handleFileUpload = async (attachmentType) => {
             //  onClose = {() => setUploadingImage(false)}
             />
           )}
+          {showImagePicker && (
+              <ImagePickerModal 
+              onSelect = {handleImageUpload}
+              type= {selectedType} 
+              onClose={() => setShowImagePicker(false)}/>
+          )}
 
             <Text style = {styles.title}> Upload Medical Requirements </Text>
             <Text style = {styles.note}> Note: Please make sure that your images are clear</Text>
@@ -205,7 +243,13 @@ const handleFileUpload = async (attachmentType) => {
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                        <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('HepaB')}>
+                        <TouchableOpacity 
+                        style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} 
+                        onPress={()=>{
+                          setSelectedType('HepaB')
+                          setShowImagePicker(true)
+                          }}
+                        >
                           <AntDesign name="picture" size={27} color="#E60965" />
                         </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>
@@ -225,7 +269,13 @@ const handleFileUpload = async (attachmentType) => {
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                        <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('HIV')}>
+                        <TouchableOpacity 
+                        style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} 
+                        onPress={()=>{
+                          setSelectedType('HIV')
+                          setShowImagePicker(true)
+                          }}
+                        >
                           <AntDesign name="picture" size={27} color="#E60965" />
                         </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>
@@ -243,7 +293,13 @@ const handleFileUpload = async (attachmentType) => {
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                        <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('Syphillis')}>
+                        <TouchableOpacity 
+                        style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} 
+                        onPress={()=>{
+                          setSelectedType('Syphillis')
+                          setShowImagePicker(true)
+                          }}
+                        >
                           <AntDesign name="picture" size={27} color="#E60965" />
                         </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>
@@ -261,11 +317,17 @@ const handleFileUpload = async (attachmentType) => {
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                        <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('Pregnancy Book')}>
+                        <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} 
+                        onPress={()=>{
+                          setSelectedType('Pregnancy Book')
+                          setShowImagePicker(true)
+                          }}
+                        >
                           <AntDesign name="picture" size={27} color="#E60965" />
                         </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>
-                        <TouchableOpacity style = {{ backgroundColor: "pink", padding: 5, borderRadius: 7}}  onPress={()=> handleFileUpload('Pregnancy Book')}>
+                        <TouchableOpacity style = {{ backgroundColor: "pink", padding: 5, borderRadius: 7}}  
+                        onPress={()=> handleFileUpload('Pregnancy Book')}>
                           <AntDesign name="file1" size={24} color="#E60965"/>
                         </TouchableOpacity>
                     </View>
@@ -279,7 +341,13 @@ const handleFileUpload = async (attachmentType) => {
                 <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                        <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}}  onPress={()=>handleImageUpload('Government_ID')}>
+                        <TouchableOpacity 
+                        style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}}  
+                        onPress={()=>{
+                          setSelectedType('Government_ID')
+                          setShowImagePicker(true)
+                          }}
+                        >
                           <AntDesign name="picture" size={27} color="#E60965" />
                         </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>

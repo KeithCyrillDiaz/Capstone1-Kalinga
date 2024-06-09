@@ -248,29 +248,38 @@ const checkEmail = async (email) => {
   return
 }
   const handleChangeText = (name, value) => {
-    const validNumber = /^[0-9]*$/
-    if(name === "mobileNumber" && !validNumber.test(value))return
+    if(name === "birthWeight" && /[^0-9]/.test(value))return
 
-    if(name === "email" && value.includes("@") && (value.endsWith("com") || value.endsWith("ph"))){
-      if(value === userInformation.email){
-        setIsEmailExisting(false)
-        setIsEmailValid(true)
-      } else {
-        console.log("Email: ", value)
-        setIsEmailValid(true)
-        checkEmail(value)
-      }
-    
-    } else if(name === "email") {
-      setIsEmailValid(false)
-      setIsEmailExisting(false)
-    }
-
-    setUserData({
-      ...userData,
-      [name]: value
-    })
+  if (name === "contactNumber" && /[^0-9]/.test(value)){
+    console.log("number: ", value)
+    setInvalidContactNumber(true)
+    return
+  } else if (name === "contactNumber" && value.length !== 11){
+    setInvalidContactNumber(true)
+  } else if(name === "contactNumber"){
+    setInvalidContactNumber(false)
+}
+  console.log("value:", value)
+  if (
+    name === "email" &&
+    value.includes("@") &&
+    (value.endsWith(".com") || value.endsWith(".ph")) &&
+    (value.match(/\.com/g) || []).length <= 1 && // Ensure there's at most one occurrence of ".com"
+    (value.match(/\.ph/g) || []).length <= 1 // Ensure there's at most one occurrence of ".ph"
+  ) {
+    console.log("Email: ", value);
+    setIsEmailValid(true);
+    checkEmail(value);
+  } else if (name === "email") {
+    setIsEmailValid(false);
+    setIsEmailExisting(false)
   }
+  setUserData({ ...userData, [name]: value });
+
+    return
+  }
+
+  
 
 const saveDetails = async () => {
   try{
@@ -460,38 +469,24 @@ const saveDetails = async () => {
             </View>
           </View>
   
-          <View style={{ flexDirection: "row", paddingHorizontal: 16, gap: 16 }}>
-            <View
-              style={{
-                width: Dimensions.get("screen").width / 2.3,
-              }}>
-              <View style={inputStyle.container}>
-                <Text style={inputStyle.label}>Age: </Text>
-                <TextInput style={inputStyle.primary} 
+              <View style={[inputStyle.container, {width: "90.5%", alignSelf: "center", marginLeft: -4}]}>
+                <Text style={[inputStyle.label, {color: onEdit ? "gray" : "#E60965"}]}>UID: </Text>
+                <TextInput style={[inputStyle.primary, {color: onEdit ? "gray" : "#E60965"}]}
+                  value={userData.Requestor_ID} 
+                  editable={false}
+                />
+              </View>
+          <View style={{ flexDirection: "row", paddingHorizontal: 16, gap:17 }}>
+          <View style={[inputStyle.container, {width: "27%"}]}>
+                <Text style={[inputStyle.label, {color: onEdit ? "gray" : "#E60965"}]}>Age: </Text>
+                <TextInput style={[inputStyle.primary , {color: onEdit ? "gray" : "#E60965"}]} 
                   value={userData.age}
                   editable={false}
                 />
               </View>
-            </View>
-  
-            <View
-              style={{
-                width: Dimensions.get("screen").width / 2.3,
-              }}>
-              <View style={inputStyle.container}>
-                <Text style={inputStyle.label}>Gender: </Text>
-                <TextInput style={inputStyle.primary}
-                  value={"Female"} 
-                  editable={false}
-                />
-              </View>
-            </View>
-          </View>
-  
-          <View style={{ paddingHorizontal: 16 }}>
-            <View style={inputStyle.container}>
-              <Text style={inputStyle.label}>Birthday: </Text>
-              <TextInput style={inputStyle.primary} 
+            <View style={[inputStyle.container, {width: "67%"}]}>
+              <Text style={[inputStyle.label, {color: onEdit ? "gray" : "#E60965"}]}>Birthday: </Text>
+              <TextInput style={[inputStyle.primary, , {color: onEdit ? "gray" : "#E60965"}]} 
                value = {userData.birthDate}
               editable={false}
               />
@@ -539,9 +534,9 @@ const saveDetails = async () => {
             <TouchableOpacity 
             disabled={!onEdit}
             onPress={() => setShowAddressPicker(true)}
-            style={[inputStyle.container, {height: 50}]}>
+            style={[inputStyle.container, {paddingVertical: 10}]}>
               <Text style={inputStyle.label}>Address:</Text>
-              <Text style={[inputStyle.primary, {minHeight:20}]}>{userData.homeAddress}</Text>
+              <Text style={[inputStyle.primary, {minHeight:20, width: "75%",}]}>{userData.homeAddress}</Text>
             </TouchableOpacity>
           </View>
           
@@ -636,7 +631,7 @@ const inputStyle = StyleSheet.create({
   container: {
     overflow: "hidden",
     flexDirection: "row",
-    gap: 7,
+    gap: 1,
     alignItems: "center",
     paddingHorizontal: 16,
     borderRadius: 13,
@@ -646,7 +641,7 @@ const inputStyle = StyleSheet.create({
   },
 
   label: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "bold",
     color: "#F94892",
   },
@@ -654,7 +649,7 @@ const inputStyle = StyleSheet.create({
   primary: {
     minHeight: 48,
     width: "100%",
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
     color: "#E60965",
   },

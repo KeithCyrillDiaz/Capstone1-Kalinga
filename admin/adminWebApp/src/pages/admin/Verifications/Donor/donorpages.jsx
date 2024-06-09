@@ -32,7 +32,7 @@ const DonorPages = ({ currentPage, form }) => {
             Home Address: {form.homeAddress}
           </div>
         </div>
-        <div className="px-16 my-6 ">
+        {/* <div className="px-16 my-6 ">
           <div className="flex font-bold text-2xl text-primary-default font-sans">
             Infant Information
           </div>
@@ -55,7 +55,7 @@ const DonorPages = ({ currentPage, form }) => {
               Birth Weight (kg): {form.birthWeight}
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     ),
 
@@ -63,86 +63,6 @@ const DonorPages = ({ currentPage, form }) => {
       <div className="px-16 my-6 ">
         <div className="font-sans text-primary-disabled my-2">
           Note: Select your answer by ticking the circle
-        </div>
-
-        <div className="relative border rounded-md border-primary-default bg-white px-2 py-2 font-sans text-primary-disabled">
-          <div className="flex gap-x-20 my-6">
-            <div className="flex justify-center items-center font-sans font-bold px-6 py-4">
-              Type of Donor
-            </div>
-            <div className="justify-center items-center">
-              <input type="checkbox" id="myCheckbox" class="hidden" checked />{" "}
-              <label
-                for="myCheckbox"
-                className="flex items-center cursor-not-allowed"
-              >
-                <div
-                  className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 mr-2 my-4 ${
-                    form.typeOfDonor === "Community"
-                      ? "bg-primary-default"
-                      : "bg-white"
-                  }`}
-                ></div>
-                <span className="font-sans font-bold">Community</span>
-              </label>
-              <input type="checkbox" id="myCheckbox" class="hidden" checked />{" "}
-              <label
-                for="myCheckbox"
-                className="flex items-center cursor-not-allowed"
-              >
-                <div
-                  className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 mr-2 my-4 ${
-                    form.typeOfDonor === "Private"
-                      ? "bg-primary-default"
-                      : "bg-white"
-                  }`}
-                ></div>
-                <span className="font-sans font-bold">Private</span>
-              </label>
-            </div>
-            <div className="justify-center items-center">
-              <input
-                type="checkbox"
-                id="myCheckbox"
-                className="hidden"
-                checked
-              />{" "}
-              <label
-                for="myCheckbox"
-                className="flex items-center cursor-not-allowed"
-              >
-                <div
-                  className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 mr-2 my-4 ${
-                    form.typeOfDonor === "Employee"
-                      ? "bg-primary-default"
-                      : "bg-white"
-                  }`}
-                ></div>
-                <span className="font-sans font-bold">Employee</span>
-              </label>
-              <input
-                type="checkbox"
-                id="myCheckbox"
-                className="hidden"
-                checked
-              />{" "}
-              <label
-                for="myCheckbox"
-                className="flex items-center cursor-not-allowed"
-              >
-                <div
-                  className={`w-5 h-5 border-2 border-primary-default rounded-full flex-shrink-0 mr-2 my-4 ${
-                    form.typeOfDonor === "Network Office / Agency"
-                      ? "bg-primary-default"
-                      : "bg-white"
-                  }`}
-                ></div>
-                <span className="font-sans font-bold">
-                  Network Office / Agency
-                </span>
-              </label>
-            </div>
-          </div>
         </div>
 
         <div

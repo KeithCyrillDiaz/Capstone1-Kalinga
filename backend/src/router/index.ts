@@ -8,6 +8,8 @@ import forum from './forum'
 import settings from './settings';
 import notification from './notification';
 import admin from './admin'
+import report from './report'
+import email from './email';
 
 const router = express.Router();
 
@@ -22,5 +24,7 @@ export default(): express.Router => {
     settings(router)
     notification(router)
     admin(router)
+    report(router)
+    email(router)
     return router;
 }

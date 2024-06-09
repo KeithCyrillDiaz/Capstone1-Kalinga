@@ -236,8 +236,8 @@ export default function ({ remarks }) {
                         <option value="Full Schedule">Full Schedule</option>
                         <option value="Holiday">Holiday</option>
                         <option value="No Office Hours">No Office Hours</option>
-                        <option value="Insufficient Requirement">
-                          Insufficient Requirement
+                        <option value="Insufficient Requirements">
+                          Insufficient Requirements
                         </option>
                       </select>
                     </div>

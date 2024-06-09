@@ -17,7 +17,11 @@ import { globalHeader } from "../../../../styles_kit/globalHeader.js";
 import { useNavigation } from '@react-navigation/native';
 import randomatic from 'randomatic';
 import { Picker } from '@react-native-picker/picker';
-
+import { getToken, logOutUser } from "../../../Authorization/checktoken.js";
+import axios from "axios";
+import { BASED_URL } from "../../../../MyConstants.js";
+import { Loader } from "../../../PopUps/loader.js";
+import { getFormFormat } from "../../../../Kalinga_API/AppointmentFormConfiguration.js";
 
 
 const SetAppointment = ({route}) => {
@@ -67,6 +71,7 @@ const SetAppointment = ({route}) => {
       'phoneNumber',
       'homeAddress',
       'milkAmount',
+      'city'
       ];
 
       const isFormDataValid = keysToCheck.every(key => formData[key].trim() !== '');
@@ -89,20 +94,24 @@ const SetAppointment = ({route}) => {
     }
   };
 
-  const validateMilkAmount = (text) => {
-    if (/^\d+$/.test(text)) {
-      handleChange("milkAmount", text);
-    } else {
-      Alert.alert("Error", "Please enter a numeric value for milk amount.");
-    }
-  };
 
 
   const handleChange = (name, value) => {
+
+    if(name === "milkAmount" && /[^0-9]/.test(value))return
+
     setFormData(prevData => ({
       ...prevData,
       [name]: value,
     }));
+  
+    if(name === "email" && value.includes("@") && (value.endsWith("com") || value.endsWith("ph"))){
+      console.log("Email: ", value)
+      setIsEmailValid(true)
+      checkEmail(value)
+    }
+    return
+    
   };
 
   const navigation = useNavigation();
@@ -122,19 +131,40 @@ const SetAppointment = ({route}) => {
   
   useEffect(()=> {
     checkForm()
-  },[formData.milkAmount])
+  },[
+    formData.milkAmount,
+    formData.city
+  ])
+
+  const [formFormat, setFormFormat] = useState({})
+  const [loading, setLoading] = useState(false)
+
+  const fetchFormat = async () => {
+    setLoading(true)
+    const result = await getFormFormat({navigation: navigation})
+    setLoading(false)
+    const { donationAppointmentConfig } = result
+    setFormFormat(donationAppointmentConfig)
+  }
+
+  useEffect(() => {
+    fetchFormat()
+  },[])
+
+if(Object.keys(formFormat).length !== 0)
   return (
-    <SafeAreaView style={globalStyles.SafeArea}>
+    <SafeAreaView style={[globalStyles.SafeArea, {backgroundColor: "#f5f5f5"}]}>
       <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
       <View style={globalHeader.SmallHeader}>
         <Text style={globalHeader.SmallHeaderTitle}>Set Appointment</Text>
       </View>
       <ScrollView
-        style={globalStyles.ScrollView}
+        style={{flex: 1, paddingBottom: 20}}
         overScrollMode="never" // Disable the over-scroll effect or the Jelly effect when reaching the end of the scroll
         nestedScrollEnabled={true} // Enable nested scrolling
         showsVerticalScrollIndicator={false}
       >
+        <Loader visible={loading}/>
         <View style={globalStyles.container}>
           <View style={styles.center}>
             <Text style={styles.text}>
@@ -148,69 +178,35 @@ const SetAppointment = ({route}) => {
           <View style={styles.left}>
             <Text style={styles.note}>Note: All fields marked with (*) are required</Text>
           </View>
-
-          <View style={styles.inputField}>
-            <View style={styles.spaceBetween}>
-              <TextInput
-                style={styles.placeholderDesign}
-                placeholder="Full Name"
-                placeholderTextColor="#E60965"
-                onChangeText={(text) => handleChange("fullName", text)}
-                value = {formData.fullName}
-                editable={false}
-              />
-            </View>
-                    <Text style = {styles.asterix}>
-                      *
-                    </Text>
-                </View>
-                <View style={styles.inputField}>
-                  <View style={styles.spaceBetween}>
-                    <TextInput
-                      style={styles.placeholderDesign}
-                      placeholder="Phone Number"
-                      placeholderTextColor="#E60965"
-                      onChangeText={(text) => validatePhoneNumber(text)}
-                      value={formData.phoneNumber}
-                      
+                {Object.entries(formFormat).map(([fieldName, fieldConfig]) => 
+                  fieldName !== "milkAmount" && fieldConfig === true && (
+                    <View key={fieldName} style ={styles.inputField}>
+                      <View style={styles.spaceBetween}>
+                        <TextInput
+                        style={[styles.placeholderDesign,{
+                          color: (fieldName === "fullName" || fieldName === "phoneNumber" || fieldName === "emailAddress") ? "gray" : "#E60965"
+                        }]}
+                        placeholder={formFormat.placeholder[fieldName]}
+                        placeholderTextColor="#E60965"
+                        multiline= {fieldName === "homeAddress"}
+                        onChangeText={(text) => handleChange(fieldName, text)}
+                        value={formData[fieldName]}
+                        editable={
+                          !(fieldName === "fullName" || fieldName === "phoneNumber" || fieldName === "emailAddress")
+                        }
                       />
+                      </View>
+                      {
+                        fieldName !== "fullName" && fieldName !== "phoneNumber" && fieldName !== "emailAddress" && (
+                          <Text style = {styles.asterix}>
+                            *
+                          </Text>
+                        )
+                      }
                   </View>
-                      
-                    <Text style = {styles.asterix}>
-                      *
-                    </Text>
-                </View>
-                <View style={styles.inputField}>
-                  <View style={styles.spaceBetween}>
-                    <TextInput
-                      style={styles.placeholderDesign}
-                      placeholder="Email Address"
-                      placeholderTextColor="#E60965"
-                      onChangeText={(text) => handleChange("emailAddress", text)}
-                      value={formData.emailAddress}
-                      editable={false}
-                    />
-                  </View>
-                 
-                    <Text style = {styles.asterix}>
-                      *
-                    </Text>
-                </View>
-                <View style={styles.inputField}>
-                  <View style={styles.spaceBetween}>
-                    <TextInput
-                      style={styles.placeholderDesign}
-                      placeholder="Home Address"
-                      placeholderTextColor="#E60965"
-                      onChangeText={(text) => handleChange("homeAddress", text)}
-                      value = {formData.homeAddress}
-                    />
-                  </View>
-                 
-                    <Text style = {styles.asterix}>
-                      *
-                    </Text>
-                </View>
+                  )
+                )}
+            
                 <View style={styles.inputField}>
                   <View style={styles.spaceBetween}>
                     <Picker
@@ -231,21 +227,6 @@ const SetAppointment = ({route}) => {
                     </Text>
                 </View>
                
-                <View style={styles.inputField}>
-                  <View style={styles.spaceBetween}>
-                    <TextInput
-                      style={styles.placeholderDesign}
-                      placeholder="Amount of milk to be donated (ml)"
-                      placeholderTextColor="#E60965"
-                      keyboardType="numeric"
-                      onChangeText={(text) => validateMilkAmount(text)}
-                      />
-                  </View>
-                 
-                    <Text style = {styles.asterix}>
-                      *
-                    </Text>
-                </View>
                 <TouchableOpacity onPress={() => navigatePage("SetDateTimeLocation")}>
                   <Text style = {styles.button}> Set Appointment </Text>
                 </TouchableOpacity>

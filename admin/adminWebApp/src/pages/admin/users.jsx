@@ -9,6 +9,7 @@ import { CgUnblock } from "react-icons/cg";
 
 //API
 import { BlockdUser } from "../../api/blockUsers/BlockUsers";
+import { getId, getToken } from "../../functions/Authentication";
 
 export default function UserManagement() {
   const navigate = useNavigate();
@@ -51,8 +52,11 @@ export default function UserManagement() {
   useEffect(() => {
     setLoading(true);
     async function fetchData() {
+      const token = getToken()
       try {
-        const response = await fetch(`${WebHost}/kalinga/getAllUsers`);
+        const response = await fetch(`${WebHost}/kalinga/getAllUsers`,
+        {headers: {Authorization: `Bearer ${token}`}}
+        );
         const data = await response.json();
         if (response.ok) {
           setUsers([...data.donors, ...data.requestors]);
@@ -231,6 +235,22 @@ export default function UserManagement() {
     setShowModal(false); // Close the modal
   };
 
+  const [string, setString] = useState(null) // id
+
+
+  useEffect(() => {
+    const storedId = getId();
+    if (storedId) {
+      setString(storedId);
+    } else {
+      const newId = generateId();
+      saveId({ id: newId });
+      setString(newId);
+    }
+  }, []);
+
+
+  if(string)
   return (
     <>
       <section className="w-full h-full bg-primary-body overflow-hidden">
@@ -403,12 +423,9 @@ export default function UserManagement() {
                               <td className="text-center py-4 whitespace-nowrap text-sm font-medium flex items-center justify-center ">
                                 {/* VIEW */}
                                 <Link
-                                  to={{
-                                    pathname:
-                                      user.userType === "Donor"
-                                        ? `/admin/DonorVerification/${user.Donor_ID}`
-                                        : `/admin/requestorVerification/${user.Requestor_ID}`,
-                                  }}
+                                  to={user.userType === "Donor"
+                                        ? `/admin/${string}/DonorVerification/${user.Donor_ID}`
+                                        : `/admin/${string}/requestorVerification/${user.Requestor_ID}`}
                                 >
                                   <button
                                     onClick={""}

@@ -17,7 +17,8 @@ import { Carousel } from './Carousel.js';
 export const MilkBankDetails = ({
     id,
     onSelect,
-    userType
+    userType, 
+    openSpreadsheet
 }) => {
     
     const navigate = useNavigation()
@@ -51,6 +52,9 @@ export const MilkBankDetails = ({
         return
     }
 
+    openSpreadsheet = () => {
+        setIndex(id)
+    }
 
     const handleAppointments = () => {
         if(userType == "Guest"){

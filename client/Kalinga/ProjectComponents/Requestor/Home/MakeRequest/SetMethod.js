@@ -31,6 +31,8 @@ import * as DocumentPicker from 'expo-document-picker';
 import ImageZoom from 'react-native-image-pan-zoom';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { ValidIdInfoModal } from "./ValidIdInfoModal.js";
+import { ImagePickerModal } from '../../../modal/ImagePickerModal.js';
+
 
 
 const SetDateTimeLocation = () => {
@@ -53,6 +55,9 @@ const SetDateTimeLocation = () => {
     const [location, setLocation] = useState('');
     const [newForm, setNewForm ] = useState(formData)
 
+    //imagePicker
+    const [showImagePicker, setShowImagePicker] = useState(false)
+    const [selectedType, setSelectedType] = useState("")
 
 
     const checkTime = (time) => {
@@ -137,7 +142,7 @@ const SetDateTimeLocation = () => {
     
     const checkForm = () => {
         // console.log("Test", newForm.location
-        if (newForm.method === undefined) {
+        if (newForm.method === undefined || newForm.method === "") {
             Alert.alert('Missing Information', 'Please input a delivery method.');
             return;
         }
@@ -153,7 +158,7 @@ const SetDateTimeLocation = () => {
                 "Milk Banks are only available during working hours from 8:00 AM to 5:00 PM.")
             return
         }
-        if(newForm.location === undefined) {
+        if(newForm.location === undefined || newForm.location === "") {
             Alert.alert("Invalid Milk Bank", "Please select a milk bank before proceeding.")
             return
         }
@@ -161,17 +166,10 @@ const SetDateTimeLocation = () => {
     }
     const handleAppointmentCreation = async () => {
       
-        const appointmentData = {
-          ...newForm,
-          selectedDate: selectedDate.toISOString(),
-          selectedTime: selectedTime.toISOString(),
-        };
-      
         try {
             // Simulate API call or any processing
-            console.log('Appointment data:', appointmentData);
             navigation.navigate('MakeRequestUploadMedicalAbstract', { 
-                screeningFormData: appointmentData, 
+                data: newForm, 
                 methodImage: selectedImage || {},
                 methodFile:  selectedFile || {}
             });
@@ -193,8 +191,24 @@ const SetDateTimeLocation = () => {
               setNewForm(newData)
           };
 
-          const handleImageUpload = async (attachmentType) => {
-            try {
+          const chooseImagePicker = async (value) => {
+            setShowImagePicker(false)
+            if(value === "Camera"){
+                const { status } = await ImagePicker.requestCameraPermissionsAsync();
+                if (status !== 'granted') {
+                    console.error('Camera permission not granted');
+                    return;
+                }
+                
+                const result = await ImagePicker.launchCameraAsync({
+                  mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                  allowsEditing: true,
+                  aspect: [Dimensions.get('window').width, Dimensions.get('window').height],
+                  quality: 1,
+                });
+
+                return result
+            } else {
                 const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
                 if (status !== 'granted') {
                     Alert.alert('Permission Denied', 'Sorry, we need camera roll permissions to make this work!');
@@ -208,7 +222,17 @@ const SetDateTimeLocation = () => {
                     quality: 1,
                     multiple: true, 
                 });
-        
+
+                return result
+            }
+           
+          }
+
+          const handleImageUpload = async (attachmentType, value) => {
+            try {
+                
+               const result = await chooseImagePicker(value)
+
                 if (!result.canceled && result.assets && result.assets.length > 0) {
                   delete selectedFile[attachmentType]
                     let fileType = ''
@@ -309,7 +333,12 @@ const SetDateTimeLocation = () => {
 
             <ScrollView overScrollMode='never' nestedScrollEnabled={true}>
                 <View style={styles.container}>
-                    
+                {showImagePicker && (
+                    <ImagePickerModal 
+                    onSelect = {handleImageUpload}
+                    type= {selectedType} 
+                    onClose={() => setShowImagePicker(false)}/>
+                )}
                     <Text style={[styles.AdminDate,{width: "100%", marginLeft: 5,}]}>Obtaining Method</Text>
                     <View style={styles.BiginputField}>
                         <Picker
@@ -409,7 +438,12 @@ const SetDateTimeLocation = () => {
                   <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                      <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload("Authorized Person's ID")}>
+                      <TouchableOpacity 
+                      style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} 
+                      onPress={()=>{
+                        setSelectedType("Authorized Person's ID")
+                        setShowImagePicker(true)
+                        }}>
                         <AntDesign name="picture" size={27} color="#E60965" />
                       </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>
@@ -428,7 +462,12 @@ const SetDateTimeLocation = () => {
                   <View style={styles.rowAlignment}>
                     <FontAwesome5 name="asterisk" size={12} color="#E60965" />
                     <View style={styles.iconContainer}>
-                      <TouchableOpacity style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} onPress={()=>handleImageUpload('Authorized Letter')}>
+                      <TouchableOpacity 
+                      style = {{ backgroundColor: "pink", padding:4, borderRadius: 7}} 
+                      onPress={()=>{
+                        setSelectedType("Authorized Letter")
+                        setShowImagePicker(true)
+                        }}>
                         <AntDesign name="picture" size={27} color="#E60965" />
                       </TouchableOpacity>
                         <Text style={styles.verticalLine}>|</Text>
@@ -561,8 +600,14 @@ const SetDateTimeLocation = () => {
                             </View>
                         </Modal>
 
-                                <TouchableOpacity onPress={() => checkForm()}>
-                                    <View style={styles.buttonContainer}>
+                                <TouchableOpacity 
+                                disabled={newForm.method === "Authorized Person" && Object.keys(selectedImage).length + Object.keys(selectedFile).length < 2}
+                                onPress={() => checkForm()}>
+                                    <View 
+                                    style={[styles.buttonContainer,
+                                    {
+                                        opacity: newForm.method === "Authorized Person" && Object.keys(selectedImage).length + Object.keys(selectedFile).length < 2 ? 0.5 :1
+                                    }]}>
                                         <Text style={styles.label}>Next</Text>
                                     </View>
                                 </TouchableOpacity>

@@ -11,6 +11,9 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BASED_URL } from '../../../MyConstants.js';
 import axios from 'axios';
+import { getDateTime } from '../../functions/formatDateAndTime.js';
+import { checkOngoingRequests, deleteAllCheckListItems, deleteAllRequestorCheckListItems } from '../../functions/checkAppointment.js';
+import { ReminderModal, ReminderRequestModal } from '../../modal/ReminderModal.js';
 
 export default function RequestorHome({route}) {
 
@@ -18,6 +21,10 @@ export default function RequestorHome({route}) {
     const token = route.params.token
     
     const [userInformation, setUserInformation] = useState(route.params.userInformation)
+    const [openReminder, setOpenReminder] = useState(false)
+    const [onReminder, setOnReminder] = useState(false)
+    const [newNotifications, setNewNotifications] = useState(false);
+    const [data, setData] = useState(null)
     const storeInAsync = async () => {
       await AsyncStorage.setItem('userInformation', JSON.stringify(userInformation))
       await AsyncStorage.setItem('token', token)
@@ -153,7 +160,6 @@ export default function RequestorHome({route}) {
   
       const canMakeRequest = requestStatus !== 'Pending' && requestStatus !== 'Ongoing';
       console.log('Can Make Request:', canMakeRequest); // Log the evaluation result
-      navigatePage('MakeRequest'); // delete after testing
       if (canMakeRequest) {
           console.log('Navigating to MakeRequest');
           navigatePage('MakeRequest');
@@ -166,11 +172,54 @@ export default function RequestorHome({route}) {
           );
       }
   };
+
+  useEffect(() => {
+    if(onReminder)Alert.alert("Appointment Reminder", "Your appointment is scheduled for today. Please make sure to attend on time.")
+  },[onReminder])
+
+  const appointmentReminder = async () => {
+    const result = await checkOngoingRequests({id: userInformation.Requestor_ID, token: token, navigation: navigation})
+    if(!result) {
+      console.log("No ongoing Appointment")
+      await deleteAllRequestorCheckListItems()
+      setOnReminder(false)
+      return
+    }
+
+    const newResult = {
+      ...result,
+      selectedDate: result.Date,
+      selectedTime: result.Time
+    }
+    const {time, date} = getDateTime({data:newResult})
+    setData(result)
+    console.log("time: ",time)
+    console.log("date: ",date)
+    const currentDate = new Date();
+    const currentDateString = currentDate.toISOString().split('T')[0];
+    const currentHours = currentDate.getUTCHours() + 8;
+    const formatTime = currentHours % 12 || 12 
+
+    console.log("formatTime: ", formatTime)
+    if (date === currentDateString) {
+      console.log(currentDateString)
+      console.log("The appointment date is today!");
+      setOnReminder(true)
+      // Perform any additional actions if the appointment is today
+    } else {
+      console.log("The appointment date is not today.");
+      await deleteAllRequestorCheckListItems()
+      setOnReminder(false)
+    }
+}
+
+
   useFocusEffect(
     React.useCallback(() => {
       simulateFetchRequestStatus();
       fetchUpdateduserInfo()
       storeInAsync()
+      appointmentReminder()
     }, [])
 );
 
@@ -186,27 +235,17 @@ export default function RequestorHome({route}) {
         overScrollMode='never' // Disable the over-scroll effect or the Jelly effect when reaching the end of the scroll
         nestedScrollEnabled={true} // Enable nested scrolling
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: 20}}
+        contentContainerStyle={{paddingBottom: 20, paddingHorizontal: 20,}}
         >
+           {openReminder && (
+                 <ReminderRequestModal
+                 data={data}
+                 onClose={() => setOpenReminder(false)}/>
+              )}
               <View style = {styles.flex_start}>
                 <Text style = {styles.title}>Requestor's Dashboard</Text>
               </View>
-              <View style = {styles.boxRowContainer}>
-              
-                <TouchableOpacity style = {styles.box} onPress={() => navigatePage("ValidUserExplore")}>
-                    <MaterialIcons name="location-pin" size={70} color="#E60965" />
-                    <Text style = {styles.boxTitle}>Milk Bank Locator</Text>
-                    <Text style = {styles.subLabel}>Easily find human milk banks near you</Text>
-                </TouchableOpacity>
-                
-                  <TouchableOpacity style = {styles.box} onPress={() => navigatePage("RequestorEducLibrary")}>
-                      <Ionicons name="book" size={70} color="#E60965" />
-                      <Text style = {styles.boxTitle}>Educational Library</Text>
-                      <Text style = {styles.subLabel}>Explore our educational articles on breastfeeding and maternal health</Text>
-                  </TouchableOpacity>
-                
-
-              </View>
+             
 
               <View style = {styles.boxRowContainer}>
               <TouchableOpacity style={styles.box} onPress={handleMakeRequest}>
@@ -215,26 +254,51 @@ export default function RequestorHome({route}) {
                     <Text style = {styles.subLabel}>Ready to Request Milk? Set an appointment</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style = {styles.box} onPress={() => navigatePage("RequestTab")}>
+                <TouchableOpacity style = {[styles.box, {position: "relative"}]} onPress={() => navigatePage("RequestTab")}>
+                {onReminder && (
+                   <TouchableOpacity 
+                   onPress={() => setOpenReminder(true)}
+                   style={{ position: "absolute", right: -12, top: -12,  transform: [{ rotate: '37deg' }]}}>
+                       <Ionicons 
+                         name="alarm-outline" 
+                         size={37} 
+                         color="#E60965" />
+                   </TouchableOpacity>
+                )}
                     <SimpleLineIcons name="graph" size={70} color="#E60965"s />
                     <Text style = {styles.boxTitle}>My Request</Text>
                     <Text style = {styles.subLabel}>View Milk Request History</Text>
                 </TouchableOpacity>
               </View>
-              <View style = {styles.boxRowContainer}>
-                <TouchableOpacity style = {styles.box} onPress={() => navigatePage("RequestorChatAssistance")}>
+              {/* <View style = {styles.boxRowContainer}> */}
+                {/* <TouchableOpacity style = {styles.box} onPress={() => navigatePage("RequestorChatAssistance")}>
                     <FontAwesome5 name="robot" size={70} color="#E60965"/>
                     <Text style = {styles.boxTitle}>Instant Messaging</Text>
                     <Text style = {styles.subLabel}>Chat with our chatbot for quick respond to FAQs </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
 
                 {/* <TouchableOpacity style = {styles.box} onPress={() => navigatePage("RequestorForum")}>
                     <MaterialIcons name="forum" size={70} color="#E60965" />
                     <Text style = {styles.boxTitle}>Forum</Text>
                     <Text style = {styles.ShortLabel}>Engage with user discussions</Text>
                 </TouchableOpacity> */}
+              {/* </View> */}
+              <View style = {styles.boxRowContainer}>
+              
+                <TouchableOpacity style = {styles.box} onPress={() => navigatePage("ValidUserExplore")}>
+                    <MaterialIcons name="location-pin" size={70} color="#E60965" />
+                    <Text style = {styles.boxTitle}>Milk Bank Locator</Text>
+                    <Text style = {styles.subLabel}>Easily find human milk banks near you</Text>
+                </TouchableOpacity>
+{/*                 
+                  <TouchableOpacity style = {styles.box} onPress={() => navigatePage("RequestorEducLibrary")}>
+                      <Ionicons name="book" size={70} color="#E60965" />
+                      <Text style = {styles.boxTitle}>Educational Library</Text>
+                      <Text style = {styles.subLabel}>Explore our educational articles on breastfeeding and maternal health</Text>
+                  </TouchableOpacity>
+                 */}
+
               </View>
-             
               
         </ScrollView>
       </View>

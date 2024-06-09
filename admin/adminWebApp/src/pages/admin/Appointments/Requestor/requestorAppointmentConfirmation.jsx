@@ -4,9 +4,16 @@ import RequestConfirmModal from "../../../../modal/RequestConfirmModal";
 import RequestDeclineModal from "../../../../modal/RequestDeclineModal";
 import AppointmentRequestDeclineModal from "../../../../modal/AppointmentRequestDeclineModal";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { WebHost } from "../../../../../MyConstantAdmin";
 import { getMedicalAbstractsFiles, getMedicalAbstractsImages } from "../../../../api/Appointments/Request";
+import DatePicker from 'react-datepicker';
+import { CustomModal } from "../../../../modal/logIn/AlertModal";
+import { Loader } from "../../../../components/loader";
+import { ShowImage } from "../../../../modal/Verification/ImageModals";
+import { getId, getToken } from "../../../../functions/Authentication";
+import { sendApprovedAppointmentEmail } from "../../../../api/email/AppointmentEmail";
+import { getDateTime } from "../../../../functions/ConvertDateandTime";
 
 const requestorAppointmentConfirmation = () => {
 
@@ -14,6 +21,10 @@ const requestorAppointmentConfirmation = () => {
   const [requestData, setRequestData] = useState(null); // State to store fetched request details
   const [images, setImages] = useState([])
   const [files, setFiles] = useState([])
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedTime, setSelectedTime] = useState(new Date());
+  const [formattedTime, setFormattedTime] = useState("");
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -29,6 +40,7 @@ const requestorAppointmentConfirmation = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    console.log("Name: ", name)
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -40,13 +52,22 @@ const requestorAppointmentConfirmation = () => {
   useEffect(() => {
     const fetchRequestData = async () => {
       try {
+        setLoading(true)
         console.log("Fetching appointment data for RequestID:", RequestID);
         const response = await axios.get(
           `${WebHost}/kalinga/getRequestByID/${RequestID}`
         );
+        setLoading(false)
         console.log("API Response:", response.data);
         setRequestData(response.data); // Update state with response data
         fetchRequirements(response.data)
+        const request  = response.data.Request
+        if(request.RequestStatus === "Ongoing"){
+          const { time } = getDateTime({data: {selectedTime: request.Time}})
+          console.log("time: ", time)
+          setFormattedTime(time)
+        }
+
       } catch (error) {
         console.error("Error fetching appointment data:", error);
       }
@@ -57,22 +78,33 @@ const requestorAppointmentConfirmation = () => {
     fetchRequirements()
   }, [RequestID]);
 
-  console.log("Request Data:", requestData);
-
-  console.log("Request Data:", requestData);
 
   const [showModal, setShowModal] = useState(false);
   const [isDeclineModalOpen, setIsDeclineModalOpen] = useState(false);
-
+  const [loading, setLoading] = useState(false)
   const handleApproved = async () => {
-    setShowModal(true);
+    setShowModal(false);
     try {
+      setLoading(true)
+      console.log("Selected Date: ", selectedDate)
+      console.log("Selected Date: ", selectedDate)
       await axios.put(`${WebHost}/kalinga/updateRequestStatus/${RequestID}`, {
         RequestStatus: "Ongoing",
-        BabyCategory: formData.BabyCategory,
+        Date: selectedDate, 
+        Time: selectedTime,
+        BabyCategory: requestData?.Request?.BabyCategory || ''
       });
+      const Request = requestData?.Request;
+      const { Requestor_ID } = Request || {};
+      setLoading(false)
+      sendApprovedAppointmentEmail({id:Requestor_ID})
+    
     } catch (error) {
       console.error("Error updating request status:", error);
+    } finally {
+      setLoading(false)
+      const id = getId()
+      navigate(`/admin/${id}/requestorManagement`)
     }
   };
   const handleApprovedConfirm = () => {
@@ -83,14 +115,20 @@ const requestorAppointmentConfirmation = () => {
     setShowModal(false);
   };
   const handleDecline = async () => {
-    setIsDeclineModalOpen(true);
+    setIsDeclineModalOpen(false);
 
     try {
+      setLoading(true)
       await axios.put(`${WebHost}/kalinga/updateRequestStatus/${RequestID}`, {
         RequestStatus: "Decline",
       });
+      setLoading(false)
+      const id = getId()
+      navigate(`/admin/${id}/DonorAppointManage`)
     } catch (error) {
       console.error("Error updating request status:", error);
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -116,14 +154,76 @@ const requestorAppointmentConfirmation = () => {
     }));
   };
 
+
+  const handleSelectChange = (event) => {
+    const { name, value } = event.target;
+    const newRequest = {
+      ...requestData.Request,
+      BabyCategory: value
+    }
+    setRequestData({
+      ...requestData,
+      Request: newRequest
+    })
+  };
+
+  const handleScheduleChange = (name, value) => {
+
+      value = value.toISOString();
+  
+    console.log(name + ": " + value)
+    const newRequest = {
+      ...requestData.Request,
+      [name]: value
+    }
+
+    setRequestData({
+      ...requestData,
+      Request: newRequest
+    })
+    if(name === "Time") setSelectedTime(value)
+      else setSelectedDate(value)
+  }
+
+
+  console.log("Request Data: ", requestData)
+
   const fetchRequirements = async (id) => {
     const Requestor_ID= id.Request.Requestor_ID
-    const files = await getMedicalAbstractsFiles({id: Requestor_ID, purpose: "Request"})
-    const images = await getMedicalAbstractsImages({id: Requestor_ID, purpose: "Request"})
+    const token = getToken()
+    const files = await getMedicalAbstractsFiles({id: Requestor_ID, purpose: "Request", token: token})
+    const images = await getMedicalAbstractsImages({id: Requestor_ID, purpose: "Request", token: token})
     if(files) setFiles(files)
       else setFiles([])
     if(images) setImages(images)
       else setImages([])
+  }
+
+
+  const [alert, setAlert] = useState(false)
+  const confirmation = () => {
+    if(requestData?.Request?.BabyCategory === "" || requestData?.Request?.BabyCategory == null ){
+      setAlert(true)
+      return
+    }
+    setShowModal(true)
+    
+  }
+
+  const [imageLink, setImageLink] = useState("");
+  const [showImage, setShowImage] = useState(false);
+  const [fileName, setFileName] = useState("")
+  const getImageUri = (data) => {
+    const {link, originalname} = data
+    setImageLink(link);
+    setFileName(originalname)
+    setShowImage(true);
+};
+
+  if(loading){
+    return (
+      <Loader isLoading={loading}/>
+    )
   }
 
   return (
@@ -132,7 +232,9 @@ const requestorAppointmentConfirmation = () => {
         <h1 className="text-3xl text-primary-default font-bold font-sans py-4 pb-2">
           Request Confirmation
         </h1>
-
+        {alert && (
+          <CustomModal message={"Please add a baby category first"} onClose={() => setAlert(false)}/>
+        )}
         {/* Full Name Input */}
         <div className="mt-2">
           <input
@@ -213,21 +315,28 @@ const requestorAppointmentConfirmation = () => {
 
         {/* Medical Condition and Milk Requested Input */}
         <div className="flex gap-x-2">
-          <div className="w-2/3 mt-4">
-            <input
-              type="text"
-              id="medicalCondition"
-              name="medicalCondition"
-              value={`Medical Condition: ${
-                requestData ? requestData.Request.medicalCondition : ""
-              }`}
-              onChange={handleChange}
-              className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
-              disabled
-              placeholder="Medical Condition"
-            />
-          </div>
-          <div className="w-1/3 mt-4">
+        <div className="w-2/3 mt-4">
+          <label
+                htmlFor="date"
+                className="text-md z-10 font-medium font-bold text-primary-default ml-2"
+              >
+                Baby Category
+              </label>
+            <select
+              disabled={requestData?.Request?.RequestStatus !== "Pending"}
+              id="BabyCategory"
+              name="BabyCategory"
+              value={requestData?.Request?.BabyCategory ?? "Did not set"}
+              onChange={handleSelectChange}
+              className={`bg-white w-full px-4 py-2 h-14 shadow-md rounded-lg focus:outline-none focus:text-primary-default ${requestData?.Request?.RequestStatus !== "Pending" ? "text-[#E60965]" : ""}`}
+            >
+              <option value="">Select Baby Category</option>
+              <option value="Well Baby">Well Baby</option>
+              <option value="Sick Baby">Sick Baby</option>
+              <option value="Medically Fragile Baby">Medically Fragile Baby</option>
+            </select>
+        </div>
+          <div className="w-1/3 mt-10">
             <input
               type="text"
               id="amountDonated"
@@ -267,7 +376,9 @@ const requestorAppointmentConfirmation = () => {
                 type="text"
                 id="reasonRequest"
                 name="MethodforObtaining"
-                value={`Method for Obtaining: Authorized Person`}
+                value={`Method for Obtaining: ${
+                  requestData ? requestData.Request.method : ""
+                }`}
                 onChange={handleChange}
                 className="bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default"
                 disabled
@@ -276,11 +387,110 @@ const requestorAppointmentConfirmation = () => {
             </div>
           </div>
         </div>
-        
+
+        {/* Scheduling Request Appointment */}
+        <div className="flex gap-x-2">
+          <div className="w-1/2 mt-4">
+            <div className="flex flex-col">
+              <label
+                htmlFor="date"
+                className="text-md font-medium font-bold text-primary-default ml-2"
+              >
+                Scheduled Date
+              </label>
+              <DatePicker
+                selected={requestData?.Request?.Date || new Date()}
+                onChange={(date) => handleScheduleChange("Date", date)}
+                dateFormat="dd/MM/yyyy"
+                className={`bg-white w-full px-4 py-2 h-14 shadow-md  rounded-lg focus:outline-none focus: text-primary-default ${
+                 requestData?.Request?.RequestStatus === "Pending" 
+                    ? "focus: text-primary-default"
+                    : "bg-gray-100 cursor-not-allowed"
+                }`}
+                // Disable date selection if not pending
+                disabled={requestData?.Request?.RequestStatus !== "Pending"}
+              />
+            </div>
+          </div>
+          <div className="w-1/2 mt-4">
+            <label
+              htmlFor="time"
+              className="text-md font-medium font-bold text-primary-default ml-2"
+            >
+              Scheduled Time
+            </label>
+            { requestData?.Request?.RequestStatus === "Pending" && (
+                <input
+                type="time"
+                id="time"
+                value={
+                    selectedTime
+                      ? selectedTime.toISOString().substring(11, 16)
+                      : ""
+                }
+                onChange={(e) => {
+                  const [hours, minutes] = e.target.value.split(":");
+                  const newTime = new Date(selectedTime);
+                  
+                  // Set the hours and minutes of the new time
+                  newTime.setUTCHours(parseInt(hours, 10), parseInt(minutes, 10));
+                
+                  // Convert newTime to local time zone (Philippine time)
+                  const localTime = newTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+                
+                  // Parse the local time string to get the hours, minutes, and AM/PM
+                  const [localHours, localMinutes, amPm] = localTime.split(/:| /);
+                  
+                  // Convert hours to 24-hour format
+                  let hours24 = parseInt(localHours, 10);
+                  if (amPm.toLowerCase() === 'pm' && hours24 < 12) {
+                    hours24 += 12;
+                  } else if (amPm.toLowerCase() === 'am' && hours24 === 12) {
+                    hours24 = 0;
+                  }
+                
+                  // Set the new time with local hours and minutes
+                  newTime.setHours(hours24, parseInt(localMinutes, 10));
+                  handleScheduleChange("Time", newTime)
+                  setSelectedTime(newTime);
+                }}
+                className={`bg-white w-full py-2 h-14 px-4 shadow-md rounded-lg focus:outline-none focus: text-primary-default ${
+                  requestData?.Request?.RequestStatus === "Pending"
+                    ? "focus: text-primary-default"
+                    : "bg-gray-100 cursor-not-allowed"
+                }`}
+                // Disable time selection if not pending
+                disabled={requestData?.Request?.RequestStatus !== "Pending"}
+              />
+            )}
+            { requestData?.Request?.RequestStatus !== "Pending" && (
+              <input
+                type="text"
+                id="time"
+                value={formattedTime}
+                disabled={true}
+                className={`bg-white w-full py-2 h-14 px-4 shadow-md rounded-lg focus:outline-none focus: text-primary-default`}
+              />
+            )}
+
+            
+          </div>
+        </div>
+         
+        {showImage && (
+          <ShowImage
+            link={imageLink}
+            fileName={fileName}
+            onClose={() => setShowImage(false)}
+          />
+        )}
+
         <div className="mt-4 flex flex-cols gap-4">
       {images.length !== 0 && images.map(requirement => (
         <>
-              <div key={requirement.originalname} className="bg-white px-4 py-2 w-full h-72 shadow-md rounded-lg focus:outline-none focus: text-primary-default">
+              <div key={requirement.originalname} 
+              onClick={() => getImageUri(requirement)}
+              className="bg-white px-4 py-2 w-full h-72 shadow-md rounded-lg focus:outline-none focus: text-primary-default">
                 <span className="flex justify-center text-primary-default text-lg text-center">
                 {requirement.originalname}
                 </span>
@@ -331,7 +541,7 @@ const requestorAppointmentConfirmation = () => {
             </span>
           </div>*/}
         </div> 
-
+{/* 
         <div className="mt-4 ">
           <div className="flex bg-white w-full px-4 py-2 h-30 shadow-md  rounded-lg focus:outline-none focus: text-primary-default">
             <div>
@@ -363,7 +573,7 @@ const requestorAppointmentConfirmation = () => {
                 )}
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="absolute  right-0 mt-8 mr-16 flex flex-col">
           {requestData &&
@@ -373,13 +583,13 @@ const requestorAppointmentConfirmation = () => {
             requestData.Request.RequestStatus !== "Complete" && (
               <>
                 <button
-                  onClick={handleApproved}
+                  onClick={()=> confirmation()}
                   className="bg-primary-default text-white px-4 py-2 rounded-full mb-4"
                 >
                   Approved
                 </button>
                 <button
-                  onClick={handleDecline}
+                  onClick={() => setIsDeclineModalOpen(true)}
                   className="bg-white text-primary-default px-4 py-2 rounded-full border border-primary-default"
                 >
                   Decline
@@ -390,21 +600,21 @@ const requestorAppointmentConfirmation = () => {
 
         <RequestConfirmModal
           isOpen={showModal}
-          onConfirm={handleApprovedCancel}
+          onConfirm={handleApproved}
           onCancel={handleApprovedConfirm}
           message="Are you sure you want to approve this request? Once approved, the request process will proceed."
         />
 
-        <RequestDeclineModal
+        {/* <RequestDeclineModal
           isOpen={isDeclineModalOpen}
-          onConfirm={handleDeclineConfirm}
+          onConfirm={handleDecline}
           onCancel={handleDeclineCancel}
           message="Are you sure you want to decline this request? Once declined, the request process will not proceed."
-        />
+        /> */}
 
         <AppointmentRequestDeclineModal
           isOpen={isDeclineModalOpen}
-          onConfirm={handleDeclineConfirm}
+          onConfirm={handleDecline}
           onCancel={handleDeclineCancel}
           message="Are you sure you want to decline this appointment? Once declined, the request process will not proceed."
           RequestID={RequestID}

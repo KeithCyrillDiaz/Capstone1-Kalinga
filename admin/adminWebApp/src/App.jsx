@@ -29,6 +29,8 @@ import {
   DonorAppointManage,
   RequestorManagement,
   Barangay,
+  DonorAppointmentForm,
+  RequestorAppointmentForm
 } from "@/pages";
 import { RootLayout, NotFound, MainLayout, AdminLayout } from "@/layouts";
 import { MobileChecker } from "@/components";
@@ -47,17 +49,17 @@ const router = createBrowserRouter(
 
       {/* Private Routes */}
 
-      <Route path="admin" element={<AdminLayout />}>
+      <Route path="admin/:id" element={<AdminLayout />}>
         <Route index element={<AdminDashboard />} />
         <Route path="city" element={<City />} />
         <Route path="DonorVerifPendings" element={<DonorVerifPendings />} />
-        <Route path="DonorVerification/:id" element={<DonorVerification />} />
+        <Route path="DonorVerification/:Applicant_ID" element={<DonorVerification />} />
         <Route
           path="RequestorVerifPendings"
           element={<RequestorVerifPendings />}
         />
         <Route
-          path="requestorVerification/:id"
+          path="requestorVerification/:Applicant_ID"
           element={<RequestorVerification />}
         />
         <Route path="chart" element={<Chart />} />
@@ -82,6 +84,8 @@ const router = createBrowserRouter(
         <Route path="users" element={<Users />} />
         <Route path="DonorAppointManage" element={<DonorAppointManage />} />
         <Route path="requestorManagement" element={<RequestorManagement />} />
+        <Route path="DonorAppointmentForm" element={<DonorAppointmentForm/>} />
+        <Route path="RequestorAppointmentForm" element={<RequestorAppointmentForm/>} />
       </Route>
 
       {/* 404 */}

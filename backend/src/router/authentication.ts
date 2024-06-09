@@ -12,8 +12,8 @@ export default (router: express.Router) => {
     router.get("/kalinga/getToken", isAuthorized, getToken)
     router.post('/kalinga/sendEmail/:Applicant_ID', sendEmail)
     router.post('/kalinga/sendVerifCodeNewEmail/:email', tokenVerification, sendEmailVerifCode)
-    router.post('/kalinga/sendApprovedEmail/:Applicant_ID', sendApprovedEmail)
-    router.post('/kalinga/sendDeclinedEmail/:Applicant_ID', sendDeclinedEmail)
+    router.post('/kalinga/sendApprovedEmail/:Applicant_ID', tokenVerification, sendApprovedEmail)
+    router.post('/kalinga/sendDeclinedEmail/:Applicant_ID', tokenVerification, sendDeclinedEmail)
     router.get('/kalinga/sendCode/:email', sendCode)
     router.post('/kalinga/tokenLogin/:userID', tokenVerification, userLogInToken)
 

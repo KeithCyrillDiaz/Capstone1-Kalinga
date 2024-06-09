@@ -4,6 +4,7 @@ import axios from "axios";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { getToken } from "../functions/Authentication";
 
 export default function BarangayGraph({ name }) {
   const [barangaysData, setBarangaysData] = useState([]);
@@ -12,33 +13,52 @@ export default function BarangayGraph({ name }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
-      setError(null);
+      const token = getToken();
       try {
-        const response = await axios.get(`${WebHost}/kalinga/getTotalUsersPerBarangay`);
-        console.log("Response from API:", response.data);
+        const response = await axios.get(`${WebHost}/kalinga/getTotalUsersPerBarangay`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-        const mergedData = response.data.totalRequestorsPerBarangay.map((requestor) => {
-          const donor = response.data.totalDonorsPerBarangay.find((d) => d._id === requestor._id);
-          return {
-            _id: requestor._id,
+        const { totalRequestorsPerBarangay, totalDonorsPerBarangay } = response.data;
+
+        // Create a map of all barangays
+        const barangayMap = {};
+
+     
+        totalRequestorsPerBarangay.forEach((requestor) => {
+          barangayMap[requestor._id] = {
+            barangay: requestor._id,
             totalRequestors: requestor.totalRequestors,
-            totalDonors: donor ? donor.totalDonors : 0,
+            totalDonors: 0, 
           };
         });
 
+        
+        totalDonorsPerBarangay.forEach((donor) => {
+          if (barangayMap[donor._id]) {
+            barangayMap[donor._id].totalDonors = donor.totalDonors;
+          } else {
+            barangayMap[donor._id] = {
+              barangay: donor._id,
+              totalRequestors: 0, 
+              totalDonors: donor.totalDonors,
+            };
+          }
+        });
+
+        const mergedData = Object.values(barangayMap);
+
         setBarangaysData(mergedData);
+        console.log("Barangays Data:", mergedData);
+        console.log("response Data:", response.data);
       } catch (error) {
         console.error("Error fetching total users per barangay:", error);
-        setError("Error fetching data");
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchData();
   }, []);
-
+  
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
     doc.setTextColor("#000000");
@@ -48,12 +68,8 @@ export default function BarangayGraph({ name }) {
     const tableColumn = ["Barangay", "Total Requestors", "Total Donors"];
     const tableRows = [];
 
-    barangaysData.forEach(item => {
-      const rowData = [
-        item._id,
-        item.totalRequestors,
-        item.totalDonors,
-      ];
+    barangaysData.forEach((item) => {
+      const rowData = [item._id, item.totalRequestors, item.totalDonors];
       tableRows.push(rowData);
     });
 
@@ -61,12 +77,17 @@ export default function BarangayGraph({ name }) {
       head: [tableColumn],
       body: tableRows,
       startY: 20,
-      headStyles: { fillColor: "#ED5077" }, 
+      headStyles: { fillColor: [255, 105, 180], halign: "center" },
       didDrawCell: (data) => {
-        if (data.section === 'body' && data.column.index === 0) {
-          doc.setTextColor("#ED5077"); 
+        if (data.section === "body" && data.column.index === 0) {
+          doc.setTextColor("#ED5077");
         }
-      }
+      },
+      columnStyles: {
+        0: { halign: "center" },
+        1: { halign: "center" },
+        2: { halign: "center" },
+      },
     });
 
     doc.save("Kalinga_Barangay_Report.pdf");

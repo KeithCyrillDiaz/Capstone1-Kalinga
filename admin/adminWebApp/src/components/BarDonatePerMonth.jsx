@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { getToken } from "../functions/Authentication";
 
 export default function BarDonatePerMonth({ name, selectedYear }) {
   const [monthlyData, setMonthlyData] = useState([]);
@@ -22,15 +23,22 @@ export default function BarDonatePerMonth({ name, selectedYear }) {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-
+      const token = getToken()
       try {
+        
         const responseComplete = await axios.get(
           `${WebHost}/kalinga/getTotalCompleteDonationsAllMonths`,
-          { params: { year: selectedYear } }
+          { 
+            params: { year: selectedYear },
+            headers: {Authorization: `Bearer ${token}`}
+          },
         );
         const responseRequests = await axios.get(
           `${WebHost}/kalinga/getTotalCompleteRequestAllMonths`,
-          { params: { year: selectedYear } }
+          { 
+            params: { year: selectedYear },
+            headers: {Authorization: `Bearer ${token}`}
+           },
         );
         const mergedData = mergeData(
           responseComplete.data,
@@ -67,10 +75,15 @@ export default function BarDonatePerMonth({ name, selectedYear }) {
   
     doc.setTextColor("#000000");
     autoTable(doc, {
-      headStyles: { fillColor: "#ED5077" },
+      headStyles: { fillColor: [255, 105, 180], halign: "center" },
       head: [["Month", "Total Complete Donations", "Total Complete Requests"]],
       body: monthlyData.map(({ month, totalCompleteDonations, totalCompleteRequests }) => [month, totalCompleteDonations, totalCompleteRequests]),
-      startY: 40, // Adjust startY value to leave space for the title
+      startY: 40, 
+      columnStyles: {
+        0: { halign: "center" },
+        1: { halign: "center" },
+        2: { halign: "center" },
+      },// Adjust startY value to leave space for the title
     });
     doc.save(`${name}_report.pdf`);
   };

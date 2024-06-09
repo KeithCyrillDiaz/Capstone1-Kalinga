@@ -1,4 +1,4 @@
-import React, { useState}from 'react';
+import React, { useEffect, useState}from 'react';
 import { 
 	SafeAreaView, 
 	Text, 
@@ -15,7 +15,9 @@ import { useNavigation, useFocusEffect} from '@react-navigation/native';
 import axios from 'axios'; // Import axios for API requests
 import { BASED_URL } from '../../../../MyConstants.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
- 
+import { getDateTime } from '../../../functions/formatDateAndTime.js';
+import BabyCategoryModal from '../../../modal/BabyCategory.js';
+import { AntDesign } from '@expo/vector-icons';
 
 const ApprovedTabRequest = ({route}) => {
 
@@ -25,31 +27,35 @@ const ApprovedTabRequest = ({route}) => {
 	const Requestor_ID = userInformation.Requestor_ID;
 
     const navigation = useNavigation();
-    const [formData, setFormData] = useState({});
-    const [loading, setLoading] = useState(true);
+    const [formData, setFormData] = useState([]);
+    const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(false)
+	const [time, setTime] = useState("")
+	const [date, setDate] = useState("")
+	const [babyModal, setBabyModal]= useState(false); 
 
     useFocusEffect(
 		React.useCallback(() => {
 			fetchData();
 		}, [])
 	);
+
     const fetchData = async () => {
         try {
+			setLoading(true)
             const response = await axios.get(`${BASED_URL}/kalinga/getApprovedRequests/${Requestor_ID}`);
             const responseData = response.data;
 			if(responseData.messages.success === false){
 				console.log("No Approved Request")
-				Alert.alert("No Approved Request", "You currently don't have any approved requests.");
 				setLoading(false); 
 				return
 			}
             const formDataFromResponse = responseData.RequestData;
-			console.log("formDataFromResponse: ", formDataFromResponse)
     
             setFormData(formDataFromResponse);
 			setError(false)
             setLoading(false); 
+			formatDateTime(formDataFromResponse)
         } catch (error) {
 			console.log("Error: ", error)
 			setError(true)
@@ -87,9 +93,24 @@ const ApprovedTabRequest = ({route}) => {
 		);
 	  };
 	
+	  
+	  const formatDateTime = (data) => {
+		if(data.length === 0) return
+		const firstFormData = data[0]; 
+		const newForm = {
+			...firstFormData,
+			selectedDate: firstFormData.Date,
+			selectedTime: firstFormData.Time
+		}
+		const { time, date } = getDateTime({data: newForm})
+		setTime(time)
+		setDate(date)
+	}
+
 	  if (loading) {
 		return <ActivityIndicator size="large" color="#E60965" />;
 	  }
+
 	
     return (
 			<SafeAreaView style = {globalStyles.defaultBackgroundColor}>
@@ -100,7 +121,32 @@ const ApprovedTabRequest = ({route}) => {
 					overScrollMode='never'
 					nestedScrollEnabled={true} 
 					showsVerticalScrollIndicator={false}
+					style={{
+						flex: 1,
+						paddingBottom: "7%",
+					}}
 				>
+					{Object.keys(formData).length === 0 && (
+						<View style ={{
+							backgroundColor: "white",
+							width: "90%",
+							alignItems: "center",
+							justifyContent: "center",
+							paddingHorizontal:7,
+							paddingVertical:17,
+							elevation:7,
+							borderRadius: 17,
+							marginTop: "7%",
+							alignSelf: "center",
+							marginVertical: "7%"
+						}}>
+						<Text style={{
+						fontFamily: "Open-Sans-SemiBold",
+						color:  '#E60965',
+						}}>No approved request at the moment.</Text>
+						</View>
+					)}
+					<BabyCategoryModal visible={babyModal} onClose={() => setBabyModal(false)}/>
 					{Object.keys(formData).length !== 0 && (
 						<>
 							<View style ={styles.boxContainer}>
@@ -127,11 +173,19 @@ const ApprovedTabRequest = ({route}) => {
 									<Text style={[styles.boxContent, styles.limitText]}>{formData[0].method}</Text>
 								</View>
 								{formData[0].BabyCategory && (
+									<View style={{ flexDirection: "row", alignItems: "center"}}>
 									<View style={styles.boxContentContainer}>
 										<Text style={styles.boxContentBold}>Baby Category: </Text>
 										<Text style={[styles.boxContent, styles.limitText]}>{formData[0].BabyCategory}</Text>
 									</View>
+									<TouchableOpacity
+									onPress={() => setBabyModal(true)}
+									>
+										<AntDesign name="questioncircle" size={24} color="pink" />
+									</TouchableOpacity>		
+									</View>
 								)}
+								
 								
 								
 								<View style={styles.boxContentContainer}>
@@ -140,8 +194,12 @@ const ApprovedTabRequest = ({route}) => {
 								</View>
 
 								<View style={styles.boxContentContainer}>
-									<Text style={styles.boxContentBold}>Date: </Text>
-									<Text style={[styles.boxContent, styles.limitText]}>{formData[0].Date}</Text>
+									<Text style={styles.boxContentBold}>Scheduled Date:</Text>
+									<Text style={[styles.boxContent, styles.limitText]}>{date}</Text>
+								</View>
+								<View style={styles.boxContentContainer}>
+									<Text style={styles.boxContentBold}>Scheduled Time: </Text>
+									<Text style={[styles.boxContent, styles.limitText]}>{time}</Text>
 								</View>
 								
 							</View>

@@ -95,8 +95,14 @@ useEffect(() => {
   setUploadingImage(false)
 },[])
 
+
     const handleRequestCreation = async () => {
+      
       try {
+
+        setUploadingImage(true)
+        await uploadImagesAndFilesInFirebase()
+        
         const response = await fetch(`${BASED_URL}/kalinga/createRequest`, {
           method: 'POST',
           headers: {
@@ -105,9 +111,6 @@ useEffect(() => {
           body: JSON.stringify(formData),
           
         });
-
-        setUploadingImage(true)
-        await uploadImagesAndFilesInFirebase()
 
       if (!response.ok) {
         throw new Error('Network response was not ok.');

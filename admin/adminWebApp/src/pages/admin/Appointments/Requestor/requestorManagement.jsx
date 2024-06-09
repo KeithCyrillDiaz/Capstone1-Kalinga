@@ -10,11 +10,11 @@ export default function RequestorAppointments() {
   const navigate = useNavigate();
   const [isRemarksModalOpen, setRemarksModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [requestData, setRequestData] = useState([]); // Changed initial state to empty array
+  const [requestData, setRequestData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // State for delete modal
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const requestPerPage = 10; // Adjust as needed
+  const requestPerPage = 10;
 
   // FILTERS
   const toggleFilterVisibility = () => {
@@ -52,10 +52,8 @@ export default function RequestorAppointments() {
             month: "long",
           }) === filters.monthOfCreation
         : true;
-      const matchMonthScheduled = filters.monthScheduled
-        ? new Date(appointment.selectedDate).toLocaleString("default", {
-            month: "long",
-          }) === filters.monthScheduled
+      const matchBabyCategory = filters.babyCategory
+        ? appointment.BabyCategory === filters.babyCategory
         : true;
       const matchStatus = filters.status
         ? appointment.RequestStatus === filters.status
@@ -64,10 +62,7 @@ export default function RequestorAppointments() {
         ? appointment.RequestRemark === filters.remarks
         : true;
       return (
-        matchMonthOfCreation &&
-        matchMonthScheduled &&
-        matchStatus &&
-        matchRemarks
+        matchMonthOfCreation && matchBabyCategory && matchStatus && matchRemarks
       );
     });
   };
@@ -78,14 +73,12 @@ export default function RequestorAppointments() {
 
   useEffect(() => {
     setLoading(true);
-    console.log("Fetching data...");
     const fetchRequestData = async () => {
       try {
         const response = await axios.get(
           `${WebHost}/kalinga/getRequestByUserType/Requestor`
         );
         const userData = response.data.request;
-        console.log("Fetched data:", userData);
         setRequestData(userData);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -97,7 +90,6 @@ export default function RequestorAppointments() {
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    console.log(`Filter change - ${name}: ${value}`);
     setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
   };
 
@@ -108,11 +100,26 @@ export default function RequestorAppointments() {
         .includes(searchQuery.trim().toLowerCase())
   );
 
-  console.log("Filtered appointments:", filteredAppointments);
+  const sortedAppointments = filteredAppointments.sort((a, b) => {
+    const dateA = new Date(a.createdAt);
+    const dateB = new Date(b.createdAt);
+
+    if (a.BabyCategory === b.BabyCategory) {
+      return dateB - dateA;
+    }
+
+    const categoryOrder = {
+      "Medically Fragile Baby": 1,
+      "Sick Baby": 2,
+      "Well Baby": 3,
+    };
+
+    return categoryOrder[a.BabyCategory] - categoryOrder[b.BabyCategory];
+  });
 
   const indexOfLastRequest = currentPage * requestPerPage;
   const indexOfFirstRequest = indexOfLastRequest - requestPerPage;
-  const currentRequest = filteredAppointments.slice(
+  const currentRequest = sortedAppointments.slice(
     indexOfFirstRequest,
     indexOfLastRequest
   );
@@ -124,30 +131,25 @@ export default function RequestorAppointments() {
         `${WebHost}/kalinga/deleteAppointmentRequestor/${RequestID}`
       );
       if (response.status === 200) {
-        // Appointment deleted successfully
         const updatedAppointments = requestData.filter(
           (request) => request.RequestID !== RequestID
         );
         setRequestData(updatedAppointments);
-        setIsDeleteModalOpen(true); // Open delete confirmation modal
+        setIsDeleteModalOpen(true);
       } else {
         console.error("Error deleting appointment:", response.data);
-        // Handle error (e.g., display error message to user)
       }
     } catch (error) {
       console.error("Error deleting appointment:", error);
-      // Handle error (e.g., display error message to user)
     }
   };
 
   const handleDeleteConfirm = () => {
-    setIsDeleteModalOpen(false); // Close the delete modal
-    // Additional logic after confirming deletion
+    setIsDeleteModalOpen(false);
   };
 
   const handleDeleteCancel = () => {
-    setIsDeleteModalOpen(false); // Close the delete modal
-    // Additional logic if deletion is canceled
+    setIsDeleteModalOpen(false);
   };
 
   const [selectedUser, setSelectedUser] = useState(null);
@@ -243,14 +245,16 @@ export default function RequestorAppointments() {
                       </label>
                       <select
                         className="bg-white text-primary-default text-lg py-1 pl-2 rounded-sm hover:cursor-pointer w-full"
-                        name="monthScheduled"
+                        name="babyCategory"
                         value={filters.babyCategory}
                         onChange={handleFilterChange}
                       >
                         <option value="">Select Baby Category</option>
-                        <option value="Complete">Well Baby</option>
-                        <option value="Ongoing">Sick Baby</option>
-                        <option value="Pending">Medically Fragile Baby</option>
+                        <option value="Well Baby">Well Baby</option>
+                        <option value="Sick Baby">Sick Baby</option>
+                        <option value="Medically Fragile Baby">
+                          Medically Fragile Baby
+                        </option>
                       </select>
                     </div>
                     <div className="border-b border-primary-default">
@@ -281,8 +285,10 @@ export default function RequestorAppointments() {
                         onChange={handleFilterChange}
                       >
                         <option value="">Select Remarks</option>
-                        <option value="Complete">Insufficient Supply</option>
-                        <option value="Approved">
+                        <option value="Insufficient Supply">
+                          Insufficient Supply
+                        </option>
+                        <option value="Prioritization of Recipients">
                           Prioritization of Recipients
                         </option>
                         <option value="No Office Hours">

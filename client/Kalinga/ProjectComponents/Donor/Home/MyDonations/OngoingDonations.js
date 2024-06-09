@@ -9,7 +9,7 @@ import {
   Alert,
   ActivityIndicator, 
   TextInput} from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useParams } from '@react-navigation/native';
 import axios from 'axios'; // Import axios for API requests
 import { format } from 'date-fns';
 import { BASED_URL } from '../../../../MyConstants.js';
@@ -18,6 +18,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
+import { getDateTime } from '../../../functions/formatDateAndTime.js';
 
 
 const OngoingDonations = ({route}) => {
@@ -29,60 +30,24 @@ const OngoingDonations = ({route}) => {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
 
-  const [formData, setFormData] = useState({
-    DonationStatus: "",
-    fullName: "",
-    phoneNumber: "",
-    emailAddress: "",
-    homeAddress: "",
-    medicalCondition: "",
-    milkAmount: "",
-    location: "",
-    selectedDate: ""(),
-    selectedTime: ""(),
-  });
+  const [formData, setFormData] = useState(null);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const { AppointmentDonorID } = useParams();
-  useEffect(() => {
-    const fetchAppointmentData = async () => {
-      try {
-        const response = await axios.get(
-          `${WebHost}/kalinga/getAppointmentsByDonorID/${AppointmentDonorID}`
-        );
-        setAppointmentData(response.data.Appointment);
-        setSelectedDate(new Date(response.data.Appointment.selectedDate));
-        setSelectedTime(new Date(response.data.Appointment.selectedTime));
-        await fetchRequirements(response.data.Appointment.Donor_ID);
-      } catch (error) {
-        console.error("Error fetching appointment data:", error);
-      }
-    };  
-
-    console.log("AppointmentDonorID:", AppointmentDonorID);
-    fetchAppointmentData();
-  }, [AppointmentDonorID]);
  
  const fetchData = async () => {
       try {
-        setLoading(false);    
+        setLoading(true);    
           const response = await axios.get(`${BASED_URL}/kalinga/getOngoingDonation/${Donor_ID}`);
+          console.log("response: ", response.data.messages.message)
           if(response.data.messages.code === 1) {
-            Alert.alert("No Ongoing Donation", "You currently don't have any ongoing donations.");
             setFormData([])
             return
           }
           const responseData = response.data;
           const formDataFromResponse = responseData.ongoingDonation;
-          getDateTime(formDataFromResponse)
-
+          console.log("response: ", formDataFromResponse)
+          const { time, date } = getDateTime({data: formDataFromResponse[0]})
+          setTime(time)
+          setDate(date)
           setFormData(formDataFromResponse);
 
       } catch (error) {
@@ -93,144 +58,140 @@ const OngoingDonations = ({route}) => {
       }
   };
 
-  if (loading) {
-      return <ActivityIndicator size="large" color="#E60965" />;
-  }
-
-  const getDateTime = (DateAndTime) => {
-    
-    const date = new Date(DateAndTime[0].selectedTime);
-    // Extract the date components
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1; // Months are 0-indexed, so add 1
-    const day = date.getDate();
-
-    // Extract the time components
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const seconds = date.getSeconds();
-
-    // Format the date and time components as desired
-    const formattedDate = `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
-    const formattedTime = `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-
-    setDate(formattedDate);
-    setTime(formattedTime);
-
-    console.log("Date:", formattedDate); 
-    console.log("Time:", formattedTime); 
-  }
-
   useFocusEffect(
     React.useCallback(() => {
       fetchData();
     }, [])
   );
+  if (loading) {
+      return <ActivityIndicator size="large" color="#E60965" />;
+  }
+
+
     return (
              <SafeAreaView style = {globalStyles.defaultBackgroundColor}>
                 <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
-               
-                <ScrollView
-                 overScrollMode='never'
-                 nestedScrollEnabled={true}
+                {!loading && formData && formData.length === 0 && (
+                       <View style ={{
+                          backgroundColor: "white",
+                          width: "90%",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          paddingHorizontal:7,
+                          paddingVertical:17,
+                          elevation:7,
+                          borderRadius: 17,
+                          marginTop: "7%",
+                          alignSelf: "center"
+                        }}>
+                    <Text style={{
+                        fontFamily: "Open-Sans-SemiBold",
+                        color:  '#E60965',
+                    }}>No ongoing donations at the moment.</Text>
+                  </View>
+                 
+                )}
+            {formData && formData.length !== 0 && (
+                <ScrollView    
+                overScrollMode='never'
+                nestedScrollEnabled={true}
+                contentContainerStyle={{
+                  alignItems:"center",
+                  justifyContent: "center",
+                  paddingVertical: "7%",
+                }}
+                style={{
+                  alignSelf: "center"
+                }}
                 >
-            
-           {formData !== undefined && formData.map((data, index) => (
-            <View key={index} style={styles.container}>
-              <TextInput
-                style={[styles.BiginputField, { color: '#E60965' }]}
-                placeholder="Full Name"
-                placeholderTextColor="#E60965"
-                value={`Full Name: ${data.fullName}`}
-                editable={false}
-              />
-              <TextInput
-                style={[styles.BiginputField, { color: '#E60965' }]}
-                placeholder="Phone Number"
-                placeholderTextColor="#E60965"
-                value={`Phone Number: ${data.phoneNumber || ''}`}
-                editable={false}
-              />
-              <TextInput
-                style={[styles.BiginputField, { color: '#E60965' }]}
-                placeholder="Email Address"
-                placeholderTextColor="#E60965"
-                value={`Email Address: ${data.emailAddress || ''}`}
-                editable={false}
-              />
-              <TextInput
-                style={[styles.BiginputField, { color: '#E60965' }]}
-                placeholder="Home Address"
-                placeholderTextColor="#E60965"
-                value={`Home Address: ${data.homeAddress || ''}`}
-                editable={false}
-              />
-              <TextInput
-                style={[styles.BiginputField, { color: '#E60965' }]}
-                placeholder="Medical Condition (If Applicable)"
-                placeholderTextColor="#E60965"
-                value={`Medical Condition (If Applicable): ${data.medicalCondition || ''}`}
-                editable={false}
-              />
-              <TextInput
-                style={[styles.BiginputField, { color: '#E60965' }]}
-                placeholder="Amount of Milk to be Donated"
-                placeholderTextColor="#E60965"
-                value={`Amount of Milk to be Donated: ${data.milkAmount || ''}`}
-                editable={false}
-              />
-              <View>
-              <Text style={styles.AdminDate}>Date</Text>
-              </View>
-              <View style={styles.BiginputField}>
-                        <TextInput
-                            style={{color: '#E60965' }}
-                            placeholder="Date"
-                            multiline={true}
-                            placeholderTextColor="#E60965"
-                            value={`Date: ${
-                              appointmentData ? appointmentData.selectedDate : ""
-                            }`}                            
-                            editable={false}
-                        />
-                        <FontAwesome5 name="calendar-alt" size={20} color="#E60965" style={styles.icon} />
-                    </View>
+                <TextInput
+                  style={[styles.BiginputField, { color: '#E60965' }]}
+                  placeholder="Full Name"
+                  placeholderTextColor="#E60965"
+                  value={`Full Name: ${formData[0].fullName}`}
+                  editable={false}
+                />
+                <TextInput
+                  style={[styles.BiginputField, { color: '#E60965' }]}
+                  placeholder="Phone Number"
+                  placeholderTextColor="#E60965"
+                  value={`Phone Number: ${formData[0].phoneNumber || ''}`}
+                  editable={false}
+                />
+                <TextInput
+                  style={[styles.BiginputField, { color: '#E60965' }]}
+                  placeholder="Email Address"
+                  placeholderTextColor="#E60965"
+                  value={`Email Address: ${formData[0].emailAddress || ''}`}
+                  editable={false}
+                />
+                <TextInput
+                  style={[styles.BiginputField, { color: '#E60965' }]}
+                  placeholder="Home Address"
+                  placeholderTextColor="#E60965"
+                  value={`Home Address: ${formData[0].homeAddress || ''}`}
+                  editable={false}
+                />
+                <TextInput
+                  style={[styles.BiginputField, { color: '#E60965' }]}
+                  placeholder="Medical Condition (If Applicable)"
+                  placeholderTextColor="#E60965"
+                  value={`Medical Condition (If Applicable): ${formData[0].medicalCondition || ''}`}
+                  editable={false}
+                />
+                <TextInput
+                  style={[styles.BiginputField, { color: '#E60965' }]}
+                  placeholder="Amount of Milk to be Donated"
+                  placeholderTextColor="#E60965"
+                  value={`Amount of Milk to be Donated: ${formData[0].milkAmount || ''}`}
+                  editable={false}
+                />
 
-                    <View>
-                        <Text style={styles.AdminTime}>Time</Text>
-                    </View>
-                    <View style={styles.BiginputField}>
-                        <TextInput
-                            style={{color: '#E60965' }}
-                            placeholder="Time"
-                            multiline={true}
-                            placeholderTextColor="#E60965"
-                            value={`Time: ${
-                              appointmentData ? appointmentData.selectedTime : ""
-                            }`}
-                            editable={false}
-                        />
-                        <MaterialIcons name="access-time-filled" size={24} color="#E60965" style={styles.icon2} />
-                    </View>
-              <View>
-                    <Text style={styles.AdminMilkLocation}>Milk Bank Location</Text>
+                <View>
+                <Text style={styles.AdminDate}>Date</Text>
                 </View>
                 <View style={styles.BiginputField}>
-                <TextInput
-                    style={{color: '#E60965', width: "90%" }} // Set flex to 1 to allow TextInput to take up remaining space
-                    placeholder="location"
-                    multiline={true}
-                    placeholderTextColor="#E60965"
-                    value={data.location || ''}
-                    editable={false}
-                />
-                <FontAwesome6 name="hospital" size={24} color="#E60965" style={styles.icon3} />
-                </View>
-                </View>
-              ))}
-                      
-                </ScrollView>
-        
+                          <TextInput
+                              style={{color: '#E60965'}}
+                              placeholder="Date"
+                              multiline={true}
+                              placeholderTextColor="#E60965"
+                              value={`Date: ${date}`}                            
+                              editable={false}
+                          />
+                          <FontAwesome5 name="calendar-alt" size={20} color="#E60965" style={styles.icon} />
+                      </View>
+  
+                      <View>
+                          <Text style={styles.AdminTime}>Time</Text>
+                      </View>
+                      <View style={styles.BiginputField}>
+                          <TextInput
+                              style={{color: '#E60965'}}
+                              placeholder="Time"
+                              multiline={true}
+                              placeholderTextColor="#E60965"
+                              value={`Time: ${time}`}
+                              editable={false}
+                          />
+                          <MaterialIcons name="access-time-filled" size={24} color="#E60965" style={styles.icon2} />
+                      </View>
+                <View>
+                      <Text style={styles.AdminMilkLocation}>Milk Bank Location</Text>
+                  </View>
+                  <View style={styles.BiginputField}>
+                  <TextInput
+                      style={{color: '#E60965', width: "90%"}} // Set flex to 1 to allow TextInput to take up remaining space
+                      placeholder="location"
+                      multiline={true}
+                      placeholderTextColor="#E60965"
+                      value={formData[0].location || ''}
+                      editable={false}
+                  />
+                  <FontAwesome6 name="hospital" size={24} color="#E60965" />
+                  </View>
+                  </ScrollView>
+            )}
             </SafeAreaView>
         
     );
@@ -282,7 +243,8 @@ AdminMilkLocation:{
     paddingHorizontal: 20,
     width: 320,
     marginBottom: 15,
-    elevation:10
+    elevation:10,
+    justifyContent: "space-between"
 },
 BiginputFieldHome: {
     flexDirection: 'row',
@@ -298,15 +260,7 @@ BiginputFieldHome: {
     height: 75,
     marginBottom: 15
 },
-icon: {
-    marginLeft: 180 // Adjust the margin right for the icon
-},
-icon2: {
-    marginLeft: 200 // Adjust the margin right for the icon
-},
-icon3: {
-    marginLeft: 10 // Adjust the margin right for the icon
-},
+
 });
 
 export default OngoingDonations;
