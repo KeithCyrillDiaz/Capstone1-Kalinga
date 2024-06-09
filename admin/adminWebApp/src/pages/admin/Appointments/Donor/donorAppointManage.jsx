@@ -383,7 +383,7 @@ export default function ({ remarks }) {
                                   : `This appointment is declined due to ${appointment.DonorRemark}`}
                               </div>
                             </td>
-
+                              {/* LINKING */}
                             <td className="text-center  py-4 whitespace-nowrap text-sm font-medium flex items-center justify-center gap-2">
                               <Link
                                 to={`/admin/${id}/donorAppointmentConfirmation/${appointment.AppointmentDonorID}`}
