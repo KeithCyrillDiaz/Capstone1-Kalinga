@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, View, StatusBar, StyleSheet, TouchableOpacity, TextInput, Alert, Platform } from 'react-native';
 import { globalHeader } from '../../../../styles_kit/globalHeader.js';
 import { globalStyles } from '../../../../styles_kit/globalStyles.js';
@@ -12,6 +12,8 @@ import randomatic from 'randomatic';
 import { format } from 'date-fns';
 import { Picker } from '@react-native-picker/picker';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { LoadingSpinner } from '../../../uploader/LoadingSpinner.js';
+import { getFormFormat } from '../../../../Kalinga_API/AppointmentFormConfiguration.js';
 
 
 const SetDateTimeLocation = () => {
@@ -162,7 +164,27 @@ const SetDateTimeLocation = () => {
               };
               setNewForm(newData)
           };
-        
+          const [loading, setLoading] = useState(false)
+          const [deliveryCategories, setDeliveryCategories] = useState([
+            "In house",
+            "Pick-up"
+          ])
+          const fetchDeliveryMethodCategories = async () => {
+            setLoading(true)
+            const result = await getFormFormat({navigation: navigation})
+            setLoading(false)
+            if(!result) return
+            const {donationAppointmentConfig} = result
+            if(!donationAppointmentConfig)return
+            console.log("donationAppointmentConfig: ", donationAppointmentConfig)
+            const { method } = donationAppointmentConfig.options
+            setDeliveryCategories(method)
+            console.log("method: ", method)
+          }
+        useEffect(() => {
+            fetchDeliveryMethodCategories()
+        },[])
+
     return (
         <View style={globalStyles.container}>
             <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
@@ -172,7 +194,7 @@ const SetDateTimeLocation = () => {
 
             <ScrollView overScrollMode='never' nestedScrollEnabled={true}>
                 <View style={styles.container}>
-                    
+                    <LoadingSpinner loading={loading}/>
                     <Text style={[styles.AdminDate,{width: "100%", marginLeft: 5,}]}>Delivery Method</Text>
                     <View style={styles.BiginputField}>
                         <Picker
@@ -183,8 +205,9 @@ const SetDateTimeLocation = () => {
                         }
                         >
                         <Picker.Item label="Method of Delivery" value="" />
-                        <Picker.Item label="In house" value="In house" />
-                        <Picker.Item label="Pick-up" value="Pick-up" />
+                        {deliveryCategories.map((category, index) => (
+                            <Picker.Item key={index} label={category} value={category} />
+                        ))}
                     </Picker>
                         <MaterialCommunityIcons name="truck-delivery" size={30} style={{flexShrink:0}} color='#E60965' />
                     </View>

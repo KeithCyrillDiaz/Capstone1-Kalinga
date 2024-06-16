@@ -2,19 +2,15 @@
   "expo": {
     "name": "Kalinga",
     "slug": "Kalinga",
-    "scheme": "Kalinga",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/KALINGA_Icon_1.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
     "ios": {
       "supportsTablet": true
     },
@@ -23,18 +19,24 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "package": "com.newpackage.Kalinga",
       "permissions": [
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION"
       ],
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyDsGViJBNg3mjkI7NtHIo79FAZIseLmhuQ"
-        }  
+          "apiKey": "AIzaSyCyAgVIPvYV-Q3hQQQ6XxGIfnXsm_aNrJ0"
+        }
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3af13a6e-95df-46c4-90ba-4616a7b3058c"
+      }
     }
   }
 }

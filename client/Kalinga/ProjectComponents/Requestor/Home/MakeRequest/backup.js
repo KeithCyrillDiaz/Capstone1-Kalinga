@@ -28,7 +28,6 @@ import ImageZoom from 'react-native-image-pan-zoom';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import { BASED_URL } from '../../../../MyConstants.js';
-import { getFormFormat } from '../../../../Kalinga_API/AppointmentFormConfiguration.js';
 
 
 export default function RequestorProfile({route}) {
@@ -106,13 +105,20 @@ export default function RequestorProfile({route}) {
     getCity();
   },[])
 
-const [keysToCheck, setKeysToCheck] = useState([
-  'milkBank',
-
-  ])
 
   const checkForm = () => {
     console.log("formData: ", formData)
+    let keysToCheck = [
+      'fullName',
+      'phoneNumber',
+      'emailAddress',
+      'homeAddress',
+      'childBirthDate',
+      'city',
+      'milkBank',
+      'milkAmount',
+      'ReasonForRequesting',
+      ];
       const isFormDataValid = keysToCheck.every(key => formData[key].trim() !== '');
   
       if (isFormDataValid) {
@@ -190,42 +196,7 @@ const handleChange = (name, value) => {
   }));
 };
 
-  const [formFormat, setFormFormat] = useState({})
-
-  const fetchFormat = async () => {
-    setIsLoading(true)
-    const result = await getFormFormat({navigation: navigation})
-    setIsLoading(false)
-    const { requestAppointmentConfig } = result
-    console.log("requestAppointmentConfig: ",requestAppointmentConfig)
-    setFormFormat(requestAppointmentConfig)
-    const updatedKeys = [...keysToCheck]
-    Object.entries(requestAppointmentConfig).forEach(([key, value]) => {
-      // If the value is true, push the key into the initialKeys array
-      if (value === true && key !== "BabyCategory" && key !== "infantInformation") {
-        updatedKeys.push(key)
-      }
-    });
-    setKeysToCheck(updatedKeys)
-    console.log("keys: ", updatedKeys)
-  }
-
-  useEffect(() => {
-    fetchFormat()
-  },[])
-
-if(isLoading && Object.keys(formFormat).length === 0) {
-  return (
-    <Spinner
-    visible={isLoading}
-    textContent={'Loading...'}
-    textStyle={{ color: '#FFF' }}
-  />
-  )
-  
-}
-
-if(!isLoading && Object.keys(formFormat).length !== 0){
+if(!isLoading){
   return (
       
     <SafeAreaView style={globalStyles.container}>
@@ -249,6 +220,7 @@ if(!isLoading && Object.keys(formFormat).length !== 0){
                 textContent={'Loading...'}
                 textStyle={{ color: '#FFF' }}
               />
+
               <View style={styles.body}>
               <Text 
                 style = {{
@@ -260,96 +232,106 @@ if(!isLoading && Object.keys(formFormat).length !== 0){
 
                 }}
                 >Personal Information</Text>
-                <Text style={styles.bodyNote}>Note: Bold fields are not editable.</Text>
+                  <Text style={styles.bodyNote}>Note: Bold fields are not editable.</Text>
+                  <TextInput
+                  style={[styles.form1, {fontFamily:"Open-Sans-SemiBold"}]}
+                  value={formData.fullName}
+                  placeholder="Full Name *"
+                  placeholderTextColor="#E60965"
+                  onChangeText={(text) => handleInputChange('fullName', text)}
+                  editable={false}
+              />
+              <TextInput
+                  style={[styles.form1, {fontFamily:"Open-Sans-SemiBold"}]}
+                  value={formData.phoneNumber}
+                  placeholder="Phone Number *"
+                  placeholderTextColor="#E60965"
+                  maxLength={11}
+                  onChangeText={(text) => handleInputChange('phoneNumber', text)}
+                  editable={false}
+                  
+              />
+              <TextInput
+                  style={[styles.form1, {fontFamily:"Open-Sans-SemiBold"}]}
+                  value={formData.emailAddress}
+                  placeholder="Email Address *"
+                  placeholderTextColor="#E60965"
+                  onChangeText={(text) => handleInputChange('emailAddress', text)}
+                  editable={false}
+              />
+              <TextInput
+                  style={[styles.form2, {fontFamily:"Open-Sans-SemiBold"}]}
+                  value={formData.homeAddress}
+                  multiline={true}
+                  placeholder="Home Address *"
+                  placeholderTextColor="#E60965"
+                  onChangeText={(text) => handleInputChange('homeAddress', text)}
+                  editable={false}
+              />
+               
+              <TextInput
+                      style={styles.form2}
+                      value={formData.ReasonForRequesting}
+                      placeholder="Reason for Requesting *"
+                      placeholderTextColor="#E60965"
+                      onChangeText={(text) => handleInputChange('ReasonForRequesting', text)}
+                      /> 
+                {/* <View style={styles.dropdownContainer1}>
+                  <Picker
+                    selectedValue={formData.ageOfGestation}
+                    style={{ height: 30, width: "100%", color: '#E60965',}}
+                    onValueChange={(text) => handleInputChange('ageOfGestation', text)} 
+                  >
+                    <Picker.Item label="Select Age of Gestation" value="" />
+                    <Picker.Item label="Early Term" value="Early Term" />
+                    <Picker.Item label="Full Term" value="Full Term" />
+                    <Picker.Item label="Late Term" value="Late Term" />
+                    <Picker.Item label="Post Term" value="Post Term" />
+                  </Picker>
+              </View> */}
+       
 
-                {Object.entries(formFormat).map(([fieldName, fieldConfig]) => {
-                  if (fieldName === "infantInformation" && fieldConfig === true ) {
-                    return (
-                        <Text 
-                            key={fieldName}
-                            style={{
-                                marginLeft: 20,
-                                color: "#E60965",
-                                fontSize: 20,
-                                fontFamily: "Open-Sans-Bold",
-                                marginTop: 20,
-                                marginBottom: 10,
-                            }}
-                        >
-                            Infant Information
-                        </Text>
-                    );
-                } else if (fieldName !== "milkAmount" && fieldConfig === true && fieldName !== "BabyCategory") {
-                    return (
-                        <TextInput
-                            key={fieldName}
-                            style={[
-                                styles.form1,
-                                {
-                                    fontFamily: (
-                                      formData[fieldName]?.trim() === "" ? "Open-Sans-Regular" : "Open-Sans-SemiBold"
-                                    ),
-                                    color: (
-                                      fieldName === "fullName" || 
-                                      fieldName === "phoneNumber" || 
-                                      fieldName === "emailAddress" ||
-                                      fieldName === "childBirthDate"||
-                                      fieldName === "homeAddress"
-                                    ) 
-                                      ? "gray" : "#E60965"
-                                }
-                            ]}
-                            placeholder={formFormat.placeholder[fieldName]}
-                            placeholderTextColor="#E60965"
-                            multiline= {fieldName === "homeAddress" || fieldName === "ReasonForRequesting" }
-                            onChangeText={(text) => handleInputChange(fieldName, text)}
-                            value={formData[fieldName]}
-                            editable={!(fieldName === "fullName" || fieldName === "phoneNumber" || fieldName === "emailAddress" || fieldName === "homeAddress")}
-                        />
-                    );
-                } else if (fieldName === "milkAmount" && fieldConfig === true) {
+            <TextInput
+                  style={[styles.form1, {fontFamily:"Open-Sans-SemiBold"}]}
+                  value={formData.city}
+                  editable={false}
+              />
 
-                    const sortedMilkAmount = formFormat.options[fieldName]
-                    .map(item => parseInt(item))
-                    .sort((a, b) => a - b) // Sort numerically
-                    .map(item => item + 'ml'); 
-                  return (
-                    <View style={styles.dropDown}>
-                        <Picker
-                            selectedValue={formData.milkAmount}
-                            style ={{
-                              color: '#E60965', 
-                            }}
-                            onValueChange={(itemValue) =>
-                              handleChange(fieldName, itemValue)
-                            }
-                            >
-                            <Picker.Item label={formFormat.placeholder[fieldName]} value="" />
-                            {sortedMilkAmount.map((item, index) =>(
-                              <Picker.Item key={index} label={item} value={item} />
-                            ))}
-                        </Picker>              
-                    </View>
-                  )
-                } else {
-                    return null; 
-                }
-              })}
-                 {Object.keys(formFormat).length !== 0 && (
+              <Text 
+                style = {{
+                  marginLeft: 20,
+                  color: "#E60965",
+                  fontSize: 20,
+                  fontFamily: "Open-Sans-Bold",
+                  marginTop:20,
+                  marginBottom: 10,
+
+                }}
+                >Infant Information</Text>
+                <TextInput
+                  style={[styles.form1, {paddingLeft: 25, fontFamily: "Open-Sans-SemiBold"}]}
+                  value={formData.childBirthDate}
+                  placeholder="Child Birthday *"
+                  placeholderTextColor="#E60965"
+                  onChangeText={(text) => handleInputChange('emailAddress', text)}
+                  editable={false}
+              />         
+    
                   <View style={styles.dropDown}>
-                      <Picker
-                        selectedValue={formData.milkBank}
-                        style ={{color: '#E60965'}}
-                        onValueChange={(itemValue) =>
-                          handleChange("milkBank", itemValue)
-                        }
-                        >
-                        <Picker.Item label="Choose Milk Bank" value="" />
-                        <Picker.Item label="Quezon City General Hospital - Human Milk Bank" value="Quezon City General Hospital - Human Milk Bank" />
-                    </Picker>
-                  </View>   
-                 )}
-            {/* <View style={styles.dropDown}>
+                    <Picker
+                      selectedValue={formData.milkBank}
+                      style ={{color: '#E60965'}}
+                      onValueChange={(itemValue) =>
+                        handleChange("milkBank", itemValue)
+                  
+                      }
+                      >
+                      <Picker.Item label="Choose Milk Bank" value="" />
+                      <Picker.Item label="Quezon City General Hospital - Human Milk Bank" value="Quezon City General Hospital - Human Milk Bank" />
+                  </Picker>
+                </View>   
+                
+            <View style={styles.dropDown}>
                   <Picker
                       selectedValue={formData.milkAmount}
                       style ={{
@@ -363,7 +345,7 @@ if(!isLoading && Object.keys(formFormat).length !== 0){
                       <Picker.Item label="100 ml" value="100" />
                       <Picker.Item label="200 ml" value="200" />
                   </Picker>              
-            </View> */}
+            </View>
                     
 
                   {/* <TouchableOpacity onPress={() => handleImageUpload("Prescription")} style = {styles.uploadContainer}>

@@ -381,7 +381,7 @@ const handleFileUpload = async (attachmentType) => {
                     <ScrollView 
                       showsHorizontalScrollIndicator={true}
                       overScrollMode='never'
-                    horizontal={scrollableHorizontal}
+                    horizontal={Object.keys(selectedImage).length > 3}
                     contentContainerStyle={{ flexDirection: 'row', }}
                   >
                       {Object.entries(selectedImage).map(([attachmentType, value]) => (

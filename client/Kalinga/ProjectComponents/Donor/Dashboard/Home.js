@@ -14,6 +14,7 @@ import { BASED_URL } from '../../../MyConstants.js';
 import { checkOngoingAppointments, deleteAllDonorCheckListItems } from '../../functions/checkAppointment.js';
 import { getDateTime } from '../../functions/formatDateAndTime.js';
 import { ReminderModal } from '../../modal/ReminderModal.js';
+import { checkMaintenanceStatus } from '../../../Kalinga_API/Maintenance.js';
 
 
 const DonorHome = ({route}) => {
@@ -150,11 +151,18 @@ const DonorHome = ({route}) => {
 };
 
 
-const handleMakeDonation = () => {
+const handleMakeDonation = async () => {
     console.log('Current Donation Status:', donationStatus);
 
     const canMakeDonation = donationStatus !== 'Pending' && donationStatus !== 'Ongoing';
     console.log('Can Make Donation:', canMakeDonation); // Log the evaluation result
+    const result = await checkMaintenanceStatus()
+    const { code } = result.messages
+    if(code === 0) {
+      Alert.alert( "Ongoing Maintenance",
+        "Make a Donation is currently undergoing maintenance. Please try again later.")
+      return
+    }
 
     if (canMakeDonation) {
         console.log('Navigating to MakeRequest');
@@ -199,6 +207,7 @@ const appointmentReminder = async () => {
     }
 }
 
+
 useFocusEffect(
   React.useCallback(() => {
     fetchUpdateduserInfo()
@@ -228,7 +237,7 @@ useFocusEffect(
              
 
               <View style = {styles.boxRowContainer}>
-              <TouchableOpacity style={[styles.box, {position: "relative"}]} onPress={handleMakeDonation}>
+              <TouchableOpacity style={[styles.box, {position: "relative"}]} onPress={() => handleMakeDonation()}>
                     <Ionicons name="calendar" size={70} color="#E60965" />
                     <Text style = {styles.boxTitle}>Make a Donation</Text>
                     <Text style = {styles.subLabel}>Ready to donate? Set an appointment</Text>

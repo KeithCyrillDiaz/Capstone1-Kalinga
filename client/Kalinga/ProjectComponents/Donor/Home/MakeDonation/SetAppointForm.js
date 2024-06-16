@@ -63,17 +63,11 @@ const SetAppointment = ({route}) => {
 
   });
 
-  const checkForm = (value) => {
-    let keysToCheck = [
+  const [keysToCheck, setKeysToCheck] = useState([
       'userType',
-      'fullName',
-      'emailAddress',
-      'phoneNumber',
-      'homeAddress',
-      'milkAmount',
-      'city'
-      ];
-
+       'city',
+  ])
+  const checkForm = (value) => {
       const isFormDataValid = keysToCheck.every(key => formData[key].trim() !== '');
   
       if (isFormDataValid) {
@@ -144,8 +138,18 @@ const SetAppointment = ({route}) => {
     const result = await getFormFormat({navigation: navigation})
     setLoading(false)
     const { donationAppointmentConfig } = result
+    console.log("donationAppointmentConfig: ", donationAppointmentConfig)
     setFormFormat(donationAppointmentConfig)
+    const updatedKeys = [...keysToCheck]
+    Object.entries(donationAppointmentConfig).forEach(([key, value]) => {
+      // If the value is true, push the key into the initialKeys array
+      if (value === true) {
+        updatedKeys.push(key)
+      }
+    });
+    setKeysToCheck(updatedKeys)
   }
+
 
   useEffect(() => {
     fetchFormat()
@@ -179,25 +183,26 @@ if(Object.keys(formFormat).length !== 0)
             <Text style={styles.note}>Note: All fields marked with (*) are required</Text>
           </View>
                 {Object.entries(formFormat).map(([fieldName, fieldConfig]) => 
-                  fieldName !== "milkAmount" && fieldConfig === true && (
+                  fieldConfig === true && (
                     <View key={fieldName} style ={styles.inputField}>
                       <View style={styles.spaceBetween}>
                         <TextInput
                         style={[styles.placeholderDesign,{
-                          color: (fieldName === "fullName" || fieldName === "phoneNumber" || fieldName === "emailAddress") ? "gray" : "#E60965"
+                          color: (fieldName === "fullName" || fieldName === "phoneNumber" || fieldName === "emailAddress" || fieldName === "homeAddress" ) ? "gray" : "#E60965"
                         }]}
+                        keyboardType={fieldName === "milkAmount" ? "numeric": "default"}
                         placeholder={formFormat.placeholder[fieldName]}
                         placeholderTextColor="#E60965"
                         multiline= {fieldName === "homeAddress"}
                         onChangeText={(text) => handleChange(fieldName, text)}
                         value={formData[fieldName]}
                         editable={
-                          !(fieldName === "fullName" || fieldName === "phoneNumber" || fieldName === "emailAddress")
+                          !(fieldName === "fullName" || fieldName === "phoneNumber" || fieldName === "emailAddress" || fieldName === "homeAddress" )
                         }
                       />
                       </View>
                       {
-                        fieldName !== "fullName" && fieldName !== "phoneNumber" && fieldName !== "emailAddress" && (
+                        fieldName !== "fullName" && fieldName !== "phoneNumber" && fieldName !== "emailAddress" && fieldName !== "homeAddress" && (
                           <Text style = {styles.asterix}>
                             *
                           </Text>
