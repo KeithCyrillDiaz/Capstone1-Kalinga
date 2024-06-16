@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScrollView, 
     Text, 
     View, 
@@ -32,6 +32,8 @@ import ImageZoom from 'react-native-image-pan-zoom';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { ValidIdInfoModal } from "./ValidIdInfoModal.js";
 import { ImagePickerModal } from '../../../modal/ImagePickerModal.js';
+import { getFormFormat } from '../../../../Kalinga_API/AppointmentFormConfiguration.js';
+import { LoadingSpinner } from '../../../uploader/LoadingSpinner.js';
 
 
 
@@ -324,6 +326,24 @@ const SetDateTimeLocation = () => {
             }
         };
         
+
+        const [methods, setMethods] = useState([])
+        const [isloading, setIsLoading] = useState(false)
+        const fetchFormat = async () => {
+            setIsLoading(true)
+            const result = await getFormFormat({navigation: navigation})
+            setIsLoading(false)
+            const { requestAppointmentConfig } = result
+            console.log("requestAppointmentConfig: ",requestAppointmentConfig)
+            const { method } = requestAppointmentConfig.options
+            console.log("method: ", method)
+           if(method)setMethods(method)
+        }
+
+        useEffect(() => {
+            fetchFormat()
+        },[])
+
     return (
         <View style={globalStyles.container}>
             <StatusBar barStyle="dark-content" translucent backgroundColor="white" />
@@ -332,6 +352,7 @@ const SetDateTimeLocation = () => {
             </View>
 
             <ScrollView overScrollMode='never' nestedScrollEnabled={true}>
+                <LoadingSpinner loading={isloading}/>
                 <View style={styles.container}>
                 {showImagePicker && (
                     <ImagePickerModal 
@@ -349,8 +370,9 @@ const SetDateTimeLocation = () => {
                         }
                         >
                         <Picker.Item label="Method of Obtaining" value="" />
-                        <Picker.Item label="Authorized Person" value="Authorized Person" />
-                        <Picker.Item label="Self Pick-up" value="Self Pick-up" />
+                        {methods.map((category, index) => (
+                             <Picker.Item key={index} label={category} value={category}  />
+                        ))}
                     </Picker>
                         <MaterialCommunityIcons name="truck-delivery" size={30} style={{flexShrink:0}} color='#E60965' />
                     </View>

@@ -25,6 +25,7 @@ import { BASED_URL } from "../../../../MyConstants.js";
 import phil from "philippine-location-json-for-geer";
 import ProvincesData from '../Provinces.json'
 import { GestationData, GestationExplanation, sexData} from "../ageofGestationData.js";
+import { checkPrevForm, storePrevForm } from "../../../../Kalinga_API/screeningForms.js";
 
 
 const DonorScreeningForm = () => {
@@ -70,6 +71,7 @@ const DonorScreeningForm = () => {
     SH2: '',
 
 });
+
 
 // Handler to update the state with the entered values
 const [value, setValue] = useState(null);
@@ -119,7 +121,6 @@ const handledSaveSex = (value) => {
     sex: value
   })
 }
-
 const checkForm = (value) => {
   let keysToCheck = [
     'Applicant_ID',
@@ -162,7 +163,10 @@ const checkEmail = async (email) => {
     console.log(response.data.messages.message)
     setIsEmailExisted(true)
     return
-  } else setIsEmailExisted(false)
+  } else {
+    setIsEmailExisted(false)
+    savePrevForm()
+  }
   return
 }
 
@@ -514,6 +518,30 @@ useEffect(() => {
   screeningFormData.sex,
 ])
 
+const getPrevForm = async () => {
+  const result = await checkPrevForm({userType: "Donor"})
+  console.log("result: ", result)
+  if(!result)return
+  const { screeningForm } = result.data
+  if(screeningForm) setScreeningFormData(screeningForm)
+    console.log("screeningForm: ", screeningForm)
+}
+
+const savePrevForm = async () => {
+  const { email } = screeningFormData
+  console.log("email: ", email)
+  if (!email) return
+  await storePrevForm({
+    userType: "Donor",
+    email: "keithcyrill.diaz@tup.edu.ph"
+  })
+}
+
+
+useEffect(() => {
+  getPrevForm()
+  savePrevForm()
+}, [])
   return (
     
 
@@ -565,7 +593,7 @@ useEffect(() => {
                      {showDatePicker && (
                       <DateTimePicker
                         testID="dateTimePicker"
-                        value={dateSelected === new Date() ? dateToday : dateSelected}
+                        value={screeningFormData.birthDate ? new Date(screeningFormData.birthDate) : dateSelected === new Date() ? dateToday : dateSelected}
                         mode="date"
                         display="spinner"
                         onChange={(event, value) => handleDateChange(event, value, "Personal")}

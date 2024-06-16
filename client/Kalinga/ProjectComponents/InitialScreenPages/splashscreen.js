@@ -50,6 +50,9 @@ const SplashScreen = ({ navigation }) => {
                 if(result.data.messages.code === 0){
                     console.log(result.data.messages.message)
                     console.log("result.data.userType: ", result.data.userType)
+                    const { userType } = result.data
+                    if(userType === "Requestor") await AsyncStorage.removeItem("email_Requestor")
+                      else await AsyncStorage.removeItem("email_Donor")
                     Alert.alert(`Congratulations!`, `You have been approved as ${result.data.userType}!`,
                     [{text: 'Ok', onPress: () => navigation.replace('SetPassword', {email: null, Applicant_ID: null, userType: result.data.userType})}])
                     return

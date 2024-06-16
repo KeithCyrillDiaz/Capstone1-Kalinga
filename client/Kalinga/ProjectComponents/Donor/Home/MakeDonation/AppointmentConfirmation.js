@@ -280,6 +280,7 @@
               borderRadius: 15,
               elevation: 7,
               marginTop: 20,
+              marginHorizontal: "7%"
               }}>
               <ScrollView 
                 showsHorizontalScrollIndicator={true}

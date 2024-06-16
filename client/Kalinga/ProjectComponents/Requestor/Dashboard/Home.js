@@ -14,6 +14,7 @@ import axios from 'axios';
 import { getDateTime } from '../../functions/formatDateAndTime.js';
 import { checkOngoingRequests, deleteAllCheckListItems, deleteAllRequestorCheckListItems } from '../../functions/checkAppointment.js';
 import { ReminderModal, ReminderRequestModal } from '../../modal/ReminderModal.js';
+import { checkMaintenanceStatus } from '../../../Kalinga_API/Maintenance.js';
 
 export default function RequestorHome({route}) {
 
@@ -155,11 +156,20 @@ export default function RequestorHome({route}) {
 
 
  
-  const handleMakeRequest = () => {
+  const handleMakeRequest = async () => {
       console.log('Current Request Status:', requestStatus);
   
       const canMakeRequest = requestStatus !== 'Pending' && requestStatus !== 'Ongoing';
       console.log('Can Make Request:', canMakeRequest); // Log the evaluation result
+
+      const result = await checkMaintenanceStatus()
+      const { code } = result.messages
+      if(code === 0) {
+        Alert.alert( "Ongoing Maintenance",
+          "Make Request is currently undergoing maintenance. Please try again later.")
+        return
+      }
+
       if (canMakeRequest) {
           console.log('Navigating to MakeRequest');
           navigatePage('MakeRequest');
@@ -248,7 +258,7 @@ export default function RequestorHome({route}) {
              
 
               <View style = {styles.boxRowContainer}>
-              <TouchableOpacity style={styles.box} onPress={handleMakeRequest}>
+              <TouchableOpacity style={styles.box} onPress={() => handleMakeRequest()}>
                     <Ionicons name="calendar" size={70} color="#E60965" />
                     <Text style = {styles.boxTitle}>Make Request</Text>
                     <Text style = {styles.subLabel}>Ready to Request Milk? Set an appointment</Text>
