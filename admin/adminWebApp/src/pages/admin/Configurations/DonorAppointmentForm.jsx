@@ -9,7 +9,7 @@ import { getMaintenace, updateMaintenaceStatus } from '../../../api/Configuratio
 import { RenderDonorCheckBoxField } from '../../../components/Configurations/RenderCheckBoxField';
 import Modal from '../../../modal/Modal';
 import { getId } from '../../../functions/Authentication';
-import { AddMethodCategoryOption } from '../../../modal/Configurations/AddNewOptions';
+import { AddDeliveryMethodCategoryOption, AddMethodCategoryOption } from '../../../modal/Configurations/AddNewOptions';
 
 const DonorAppointmentForm = () => {
 
@@ -213,7 +213,7 @@ const DonorAppointmentForm = () => {
                     )}
                                         
                     {openAddMethodModal && (
-                        <AddMethodCategoryOption
+                        <AddDeliveryMethodCategoryOption
                         isOpen={true}
                         onConfirm={handleChange}
                         onCancel={() => setOpenAddMethodModal(false)}
