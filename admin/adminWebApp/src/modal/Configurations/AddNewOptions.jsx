@@ -116,8 +116,17 @@ export const AddBabyCategoryOption = ({ isOpen, onConfirm, onCancel }) => {
 
 export const AddMethodCategoryOption = ({ isOpen, onConfirm, onCancel }) => {
 
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState({
+    title: "",
+    Authorized_ID: false
+  });
 
+  const handleChange = (name, value) => {
+    setCategory({
+      ...category,
+      [name]: value
+    })
+  }
   const handleAction = (actionType, subName) => {
     console.log("new Category: ", category)
     onConfirm("options", category, actionType, subName);
@@ -136,11 +145,21 @@ export const AddMethodCategoryOption = ({ isOpen, onConfirm, onCancel }) => {
           <div className="border-2 border-pink-800 p-12 rounded-lg">
             <input
               type="text"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              value={category.title}
+              onChange={(e) => handleChange('title', e.target.value)}
               placeholder="Enter new method of obtaining"
               className="w-full px-4 py-2 mb-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
             />
+            <div className="flex flex-row gap-2 justify-center items-center">
+              <input
+                type="checkbox"
+                checked={category.Authorized_ID}
+                onChange={(e) => handleChange('Authorized_ID',  e.target.checked)}
+                className="mr-2 h-5 w-5"
+              />
+              Required an Authorized ID?
+            </div>
+           
             <div className="mt-8 flex justify-end">
               <button
                 className="px-4 py-2 mr-4 bg-pink-500 text-white rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-blue-500"

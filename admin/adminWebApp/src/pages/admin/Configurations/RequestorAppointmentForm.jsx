@@ -46,6 +46,8 @@ const RequestorAppointmentForm = () => {
     }
 
     const handleChange = async (name, value, actionType, subName) => {
+        console.log("value: ", value)
+        console.log("formFormatConfiguration.options[method]: ", formFormatConfiguration.options[subName])
         if(name === "maintenanceStatus"){
             setOpenModal(false)
             setMaintenace({
@@ -74,7 +76,7 @@ const RequestorAppointmentForm = () => {
             } else {
                 console.log("value: ", value)
                 console.log("subName Remove: ", subName)
-                const updated = formFormatConfiguration.options[subName].filter(item => item !== value);
+                const updated = formFormatConfiguration.options[subName].filter(item => item.title !== value.title);
                     setFormFormatConfiguration({
                         ...formFormatConfiguration,
                         options: {
@@ -82,6 +84,7 @@ const RequestorAppointmentForm = () => {
                             [subName]: updated
                         }
                     })
+                console.log("updated: ", updated)
                 return
             } 
            

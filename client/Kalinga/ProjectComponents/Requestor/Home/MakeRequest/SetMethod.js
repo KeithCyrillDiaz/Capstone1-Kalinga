@@ -32,9 +32,8 @@ import ImageZoom from 'react-native-image-pan-zoom';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { ValidIdInfoModal } from "./ValidIdInfoModal.js";
 import { ImagePickerModal } from '../../../modal/ImagePickerModal.js';
-import { getFormFormat } from '../../../../Kalinga_API/AppointmentFormConfiguration.js';
+import { getFormFormat, getAllMethodTitles, getSelectedMethodBoolean } from '../../../../Kalinga_API/AppointmentFormConfiguration.js';
 import { LoadingSpinner } from '../../../uploader/LoadingSpinner.js';
-
 
 
 const SetDateTimeLocation = () => {
@@ -49,6 +48,7 @@ const SetDateTimeLocation = () => {
     const [selectedFile, setSelectedFile] = useState({});
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedImageUrl, setSelectedImageUrl] = useState('');
+    const [configurations, setConfigurations] = useState({})
 
     //validity
     const [invalidTime, setInvalidTime] = useState(false)
@@ -56,11 +56,11 @@ const SetDateTimeLocation = () => {
 
     const [location, setLocation] = useState('');
     const [newForm, setNewForm ] = useState(formData)
+    const [idRequired, setIdRequired] = useState(false)
 
     //imagePicker
     const [showImagePicker, setShowImagePicker] = useState(false)
     const [selectedType, setSelectedType] = useState("")
-
 
     const checkTime = (time) => {
 
@@ -186,6 +186,7 @@ const SetDateTimeLocation = () => {
               setSelectedImage({})
               setSelectedFile({})
             }
+            console.log("name: " + name + " value: " + value)
             const newData = {
                 ...newForm,
                 [name]: value
@@ -335,14 +336,46 @@ const SetDateTimeLocation = () => {
             setIsLoading(false)
             const { requestAppointmentConfig } = result
             console.log("requestAppointmentConfig: ",requestAppointmentConfig)
+            setConfigurations(requestAppointmentConfig)
             const { method } = requestAppointmentConfig.options
             console.log("method: ", method)
-           if(method)setMethods(method)
+            const titles = getAllMethodTitles(method)
+            console.log("titles: ", titles)
+            if(titles)setMethods(titles)
+
         }
 
         useEffect(() => {
             fetchFormat()
         },[])
+
+        useEffect(()=> {
+            if(!newForm.method)return
+            console.log("selectedMethod: ", newForm.method)
+            const boolean = getSelectedMethodBoolean(configurations.options.method, newForm.method)
+            console.log("boolean: ", boolean)
+            setIdRequired(boolean.Authorized_ID)
+        },[newForm.method])
+
+        
+    // const getTitle = getSelectedMethodBoolean("Authorized Person")
+    // 
+
+    // const checkedAuthorizedIDBoolean = () => {
+    //     if(!newForm) return
+    //     const titles = getAllMethodTitles()
+    //     console.log("titles: ", titles)
+    //     if(titles)setMethods(titles)
+    //     if(!newForm.method)return
+    //     const result = getSelectedMethodBoolean(newForm.method)
+    //     console.log("result: ", result)
+    //     setIdRequired(result.Authorized_ID)
+    // }
+
+    // useEffect(()=>{
+    //     checkedAuthorizedIDBoolean()
+    // },[newForm, newForm.method])
+
 
     return (
         <View style={globalStyles.container}>
@@ -449,7 +482,7 @@ const SetDateTimeLocation = () => {
                         <FontAwesome6 name="hospital" size={24} color="#E60965" style={styles.icon3} />
                     </View>
             
-            {newForm.method === "Authorized Person" && (
+            {idRequired && (
                 <>
                   <Text style={[styles.AdminMilkLocation, {width: "70%", marginRight:0, alignSelf: "flex-start"}]}>Authorized Person's ID</Text>
                 <Text style ={{fontFamily: "Open-Sans-Regular", color: "#E60965", marginBottom: 7}}> Note: Make sure the images are clear</Text>

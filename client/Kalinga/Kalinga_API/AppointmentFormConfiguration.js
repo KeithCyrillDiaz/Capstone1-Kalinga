@@ -17,3 +17,7 @@ export const getFormFormat = async({navigation}) => {
         console.log("Error: ",error)
     } 
   }
+
+  
+  export const getAllMethodTitles = (data) => data.map(item => item.title)
+  export const getSelectedMethodBoolean = (data, title) => data.find(method => method.title === title)

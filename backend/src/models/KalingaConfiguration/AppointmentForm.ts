@@ -75,7 +75,10 @@ const QCGHRequestorAppointmentConfigSchema = new mongoose.Schema({
         type:{
             milkAmount: [String],
             BabyCategory: [String],
-            method: [String],
+            method: [{
+                title: {type: String},
+                Authorized_ID: {type: Boolean}
+            }],
         },
         default: {
             milkAmount: ["100ml", "200ml"],
@@ -85,8 +88,14 @@ const QCGHRequestorAppointmentConfigSchema = new mongoose.Schema({
                 "Medically Fragile Baby"
             ],
             method: [
-                "Authorized Person", 
-                "Self Pick-up",
+                {
+                    title: "Authorized Person", 
+                    Authorized_ID: true
+                },
+                {
+                    title: "Self Pick-up",
+                    Authorized_ID: false
+                }
             ]
         }
     }

@@ -680,7 +680,7 @@ const handlePress = (name, value) => {
                       screeningFormData: screeningFormData, 
                       selectedImage: selectedImage,
                       selectedFile: selectedFile,
-                      formData: screeningFormData
+                      form: screeningFormData
                     }
                     )}>
 

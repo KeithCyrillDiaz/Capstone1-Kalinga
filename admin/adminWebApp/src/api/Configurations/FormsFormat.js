@@ -26,6 +26,9 @@ export const getFormFormat = async () => {
     }
 };
 
+export const getAllMethodTitles = (data) => data.map(item => item.title)
+export const getSelectedMethodIDBoolean = (data, title) => data.find(method => method.title === title)
+
 
 export const updateRequestorFormFormat = async ({value}) => {
   try {

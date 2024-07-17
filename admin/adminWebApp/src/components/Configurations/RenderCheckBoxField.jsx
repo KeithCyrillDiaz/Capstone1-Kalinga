@@ -2,9 +2,22 @@ import React, {useState, useEffect} from 'react';
 import Toggle from 'react-toggle';
 import 'react-toggle/style.css'; 
 import './toggle.css'
+import { getAllMethodTitles } from '../../api/Configurations/FormsFormat';
 
 export const RenderRequestorCheckBoxField = ({data, handleChange, editable, openAddModal, openAddCategory, openAddMethod, maintenanceStatus}) => {
-    if(data)
+    console.log("data:  ", data.options.method)
+    const [methods, setMethods] = useState([])
+    
+    useEffect(() => {
+        if(data){
+            const methods = getAllMethodTitles(data.options.method)
+            console.log("methods: ", methods)
+            setMethods(methods)
+        }
+    },[data])
+ 
+    
+    if(data && methods.length !== 0)
     return (
         <>
             {Object.entries(data).map(([fieldName, fieldConfig]) => {
@@ -111,7 +124,7 @@ export const RenderRequestorCheckBoxField = ({data, handleChange, editable, open
                                         </label>
                                         <select className="bg-white text-primary-default text-xs py-1 px-5 pr-10 rounded-sm hover:cursor-pointer w-full">
                                             <option value="">Select Method of Obtaining</option>
-                                            {data.options.method.map((category, index) => (
+                                            {methods.map((category, index) => (
                                             <option key={index} value={category}>
                                                 {category}
                                             </option>

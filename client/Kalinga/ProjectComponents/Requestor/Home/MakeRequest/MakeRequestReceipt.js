@@ -28,7 +28,7 @@ import axios from 'axios';
 const MakeRequestReceipt = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { formData, screeningFormData, selectedImage, selectedFile } = route.params;
+  const { form, screeningFormData, selectedImage, selectedFile } = route.params;
 
   // State to track selected image and input value
   const [modalVisible, setModalVisible] = useState(false);
@@ -40,6 +40,7 @@ const MakeRequestReceipt = () => {
   const [uploadingImage, setUploadingImage] = useState(false)
   const [imageUri, setIMageUri] = useState("")
   const [loaderLabel, setLoaderLabel] = useState("")
+  const [formData, setFormData] = useState(form)
 
 
   const confirmation = (status) => {
@@ -95,14 +96,23 @@ useEffect(() => {
   setUploadingImage(false)
 },[])
 
-
+useEffect(() => {
+  console.log("formData: ", formData)
+  if(formData && formData.milkAmount.includes("ml")){
+    const formattedAmount = formData.milkAmount.replace("ml", "")
+    console.log("formmattedAmount: ", formattedAmount)
+    setFormData({
+      ...formData,
+      milkAmount: formattedAmount
+    })
+  }
+},[])
     const handleRequestCreation = async () => {
       
       try {
 
         setUploadingImage(true)
         await uploadImagesAndFilesInFirebase()
-        
         const response = await fetch(`${BASED_URL}/kalinga/createRequest`, {
           method: 'POST',
           headers: {
@@ -271,7 +281,7 @@ useEffect(() => {
           <View style={styles.bodyForm1}>
             <TextInput
                   style={[styles.form3, { color: '#E60965', fontWeight: 'bold', }]}
-                  value={ "Amount of Milk: " + formData.milkAmount + " ml" }               
+                  value={ "Amount of Milk: " + formData.milkAmount + "ml"}               
                   placeholder="Amount of milk to be requested (mL) *"
                   placeholderTextColor="#E60965"
                   editable={false}

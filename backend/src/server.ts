@@ -26,6 +26,7 @@ app.get("/", (req, res) => { res.json("Kalinga Backend") } )
 const server = http.createServer(app);
 
 const MongoDb_URL = process.env.MONGO_DB_ATLAS_URL;
+console.log("Mongodb: ", MongoDb_URL)
 
 if (!MongoDb_URL) {
     throw new Error("MongoDB URL is not defined");
