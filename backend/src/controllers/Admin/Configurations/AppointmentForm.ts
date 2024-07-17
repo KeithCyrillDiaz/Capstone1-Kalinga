@@ -81,6 +81,8 @@ export const updateRequestorAppointmentsConfiguration = async (req: express.Requ
     
         const updates = req.body
 
+        console.log("updates: ", updates)
+
         const updateResult = await QCGHRequestorAppointmentConfigModel.findOneAndUpdate(
             {}, 
             updates,

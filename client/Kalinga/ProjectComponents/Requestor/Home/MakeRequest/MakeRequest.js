@@ -108,12 +108,13 @@ export default function RequestorProfile({route}) {
   },[])
 
 const [keysToCheck, setKeysToCheck] = useState([
-  'milkBank',
+  'milkAmount',
 
   ])
 
   const checkForm = () => {
     console.log("formData: ", formData)
+
       const isFormDataValid = keysToCheck.every(key => formData[key].trim() !== '');
   
       if (isFormDataValid) {
@@ -322,7 +323,7 @@ if(!isLoading && Object.keys(formFormat).length !== 0){
                 <Text style={styles.bodyNote}>Note: Bold fields are not editable.</Text>
                 {fields.infantInformation.map((item, index) => 
                 {
-                  if(item.name !== "milkAmount" && item.fieldBoolean)
+                  if(item.name !== "milkAmount" && item.fieldBoolean && item.name !=="BabyCategory")
                     return(
                       <>
                       <TextInput
@@ -376,7 +377,7 @@ if(!isLoading && Object.keys(formFormat).length !== 0){
                       </View>
                     )
                   }
-                 
+                
                 }
                 )}
                 </>

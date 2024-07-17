@@ -132,7 +132,7 @@ const QCGHRequestorAppointmentConfigSchema = new mongoose.Schema({
             ]
         }
     }
-})
+},{strict: false})
 
 export const QCGHDonorAppointmentConfigModel = mongoose.model("DonorConfigurations", QCGHDonorAppointmentConfigSchema);
 export const QCGHRequestorAppointmentConfigModel = mongoose.model("RequestorConfigurations", QCGHRequestorAppointmentConfigSchema);

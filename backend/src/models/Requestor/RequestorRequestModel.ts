@@ -69,7 +69,7 @@ const RequestSchema: Schema = new Schema({
   barangay: { type: String }, // New field for barangay
   method: {type: String},
   noQCID: {type: String},
-});
+}, {strict: false});
 
 // Define and export the Mongoose model based on the schema
 const RequestModel = mongoose.model<Request>('Request', RequestSchema);

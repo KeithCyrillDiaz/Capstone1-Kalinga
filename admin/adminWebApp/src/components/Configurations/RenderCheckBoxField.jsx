@@ -4,7 +4,15 @@ import 'react-toggle/style.css';
 import './toggle.css'
 import { getAllMethodTitles } from '../../api/Configurations/FormsFormat';
 
-export const RenderRequestorCheckBoxField = ({data, handleChange, editable, openAddModal, openAddCategory, openAddMethod, maintenanceStatus}) => {
+export const RenderRequestorCheckBoxField = ({
+    data, 
+    handleChange, 
+    editable, 
+    openAddModal, 
+    openAddCategory, 
+    openAddMethod, 
+    openAddNewField,
+}) => {
     console.log("data:  ", data.options.method)
     const [methods, setMethods] = useState([])
     const [fields, setFields] = useState({})
@@ -60,12 +68,15 @@ export const RenderRequestorCheckBoxField = ({data, handleChange, editable, open
                     </div>
                 )
             })} 
-                {/* <button
-                    className="px-4 py-2 mr-4 w-[7rem] h-8 mt-2 bg-pink-500 text-xs text-white rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    onClick={{}}
-                >
-                    Add New Field
-                </button> */}
+                {/* {editable === true && (
+                    <button
+                           className="px-4 py-2 mr-4 w-[7rem] h-8 mt-2 bg-pink-500 text-xs text-white rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           onClick={openAddNewField}
+                       >
+                           Edit Fields
+                       </button>
+                )} */}
+         
                 <h2
                     className="
                     text-xl text-primary-default font-bold font-sans my-4 mb-4

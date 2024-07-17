@@ -160,7 +160,7 @@ const SetDateTimeLocation = () => {
                 "Milk Banks are only available during working hours from 8:00 AM to 5:00 PM.")
             return
         }
-        if(newForm.location === undefined || newForm.location === "") {
+        if(newForm.milkBank === undefined || newForm.milkBank === "") {
             Alert.alert("Invalid Milk Bank", "Please select a milk bank before proceeding.")
             return
         }
@@ -467,10 +467,10 @@ const SetDateTimeLocation = () => {
                     <Text style={[styles.AdminMilkLocation]}>Milk Bank Location</Text>
                     <View style={[styles.BiginputField, {paddingLeft: 0,}]}>
                          <Picker
-                            selectedValue={newForm.location}
+                            selectedValue={newForm.milkBank}
                             style={{ height: 30, width: "90%", color: '#E60965', fontFamily: "Kurale"}}
                             onValueChange={(itemValue) =>
-                            handleChange("location", itemValue)
+                            handleChange("milkBank", itemValue)
                             }
                             >
                             <Picker.Item label="Select Milk Bank" value="" />

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { CustomModal } from "../logIn/AlertModal";
 
 export const AddMilkAmountOption = ({ isOpen, onConfirm, onCancel }) => {
 
@@ -188,3 +189,157 @@ export const AddMethodCategoryOption = ({ isOpen, onConfirm, onCancel }) => {
 };
 
 
+export const AddNewPersonalInfoField = ({ isOpen, onConfirm, onCancel }) => {
+
+  const [alertModal, setAlertModal] = useState(false)
+  const [category, setCategory] = useState({
+    name: "",
+    placeHolder: "",
+    fieldBoolean: false
+  });
+
+  const handleChange = (name, value) => {
+    setCategory({
+      ...category,
+      [name]: value
+    })
+  }
+  const handleAction = (actionType) => {
+    if (!category.name.trim() || !category.placeHolder.trim()) {
+      onCancel()
+      setAlertModal(true)
+      return;
+    }
+    console.log("new Category: ", category)
+    onConfirm("fields", category, actionType, "personalInformation");
+    onCancel()
+  };
+
+  return (
+    <div
+      className={`fixed inset-0 flex items-center justify-center z-50 ${
+        isOpen ? "block" : "hidden"
+      }`}
+    >
+      {alertModal && (
+        <CustomModal 
+        onClose={() => setAlertModal(false)}
+        message={"Please fill in all fields"}
+        />
+      )}
+      <div className="fixed inset-0 bg-gray-800 opacity-50 z-40"></div>
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+        <div className="bg-white rounded-lg shadow-lg max-w-lg">
+          <div className="border-2 border-pink-800 p-12 rounded-lg items-center">
+            <input
+              type="text"
+              value={category.title}
+              onChange={(e) => handleChange('name', e.target.value)}
+              placeholder="Enter new field"
+              className="w-full px-4 py-2 mb-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+            />
+             <input
+              type="text"
+              value={category.placeHolder}
+              onChange={(e) => handleChange('placeHolder', e.target.value)}
+              placeholder="Enter the field placeholder"
+              className="w-full px-4 py-2 mb-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+            />
+            <div className="mt-8 flex justify-center">
+              <button
+                className="px-4 py-2 mr-4 bg-pink-500 text-white rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onClick={() => handleAction("Add", "fields")}
+              >
+                Add
+              </button>
+              <button
+                className="px-4 py-2 mr-4 bg-pink-500 text-white rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onClick={() => handleAction("Remove", "fields")}
+              >
+                Remove
+              </button>
+              <button
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                onClick={onCancel}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+export const AddNewInfantInfoField = ({ isOpen, onConfirm, onCancel }) => {
+
+  const [category, setCategory] = useState({
+    name: "",
+    placeHolder: "",
+    fieldBoolean: false
+  });
+
+  const handleChange = (name, value) => {
+    setCategory({
+      ...category,
+      [name]: value
+    })
+  }
+  const handleAction = (actionType) => {
+    console.log("new Category: ", category)
+    onConfirm("fields", category, actionType, "infantInformation");
+    onCancel()
+  };
+
+  return (
+    <div
+      className={`fixed inset-0 flex items-center justify-center z-50 ${
+        isOpen ? "block" : "hidden"
+      }`}
+    >
+      <div className="fixed inset-0 bg-gray-800 opacity-50 z-40"></div>
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+        <div className="bg-white rounded-lg shadow-lg max-w-lg">
+          <div className="border-2 border-pink-800 p-12 rounded-lg items-center">
+            <input
+              type="text"
+              value={category.title}
+              onChange={(e) => handleChange('title', e.target.value)}
+              placeholder="Enter new field"
+              className="w-full px-4 py-2 mb-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+            />
+             <input
+              type="text"
+              value={category.placeHolder}
+              onChange={(e) => handleChange('placeholder', e.target.value)}
+              placeholder="Enter the field placeholder"
+              className="w-full px-4 py-2 mb-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+            />
+            <div className="mt-8 flex justify-center">
+              <button
+                className="px-4 py-2 mr-4 bg-pink-500 text-white rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onClick={() => handleAction("Add", "fields")}
+              >
+                Add
+              </button>
+              <button
+                className="px-4 py-2 mr-4 bg-pink-500 text-white rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onClick={() => handleAction("Remove", "fields")}
+              >
+                Remove
+              </button>
+              <button
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                onClick={onCancel}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

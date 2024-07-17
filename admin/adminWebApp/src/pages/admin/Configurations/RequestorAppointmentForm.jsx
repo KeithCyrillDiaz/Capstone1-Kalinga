@@ -11,7 +11,7 @@ import '../../../components/Configurations/toggle.css'
 import { getMaintenace, updateMaintenaceStatus } from '../../../api/Configurations/Maintenance';
 import Modal from '../../../modal/Modal';
 import { Loader } from '../../../components/loader';
-import { AddBabyCategoryOption, AddMethodCategoryOption, AddMilkAmountOption } from '../../../modal/Configurations/AddNewOptions';
+import { AddBabyCategoryOption, AddMethodCategoryOption, AddMilkAmountOption, AddNewPersonalInfoField } from '../../../modal/Configurations/AddNewOptions';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -29,7 +29,9 @@ const RequestorAppointmentForm = () => {
     const [openAddAmountModal, setOpenAddAmountModal] = useState(false)
     const [openAddCategoryModal, setOpenAddCategoryModal] = useState(false)
     const [openAddMethodModal, setOpenAddMethodModal] = useState(false)
+    const [openAddNewField, setOpenAddNewField] = useState(false)
     const [saveDetailsModal, setSaveDetailsModal] = useState(false)
+
     
 
     const saveDetails = async () => {
@@ -89,7 +91,39 @@ const RequestorAppointmentForm = () => {
             } 
            
         }
-
+        if(name === "fields"){
+            console.log("value: ", value)
+            console.log("action: ", actionType)
+            if(actionType === "Add"){
+                const updatedFields = {
+                    ...formFormatConfiguration,
+                    [name]:{
+                        ...formFormatConfiguration[name],
+                        [subName]: [
+                            ...formFormatConfiguration[name][subName],
+                            value
+                        ]
+                    }
+                }
+                console.log("updated: ", updatedFields)
+                setFormFormatConfiguration(updatedFields)
+                return
+            } else {
+                const updatedFields = formFormatConfiguration[name][subName].filter(item => item.name !== value.name)
+                console.log("Updated Fields: ", updatedFields)
+                const updated = {
+                    ...formFormatConfiguration,
+                    [name]: {
+                        ...formFormatConfiguration[name],
+                        [subName]:updatedFields
+                    }
+                }
+                console.log("updated values: ", updated)
+                setFormFormatConfiguration(updated)
+                return
+            }
+           
+        }
         console.log("value: ", value)
         console.log("formFormatConfiguration.fields: ", formFormatConfiguration.fields)
         const updatedFields = formFormatConfiguration.fields[subName].map(item => 
@@ -104,6 +138,7 @@ const RequestorAppointmentForm = () => {
                 [subName]: updatedFields
             }
         })
+
         // setFormFormatConfiguration({
         //     ...formFormatConfiguration,
         //     [name]: value
@@ -206,8 +241,10 @@ const RequestorAppointmentForm = () => {
                         openAddModal={() => setOpenAddAmountModal(true)}
                         openAddCategory ={() => setOpenAddCategoryModal(true)}
                         openAddMethod = {() => setOpenAddMethodModal(true)}
+                        openAddNewField={()=> setOpenAddNewField(true)}
                         />
                     )}
+                    
                    {maintenance.maintenanceStatus === true && (
                         <div className='flex flex-row items-center gap-2 ml-12'>
                             <button
@@ -267,6 +304,13 @@ const RequestorAppointmentForm = () => {
                         isOpen={true}
                         onConfirm={handleChange}
                         onCancel={() => setOpenAddMethodModal(false)}
+                        />
+                    )}
+                     {openAddNewField && (
+                        <AddNewPersonalInfoField
+                        isOpen={true}
+                        onConfirm={handleChange}
+                        onCancel={() => setOpenAddNewField(false)}
                         />
                     )}
         </section>
