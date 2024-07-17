@@ -83,7 +83,7 @@ const DonorMedicalPage = ({ currentPage, id, form }) => {
     fetchImagesAndFiles();
   }, []);
   const pageContents = {
-    1: (
+    [currentPage]: (
       <>
         <Loader isLoading={loading} />
         {openNoRequirementModal && (

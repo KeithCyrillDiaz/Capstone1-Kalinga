@@ -7,6 +7,11 @@ import { WebHost } from "../../../../../MyConstantAdmin";
 import { Loader } from "../../../../components/loader";
 import { Confirmation, RejectionRemarks, VerificationModal } from "../../../../modal/Verification/VerificationModal";
 import { getId, getToken } from "../../../../functions/Authentication";
+import { 
+  NoUploadedRequirementModal,
+  ShowImage,
+  MissingRequirements,
+ } from "../../../../modal/Verification/ImageModals";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState("screening");
@@ -110,9 +115,85 @@ export default function App() {
     fetchData();
   }, []);
 
+  const [images, setImages] = useState({});
+  const [files, setFiles] = useState({});
+  const [openNoRequirementModal, setOpenNoRequirementModal] = useState(false);
+  const [openMissingRequirements, setOpenMissingRequirements] = useState(false);
+  const [showImage, setShowImage] = useState(false);
+
+  const [imageLink, setImageLink] = useState("");
+  const [fileName, setFileName] = useState("");
+
+  const fetchImagesAndFiles = async () => {
+    try {
+      setLoading(true);
+      console.log("Fetching Files and Images in database");
+      const token = getToken()
+      const getFilesResponse = await axios.post(
+        `${WebHost}/kalinga/getMedicalRequirementFile/${Applicant_ID}`,
+        {purpose: "Application"},
+        {headers: { Authorization: `Bearer ${token}`}}
+      );
+      console.log(getFilesResponse.data.messages.message);
+      if (getFilesResponse.data.messages.code === 0) {
+        const filesObj = {};
+        getFilesResponse.data.files.forEach((file) => {
+          filesObj[file.originalname] = file.link
+        });
+        setFiles(filesObj)
+      }
+
+      const getImagesResponse = await axios.post(
+        `${WebHost}/kalinga/getMedicalRequirementImage/${Applicant_ID}`,
+        {purpose: "Application"},
+        {headers: { Authorization: `Bearer ${token}`}}
+      );
+      console.log(getImagesResponse.data.messages.message);
+      if (getImagesResponse.data.messages.code === 0) {
+        const imagesObj = {};
+        getImagesResponse.data.images.forEach((image) => {
+          imagesObj[image.originalname] = image.link;
+        });
+        setImages(imagesObj);
+      }
+    } catch (error) {
+      console.log("Error fetching Images And Files", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getImageUri = (link, name) => {
+        setImageLink(link);
+        setFileName(name)
+        setShowImage(true);
+  };
+
+  useEffect(() => {
+    fetchImagesAndFiles();
+  }, []);
+console.log("images: ", images)
+
   return (
     <>
       <Loader isLoading={loading} />
+        {openNoRequirementModal && (
+          <NoUploadedRequirementModal
+            onClose={() => setOpenNoRequirementModal(false)}
+          />
+        )}
+        {showImage && (
+          <ShowImage
+            link={imageLink}
+            fileName={fileName}
+            onClose={() => setShowImage(false)}
+          />
+        )}
+        {openMissingRequirements && (
+          <MissingRequirements
+            onClose={() => setOpenMissingRequirements(false)}
+          />
+        )}
       <section className="w-full min-h-screen bg-primary-body">
         <div>
           <div className="flex justify-center m-6">
@@ -181,6 +262,8 @@ export default function App() {
                     form={form}
                     currentPage={currentPage}
                     id={Applicant_ID}
+                    imagesData={images} 
+                    filesData ={files}
                   />
                 </div>
               </div>
@@ -229,7 +312,8 @@ export default function App() {
             onClose={() => setIsConfirmationModalOpen(false)}
             onConfirm = {() =>{
               setIsConfirmationModalOpen(false)
-              setOpenRejectionRemarks(true)
+              if(status === "declined")setOpenRejectionRemarks(true)
+                else updateStatus(status)
             }}
           />
         </>

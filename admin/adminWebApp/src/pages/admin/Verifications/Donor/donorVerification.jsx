@@ -76,7 +76,7 @@ export default function () {
   };
 
   const updateStatus = async (data) => {
-    if(remark === "") {
+    if(remark === "" && data === "declined") {
       console.log("remark is an empty string")
       console.log("remark: ", remark)
       return
@@ -348,7 +348,9 @@ export default function () {
             userType={form.userType}
             onClose={() => setIsConfirmationModalOpen(false)}
             onConfirm = {() =>{
-              setIsConfirmationModalOpen(true)
+              setIsConfirmationModalOpen(false)
+              if(status === "declined")setOpenRejectionRemarks(true)
+                else updateStatus(status)
             }}
           />
         </>
