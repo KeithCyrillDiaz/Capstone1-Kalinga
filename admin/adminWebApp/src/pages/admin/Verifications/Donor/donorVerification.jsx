@@ -348,8 +348,7 @@ export default function () {
             userType={form.userType}
             onClose={() => setIsConfirmationModalOpen(false)}
             onConfirm = {() =>{
-              setIsConfirmationModalOpen(false)
-              setOpenRejectionRemarks(true)
+              setIsConfirmationModalOpen(true)
             }}
           />
         </>

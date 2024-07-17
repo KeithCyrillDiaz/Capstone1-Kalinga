@@ -672,7 +672,7 @@ useEffect(() => {
                         <Dropdown
                           style={[, isRegionFocus && { borderColor: 'blue'}]}
                           placeholderStyle={styles.placeholderStyle}
-                          selectedTextStyle={[styles.selectedTextStyle, {marginTop: 20, paddingTop: 15}]}
+                          selectedTextStyle={[styles.selectedTextStyle, {marginVertical:10}]}
                           inputSearchStyle={styles.inputSearchStyle}
                           data={phil.regions.map(region => ({ label: region.name, value: region.reg_code }))}
                           search
@@ -696,7 +696,7 @@ useEffect(() => {
                             disable={listProvinces === null}
                             style={[, isProvincesFocus && { borderColor: 'blue'}]}
                             placeholderStyle={styles.placeholderStyle}
-                            selectedTextStyle={[styles.selectedTextStyle, { marginTop:30, paddingTop: 10}]}
+                            selectedTextStyle={[styles.selectedTextStyle, {marginVertical:5}]}
                             inputSearchStyle={styles.inputSearchStyle}
                             data={listProvinces === null ? phil.provinces.map(province => ({ label: province.name, value: province.prov_code})) : listProvinces}
                             search
@@ -720,7 +720,7 @@ useEffect(() => {
                         <Dropdown
                             style={[, isMunicipalityFocus && { borderColor: 'blue'}]}
                             placeholderStyle={styles.placeholderStyle}
-                            selectedTextStyle={[styles.selectedTextStyle, {paddingTop: 25}]}
+                            selectedTextStyle={[styles.selectedTextStyle, {marginVertical:7}]}
                             inputSearchStyle={styles.inputSearchStyle}
                             data={listCity === null ? phil.city_mun.map(city => ({ label: city.name, value: city.mun_code })) : listCity}
                             search
@@ -746,7 +746,7 @@ useEffect(() => {
                           disable = {listBarangays === null}
                           style={[, isBarangayFocus && { borderColor: 'blue'}]}
                           placeholderStyle={styles.placeholderStyle}
-                          selectedTextStyle={[styles.selectedTextStyle, {paddingTop: 25}]}
+                          selectedTextStyle={[styles.selectedTextStyle, {marginVertical:7}]}
                           inputSearchStyle={styles.inputSearchStyle}
                           data={listBarangays === null ? phil.barangays.map(barangay => ({ label: barangay.name, value: barangay.reg_code })) : listBarangays}
                           search
@@ -1037,7 +1037,8 @@ useEffect(() => {
       elevation: 5,
       paddingRight: 10,
       fontSize: 16, 
-      fontFamily: "Open-Sans-Regular"
+      fontFamily: "Open-Sans-Regular",
+      paddingVertical:7
     },
    
     label: {
@@ -1059,11 +1060,10 @@ useEffect(() => {
     selectedTextStyle: {
       fontSize: 16, 
       marginLeft: 15,
-      height: 70,
       justifyContent: "center",
       alignItems: "center",
       color: '#E60965',
-      fontFamily: "Open-Sans-Regular"
+      fontFamily: "Open-Sans-Regular",
     },
 
     sexSelectedTextStyle: {
@@ -1072,7 +1072,7 @@ useEffect(() => {
       justifyContent: "center",
       alignItems: "center",
       color: '#E60965',
-      fontFamily: "Open-Sans-Regular"
+      fontFamily: "Open-Sans-Regular",
     },
   
     inputSearchStyle: {

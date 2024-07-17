@@ -620,7 +620,7 @@ useEffect(() => {
           <Dropdown
               style={[, isRegionFocus && { borderColor: 'blue'}]}
               placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={[styles.selectedTextStyle, {marginTop: 20, paddingTop: 15}]}
+              selectedTextStyle={[styles.selectedTextStyle, {marginVertical: 2}]}
               inputSearchStyle={styles.inputSearchStyle}
               data={phil.regions.map(region => ({ label: region.name, value: region.reg_code }))}
               search
@@ -645,7 +645,7 @@ useEffect(() => {
                 disable={listProvinces === null}
                 style={[, isProvincesFocus && { borderColor: 'blue'}]}
                 placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={[styles.selectedTextStyle, { marginTop: !provinceCode.includes("1339") ? 30 : 10, paddingTop: 10}]}
+                selectedTextStyle={[styles.selectedTextStyle, { marginVertical:2}]}
                 inputSearchStyle={styles.inputSearchStyle}
                 data={listProvinces === null ? phil.provinces.map(province => ({ label: province.name, value: province.prov_code})) : listProvinces}
                 search
@@ -672,7 +672,7 @@ useEffect(() => {
             <Dropdown
                 style={[, isMunicipalityFocus && { borderColor: 'blue'}]}
                 placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={[styles.selectedTextStyle, {paddingTop: 25}]}
+                selectedTextStyle={[styles.selectedTextStyle, {marginVertical:2}]}
                 inputSearchStyle={styles.inputSearchStyle}
                 data={listCity === null ? phil.city_mun.map(city => ({ label: city.name, value: city.mun_code })) : listCity}
                 search
@@ -698,7 +698,7 @@ useEffect(() => {
               disable = {listBarangays === null}
               style={[, isBarangayFocus && { borderColor: 'blue'}]}
               placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={[styles.selectedTextStyle, {paddingTop: 25}]}
+              selectedTextStyle={[styles.selectedTextStyle, {marginVertical: 2}]}
               inputSearchStyle={styles.inputSearchStyle}
               data={listBarangays === null ? phil.barangays.map(barangay => ({ label: barangay.name, value: barangay.reg_code })) : listBarangays}
               search
@@ -769,7 +769,7 @@ useEffect(() => {
             <Dropdown
                 style={[styles.sexDropdown, openSexDropdown  && { borderColor: 'blue' }]}
                 placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={[styles.selectedTextStyle, {marginTop: 45}]}
+                selectedTextStyle={[styles.selectedTextStyle]}
                 data={sexData}
                 labelField="label"
                 valueField="value"
@@ -1032,9 +1032,8 @@ const styles = StyleSheet.create({
     marginRight: "12%", 
     marginLeft: "7%",
     marginTop: "5%",
-    flex: 1,
-    paddingVertical: 10,
     borderRadius: 18,
+    paddingVertical: 12,
     borderColor: '#E60965',
     elevation: 5,
     justifyContent: "center",
@@ -1062,7 +1061,6 @@ const styles = StyleSheet.create({
   selectedTextStyle: {
     fontSize: 16,
     marginLeft: 10,
-    height: 70,
     justifyContent: "center",
     alignItems: "center",
     color: '#E60965',
