@@ -7,12 +7,30 @@ import { getAllMethodTitles } from '../../api/Configurations/FormsFormat';
 export const RenderRequestorCheckBoxField = ({data, handleChange, editable, openAddModal, openAddCategory, openAddMethod, maintenanceStatus}) => {
     console.log("data:  ", data.options.method)
     const [methods, setMethods] = useState([])
-    
+    const [fields, setFields] = useState({})
+    // const fields = {
+    //     personalInformation:[
+    //       {name: "fullName", placeHolder: "Full Name", fieldBoolean: true},
+    //       {name: "phoneNumber", placeHolder: "Phone Number", fieldBoolean: true},
+    //       {name: "emailAddress", placeHolder: "Email Address", fieldBoolean: true},
+    //       {name: "homeAddress", placeHolder: "Complete Address", fieldBoolean: true},
+    //       {name: "ReasonForRequesting", placeHolder: "Reason for Requesting", fieldBoolean: true},
+    //     ],
+    //     infantInformation: [
+    //       {name: "childBirthDate", placeHolder: "Child Birthday", fieldBoolean: true},
+    //       {name: "milkAmount", placeHolder: "Amount of Milk to be requested", fieldBoolean: true},
+    //       {name: "BabyCategory", placeHolder: "Select Baby Category", fieldBoolean: true},
+    //     ]
+    //   }
+
+
     useEffect(() => {
         if(data){
             const methods = getAllMethodTitles(data.options.method)
             console.log("methods: ", methods)
             setMethods(methods)
+            console.log("fields: ", data.fields)
+            setFields(data.fields)
         }
     },[data])
  
@@ -20,47 +38,66 @@ export const RenderRequestorCheckBoxField = ({data, handleChange, editable, open
     if(data && methods.length !== 0)
     return (
         <>
-            {Object.entries(data).map(([fieldName, fieldConfig]) => {
-            // console.log("fieldName: ", fieldName)
-            // console.log("fieldConfig: ", fieldConfig)
-                if( (
-                    fieldName === "fullName"||
-                    fieldName === "phoneNumber"||
-                    fieldName === "emailAddress"||
-                    fieldName === "homeAddress"||
-                    fieldName === "ReasonForRequesting"||
-                    fieldName === "childBirthDate"||
-                    fieldName === "milkAmount")) {
-                        return(
-                            <div 
-                            className='flex flex-row gap-12 mb-2 '>
-                                <div className='relative'>
-                                 <Toggle
-                                    disabled={editable === false}
-                                    checked={fieldConfig}
-                                    onChange={() => handleChange(fieldName, !fieldConfig)}
-                                    icons={false}
-                                    color="#E60965"
-                                    size={10}
-                                    className='absolute custom-toggle'
-                                />
-                                </div>
-                                <div
-                                className='font-sans text-sm mt-0 2xl:text-md'
-                                > {data.placeholder[fieldName] + " Field"}</div>
-                            </div>
-                        )
-                    } else if (fieldName === "infantInformation" && fieldConfig === true){
-                        return (
-                            <h2
-                                className="
-                                text-xl text-primary-default font-bold font-sans my-4 mb-4
-                                2xl:text-2xl
-                                "
-                                > Infant Information 
-                            </h2>
-                        )
-                    } else if (fieldName === "options") {
+            {fields.personalInformation.map((item, index) => {
+                return(
+                    <div 
+                    key={index}
+                    className='flex flex-row gap-12 mb-2 '>
+                        <div className='relative'>
+                         <Toggle
+                            disabled={editable === false}
+                            checked={item.fieldBoolean}
+                            onChange={() => handleChange(item.name, !item.fieldBoolean, null, "personalInformation")}
+                            icons={false}
+                            color="#E60965"
+                            size={10}
+                            className='absolute custom-toggle'
+                        />
+                        </div>
+                        <div
+                        className='font-sans text-sm mt-0 2xl:text-md'
+                        > {item.placeHolder + " Field"}</div>
+                    </div>
+                )
+            })} 
+                {/* <button
+                    className="px-4 py-2 mr-4 w-[7rem] h-8 mt-2 bg-pink-500 text-xs text-white rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    onClick={{}}
+                >
+                    Add New Field
+                </button> */}
+                <h2
+                    className="
+                    text-xl text-primary-default font-bold font-sans my-4 mb-4
+                    2xl:text-2xl
+                    "
+                    > Infant Information 
+                </h2>
+              {fields.infantInformation.map((item, index) => {
+                return(
+                    <div 
+                    key={index}
+                    className='flex flex-row gap-12 mb-2 '>
+                        <div className='relative'>
+                         <Toggle
+                            disabled={editable === false}
+                            checked={item.fieldBoolean}
+                            onChange={() => handleChange(item.name, !item.fieldBoolean, null, "infantInformation")}
+                            icons={false}
+                            color="#E60965"
+                            size={10}
+                            className='absolute custom-toggle'
+                        />
+                        </div>
+                        <div
+                        className='font-sans text-sm mt-0 2xl:text-md'
+                        > {item.placeHolder + " Field"}</div>
+                    </div>
+                )
+            })}
+            
+            {Object.entries(data).map(([fieldName]) => {
+             if (fieldName === "options") {
                         const sortedMilkAmount = data.options.milkAmount
                           .map(item => parseInt(item))
                           .sort((a, b) => a - b) // Sort numerically

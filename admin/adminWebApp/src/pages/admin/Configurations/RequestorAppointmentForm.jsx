@@ -90,12 +90,28 @@ const RequestorAppointmentForm = () => {
            
         }
 
+        console.log("value: ", value)
+        console.log("formFormatConfiguration.fields: ", formFormatConfiguration.fields)
+        const updatedFields = formFormatConfiguration.fields[subName].map(item => 
+            item.name === name ? { ...item, fieldBoolean: value } : item
+        );
+
+        console.log("updatedFields: ", updatedFields)
         setFormFormatConfiguration({
             ...formFormatConfiguration,
-            [name]: value
+            fields:{
+                ...formFormatConfiguration.fields,
+                [subName]: updatedFields
+            }
         })
+        // setFormFormatConfiguration({
+        //     ...formFormatConfiguration,
+        //     [name]: value
+        // })
         return
     }
+
+
 
     const fetchMaintenance = async () => {
         setLoading(true)

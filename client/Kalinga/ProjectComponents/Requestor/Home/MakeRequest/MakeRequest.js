@@ -44,6 +44,7 @@ export default function RequestorProfile({route}) {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState('');
   const [form, setForm] = useState({})
+  const [fields, setFields] = useState({})
 
    //Dropdowns
    const [isGestationFocus, setIsGestationFocus] = useState(false)
@@ -198,6 +199,7 @@ const handleChange = (name, value) => {
     setIsLoading(false)
     const { requestAppointmentConfig } = result
     console.log("requestAppointmentConfig: ",requestAppointmentConfig)
+    setFields(requestAppointmentConfig.fields)
     setFormFormat(requestAppointmentConfig)
     const updatedKeys = [...keysToCheck]
     Object.entries(requestAppointmentConfig).forEach(([key, value]) => {
@@ -214,6 +216,7 @@ const handleChange = (name, value) => {
     fetchFormat()
   },[])
 
+  
 if(isLoading && Object.keys(formFormat).length === 0) {
   return (
     <Spinner
@@ -250,7 +253,10 @@ if(!isLoading && Object.keys(formFormat).length !== 0){
                 textStyle={{ color: '#FFF' }}
               />
               <View style={styles.body}>
-              <Text 
+
+              {fields.personalInformation && (
+                <>
+                <Text 
                 style = {{
                   marginLeft: 20,
                   color: "#E60965",
@@ -261,94 +267,121 @@ if(!isLoading && Object.keys(formFormat).length !== 0){
                 }}
                 >Personal Information</Text>
                 <Text style={styles.bodyNote}>Note: Bold fields are not editable.</Text>
-
-                {Object.entries(formFormat).map(([fieldName, fieldConfig]) => {
-                  if (fieldName === "infantInformation" && fieldConfig === true ) {
-                    return (
-                        <Text 
-                            key={fieldName}
-                            style={{
-                                marginLeft: 20,
-                                color: "#E60965",
-                                fontSize: 20,
-                                fontFamily: "Open-Sans-Bold",
-                                marginTop: 20,
-                                marginBottom: 10,
-                            }}
-                        >
-                            Infant Information
-                        </Text>
-                    );
-                } else if (fieldName !== "milkAmount" && fieldConfig === true && fieldName !== "BabyCategory") {
-                    return (
+                {fields.personalInformation.map((item, index) => 
+                  {
+                    if(item.fieldBoolean){
+                      return(
+                        <>
                         <TextInput
-                            key={fieldName}
-                            style={[
-                                styles.form1,
-                                {
-                                    fontFamily: (
-                                      formData[fieldName]?.trim() === "" ? "Open-Sans-Regular" : "Open-Sans-SemiBold"
-                                    ),
-                                    color: (
-                                      fieldName === "fullName" || 
-                                      fieldName === "phoneNumber" || 
-                                      fieldName === "emailAddress" ||
-                                      fieldName === "childBirthDate"||
-                                      fieldName === "homeAddress"
-                                    ) 
-                                      ? "gray" : "#E60965"
-                                }
-                            ]}
-                            placeholder={formFormat.placeholder[fieldName]}
-                            placeholderTextColor="#E60965"
-                            multiline= {fieldName === "homeAddress" || fieldName === "ReasonForRequesting" }
-                            onChangeText={(text) => handleInputChange(fieldName, text)}
-                            value={formData[fieldName]}
-                            editable={!(fieldName === "fullName" || fieldName === "phoneNumber" || fieldName === "emailAddress" || fieldName === "homeAddress")}
-                        />
-                    );
-                } else if (fieldName === "milkAmount" && fieldConfig === true) {
+                                  key={index}
+                                  style={[
+                                      styles.form1,
+                                      {
+                                        fontFamily: (
+                                          formData[item.name]?.trim() === "" ? "Open-Sans-Regular" : "Open-Sans-SemiBold"
+                                        ),
+                                          color: (
+                                            item.name === "fullName" || 
+                                            item.name === "phoneNumber" || 
+                                            item.name === "emailAddress" ||
+                                            item.name === "childBirthDate"||
+                                            item.name === "homeAddress"
+                                          ) 
+                                            ? "gray" : "#E60965"
+                                      }
+                                  ]}
+                                  placeholder={item.placeHolder}
+                                  placeholderTextColor="#E60965"
+                                  multiline= {item.name === "homeAddress" || item.name === "ReasonForRequesting" }
+                                  onChangeText={(text) => handleInputChange(item.name, text)}
+                                  value={formData[item.name]}
+                                  editable={!(item.name === "fullName" || item.name === "phoneNumber" || item.name === "emailAddress" || item.name === "homeAddress")}
+                              />
+                      </>
+                      )
+                    }
+                  }
+                )}
+                </>
+              )}
 
-                    const sortedMilkAmount = formFormat.options[fieldName]
+              {fields.infantInformation && (
+                <>  
+                  <Text 
+                    style={{
+                        marginLeft: 20,
+                        color: "#E60965",
+                        fontSize: 20,
+                        fontFamily: "Open-Sans-Bold",
+                        marginTop: 20,
+                        marginBottom: 10,
+                    }}
+                  >
+                      Infant Information
+                  </Text>
+                <Text style={styles.bodyNote}>Note: Bold fields are not editable.</Text>
+                {fields.infantInformation.map((item, index) => 
+                {
+                  if(item.name !== "milkAmount" && item.fieldBoolean)
+                    return(
+                      <>
+                      <TextInput
+                                key={index}
+                                style={[
+                                    styles.form1,
+                                    {
+                                      fontFamily: (
+                                        formData[item.name]?.trim() === "" ? "Open-Sans-Regular" : "Open-Sans-SemiBold"
+                                      ),
+                                        color: (
+                                          item.name === "fullName" || 
+                                          item.name === "phoneNumber" || 
+                                          item.name === "emailAddress" ||
+                                          item.name === "childBirthDate"||
+                                          item.name === "homeAddress"
+                                        ) 
+                                          ? "gray" : "#E60965"
+                                    }
+                                ]}
+                                placeholder={item.placeHolder}
+                                placeholderTextColor="#E60965"
+                                multiline= {item.name === "homeAddress" || item.name === "ReasonForRequesting" }
+                                onChangeText={(text) => handleInputChange(item.name, text)}
+                                value={formData[item.name]}
+                                editable={!(item.name === "fullName" || item.name === "phoneNumber" || item.name === "emailAddress" || item.name === "homeAddress")}
+                            />
+                    </>
+                    )
+                  else if(item.name === "milkAmount" && item.fieldBoolean){
+                    const sortedMilkAmount = formFormat.options[item.name]
                     .map(item => parseInt(item))
                     .sort((a, b) => a - b) // Sort numerically
                     .map(item => item + 'ml'); 
-                  return (
-                    <View style={styles.dropDown}>
-                        <Picker
-                            selectedValue={formData.milkAmount}
-                            style ={{
-                              color: '#E60965', 
-                            }}
-                            onValueChange={(itemValue) =>
-                              handleChange(fieldName, itemValue)
-                            }
-                            >
-                            <Picker.Item label={formFormat.placeholder[fieldName]} value="" />
-                            {sortedMilkAmount.map((item, index) =>(
-                              <Picker.Item key={index} label={item} value={item} />
-                            ))}
-                        </Picker>              
-                    </View>
-                  )
-                } else {
-                    return null; 
+                    return (
+                      <View style={styles.dropDown}>
+                          <Picker
+                              selectedValue={formData.milkAmount}
+                              style ={{
+                                color: '#E60965', 
+                              }}
+                              onValueChange={(itemValue) =>
+                                handleChange(item.name, itemValue)
+                              }
+                              >
+                              <Picker.Item label={item.placeHolder} value="" />
+                              {sortedMilkAmount.map((item, index) =>(
+                                <Picker.Item key={index} label={item} value={item} />
+                              ))}
+                          </Picker>              
+                      </View>
+                    )
+                  }
+                 
                 }
-              })}
-                 {Object.keys(formFormat).length !== 0 && (
-                  <View style={styles.dropDown}>
-                      <Picker
-                        selectedValue={formData.milkBank}
-                        style ={{color: '#E60965'}}
-                        onValueChange={(itemValue) =>
-                          handleChange("milkBank", itemValue)
-                        }
-                        >
-                        <Picker.Item label="Choose Milk Bank" value="" />
-                        <Picker.Item label="Quezon City General Hospital - Human Milk Bank" value="Quezon City General Hospital - Human Milk Bank" />
-                    </Picker>
-                  </View>   
-                 )}
+                )}
+                </>
+              )}
+              
             {/* <View style={styles.dropDown}>
                   <Picker
                       selectedValue={formData.milkAmount}

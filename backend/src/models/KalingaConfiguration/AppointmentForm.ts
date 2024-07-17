@@ -48,6 +48,39 @@ const QCGHRequestorAppointmentConfigSchema = new mongoose.Schema({
     childBirthDate: {type: Boolean, default: true},
     milkAmount: {type: Boolean, default: true},
     BabyCategory: {type: Boolean, default: true},
+
+
+    fields: {
+        type:{
+            personalInformation:[{
+                name: {type: String},
+                placeHolder: {type: String},
+                fieldBoolean: {type: Boolean}
+            }],
+            infantInformation: [{
+                name: {type: String},
+                placeHolder: {type: String},
+                fieldBoolean: {type: Boolean}
+            }]
+        },
+        default: {
+            personalInformation:[
+                {name: "fullName", placeHolder: "Full Name", fieldBoolean: true},
+                {name: "phoneNumber", placeHolder: "Phone Number", fieldBoolean: true},
+                {name: "emailAddress", placeHolder: "Email Address", fieldBoolean: true},
+                {name: "homeAddress", placeHolder: "Complete Address", fieldBoolean: true},
+                {name: "ReasonForRequesting", placeHolder: "Reason for Requesting", fieldBoolean: true},
+    
+            ],
+            infantInformation: [
+                {name: "childBirthDate", placeHolder: "Child Birthday", fieldBoolean: true},
+                {name: "milkAmount", placeHolder: "Amount of Milk to be requested", fieldBoolean: true},
+                {name: "BabyCategory", placeHolder: "Select Baby Category", fieldBoolean: true},
+            ]
+        }
+      
+    },
+
     placeholder: { 
         type: {
             fullName: String,
